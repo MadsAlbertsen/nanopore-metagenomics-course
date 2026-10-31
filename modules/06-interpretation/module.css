@@ -1,0 +1,13 @@
+.daypick { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center }
+.daypick button { all: unset; cursor: pointer; font-size: 12px; min-width: 22px; text-align: center; padding: 2px 4px; border-radius: 5px; border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums }
+.daypick button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface) }
+.daypick button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px }
+svg .seg:hover, svg .dot:hover { stroke: var(--ink); stroke-width: 1.5 }
+svg .dot { cursor: pointer }
+svg .cell { stroke: var(--surface); stroke-width: 1 }
+svg .grp { fill: none; stroke: var(--ink); stroke-width: 1.5 }
+svg .ref { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 4 3 }
+svg .mean { stroke-width: 1.5; stroke-dasharray: 5 4 }
+.picked td .link { font-size: 12px }
+table.ct.picked th, table.ct.picked td { white-space: normal; vertical-align: top }
+.picked th { min-width: 70px }
