@@ -1,4 +1,4 @@
-# Guided examples for module 6 (interpretation). Each example sets the page up (state) and asks one question; the
+# Guided examples for module 7 (interpretation). Each example sets the page up (state) and asks one question; the
 # answer stays hidden until clicked. Answers state only what the example analysis shows; every number was computed
 # from np26 results/mmlong2/overview/*.tsv and checked against the page (2026-10-31). check.py rejects MAGs, measures
 # or days not in data.json.
