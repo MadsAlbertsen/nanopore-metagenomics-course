@@ -1,0 +1,83 @@
+<div class="intro">
+  <span class="kicker">Module 4</span>
+  <h1>MAG quality: how complete, how clean</h1>
+  <p>A MAG (metagenome-assembled genome) is a set of contigs that binning put together. Before we use one, we ask two questions: how much of the genome is there (completeness), and how much of what is there belongs to another genome (contamination)? Neither can be measured directly, because the true genome is unknown. CheckM counts marker genes that almost every genome of a lineage has once; CheckM2 learns the estimates from the protein functions a MAG encodes and simple genome properties. This page shows those estimates for the 421 MAGs of the example data set, the rule that sorts them into high and medium quality, and further evidence from the long reads: methylation and read support along each contig.</p>
+  <div class="stats" id="mqStats"></div>
+  <p class="note" id="mqStatsNote"></p>
+</div>
+<section class="panel" id="mqExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+<div class="mqtext">
+  <section class="panel">
+    <h2>How CheckM and CheckM2 estimate them</h2>
+    <p>CheckM (version 1) uses marker genes: genes found exactly once in nearly all reference genomes of a lineage. It first places the MAG in the reference tree, picks that lineage's marker set, and counts. Completeness is the share of markers found; contamination comes from markers found more than once. Its strain heterogeneity is the share of pairs of duplicated markers that are at least 90% identical in amino acids: high values point to a close strain rather than another species (Parks et al. 2015, Genome Research).</p>
+    <p>CheckM2 instead uses machine learning. It was trained on reference genomes cut down and mixed to known levels of completeness and contamination, and it reads the protein functions a MAG encodes (counts of KEGG orthologs and how complete each KEGG pathway and module is) and simple properties such as genome length, number of genes and amino-acid counts. It works across lineages without a fixed marker set and is more accurate for novel lineages and for genomes that are naturally small (Chklovski et al. 2023, Nature Methods). Both give percentages, not base pairs: 5% contamination does not mean 5% of the sequence is foreign.</p>
+  </section>
+  <section class="panel">
+    <h2>The quality rule used here</h2>
+    <p>The minimum standard for MAGs (MIMAG; Bowers et al. 2017, Nature Biotechnology) calls a MAG high quality at more than 90% completeness, less than 5% contamination, the 23S, 16S and 5S rRNA genes and tRNAs for at least 18 of the 20 amino acids; medium quality at 50% or more and less than 10%. mmlong2 (version <span id="mqVersion"></span>), which made these MAGs, applies it to CheckM2 estimates as follows.</p>
+    <table class="ct rule">
+      <tbody>
+        <tr><th>High quality (HQ)</th><td>CheckM2 completeness ≥ 90% and contamination ≤ 5%; at least one 5S, one 16S and one 23S rRNA gene (Bakta or barrnap); 18 or more unique tRNAs by Bakta, <i>or</i> a tRNAscan-SE count that is not zero (see below)</td></tr>
+        <tr><th>Medium quality (MQ)</th><td>every other MAG with CheckM2 completeness ≥ 50% and contamination ≤ 10%</td></tr>
+        <tr><th>Kept at all</th><td>also CheckM (version 1) completeness ≥ 50%, contamination ≤ 10% and completeness − 5 × contamination &gt; 30; MAGs below this were dropped before this table</td></tr>
+      </tbody>
+    </table>
+    <p class="note" id="mqRuleNote"></p>
+  </section>
+  <section class="panel">
+    <h2>Other evidence</h2>
+    <p>GUNC (Orakov et al. 2021, Genome Biology) looks for chimeras: it assigns each gene to a lineage and asks whether genes of different lineages sit on different contigs (the clade separation score, 0 to 1; a MAG passes at 0.45 or less). The score is also set to 0 when too few genes match its reference database (gene retention index 0.4 or less), so 0 can mean "one lineage" or "too little to judge"; <span id="mqCss0"></span> It works down to genus by default, so two strains of one species look alike to it. A circular contig is one the assembler could close on itself: a whole chromosome or plasmid, if the join is right. Microdiversity is the share of positions that are single-base variant sites (called by Longshot: at least 6 reads, the other base in at least 3 reads and 10% of them): a mixture of close strains raises it, and so can errors. Low depth lowers the power to call variants.</p>
+    <p>Our own evidence comes from methylation. Each genome's methyltransferases mark their own sequence motifs, so a contig from another organism can carry motifs the rest of the MAG lacks, or lack its motifs. The screen compares each contig with the rest of its MAG and, for contigs of 200 kb or more, each 100 kb window with the rest of its contig; reads that cross the edge of a flagged window tell a misjoin from an island with its own methylation. A flag means the methylation differs, not that the contig is foreign.</p>
+  </section>
+</div>
+<section class="spctl panel" aria-label="Overview settings">
+  <label>Estimates <select id="mqEst" aria-label="Estimates on the axes">
+    <option value="c2">CheckM2 (used for the classes)</option>
+    <option value="c1">CheckM (version 1)</option>
+  </select></label>
+  <label>Colour <select id="mqColor" aria-label="Colour by">
+    <option value="q">Quality class</option>
+    <option value="circ">Circular contigs</option>
+    <option value="rrna">rRNA genes</option>
+    <option value="trna">tRNAs</option>
+    <option value="meth">Methylation flags</option>
+    <option value="var">Microdiversity</option>
+    <option value="diff">CheckM against CheckM2</option>
+    <option value="gunc">GUNC clade separation</option>
+    <option value="cov">Depth</option>
+  </select></label>
+  <label>Show <select id="mqShow" aria-label="Which MAGs to show">
+    <option value="all">All MAGs</option><option value="HQ">High quality only</option><option value="MQ">Medium quality only</option>
+  </select></label>
+  <label>MAG <input id="mqFind" list="mqMags" placeholder="find a MAG" aria-label="Find a MAG" style="width:170px"></label>
+  <datalist id="mqMags"></datalist>
+  <button class="link" id="mqCopy" type="button">Copy link to this view</button>
+  <span class="count" id="mqCopied" aria-live="polite"></span>
+</section>
+<div class="spgrid">
+  <section class="panel">
+    <h2>Completeness against contamination</h2>
+    <div id="mqPlot" class="plotwrap"></div>
+    <div class="legend" id="mqLegend"></div>
+    <p class="note" id="mqPlotNote"></p>
+  </section>
+  <aside>
+    <section class="panel list mqlist">
+      <div class="exhead"><h2>MAGs</h2>
+        <label class="spctl">Sort <select id="mqSort" aria-label="Sort the list by">
+          <option value="cont">Contamination (high first)</option>
+          <option value="comp">Completeness (low first)</option>
+          <option value="diff">CheckM minus CheckM2 completeness</option>
+          <option value="var">Microdiversity (high first)</option>
+          <option value="flag">Methylation-flagged length</option>
+          <option value="cov">Depth (high first)</option>
+        </select></label></div>
+      <span class="count" id="mqCount"></span>
+      <div class="rows" id="mqRows" role="list"></div>
+    </section>
+  </aside>
+</div>
+<div id="mqCard" class="detail"></div>

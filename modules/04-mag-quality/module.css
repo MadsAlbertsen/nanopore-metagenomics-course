@@ -1,0 +1,35 @@
+.mqtext { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start }
+.mqtext p { margin: 0; color: var(--muted); font-size: 13.5px }
+.mqtext p.note { font-size: 12px }
+table.rule th { white-space: normal; vertical-align: top; width: 110px; color: var(--ink) }
+table.rule td { white-space: normal; color: var(--muted) }
+.plotwrap { width: 100%; min-height: 300px }
+.plotwrap svg { display: block; touch-action: manipulation }
+.plotwrap circle.pt { cursor: pointer }
+.mqlist { max-height: 640px; position: static }
+.mqlist .rows { flex: 1 }
+.row .val { font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted) }
+.row .sub { font-size: 12px; color: var(--muted) }
+.cardgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start }
+table.chk { border-collapse: collapse; width: 100%; font-size: 13px }
+table.chk th, table.chk td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top }
+table.chk th { font-weight: 500; white-space: nowrap }
+table.chk td.v { font-variant-numeric: tabular-nums; white-space: nowrap }
+table.chk td.why { color: var(--muted); font-size: 12px }
+.mark { display: inline-block; min-width: 64px; font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); text-align: center; white-space: nowrap }
+.mark.ok { color: var(--accent); border-color: var(--accent) }
+.mark.mid { color: var(--v3); border-color: var(--v3) }
+.mark.no { color: var(--v1); border-color: var(--v1) }
+.verdict { margin: 0; font-size: 14px }
+svg .trk text { fill: var(--muted) }
+g.hl text { fill: var(--ink) }
+.fp tr.hl th, table.ct tr.hl td { color: var(--ink); background: var(--sel) }
+@media (max-width: 700px) {
+  table.chk thead { display: none }
+  table.chk tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; padding: 6px 0; border-bottom: 1px solid var(--line) }
+  table.chk th, table.chk td { border: 0; padding: 0 }
+  table.chk td.v { grid-column: 1; white-space: normal }
+  table.chk td.why { grid-column: 1 / -1 }
+  table.chk td:last-child { grid-column: 2; grid-row: 1 }
+}
+@media (max-width: 1100px) { .mqtext { grid-template-columns: 1fr } .cardgrid { grid-template-columns: 1fr } }
