@@ -46,3 +46,12 @@ links it from the front page. For a fixed copy for one course, publish a GitHub 
   `overview.json` (the numbers on the front page, made by np26 scripts/23_course_overview.py).
 - `module.yaml` may also hold `takeaways`, `discussion` and `mag_link` (opens a MAG, so other modules can link to it).
 - `build.py`: puts each page together; `tests/`: build checks.
+
+## Licence
+
+- Text, figures, examples and data (`modules/*/body.html`, `*.yaml`, `data.json`, `shared/glossary.yaml`,
+  `shared/overview.json`, the built pages): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+  (`LICENSE-CONTENT`). Reuse and adapt freely, including commercially, with credit: "Mads Albertsen,
+  Nanopore metagenomics: from reads to genomes, https://github.com/MadsAlbertsen/nanopore-metagenomics-course".
+- Code (`build.py`, `shared/*.js`, `modules/*/module.js`, `check.py`, `tests/`): MIT (`LICENSE`).
+- Cited papers and tools keep their own licences; quotes are marked and referenced on the pages.
