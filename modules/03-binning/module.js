@@ -368,8 +368,9 @@ const examples = setupExamples($("spExamples"), (k) => { applyState(EXAMPLES[k].
 spaceSetup();
 (function start() {
   const st = readHashParams(), ex = parseInt(st.ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); }
-  applyState(st);
+  const valid = ex >= 1 && ex <= EXAMPLES.length;
+  if (valid) { examples.current = ex - 1; examples.draw(); }
+  applyState(valid ? { ...EXAMPLES[ex - 1].state, ...st } : st);  // a bare #?ex=2 opens the example's own setup
   drawSpace(false);
 })();
 let resizeTimer;

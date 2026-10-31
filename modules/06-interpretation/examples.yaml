@@ -1,0 +1,114 @@
+# Guided examples for module 6 (interpretation). Each example sets the page up (state) and asks one question; the
+# answer stays hidden until clicked. Answers state only what the example analysis shows; every number was computed
+# from np26 results/mmlong2/overview/*.tsv and checked against the page (2026-10-31). check.py rejects MAGs, measures
+# or days not in data.json.
+# state keys: m = measure (share, binned, gb); by = bars grouped by phylum or mag; b = days in the second group
+#   (comma list, default the low-carbohydrate days 6-10); mag = up to 3 picked MAGs (comma list, or none);
+#   log = 1 for a log scale in the picked-MAG chart.
+
+- title: Who takes the most reads
+  state: {m: share, by: mag, mag: "2.359"}
+  question: >-
+    The bars now show the seven MAGs with the highest mean share of all read bases over the ten days. How large a
+    part of each day do they take together? How steady is the largest one, Prevotella copri_B (MAG 2.359)?
+  answer: >-
+    The seven are two Prevotella copri_B MAGs (2.359 and 3.5197), Cryptobacteroides sp000431015, Acetatifactor
+    intestinalis, Butyrivibrio_A crossota, Prevotella sp003447235 and Agathobacter faecis, with means of 2.2-5.1%.
+    Together they take 21-31% of a day's read bases. Ranked by mean share, the 17 largest MAGs hold half of the read
+    bases in MAGs; the other 404 share the rest. The largest is not steady: P. copri_B 2.359 takes 4.4-8.7% on days
+    1-7, then 2.0% and 2.2% on days 8 and 9 and 0.30% on day 10. The second P. copri_B MAG (3.5197) keeps a near-constant
+    ratio to it (0.67-0.71 on every day), both match the same GTDB reference genome (97.9% and 98.0% ANI), and 3.5197
+    is 74% complete with 4.1% contamination (CheckM2): they may be one population split over two MAGs, or two
+    strains that move together.
+
+- title: How much is in MAGs at all
+  state: {m: share, by: phylum, mag: none}
+  question: >-
+    Each bar is one day's read bases. Which parts are not in any MAG, and how large are they? Does the share in
+    MAGs differ between the days?
+  answer: >-
+    74.1% (day 2) to 83.4% (day 8) of a day's read bases land on MAG contigs. About 96% (95.7-96.6%) land on some
+    contig, so 12.9-21.5% are on contigs that were assembled but not put into a MAG, and 3.4-4.3% are not counted on
+    any contig (reads that did not align, plus contig ends and poor alignments, which the depth count leaves out). The
+    share in MAGs is higher in days 6-10 (mean 81.9%) than in days 1-5 (76.5%), so any measure that leaves out the
+    unbinned reads shifts all MAGs a little between the periods.
+
+- title: Sequencing effort is not abundance
+  state: {m: gb, by: phylum, mag: "c.32"}
+  question: >-
+    The measure is now read bases, not divided by how much was sequenced. Picked: Butyrivibrio_A crossota (MAG c.32).
+    Compare day 2 with day 4, then switch the measure back to share of all read bases. How many MAGs look two-fold
+    higher in days 6-10 in each measure?
+  answer: >-
+    In read bases it has 50 Mb on day 2 and 874 Mb on day 4, 17 times more; its share is 3.00% and 3.41%. Day 2 had
+    1.7 Gb sequenced, day 4 25.6 Gb. Days 6-10 were sequenced more (mean 20.9 Gb against 12.4 Gb), so in read bases
+    44 of the 124 MAGs with a mean of 0.1% or more look at least two-fold higher there and 3 lower; in shares it is
+    23 higher and 12 lower. Raw amounts compare sequencing runs, not guts.
+
+- title: Two MAGs that go opposite ways
+  state: {m: share, by: phylum, mag: "1.308,2.500"}
+  question: >-
+    Picked: Bacteroides caccae (MAG 1.308) and Blautia_A aquisgranensis (MAG 2.500). How large is each change
+    between days 1-5 and days 6-10, and do the days of the two periods overlap? Look at the table under the chart.
+  answer: >-
+    B. caccae rises from a mean of 0.098% to 0.248%, 2.5 times higher (2.4 in the chart, which adds 0.01% to both
+    means); every day of days 6-10 (0.19-0.31%) is above every day of days 1-5 (0.06-0.16%), and none of the 126
+    ways to split the days 5 and 5 (ignoring their order) gives a larger change. Blautia_A falls from 0.253% to
+    0.098%, 2.6 times lower (2.4 in the chart), but the periods overlap (day 4: 0.13%, day 6: 0.16%) and one other
+    split gives a larger change. B. caccae's change is consistent across the days; Blautia_A's is less so. The split
+    count is not a p-value: the days follow each other in time, so a steady trend also gives 0. With one person and
+    diet changed together with time, neither change can be put on the diet.
+
+- title: Day-to-day variation as a yardstick
+  state: {m: share, by: phylum, mag: none}
+  question: >-
+    The Bray-Curtis table compares the MAG composition of every pair of days. Are days within one period more alike
+    than days from different periods? Is the step from day 5 to day 6, where the diet changed, larger than other
+    day-to-day steps?
+  answer: >-
+    On average, days within days 1-5 differ by 0.21 and within days 6-10 by 0.24, against 0.31 between the periods.
+    Consecutive days differ by 0.15-0.28; the largest step is day 4 to 5 (0.28), and day 5 to 6 is 0.20, in the middle of
+    the range. On average, day 6 differs from days 1-5 by 0.19 and day 7 by 0.26, about as much as day 4 differs from
+    the other days of its own period (0.25); days 8, 9 and 10 differ by 0.37, 0.32 and 0.40. The composition moves
+    away gradually after day 6, clearest on days 8-10. A lag of a few days is also what a diet effect could look like
+    (food takes time to pass, and a community takes time to respond), so the timing neither supports nor rules out
+    the diet.
+
+- title: Other ways to split the days
+  state: {m: share, by: phylum, b: "2,4,6,8,10", mag: none}
+  question: >-
+    The second group is now the even days. How many of the 124 MAGs with a mean of 0.1% or more change two-fold
+    between odd and even days? Read the note under the change chart, then go back to the diet periods.
+  answer: >-
+    Odd against even days: 1 MAG (higher on even days). Days 1-5 against 6-10: 35 (23 higher, 12 lower). Over all
+    126 ways to split the ten days 5 and 5, the count runs from 1 to 35 (median 6). The diet split ties for the top
+    with days 1, 2, 3, 5, 6 against 4, 7, 8, 9, 10, and days 2-6 against 1, 7, 8, 9, 10 gives 34: splits of early
+    against late days do as well. The data show a change over time; this design cannot tell a diet effect from any
+    other trend over the ten days.
+
+- title: A noisy rare MAG
+  state: {m: share, by: phylum, mag: "c.100", log: 1}
+  question: >-
+    Picked: CAG-417 sp000432835 (MAG c.100), mean 0.064% of all read bases. Its mean is 2.6 times higher in days
+    6-10. Is that a change between the periods? Look at the single days and the split count in the table.
+  answer: >-
+    On seven days it is at 0.010-0.025% (depth 0.3-2.6x); on days 4, 9 and 10 it jumps to 0.10%, 0.17% and 0.24%
+    (depth 19x, 19x and 44x). Those jumps are far larger than counting noise: the genome really took a larger share in
+    those samples. But days 9 and 10 alone make 91% of the second period's mean, the periods overlap, and 54 of 126
+    splits give a larger change. A few days can carry a whole period's mean, so check the days, not only the means.
+    (The chart shows 2.2-fold because it adds 0.01% to both means.)
+
+- title: Shares are not amounts
+  state: {m: share, by: phylum, mag: "2.359,3.5197"}
+  question: >-
+    Picked: the two Prevotella copri_B MAGs. Together they take 12.4% of the read bases on day 6 and 0.5% on day 10.
+    If no other genome changed in amount, what would happen to their shares? Then switch the measure to share of
+    read bases in MAGs: do the counts under the change chart move?
+  answer: >-
+    The other 87.6% would have to fill 99.5% of day 10, so every other genome's share would rise by a factor of
+    1.14 between days 6 and 10 without any change in amount. Shares add up to 100%, so a fall of one genome looks
+    like a rise of the others. But 1.14-fold is far below two-fold, so the P. copri_B fall alone explains none of the
+    35 two-fold changes. With shares of the read bases in MAGs, the same 124 MAGs give 21 two-fold higher and
+    17 lower (23 and 12 with shares of all read bases), because the part in MAGs is larger in days 6-10. Sequencing
+    gives shares only; whether a genome grew or others shrank needs a measure of total amount, which this data set
+    does not have.

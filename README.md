@@ -11,7 +11,7 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 | 3. Binning: sorting contigs into genomes | ready |
 | 4. MAG quality: how complete, how clean | in preparation |
 | 5. Annotation: what is in a genome, and how sure are we | in preparation |
-| 6. Interpretation: what changes over ten days | in preparation |
+| 6. Interpretation: what changes over ten days | draft |
 
 ## The data
 
