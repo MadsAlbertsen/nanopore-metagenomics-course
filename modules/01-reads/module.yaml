@@ -1,0 +1,7 @@
+number: 1
+slug: reads
+title: "Raw reads: what they look like, and why we filter and split them"
+nav: Raw reads
+summary: >-
+  The structure of a read for rapid and ligation library preps, read length and quality, adapters, joined reads that need splitting, and what filtering costs.
+status: planned

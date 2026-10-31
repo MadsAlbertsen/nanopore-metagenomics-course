@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<style>
+{{BASE_CSS}}
+{{MODULE_CSS}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="course" aria-label="Course modules">{{NAV}}</nav>
+{{BODY}}
+<footer class="course">{{FOOTER}}</footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+<script>
+const DATA = {{DATA}};
+const EXAMPLES = {{EXAMPLES}};
+</script>
+<script>
+{{COMMON_JS}}
+</script>
+<script>
+{{MODULE_JS}}
+</script>
+</body>
+</html>

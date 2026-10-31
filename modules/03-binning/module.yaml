@@ -1,0 +1,8 @@
+number: 3
+slug: binning
+title: "Binning: sorting contigs into genomes"
+nav: Binning
+summary: >-
+  The features binners use to group contigs into genomes (depth in each sample, GC, tetranucleotides, methylation),
+  shown as maps you can explore, and how well each feature keeps a genome together.
+status: ready
