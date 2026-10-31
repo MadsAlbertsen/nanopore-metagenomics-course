@@ -42,7 +42,7 @@ const rankOf = (b, f) => 1 + B.filter((x) => f(x) > f(b)).length;
 // --- colour modes: {label, col(b), legend, val(b) text for tooltips}
 const cat = (k) => `var(--c${k})`;
 const COLORS = {
-  q: { col: (b) => b.q === "HQ" ? cat(1) : cat(2), legend: () => sw(cat(1), "High quality (HQ)") + sw(cat(2), "Medium quality (MQ)") },
+  q: { col: (b) => b.q === "HQ" ? cat(1) : cat(2), legend: () => sw(cat(1), "High quality") + sw(cat(2), "Medium quality") },
   circ: { col: (b) => b.cbin ? cat(1) : b.circN ? cat(3) : "var(--faint)", legend: () => sw(cat(1), "MAG is one circular contig") + sw(cat(3), "has a circular contig among others") + sw("var(--faint)", "no circular contig") },
   rrna: { col: (b) => !b.rrMissing.length ? cat(1) : b.rrMissing.length < 3 ? cat(4) : cat(2), legend: () => sw(cat(1), "5S, 16S and 23S rRNA genes") + sw(cat(4), "one or two of them missing") + sw(cat(2), "none") },
   trna: { col: (b) => b.trna[0] >= 18 && b.trna[1] >= 18 ? cat(1) : b.trna[0] >= 18 || b.trna[1] >= 18 ? cat(4) : cat(2), legend: () => sw(cat(1), "18 or more unique tRNAs by both tools") + sw(cat(4), "by one of the two") + sw(cat(2), "fewer than 18 by both") },
@@ -95,8 +95,8 @@ function drawPlot() {
   const thr = (a) => el("line", { ...a, stroke: "var(--ink)", "stroke-width": 1.2, "stroke-dasharray": "5 3" }, svg);
   thr({ x1: X(90), x2: X(90), y1: Y(5), y2: Y(y0) }); thr({ x1: X(90), x2: X(x1), y1: Y(5), y2: Y(5) });
   thr({ x1: X(50), x2: X(50), y1: Y(10), y2: Y(y0) }); thr({ x1: X(50), x2: X(x1), y1: Y(10), y2: Y(10) });
-  el("text", { x: X(x1) - 4, y: Y(5) - 5, "text-anchor": "end", class: "lbl", style: "fill:var(--ink)" }, svg).textContent = "HQ: ≥ 90% and ≤ 5%";
-  el("text", { x: X(50) + 4, y: Y(10) - 5, class: "lbl", style: "fill:var(--ink)" }, svg).textContent = "MQ: ≥ 50% and ≤ 10%";
+  el("text", { x: X(x1) - 4, y: Y(5) - 5, "text-anchor": "end", class: "lbl", style: "fill:var(--ink)" }, svg).textContent = "High quality: ≥ 90% and ≤ 5%";
+  el("text", { x: X(50) + 4, y: Y(10) - 5, class: "lbl", style: "fill:var(--ink)" }, svg).textContent = "Medium quality: ≥ 50% and ≤ 10%";
   const name = est === "c2" ? "CheckM2" : "CheckM";
   el("text", { x: (mg.l + W - mg.r) / 2, y: H - 6, "text-anchor": "middle", class: "lbl" }, svg).textContent = `Completeness (${name})`;
   const yl = el("text", { x: 12, y: (mg.t + H - mg.b) / 2, "text-anchor": "middle", class: "lbl", transform: `rotate(-90 12 ${(mg.t + H - mg.b) / 2})` }, svg); yl.textContent = H < 380 ? "Contamination" : `Contamination (${name})`;
@@ -165,9 +165,9 @@ function drawCard() {
   const flagTxt = b.nFlag ? `${plural(b.nFlag, "contig")} flagged, ${fmtBp(b.flagBp)} of ${fmtBp(b.size)}` : b.methInfo && b.contigs.some((c) => c.v !== 4) ? "no contig flagged" : "no contig could be tested";
   const methWhy = b.n === 1 ? "A MAG of one contig has no rest to compare with; the windows below still test it." : `Each contig with enough motif sites (5x depth or more) against the site-weighted rest of the MAG. ${b.contigs.filter((c) => c.v !== 4).length} of ${b.n} contigs had enough data.`;
   const rows = [
-    ["CheckM2 completeness", pct(b.c2[0]), "HQ needs ≥ 90%, MQ ≥ 50%.", b.c2[0] >= 90 ? mark("ok", "HQ level") : mark("mid", "MQ level")],
-    ["CheckM2 contamination", pct(b.c2[1], 2), "HQ needs ≤ 5%, MQ ≤ 10%. An estimate from duplicated functions, not a share of the sequence.", b.c2[1] <= 5 ? mark("ok", "HQ level") : mark("mid", "MQ level")],
-    ["rRNA genes", rr, "Copies found by Bakta / barrnap. HQ needs at least one 5S, 16S and 23S gene, by either tool.", b.rrMissing.length ? mark("no", "missing " + b.rrMissing.map((k) => RRNAME[k]).join(", ")) : mark("ok", "all three")],
+    ["CheckM2 completeness", pct(b.c2[0]), "High quality needs ≥ 90%, medium quality ≥ 50%.", b.c2[0] >= 90 ? mark("ok", "high-quality level") : mark("mid", "medium-quality level")],
+    ["CheckM2 contamination", pct(b.c2[1], 2), "High quality needs ≤ 5%, medium quality ≤ 10%. An estimate from duplicated functions, not a share of the sequence.", b.c2[1] <= 5 ? mark("ok", "high-quality level") : mark("mid", "medium-quality level")],
+    ["rRNA genes", rr, "Copies found by Bakta / barrnap. High quality needs at least one 5S, 16S and 23S gene, by either tool.", b.rrMissing.length ? mark("no", "missing " + b.rrMissing.map((k) => RRNAME[k]).join(", ")) : mark("ok", "all three")],
     ["tRNAs", `${b.trna[0]} Bakta · ${b.trna[1]} tRNAscan-SE`, "Unique tRNAs. MIMAG asks for at least 18 of the 20 amino acids; mmlong2's code accepts Bakta ≥ 18 or any tRNAscan-SE count.", b.trna[0] >= 18 || b.trna[1] >= 18 ? mark("ok", "18 or more") : mark("mid", "below 18")],
     ["CheckM (version 1)", `${pct(b.c1[0])} · ${pct(b.c1[1], 2)} · ${sh}%`, `Completeness · contamination · strain heterogeneity (share of pairs of duplicated markers ≥ 90% identical in amino acids: high points to a close strain). Completeness differs from CheckM2 by ${b.diff > 0 ? "+" : ""}${b.diff.toFixed(1)} points. Kept by mmlong2 because completeness − 5 × contamination = ${score.toFixed(1)} (needs more than 30).`, Math.abs(b.diff) > 10 ? mark("mid", "disagrees") : mark("ok", "agrees")],
     ["GUNC", `CSS ${b.gunc[0]} · RRS ${b.gunc[1]}`, "Clade separation score (passes at ≤ 0.45; set to 0 when too few genes match the reference, so 0 can also mean too little to judge) and how well the reference database covers this genome (reference representation score, 0 to 1). Blind to strains of one species.", b.gunc[2] ? mark("ok", "pass") : mark("no", "fail")],
@@ -186,7 +186,7 @@ function drawCard() {
         <span>Nanomotif motifs: ${b.nm.length ? b.nm.map((m) => `<code class="mono">${esc(m)}</code>`).join(" ") : "none found"}</span>
       </div>
       <div class="tax">${esc(b.tax)}</div>
-      <p class="verdict">${verdict(b)}</p>
+      <p class="verdict">${verdict(b)}</p>${magLinks(b.id, "mag-quality")}
       <div><button class="link" id="mqClose" type="button">Close card</button></div>
     </section>
     <section class="panel"><h2>Evidence checklist</h2><div class="scroll"><table class="chk"><thead><tr><th>Evidence</th><th>This MAG</th><th>What it says</th><th></th></tr></thead><tbody>

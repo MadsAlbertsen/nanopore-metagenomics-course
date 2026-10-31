@@ -1,7 +1,17 @@
 number: 6
 slug: interpretation
-title: "Interpretation: what changes over ten days"
+title: 'Interpretation: what changes over ten days'
 nav: Interpretation
-summary: >-
-  Abundance of the MAGs over the ten days and the diet change, and what one person's time series can and cannot show.
+summary: Abundance of the MAGs over the ten days and the diet change, and what one person's time series can and cannot
+  show.
 status: draft
+mag_link: '#?mag={id}'
+takeaways:
+- 'Abundance here is a share of each day''s read bases. Shares are relative: when one genome falls, every other share
+  rises.'
+- Samples were sequenced to different amounts (1.7-25.6 Gb), so compare shares, not raw read bases.
+- Compare a change with the variation from day to day, and look at the single days, not only at the means.
+- One person with one sample per day cannot separate the diet from time, and ranking hundreds of MAGs always turns up
+  some large changes.
+discussion: Design a study that could tell whether the diet caused the changes seen here. What would you change, and what
+  would it cost in samples and sequencing?

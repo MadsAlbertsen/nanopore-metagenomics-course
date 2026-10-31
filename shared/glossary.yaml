@@ -1,0 +1,106 @@
+# Words used across the modules, in plain terms. modules: the pages where the term matters most (slugs).
+- term: "Read"
+  text: "One DNA molecule as the sequencer read it, as a string of bases with a quality per base. Nanopore reads in this course are mostly a few kb long, some much longer."
+  modules: [reads, assembly]
+- term: "Read N50"
+  text: "Half of all sequenced bases are in reads at least this long. It describes bases, not reads, so it is larger than the typical (median) read length."
+  modules: [reads]
+- term: "Read bases"
+  text: "The sum of read lengths. Abundance in this course counts read bases, not reads, so a long read counts more than a short one."
+  modules: [reads, interpretation]
+- term: "Q score (quality)"
+  text: "The basecaller's confidence in a base on a log scale: Q10 means 1 error in 10 expected, Q20 1 in 100, Q30 1 in 1,000."
+  modules: [reads]
+- term: "Adapter and barcode"
+  text: "Short known sequences added in the library prep. The adapter lets the DNA enter the pore; the barcode tells which sample a read came from, so several samples can share a flow cell."
+  modules: [reads]
+- term: "Joined (chimeric) read"
+  text: "A read that holds two molecules one after the other, with an adapter in the middle. It is split at the adapter before assembly."
+  modules: [reads, assembly]
+- term: "k-mer"
+  text: "A short word of k bases cut from a sequence, such as the 21-letter words myloasm compares or the 4-letter words of tetranucleotide frequencies."
+  modules: [assembly, binning]
+- term: "Overlap"
+  text: "Two reads share a stretch of sequence because they came from overlapping places in a genome. Assemblers build everything from overlaps."
+  modules: [assembly]
+- term: "Assembly graph"
+  text: "Reads or contig pieces as nodes, overlaps as edges. A genome without repeats is one path; repeats and closely related strains make branches and loops."
+  modules: [assembly]
+- term: "Unitig"
+  text: "A chain of reads in the assembly graph without branches; it becomes a contig."
+  modules: [assembly]
+- term: "Contig"
+  text: "A continuous sequence the assembler built from overlapping reads: one unbranched path through the assembly graph."
+  modules: [assembly, binning]
+- term: "Contig N50"
+  text: "Half of all assembled bases are in contigs at least this long."
+  modules: [assembly]
+- term: "Repeat"
+  text: "Sequence that occurs more than once, such as rRNA operons or insertion sequences. Reads shorter than a repeat cannot tell its copies apart."
+  modules: [assembly]
+- term: "Circular contig"
+  text: "A contig whose end overlaps its start, so the assembler closed it into a circle: likely a whole chromosome, plasmid or phage."
+  modules: [assembly, mag-quality]
+- term: "Misassembly (misjoin)"
+  text: "A contig that joins sequence that does not belong together in the genome."
+  modules: [assembly, mag-quality]
+- term: "Co-assembly"
+  text: "One assembly of the reads from several samples together, here all ten days. Each contig then has a depth in each sample."
+  modules: [assembly, binning]
+- term: "Depth (coverage)"
+  text: "How many reads cover a position, averaged over a contig. Higher depth means a more abundant genome or more sequencing."
+  modules: [assembly, binning, mag-quality, interpretation]
+- term: "Binning"
+  text: "Sorting contigs into groups that each come from one genome, using features that differ between genomes, such as depth in each sample and sequence composition."
+  modules: [binning]
+- term: "MAG (metagenome-assembled genome)"
+  text: "The contigs binning put together as one genome. A MAG is an estimate of a genome, not a guarantee."
+  modules: [binning, mag-quality, annotation, interpretation]
+- term: "GC content"
+  text: "The share of G and C bases in a sequence; it differs between genomes."
+  modules: [binning]
+- term: "Tetranucleotide frequency"
+  text: "How often each 4-letter word occurs in a sequence, a word and its reverse complement counted together (136 words). It is a genome-wide signature of composition."
+  modules: [binning]
+- term: "t-SNE map"
+  text: "A way to draw many features in two dimensions so that close neighbours stay close. Distances between groups and their sizes mean little."
+  modules: [binning]
+- term: "Methylation motif"
+  text: "A short sequence that a bacterium marks with a methyl group at nearly every occurrence, set by its own enzymes (written as the motif plus the modified base, such as GATC 6mA). Nanopore reads show it directly."
+  modules: [binning, mag-quality]
+- term: "Completeness and contamination"
+  text: "Estimates of how much of a genome a MAG holds and how much of it seems to come from other genomes, from genes that most genomes of a lineage carry (CheckM) or from protein functions (CheckM2)."
+  modules: [mag-quality]
+- term: "Marker gene"
+  text: "A gene found once in nearly every genome of a lineage. Missing markers point to an incomplete genome, extra copies to contamination."
+  modules: [mag-quality]
+- term: "Strain heterogeneity (CheckM)"
+  text: "The share of duplicated marker pairs that are at least 90% identical in amino acids; high values point to a close strain."
+  modules: [mag-quality]
+- term: "MIMAG"
+  text: "The community standard for reporting MAGs. High quality needs more than 90% completeness, less than 5% contamination, the 5S, 16S and 23S rRNA genes and tRNAs for at least 18 amino acids; medium quality at least 50% and less than 10%."
+  modules: [mag-quality]
+- term: "rRNA and tRNA genes"
+  text: "Genes for the RNA parts of ribosomes and for the RNAs that carry amino acids; MIMAG asks for them in high-quality MAGs."
+  modules: [mag-quality]
+- term: "Strain"
+  text: "Genomes of one species that differ in a small share of positions and sometimes in gene content."
+  modules: [assembly, binning, mag-quality]
+- term: "ANI (average nucleotide identity)"
+  text: "The share of identical bases where two genomes align; about 95% is the usual boundary between species (Jain et al. 2018, Nature Communications)."
+  modules: [assembly, annotation, interpretation]
+- term: "Microdiversity (variant sites)"
+  text: "Single-base positions where the reads of one MAG consistently disagree; many such sites point to closely related strains mixed in one MAG. Low depth means fewer sites can be called."
+  modules: [mag-quality]
+- term: "GTDB"
+  text: "The Genome Taxonomy Database, a taxonomy built from genome sequences. MAGs are named by placing them among its reference genomes."
+  modules: [annotation, mag-quality]
+- term: "Relative abundance"
+  text: "A genome's share of everything sequenced in a sample, here the share of read bases on its contigs. Shares add up to 100%, so one genome rising lowers the others."
+  modules: [interpretation]
+- term: "Bray-Curtis dissimilarity"
+  text: "How different two samples are in composition, from 0 (the same) to 1 (nothing shared)."
+  modules: [interpretation]
+- term: "HQ and MQ (high and medium quality)"
+  text: "The quality classes of the MAGs, from mmlong2's rule based on MIMAG: high quality (HQ) is CheckM2 completeness of 90% or more, contamination of 5% or less, and the rRNA and tRNA genes; medium quality (MQ) is at least 50% and at most 10%."
+  modules: [mag-quality, binning]

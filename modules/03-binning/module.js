@@ -58,7 +58,7 @@ function applyState(st) {
 // --- setup
 function spaceSetup() {
   const opts = VIEWS.map((v) => `<option value="${v.key}">${esc(v.label)}</option>`).join("");
-  const samples = SP.samples.map((s, k) => `<option value="${s}">${s} (day ${SP.day[k]})</option>`).join("");
+  const samples = SP.samples.map((s, k) => `<option value="${s}">Day ${SP.day[k]}</option>`).join("");
   for (const m of MAPS) { m.vsel.innerHTML = opts; m.xsel.innerHTML = samples; m.ysel.innerHTML = samples; }
   $("spMags").innerHTML = DATA.bins.map((b) => `<option value="${b.id} ${esc(b.name)}">`).join("");
   applyState({});
@@ -180,8 +180,8 @@ function drawMap(m) {
     ctx.textAlign = "right";
     for (const [t, lab] of yt) if (t >= y0 && t <= y1) { ctx.beginPath(); ctx.moveTo(mg.l, Y(t)); ctx.lineTo(W - mg.r, Y(t)); ctx.stroke(); ctx.fillText(lab, mg.l - 6, Y(t) + 4); }
     ctx.textAlign = "center";
-    ctx.fillText(v.key === "gcdepth" ? "GC content" : `Depth in ${m.xsel.value}`, (mg.l + W - mg.r) / 2, H - 6);
-    ctx.save(); ctx.translate(12, (mg.t + H - mg.b) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(v.key === "gcdepth" ? "Depth, all reads" : `Depth in ${m.ysel.value}`, 0, 0); ctx.restore();
+    ctx.fillText(v.key === "gcdepth" ? "GC content" : `Depth on day ${SP.day[SP.samples.indexOf(m.xsel.value)]}`, (mg.l + W - mg.r) / 2, H - 6);
+    ctx.save(); ctx.translate(12, (mg.t + H - mg.b) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(v.key === "gcdepth" ? "Depth, all reads" : `Depth on day ${SP.day[SP.samples.indexOf(m.ysel.value)]}`, 0, 0); ctx.restore();
   }
   const { fore, col } = colourFn(v), sel = space.sel;
   const rad = (i) => 1.1 + 1.3 * Math.log10(SP.len[i] / 1e4);
@@ -263,7 +263,7 @@ function drawMagPanel() {
     return `<tr class="${cur.includes(w.key) ? "cur" : ""}"><td>${esc(shortView(w))}</td><td class="r">${c ? Math.round((s / c) * 100) + "%" : "–"}</td></tr>`;
   }).join("");
   host.innerHTML = `<h2>Ringed MAG</h2><h3 style="font-size:16px"><i>${esc(b.name)}</i> <span class="mono muted" style="font-size:12px">${b.id}</span></h3>
-    <div class="facts"><span>${b.q}</span><span>CheckM2 <b>${b.comp}%</b> complete, <b>${b.cont}%</b> contamination</span><span><b>${b.n}</b> contigs, <b>${n}</b> of 10 kb or more</span><span>depth <b>${b.cov}x</b></span></div>
+    <div class="facts"><span>${b.q}</span><span>CheckM2 <b>${b.comp}%</b> complete, <b>${b.cont}%</b> contamination</span><span><b>${b.n}</b> contigs, <b>${n}</b> of 10 kb or more</span><span>depth <b>${b.cov}x</b></span></div>${magLinks(b.id, "binning")}
     ${b.n < 2 ? `<p class="note">A MAG of one contig: nothing to keep together.</p>` : `<table class="sc"><thead><tr><th>Feature set</th><th class="r">Same-MAG neighbours</th></tr></thead><tbody>${rows}</tbody></table>`}
     <div style="display:flex;flex-wrap:wrap;gap:6px 16px"><button class="link" id="spSelMag">Select its contigs</button><button class="link" id="spClear">Remove ring</button></div>`;
   $("spSelMag").addEventListener("click", () => { setSelection(magContigs(space.pin), b.id); refresh(true); });
@@ -320,7 +320,7 @@ function drawProfile() {
     const t = el("text", { x: mg.l - 6, y: Y(e) + 4, "text-anchor": "end", class: "lbl" }, svg); t.textContent = `${10 ** e >= 1 ? 10 ** e : (10 ** e).toFixed(-e)}x`;
   }
   S.forEach((s, k) => { const t = el("text", { x: X(k), y: H - mg.b + 14, "text-anchor": "middle", class: "lbl" }, svg); t.textContent = SP.day[k]; });
-  const xt = el("text", { x: (mg.l + W - mg.r) / 2, y: H - 4, "text-anchor": "middle", class: "lbl" }, svg); xt.textContent = "Day (samples DNA01-DNA10)";
+  const xt = el("text", { x: (mg.l + W - mg.r) / 2, y: H - 4, "text-anchor": "middle", class: "lbl" }, svg); xt.textContent = "Day";
   const yt = el("text", { x: 12, y: (mg.t + H - mg.b) / 2, "text-anchor": "middle", class: "lbl", transform: `rotate(-90 12 ${(mg.t + H - mg.b) / 2})` }, svg); yt.textContent = perGb ? "Depth per Gb sequenced" : "Depth";
   const path = (row) => row.map((v, k) => (v === null ? null : `${X(k).toFixed(1)},${Y(v).toFixed(1)}`)).filter(Boolean).join(" ");
   for (const g of groups) for (const i of g.drawn) {

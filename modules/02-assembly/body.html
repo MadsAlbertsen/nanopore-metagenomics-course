@@ -1,15 +1,15 @@
 <div class="intro">
   <span class="kicker">Module 2</span>
   <h1>Assembly: from overlapping reads to contigs</h1>
-  <p>An assembler gets millions of reads in no order and has to rebuild the genomes they came from. It finds reads that share sequence (overlaps), joins them into a graph and reads contigs off that graph. Repeats and closely related strains are what make this hard. Our data were assembled with myloasm (version 0.2.0, inside mmlong2), all ten samples together. The three small examples below are simulations: toy genomes and toy rules, made to show one idea each. They are not myloasm itself; the panel after them says what myloasm does, from its authors' paper.</p>
+  <p>An assembler gets millions of reads in no order and has to rebuild the genomes they came from. It finds reads that share sequence (overlaps), joins them into a graph and reads contigs off that graph. Repeats and closely related strains are what make this hard. Our data were assembled with myloasm (version 0.2.0, inside mmlong2), all ten samples together. The three small examples below are simulations: toy genomes and toy rules, made to show one idea each. They are not myloasm itself; the panel after them says what myloasm does, from its authors' paper. Before this step the reads were filtered and trimmed (module 1). Next: <a href="binning.html">module 3</a> sorts these contigs into genomes.</p>
   <div class="stats" aria-label="Our assembly in numbers: myloasm's primary assembly">
-    <div class="stat"><b>166.5 Gbp</b><span>reads in (10 samples, after filtering and trimming)</span></div>
+    <div class="stat"><b>166.5 Gb</b><span>reads in (10 samples, after filtering and trimming)</span></div>
     <div class="stat"><b>11.5 h</b><span>myloasm run time, 60 threads</span></div>
-    <div class="stat"><b>20,442</b><span>contigs in myloasm's primary assembly, 1.87 Gbp</span></div>
+    <div class="stat"><b>20,442</b><span>contigs in myloasm's primary assembly, 1.87 Gb</span></div>
     <div class="stat"><b>939 kb</b><span>contig N50 (myloasm)</span></div>
-    <div class="stat"><b>410</b><span>contigs of 1 Mbp or more, 122 of them possibly circular (myloasm)</span></div>
+    <div class="stat"><b>410</b><span>contigs of 1 Mb or more, 122 of them possibly circular (myloasm)</span></div>
   </div>
-  <p class="note">These are myloasm's primary assembly. mmlong2 then splits contigs at likely misassemblies and drops contigs shorter than 3 kb, leaving 20,302 contigs (1.87 Gbp, N50 926 kb), 409 of 1 Mbp or more, 107 of them circular; the later modules use that set.</p>
+  <p class="note">These are myloasm's primary assembly. mmlong2 then splits contigs at likely misassemblies and drops contigs shorter than 3 kb, leaving 20,302 contigs (1.87 Gb, N50 926 kb), 409 of 1 Mb or more; 401 contigs are circular, 107 of them 1 Mb or more. The later modules use this set.</p>
 </div>
 <section class="panel" id="asExamples" hidden>
   <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
@@ -75,7 +75,7 @@
 <section class="panel" id="secMyloasm">
   <h2>What myloasm does, step by step</h2>
   <div class="txt">
-    <p>From the myloasm paper (Shaw, Marin and Li, bioRxiv 2025; published in Nature Biotechnology 2026) and its documentation. The authors call it a "metagenomic noisy long-read assembler" that "uses polymorphic k-mers to construct a high-resolution string graph and then leverages differential abundance for graph simplification". The paper describes version 0.1.0; we ran 0.2.0, whose listed changes concern polishing, filters for low-depth contigs, removal of duplicated plasmids, input formats and the output format. The current documentation describes later versions (now 0.7; for example, since 0.3.0 the bloom filter size is chosen automatically, and since 0.6.0 polishing mostly uses abPOA instead of SPOA). The right column gives the times and counts from our run's log.</p>
+    <p>From the myloasm paper (Shaw, Marin and Li, bioRxiv 2025; published in Nature Biotechnology 2026) and its documentation. The authors call it a "metagenomic noisy long-read assembler" that "uses polymorphic k-mers to construct a high-resolution string graph and then leverages differential abundance for graph simplification". The paper describes version 0.1.0; we ran 0.2.0, whose listed changes concern polishing, filters for low-depth contigs, removal of duplicated plasmids, input formats and the output format. The right column gives the times and counts from our run's log.</p>
   </div>
   <div class="scroll">
   <table class="ct steps-table">
@@ -87,7 +87,7 @@
       <tr><td>4. Depth and chimeric reads</td><td class="w">All reads are mapped to the outer reads to get each read's depth, at three identity thresholds (about 99%, 99.75% and 100%), because "under extensive strain variation ... few perfect mappings may exist". Where a stretch of a read is backed by almost no other reads (depth 2 or less) right next to a stretch with more than 5 times that depth, the read is taken as chimeric or as carrying a large error and is broken in two there; then containment and mapping are repeated.</td><td class="w">2.1 h mapping (288 GB of memory at this step in myloasm's log; the job's peak, measured by the pipeline, was 323 GB); 449,913 reads (1.18%) split as "possibly chimeric or noisy"; two more rounds 1.5 h</td></tr>
       <tr><td>5. Build the string graph</td><td class="w">Overlaps of more than 500 bp between outer reads become edges when no SNPmer differs (with a relaxed threshold where depth shows no exactly matching reads exist). Transitive edges are removed and chains without branches are collapsed into unitigs.</td><td class="w" rowspan="2">1.1 h for overlaps, cleaning, circular contigs and removing duplicates</td></tr>
       <tr><td>6. Clean the graph</td><td class="w">First light cleaning (remove tips, pop bubbles, cut much shorter overlaps). Then a "random path model": paths whose depth stays consistent, with long and identical overlaps, get a high probability; edges rarely used by such paths are cut. This is repeated "from high to low temperature" (inspired by simulated annealing): first only clear cuts, then stricter ones on the longer unitigs. Cuts must be "safe", so they do not leave dead ends.</td></tr>
-      <tr><td>7. Circular contigs</td><td class="w">Uses the "progressive coverage filter of metaMDBG": low-depth parts are removed step by step, and an isolated unitig that loops onto itself is taken as a circular contig. Small circular elements (plasmids, phages) get a separate heuristic.</td><td class="w">122 possibly circular contigs of 1 Mbp or more</td></tr>
+      <tr><td>7. Circular contigs</td><td class="w">Uses the "progressive coverage filter of metaMDBG": low-depth parts are removed step by step, and an isolated unitig that loops onto itself is taken as a circular contig. Small circular elements (plasmids, phages) get a separate heuristic.</td><td class="w">122 possibly circular contigs of 1 Mb or more</td></tr>
       <tr><td>8. Polish and remove duplicates</td><td class="w">All reads are aligned to the unitigs and a consensus is computed with partial order alignment (SPOA) in 400 bp windows. Contigs with more than 99.9% identity over more than 99% of their length to a larger contig are duplicates; with more than 99% identity and 90% aligned they go to a separate file of "alternates".</td><td class="w">2.7 h read alignment, 1.2 h polishing; 20,442 primary contigs (plus 9,435 alternates and 16,853 duplicates in separate files)</td></tr>
     </tbody>
   </table>
@@ -107,7 +107,7 @@
   <h2>Sources</h2>
   <ul class="refs">
     <li>Shaw J, Marin MG, Li H (2025). High-resolution metagenome assembly for modern long reads with myloasm. bioRxiv, version 1. <a href="https://doi.org/10.1101/2025.09.05.674543">doi:10.1101/2025.09.05.674543</a> (open; the source of the step table). Published as: Nature Biotechnology (2026), <a href="https://www.nature.com/articles/s41587-026-03053-z">s41587-026-03053-z</a>.</li>
-    <li>myloasm documentation: <a href="https://myloasm-docs.github.io/">myloasm-docs.github.io</a> (output format, quality control, changelog); code: <a href="https://github.com/bluenote-1577/myloasm">github.com/bluenote-1577/myloasm</a>.</li>
+    <li>myloasm documentation: <a href="https://myloasm-docs.github.io/">myloasm-docs.github.io</a> (output format, quality control, changelog; it describes later versions, now 0.7: for example, since 0.3.0 the bloom filter size is chosen automatically, and since 0.6.0 polishing mostly uses abPOA instead of SPOA); code: <a href="https://github.com/bluenote-1577/myloasm">github.com/bluenote-1577/myloasm</a>.</li>
     <li>Myers EW (2005). The fragment assembly string graph. Bioinformatics 21 Suppl 2: ii79-85. <a href="https://doi.org/10.1093/bioinformatics/bti1114">doi:10.1093/bioinformatics/bti1114</a> (reads as nodes, overlaps as edges, transitive reduction).</li>
     <li>Koren S, Phillippy AM (2015). One chromosome, one contig: complete microbial genomes from long-read sequencing and assembly. Current Opinion in Microbiology 23: 110-120. <a href="https://doi.org/10.1016/j.mib.2014.11.014">doi:10.1016/j.mib.2014.11.014</a> (why read length matters for repeats).</li>
     <li>Our run: myloasm 0.2.0 log and mmlong2 1.2.1 (command <code>myloasm reads.fastq.gz -t 60 -b 100 --clean-dir --aggressive-bloom</code>).</li>

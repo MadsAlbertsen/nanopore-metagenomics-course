@@ -15,7 +15,8 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 
 ## The data
 
-Ten daily stool samples from one person (days 1-5 on a high-carbohydrate, days 6-10 on a low-carbohydrate diet),
+Ten daily stool samples from one person (days 1-5 on a high-carbohydrate, high-calorie diet, days 6-10 on a
+low-carbohydrate, low-calorie diet),
 sequenced together on one PromethION flow cell (Oxford Nanopore, Rapid Barcoding Kit SQK-RBK114-24, R10.4.1),
 assembled with myloasm and binned with mmlong2. The pages hold only derived data (statistics, contig features,
 MAG summaries); no read files.
@@ -31,10 +32,17 @@ python -m pytest -q        # build checks
 Open `site/index.html` in a browser, or a module page directly. A page's state is kept in its address
 (`binning.html#?ex=2`), so a link opens the same view.
 
+## Offline copy
+
+`python build.py` also writes `site/nanopore-metagenomics-course.zip` (all pages; open `index.html`); the live site
+links it from the front page. For a fixed copy for one course, publish a GitHub release: the zip is attached to it.
+
 ## Layout
 
 - `modules/<nn>-<slug>/`: one folder per module: `module.yaml` (title, status), `body.html`, `module.js`,
   optional `module.css`, `data.json` (made by the example analysis), `examples.yaml` (guided examples) and
   `check.py` (rejects examples that name something not in the data).
-- `shared/`: page skeleton, styles and helpers used by every module.
+- `shared/`: page skeleton, styles and helpers used by every module; `glossary.yaml` (the glossary page);
+  `overview.json` (the numbers on the front page, made by np26 scripts/23_course_overview.py).
+- `module.yaml` may also hold `takeaways`, `discussion` and `mag_link` (opens a MAG, so other modules can link to it).
 - `build.py`: puts each page together; `tests/`: build checks.

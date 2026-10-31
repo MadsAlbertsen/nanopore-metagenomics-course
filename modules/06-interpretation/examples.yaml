@@ -6,7 +6,7 @@
 #   (comma list, default the low-carbohydrate days 6-10); mag = up to 3 picked MAGs (comma list, or none);
 #   log = 1 for a log scale in the picked-MAG chart.
 
-- title: Who takes the most reads
+- title: Who takes the most read bases
   state: {m: share, by: mag, mag: "2.359"}
   question: >-
     The bars now show the seven MAGs with the highest mean share of all read bases over the ten days. How large a

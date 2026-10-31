@@ -241,7 +241,7 @@ function drawPicked(A, B) {
     const c = change(i, A, B), va = A.map((k) => val(i, k)), vb = B.map((k) => val(i, k));
     const overlap = c.lfc >= 0 ? Math.max(...va) >= Math.min(...vb) : Math.max(...vb) >= Math.min(...va);
     const r = splitRank(i, A, B), depth = S.map((_, k) => ((M[i].share[k] / 100) * D.gb[k] * 1e9) / M[i].len);
-    return `<tr><td><i class="sw" style="background:${cats()[j]}"></i>${magLabel(i)}<div class="tax">${esc(M[i].phylum)} · ${M[i].q} · mean ${meanShare[i].toFixed(meanShare[i] >= 0.1 ? 2 : 3)}% of all read bases · <button class="link" data-unpick="${i}">remove</button></div></td>
+    return `<tr><td><i class="sw" style="background:${cats()[j]}"></i>${magLabel(i)}<div class="tax">${esc(M[i].phylum)} · ${M[i].q} · mean ${meanShare[i].toFixed(meanShare[i] >= 0.1 ? 2 : 3)}% of all read bases · <button class="link" data-unpick="${i}">remove</button> · ${magLinks(M[i].id, "interpretation", true)}</div></td>
       <td class="r">${fmtV(c.a)}</td><td class="r">${fmtV(c.b)}</td><td class="r">${ratioTxt(c.a, c.b)}<div class="tax">chart: log2 ${c.lfc.toFixed(2)}</div></td>
       <td>${overlap ? "overlap" : "no overlap"}</td><td class="r">${r.larger} of ${r.n}</td><td class="r">${Math.min(...depth).toFixed(1)}-${Math.max(...depth).toFixed(1)}x</td></tr>`;
   }).join("");

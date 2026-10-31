@@ -1,7 +1,20 @@
 number: 4
 slug: mag-quality
-title: "MAG quality: how complete, how clean"
+title: 'MAG quality: how complete, how clean'
 nav: MAG quality
-summary: >-
-  Completeness and contamination estimates (CheckM2, CheckM), the quality classes they set, and extra evidence from methylation and read support for whether a MAG is one genome.
+summary: Completeness and contamination estimates (CheckM2, CheckM), the quality classes they set, and extra evidence
+  from methylation and read support for whether a MAG is one genome.
 status: draft
+mag_link: '#?mag={id}'
+takeaways:
+- 'Completeness and contamination are estimates, not measurements; CheckM and CheckM2 can disagree by 20-28 points:
+  CheckM rated all 13 MAGs of the order TANB77 lower, which fits a lineage poorly represented in CheckM''s references.'
+- 'A quality class is a rule applied to those estimates (MIMAG high quality: more than 90% complete, less than 5% contamination,
+  rRNA and tRNA genes); read the rule, not only the label.'
+- A MAG that is one circular contig is a strong sign of a whole genome, but closing the circle is still the assembler's
+  call.
+- 'Long reads add evidence the standard tools do not see: methylation per contig and per window, and reads that cross
+  each join.'
+- 'A flag is a question, not a verdict: a misjoin, a strain region and an island with its own methylation can look alike.'
+discussion: Would you publish MAG 2.441 as it is? What would you do with contig u3347900ctg, and what extra data would
+  settle it?

@@ -4,3 +4,7 @@ ol.modules li h3 { font-size: 18px }
 ol.modules li h3 a { color: var(--ink); text-decoration: none }
 ol.modules li h3 a:hover { color: var(--accent); text-decoration: underline }
 ol.modules li p { margin: 0; color: var(--muted) }
+ol.modules { counter-reset: step }
+ol.modules li { position: relative }
+ol.modules li p.fact { font-size: 13px; color: var(--ink); border-left: 3px solid var(--accent); padding-left: 8px }
+.note a { color: var(--accent) }
