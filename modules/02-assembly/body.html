@@ -1,0 +1,115 @@
+<div class="intro">
+  <span class="kicker">Module 2</span>
+  <h1>Assembly: from overlapping reads to contigs</h1>
+  <p>An assembler gets millions of reads in no order and has to rebuild the genomes they came from. It finds reads that share sequence (overlaps), joins them into a graph and reads contigs off that graph. Repeats and closely related strains are what make this hard. Our data were assembled with myloasm (version 0.2.0, inside mmlong2), all ten samples together. The three small examples below are simulations: toy genomes and toy rules, made to show one idea each. They are not myloasm itself; the panel after them says what myloasm does, from its authors' paper.</p>
+  <div class="stats" aria-label="Our assembly in numbers: myloasm's primary assembly">
+    <div class="stat"><b>166.5 Gbp</b><span>reads in (10 samples, after filtering and trimming)</span></div>
+    <div class="stat"><b>11.5 h</b><span>myloasm run time, 60 threads</span></div>
+    <div class="stat"><b>20,442</b><span>contigs in myloasm's primary assembly, 1.87 Gbp</span></div>
+    <div class="stat"><b>939 kb</b><span>contig N50 (myloasm)</span></div>
+    <div class="stat"><b>410</b><span>contigs of 1 Mbp or more, 122 of them possibly circular (myloasm)</span></div>
+  </div>
+  <p class="note">These are myloasm's primary assembly. mmlong2 then splits contigs at likely misassemblies and drops contigs shorter than 3 kb, leaving 20,302 contigs (1.87 Gbp, N50 926 kb), 409 of 1 Mbp or more, 107 of them circular; the later modules use that set.</p>
+</div>
+<section class="panel" id="asExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel" id="secRepeat">
+  <div class="exhead"><h2>1. Why long reads make assembly easier</h2><span class="chip">simulated</span></div>
+  <div class="txt">
+    <p>Genomes contain repeats: stretches that occur more than once, such as ribosomal RNA operons or insertion sequences. Reads that fall inside a repeat look the same whichever copy they came from, so the assembler cannot tell where to go next. A read that runs through the whole repeat and into unique sequence on both sides settles it. This is a main reason why long reads give much longer contigs than short reads (see Koren and Phillippy, 2015).</p>
+    <p>The toy genome below is 60 kb long with one repeat (R) in two copies between three unique pieces (A, B, C). Reads of one fixed length are placed at random to 10x depth. Toy rule: the assembler follows the genome through a repeat copy only if at least one read covers that whole copy plus 1 kb of unique sequence on each side. Every unspanned copy ends the contig there and becomes a separate repeat node; if both copies are unspanned, they are merged into one.</p>
+  </div>
+  <div class="spctl">
+    <label>Read length <input type="range" id="rl" min="1" max="30" step="1" aria-label="Read length in kb"> <b class="num" id="rlv"></b></label>
+    <label>Repeat length <input type="range" id="rep" min="1" max="10" step="1" aria-label="Repeat length in kb"> <b class="num" id="repv"></b></label>
+  </div>
+  <div id="repSvg" class="figbox"></div>
+  <div class="legend" id="repLegend"></div>
+  <p class="result" id="repOut" aria-live="polite"></p>
+  <p class="note">Simulated: random read positions with a fixed seed, no sequencing errors, all reads the same length. Real reads vary in length, so a few long reads can span a repeat that most reads do not. Real assemblers also use other clues, such as depth (myloasm does, see below).</p>
+</section>
+
+<section class="panel" id="secSteps">
+  <div class="exhead"><h2>2. From reads to overlaps to a graph to contigs</h2><span class="chip">simulated</span></div>
+  <div class="txt">
+    <p>Nine error-free toy reads from a 24 kb genome, step by step through the overlap (string graph) approach that myloasm builds on (Myers, 2005). The assembler never sees where a read came from; it only sees which reads share sequence. Each read is a node, each overlap longer than 500 bp an edge (myloasm's default minimum). Reads lying wholly inside another read add nothing to the path and are set aside. An edge that can be reached in two hops anyway is redundant ("transitive") and removed. What is left is a chain without branches: a unitig, which becomes a contig.</p>
+  </div>
+  <div class="spctl steps" role="group" aria-label="Steps">
+    <button class="link" id="stPrev" type="button">← Back</button>
+    <div class="exlist" id="stList" role="list"></div>
+    <button class="link" id="stNext" type="button">Next →</button>
+  </div>
+  <div class="stepgrid">
+    <div id="stSvg" class="figbox"></div>
+    <div class="stside">
+      <p class="steptext" id="stText" aria-live="polite"></p>
+      <table class="sc" id="stTable"></table>
+    </div>
+  </div>
+  <p class="note">Simulated: hand-placed reads without errors, so every overlap is exact. With real reads the overlaps must be found despite errors, which is where most of an assembler's work goes.</p>
+</section>
+
+<section class="panel" id="secStrains">
+  <div class="exhead"><h2>3. Closely related strains</h2><span class="chip">simulated</span></div>
+  <div class="txt">
+    <p>A gut sample often holds two or more strains of one species that differ at a small share of positions. Their reads overlap as well as reads of one strain do. An assembler built for noisy reads has to accept some mismatches in an overlap; if it accepts as many as the strains differ by, it merges (collapses) the strains into one mixed contig.</p>
+    <p>myloasm takes another route: it first finds positions where the reads consistently disagree (likely true differences, not read errors), then refuses overlaps that disagree at such a position, while other mismatches are tolerated. Two 30 kb toy strains, reads of 5 kb with random substitution errors. Left: a mismatch-tolerant rule (join if at most 5% of the overlap differs; a generic rule, not a specific assembler). Right: the variant-aware idea. Each read keeps only its longest allowed overlap on each side: a shortcut for removing transitive edges (section 2), exact only when all overlaps are allowed; a real string graph can keep branches. Coloured bars are groups of reads joined this way; each group would become one or more contigs.</p>
+  </div>
+  <div class="spctl">
+    <label>Strains identical at <input type="range" id="sid" min="0" max="7" step="1" aria-label="Identity between the two strains"> <b class="num" id="sidv"></b></label>
+    <label>Depth strain A <input type="range" id="cova" min="2" max="40" step="1" aria-label="Depth of strain A"> <b class="num" id="covav"></b></label>
+    <label>Depth strain B <input type="range" id="covb" min="1" max="40" step="1" aria-label="Depth of strain B"> <b class="num" id="covbv"></b></label>
+    <label>Read errors <input type="range" id="err" min="0" max="4" step="1" aria-label="Substitution error rate of the reads"> <b class="num" id="errv"></b></label>
+  </div>
+  <div class="duo">
+    <div class="sub"><h3 class="subh">Mismatch-tolerant rule</h3><div id="strTol" class="figbox"></div><div class="facts" id="strTolOut"></div></div>
+    <div class="sub"><h3 class="subh">Variant-aware rule (the idea behind myloasm)</h3><div id="strVar" class="figbox"></div><div class="facts" id="strVarOut"></div></div>
+  </div>
+  <div class="legend" id="strLegend"></div>
+  <p class="note">Simulated: one region of 30 kb, every read 5 kb, substitution errors only, single positions compared instead of myloasm's 21-letter words. As in the myloasm paper, a position counts as a variant when the two most common bases are each seen in reads from both DNA strands and the rarer one passes a binomial test against an error rate of 0.025. Not modelled: the paper's strand-bias test (Fisher's exact test; a pair is rejected at odds ratio above 1.5 and p below 0.005), myloasm's base-quality check at variant positions and its relaxed threshold when no exactly matching reads exist, both of which reduce the breaks caused by read errors; and its use of depth to clean the graph.</p>
+</section>
+
+<section class="panel" id="secMyloasm">
+  <h2>What myloasm does, step by step</h2>
+  <div class="txt">
+    <p>From the myloasm paper (Shaw, Marin and Li, bioRxiv 2025; published in Nature Biotechnology 2026) and its documentation. The authors call it a "metagenomic noisy long-read assembler" that "uses polymorphic k-mers to construct a high-resolution string graph and then leverages differential abundance for graph simplification". The paper describes version 0.1.0; we ran 0.2.0, whose listed changes concern polishing, filters for low-depth contigs, removal of duplicated plasmids, input formats and the output format. The current documentation describes later versions (now 0.7; for example, since 0.3.0 the bloom filter size is chosen automatically, and since 0.6.0 polishing mostly uses abPOA instead of SPOA). The right column gives the times and counts from our run's log.</p>
+  </div>
+  <div class="scroll">
+  <table class="ct steps-table">
+    <thead><tr><th>Step</th><th>What it does (the authors' terms in quotes)</th><th>Our run</th></tr></thead>
+    <tbody>
+      <tr><td>1. Find variant positions</td><td class="w">Counts all 21-letter words (k-mers) in the reads and keeps pairs that differ only in the middle letter: "SNPmers", "pairs of k-mers that differ by a substitution in the middle base". Rare words (likely read errors) are filtered out with a bloom filter and a test for strand bias and a binomial test. This is "a form of reference-free variant calling".</td><td class="w">1.8 h (k-mer counting with a 100 GB bloom filter and --aggressive-bloom, which the documentation says "may save some memory, but lead to non-deterministic results")</td></tr>
+      <tr><td>2. Index and compare reads</td><td class="w">Reads are indexed with SNPmers and "open syncmers" (a sample of about 1 in 11 k-mers). Two reads are compared by chaining exact syncmer matches and then SNPmer matches ("double chaining"). From the share of SNPmers whose middle letter differs, myloasm estimates the true difference between the two reads with the read errors "divided out". This step is "permissive for missing syncmer or SNPmer hits between reads; error correction is not required. However, it is strict for mismatched SNPs".</td><td class="w">38.0 M reads of 1 kb or more; 0.25 h to index them</td></tr>
+      <tr><td>3. Set aside contained reads</td><td class="w">Reads lying inside a longer read with no differing SNPmer are removed; the rest are "outer reads".</td><td class="w">36.9 M reads contained, 1.14 M outer reads (first round), 0.75 h</td></tr>
+      <tr><td>4. Depth and chimeric reads</td><td class="w">All reads are mapped to the outer reads to get each read's depth, at three identity thresholds (about 99%, 99.75% and 100%), because "under extensive strain variation ... few perfect mappings may exist". Where a stretch of a read is backed by almost no other reads (depth 2 or less) right next to a stretch with more than 5 times that depth, the read is taken as chimeric or as carrying a large error and is broken in two there; then containment and mapping are repeated.</td><td class="w">2.1 h mapping (288 GB of memory at this step in myloasm's log; the job's peak, measured by the pipeline, was 323 GB); 449,913 reads (1.18%) split as "possibly chimeric or noisy"; two more rounds 1.5 h</td></tr>
+      <tr><td>5. Build the string graph</td><td class="w">Overlaps of more than 500 bp between outer reads become edges when no SNPmer differs (with a relaxed threshold where depth shows no exactly matching reads exist). Transitive edges are removed and chains without branches are collapsed into unitigs.</td><td class="w" rowspan="2">1.1 h for overlaps, cleaning, circular contigs and removing duplicates</td></tr>
+      <tr><td>6. Clean the graph</td><td class="w">First light cleaning (remove tips, pop bubbles, cut much shorter overlaps). Then a "random path model": paths whose depth stays consistent, with long and identical overlaps, get a high probability; edges rarely used by such paths are cut. This is repeated "from high to low temperature" (inspired by simulated annealing): first only clear cuts, then stricter ones on the longer unitigs. Cuts must be "safe", so they do not leave dead ends.</td></tr>
+      <tr><td>7. Circular contigs</td><td class="w">Uses the "progressive coverage filter of metaMDBG": low-depth parts are removed step by step, and an isolated unitig that loops onto itself is taken as a circular contig. Small circular elements (plasmids, phages) get a separate heuristic.</td><td class="w">122 possibly circular contigs of 1 Mbp or more</td></tr>
+      <tr><td>8. Polish and remove duplicates</td><td class="w">All reads are aligned to the unitigs and a consensus is computed with partial order alignment (SPOA) in 400 bp windows. Contigs with more than 99.9% identity over more than 99% of their length to a larger contig are duplicates; with more than 99% identity and 90% aligned they go to a separate file of "alternates".</td><td class="w">2.7 h read alignment, 1.2 h polishing; 20,442 primary contigs (plus 9,435 alternates and 16,853 duplicates in separate files)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="txt">
+    <p>Each contig name in the output carries what myloasm found: for example <code>u2658272ctg_len-2275750_circular-possibly_depth-10-9-9_duplicated-no mult=1.00</code> (example from the documentation). "circular-yes" needs a self-loop, depth above 5x and no other connections; "possibly" means a self-loop without the rest. The three depths are for about 99%, 99.75% and 100% identity. "mult" is how often 21-mers repeat within the contig; for a single genome it should be near 1.00, and above 1 can mean two strains joined into one contig.</p>
+    <p>What is not settled. The documentation lists as a limitation that myloasm may "occasionally produce chimeric misassembled contigs (like all metagenome assemblers)", and the paper says errors arise "from sequencing artifacts ... to erroneous graph resolution for regions with high similarity"; they recommend CheckM2 on long contigs. They also question the term "strain-resolved": where strains recombine, it is "not even clear what a genome assembly means". The documentation says myloasm "can resolve up to 99% ANI quite confidently"; how close two strains in our data can be and still come apart is not measured here.</p>
+  </div>
+</section>
+
+<section class="panel placeholder" id="secReal">
+  <div class="exhead"><h2>4. Real graphs from our assembly</h2><span class="chip">coming soon</span></div>
+  <p>In preparation: pieces of myloasm's assembly graph from our own data. A large repeat with the reads that span it, a species with low and with high microdiversity (one clean path against a tangle of strains), and a circular contig closing on itself. These need the graph file from the computing cluster and will be added when it arrives.</p>
+</section>
+
+<section class="panel" id="secSources">
+  <h2>Sources</h2>
+  <ul class="refs">
+    <li>Shaw J, Marin MG, Li H (2025). High-resolution metagenome assembly for modern long reads with myloasm. bioRxiv, version 1. <a href="https://doi.org/10.1101/2025.09.05.674543">doi:10.1101/2025.09.05.674543</a> (open; the source of the step table). Published as: Nature Biotechnology (2026), <a href="https://www.nature.com/articles/s41587-026-03053-z">s41587-026-03053-z</a>.</li>
+    <li>myloasm documentation: <a href="https://myloasm-docs.github.io/">myloasm-docs.github.io</a> (output format, quality control, changelog); code: <a href="https://github.com/bluenote-1577/myloasm">github.com/bluenote-1577/myloasm</a>.</li>
+    <li>Myers EW (2005). The fragment assembly string graph. Bioinformatics 21 Suppl 2: ii79-85. <a href="https://doi.org/10.1093/bioinformatics/bti1114">doi:10.1093/bioinformatics/bti1114</a> (reads as nodes, overlaps as edges, transitive reduction).</li>
+    <li>Koren S, Phillippy AM (2015). One chromosome, one contig: complete microbial genomes from long-read sequencing and assembly. Current Opinion in Microbiology 23: 110-120. <a href="https://doi.org/10.1016/j.mib.2014.11.014">doi:10.1016/j.mib.2014.11.014</a> (why read length matters for repeats).</li>
+    <li>Our run: myloasm 0.2.0 log and mmlong2 1.2.1 (command <code>myloasm reads.fastq.gz -t 60 -b 100 --clean-dir --aggressive-bloom</code>).</li>
+  </ul>
+</section>
