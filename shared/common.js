@@ -58,3 +58,12 @@ function setupExamples(host, open) {
   ui.draw();
   return ui;
 }
+
+// Links to the same MAG on the other module pages (modules with mag_link in module.yaml).
+// inline: a short "also in" list for a table row instead of a paragraph.
+function magLinks(id, current, inline = false) {
+  const links = MODULES.filter((m) => m.mag_link && m.slug !== current)
+    .map((m) => `<a href="${m.slug}.html${m.mag_link.replace("{id}", encodeURIComponent(id))}">${m.number}. ${esc(m.nav)}</a>`);
+  if (!links.length) return "";
+  return inline ? `<span class="maglinks">also in ${links.join(", ")}</span>` : `<p class="maglinks">This MAG in other modules: ${links.join(" · ")}</p>`;
+}

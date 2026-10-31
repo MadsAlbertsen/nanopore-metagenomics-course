@@ -1,7 +1,18 @@
 number: 2
 slug: assembly
-title: "Assembly: from overlapping reads to contigs"
+title: 'Assembly: from overlapping reads to contigs'
 nav: Assembly
-summary: >-
-  How a long-read assembler such as myloasm turns overlapping reads into a graph and contigs, and what repeats and closely related strains do to that graph.
+summary: How a long-read assembler such as myloasm turns overlapping reads into a graph and contigs, and what repeats
+  and closely related strains do to that graph.
 status: draft
+takeaways:
+- An assembler never sees where a read came from, only which reads overlap; contigs are paths through the graph those
+  overlaps make.
+- A read that runs through a whole repeat into unique sequence on both sides settles it; a repeat that no read happens to
+  span ends the contig, so read length and depth both matter.
+- In the toy, a mismatch-tolerant rule merged two strains 99.5% identical; a variant-aware rule kept them apart only
+  with enough depth per strain and accurate reads. myloasm finds such positions with pairs of k-mers that differ in
+  one base.
+- 'Read accuracy matters: myloasm is documented for reads of about 97% accuracy or better.'
+discussion: Two strains of one species share 99.5% of their sequence. What decides whether an assembler gives you one
+  contig or two, and which would you want for your own question?

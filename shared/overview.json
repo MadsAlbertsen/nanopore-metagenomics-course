@@ -1,0 +1,50 @@
+[
+ {
+  "module": "reads",
+  "step": "Reads",
+  "facts": [
+   "10 samples, 38.1 M reads (166.9 Gb) of 1 kb or more and mean quality Q10 or more",
+   "166.5 Gb after adapter trimming and splitting; read N50 6.0 kb"
+  ]
+ },
+ {
+  "module": "assembly",
+  "step": "Assembly",
+  "facts": [
+   "20,302 contigs after mmlong2's checks (myloasm made 20,442), 1.87 Gb, contig N50 926 kb",
+   "401 circular contigs; the longest 6.97 Mb"
+  ]
+ },
+ {
+  "module": "binning",
+  "step": "Binning",
+  "facts": [
+   "421 MAGs holding 60% of the assembly's bases",
+   "80% of all read bases (per day 74-83%)"
+  ]
+ },
+ {
+  "module": "mag-quality",
+  "step": "MAG quality",
+  "facts": [
+   "257 high and 164 medium quality (none lower: mmlong2 drops them)",
+   "102 MAGs are one circular contig; median completeness 95%, contamination 0.9% (CheckM2)"
+  ]
+ },
+ {
+  "module": "annotation",
+  "step": "Annotation",
+  "facts": [
+   "407 MAGs named to a GTDB species, 346 different species",
+   "49 species with more than one MAG"
+  ]
+ },
+ {
+  "module": "interpretation",
+  "step": "Interpretation",
+  "facts": [
+   "124 MAGs at 0.1% of read bases or more: 23 two-fold higher and 12 two-fold lower in days 6-10 than days 1-5",
+   "Bray-Curtis between days: 0.21 and 0.24 within the diet periods, 0.31 between them"
+  ]
+ }
+]

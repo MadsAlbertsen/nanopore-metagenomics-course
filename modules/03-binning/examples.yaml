@@ -36,7 +36,8 @@
   answer: >-
     Most lines of each MAG run in parallel (a short contig can be noisy): the contigs of one genome share its
     abundance in every sample, which is what binners use. Per Gb sequenced, B. caccae is on average about 2.3-2.4
-    times higher in days 6-10 than in days 1-5 and Blautia_A about 2.5 times lower. This is one person with one
+    times higher in days 6-10 than in days 1-5 and Blautia_A about 2.5 times lower (module 6 uses shares of read bases and gives 2.5
+    and 2.6). This is one person with one
     sample per day, so the change cannot be put on the diet rather than on time. Day 2 had only 1.7 Gb of reads, so
     its values are the noisiest.
 

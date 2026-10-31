@@ -1,0 +1,19 @@
+name: Release zip
+# A fixed copy of all pages for a course: publish a GitHub release (e.g. v2026.1) and the zip is attached to it.
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml && python build.py site
+      - run: gh release upload "${{ github.event.release.tag_name }}" site/nanopore-metagenomics-course.zip --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
