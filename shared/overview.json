@@ -32,6 +32,14 @@
   ]
  },
  {
+  "module": "methylation",
+  "step": "Methylation",
+  "facts": [
+   "1,057 methylation motifs found in 335 of 421 MAGs (median 3 per MAG)",
+   "149 unbinned contigs of 50 kb or more placed in a MAG by at least 2 distinct motifs and depth"
+  ]
+ },
+ {
   "module": "annotation",
   "step": "Annotation",
   "facts": [
