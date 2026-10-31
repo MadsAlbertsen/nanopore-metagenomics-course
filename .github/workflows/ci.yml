@@ -13,5 +13,5 @@ jobs:
           python-version: "3.12"
       - run: pip install pytest ruff pyyaml
       - run: ruff check . && ruff format --check .
-      - run: python -m pytest -q
+      - run: python -m pytest -q  # includes the headless-browser test (Chrome is on the runner)
       - run: python build.py
