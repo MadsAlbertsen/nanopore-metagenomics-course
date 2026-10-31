@@ -19,6 +19,7 @@ import importlib.util
 import json
 import re
 import sys
+import urllib.parse
 import zipfile
 from pathlib import Path
 
@@ -108,6 +109,15 @@ def modules_json(mods: list[dict]) -> str:
     return script_json([{k: m.get(k) for k in keys} for m in mods if m["status"] != "planned"])
 
 
+ISSUES = "https://github.com/MadsAlbertsen/nanopore-metagenomics-course/issues/new"
+
+
+def footer(title: str) -> str:
+    """The data note plus a link that opens a GitHub issue about this page."""
+    q = urllib.parse.urlencode({"title": f"[{title}] ", "body": f"Page: {title}\n\nWhat I noticed or suggest:\n"})
+    return f'{FOOTER} <a href="{ISSUES}?{esc(q)}" target="_blank" rel="noopener">Report a problem or suggestion</a>'
+
+
 def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
     d = m["dir"]
     data_path = d / "data.json"
@@ -124,7 +134,7 @@ def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
             "MODULE_JS": (d / "module.js").read_text(),
             "DATA": script_json(data),
             "EXAMPLES": script_json(examples),
-            "FOOTER": FOOTER,
+            "FOOTER": footer(m["nav"]),
         },
     )
 
@@ -154,7 +164,7 @@ def build_index(mods: list[dict], page: str, base: dict) -> str:
             "MODULE_JS": "",
             "DATA": "null",
             "EXAMPLES": "[]",
-            "FOOTER": FOOTER,
+            "FOOTER": footer("Front page"),
         },
     )
 
@@ -184,7 +194,7 @@ def build_glossary(mods: list[dict], page: str, base: dict) -> str:
             "MODULE_JS": "",
             "DATA": "null",
             "EXAMPLES": "[]",
-            "FOOTER": FOOTER,
+            "FOOTER": footer("Glossary"),
         },
     )
 

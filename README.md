@@ -26,7 +26,7 @@ MAG summaries); no read files.
 ```
 pip install pyyaml
 python build.py            # writes site/index.html and one page per module
-python -m pytest -q        # build checks
+python -m pytest -q        # build checks; with Chrome installed also loads every page and example
 ```
 
 Open `site/index.html` in a browser, or a module page directly. A page's state is kept in its address

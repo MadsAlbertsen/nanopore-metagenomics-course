@@ -18,7 +18,7 @@ set from raw reads to interpretation. The analysis behind them lives in the priv
 - data.json files are build inputs made by np26; never edit them by hand.
 - Shared look and helpers in shared/ (base.css tokens with light and dark mode, common.js); a module adds only what is
   its own. Pages load nothing at run time except Google Fonts.
-- Before a PR: python -m pytest -q, ruff check ., ruff format --check ., python build.py, and look at the changed pages
+- Before a PR: python -m pytest -q (tests/test_pages.py loads every page and example in headless Chrome), ruff check ., ruff format --check ., python build.py, and look at the changed pages
   in headless Chrome (screenshot, light and dark; simulated clicks for interactions).
 - Work on a feature branch, open a PR and merge it yourself once CI passes (gh pr merge <n> --merge), then
   git checkout main && git pull.
