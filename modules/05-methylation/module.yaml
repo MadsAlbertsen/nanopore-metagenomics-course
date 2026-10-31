@@ -1,0 +1,8 @@
+number: 5
+slug: methylation
+title: "Methylation: misassemblies, contamination and placing contigs"
+nav: Methylation
+summary: >-
+  Every genome methylates its own short motifs, and nanopore reads show it directly. How that signature finds
+  misassembled contigs and contamination, and places unbinned contigs such as plasmids in their MAG.
+status: planned

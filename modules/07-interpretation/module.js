@@ -1,4 +1,4 @@
-// Module 6: interpretation. DATA = {samples, day, diet, gb, on_assembly, phyla, mags, bc, ...} from the example analysis
+// Module 7: interpretation. DATA = {samples, day, diet, gb, on_assembly, phyla, mags, bc, ...} from the example analysis
 // (np26 scripts/22_course_interpretation.py). share = percent of the sample's read bases on the MAG's contigs.
 const D = DATA, S = D.samples, N = S.length, M = D.mags;
 const MAX_PICK = 3;
