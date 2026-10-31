@@ -159,3 +159,9 @@ dl.glossary a, .maglinks a { color: var(--accent) }
 nav.course a.gloss { margin-left: auto }
 .maglinks { font-size: 13px; color: var(--muted) }
 .intro a { color: var(--accent) }
+/* teacher notes */
+.teach h2 { font-size: 18px; text-transform: none; letter-spacing: 0; color: var(--ink) }
+.teach h2 a { color: var(--ink) }
+.teach h3 { font-size: 14px; font-weight: 600; margin-top: 4px }
+.teach ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; max-width: 95ch }
+.teach p { margin: 0; max-width: 95ch }

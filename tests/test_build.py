@@ -14,9 +14,9 @@ def test_every_page_builds(tmp_path):
     pages = build.build(tmp_path)
     mods = build.read_modules()
     built = {f"{m['slug']}.html" for m in mods if m["status"] != "planned"}
-    assert {p.name for p in pages} == {"index.html", "glossary.html", build.ZIP_NAME} | built
+    assert {p.name for p in pages} == {"index.html", "glossary.html", "teachers.html", build.ZIP_NAME} | built
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
-        assert set(z.namelist()) == {"index.html", "glossary.html"} | built
+        assert set(z.namelist()) == {"index.html", "glossary.html", "teachers.html"} | built
     for p in pages:
         if p.suffix != ".html":
             continue
