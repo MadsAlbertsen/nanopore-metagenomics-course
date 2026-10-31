@@ -1,0 +1,7 @@
+number: 2
+slug: assembly
+title: "Assembly: from overlapping reads to contigs"
+nav: Assembly
+summary: >-
+  How a long-read assembler such as myloasm turns overlapping reads into a graph and contigs, and what repeats and closely related strains do to that graph.
+status: planned

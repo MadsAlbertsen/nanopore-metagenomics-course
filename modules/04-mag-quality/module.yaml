@@ -1,0 +1,7 @@
+number: 4
+slug: mag-quality
+title: "MAG quality: how complete, how clean"
+nav: MAG quality
+summary: >-
+  Completeness and contamination from marker genes (CheckM2), quality classes, and extra evidence from methylation and read support for whether a MAG is one genome.
+status: planned
