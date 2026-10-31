@@ -63,6 +63,7 @@ def load(page: Path, fragment: str = "") -> dict:
 
 def cases() -> list[tuple[str, str, int | None]]:
     out = [("index", "index.html", None), ("glossary", "glossary.html", None)]
+    out.append(("teachers", "teachers.html", None))
     for m in build.read_modules():
         if m["status"] == "planned":
             continue

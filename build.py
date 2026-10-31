@@ -11,8 +11,9 @@ Each module is a folder modules/<nn>-<slug>/ with
   examples.yaml optional guided examples: [{title, question, answer, state}]
   check.py      optional check(data, examples): raises ValueError if an example names something not in the data
 Planned modules only appear in the navigation and on the index. Also built: glossary.html (shared/glossary.yaml),
-the index with the analysis in numbers (shared/overview.json, made by np26 scripts/23_course_overview.py) and a zip of
-all pages for offline use. Run: python build.py [out dir]
+teachers.html (shared/teachers_intro.html plus each module's teacher block: time, before, flow, discussion_points,
+pitfalls), the index with the analysis in numbers (shared/overview.json, made by np26 scripts/23_course_overview.py)
+and a zip of all pages for offline use. Run: python build.py [out dir]
 """
 
 import importlib.util
@@ -67,6 +68,8 @@ def nav(mods: list[dict], current: str | None) -> str:
             items.append(f'<a href="{m["slug"]}.html"{cur}>{label}</a>')
     cur = ' aria-current="page"' if current == "glossary" else ""
     items.append(f'<a class="gloss" href="glossary.html"{cur}>Glossary</a>')
+    cur = ' aria-current="page"' if current == "teachers" else ""
+    items.append(f'<a href="teachers.html"{cur}>For teachers</a>')
     return "".join(items)
 
 
@@ -203,6 +206,43 @@ def build_glossary(mods: list[dict], page: str, base: dict) -> str:
     )
 
 
+def build_teachers(mods: list[dict], page: str, base: dict) -> str:
+    """Teacher notes: shared/teachers_intro.html plus the teacher block of each built module's module.yaml."""
+    parts = [(SHARED / "teachers_intro.html").read_text()]
+    for m in mods:
+        t = m.get("teacher")
+        if m["status"] == "planned" or not t:
+            continue
+        lists = "".join(
+            f"<h3>{head}</h3><ul>{''.join(f'<li>{esc(x)}</li>' for x in t[key])}</ul>"
+            for key, head in (
+                ("flow", "A possible session"),
+                ("discussion_points", "Points for the discussion question"),
+                ("pitfalls", "Watch for"),
+            )
+        )
+        parts.append(
+            f'<section class="panel teach" id="{m["slug"]}"><span class="kicker">Module {m["number"]}</span>'
+            f'<h2><a href="{m["slug"]}.html">{esc(m["title"])}</a></h2>'
+            f"<p><b>Time:</b> {esc(t['time'])} <b>Before:</b> {esc(t['before'])}</p>"
+            f"<p><b>Discussion question:</b> {esc(m.get('discussion', ''))}</p>{lists}</section>"
+        )
+    return fill(
+        page,
+        {
+            **base,
+            "TITLE": "For teachers: nanopore metagenomics course",
+            "NAV": nav(mods, "teachers"),
+            "MODULE_CSS": "",
+            "BODY": "".join(parts),
+            "MODULE_JS": "",
+            "DATA": "null",
+            "EXAMPLES": "[]",
+            "FOOTER": footer("For teachers"),
+        },
+    )
+
+
 def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
@@ -216,9 +256,10 @@ def build(out: Path) -> list[Path]:
         "MODULES": modules_json(mods),
     }
     out.mkdir(parents=True, exist_ok=True)
-    written = [out / "index.html", out / "glossary.html"]
+    written = [out / "index.html", out / "glossary.html", out / "teachers.html"]
     written[0].write_text(build_index(mods, page, base))
     written[1].write_text(build_glossary(mods, page, base))
+    written[2].write_text(build_teachers(mods, page, base))
     for m in mods:
         if m["status"] == "planned":
             continue
