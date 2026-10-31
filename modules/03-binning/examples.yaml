@@ -82,4 +82,6 @@
     u3347900ctg, 635 kb together) sit with MAG 3.1230, and the first 299 kb of contig u28510213ctg is in MAG 3.1230.
     Their depth change over time lies between the two MAGs, somewhat closer to MAG 3.1230's. CheckM2 gives MAG 2.441
     8.0% contamination, among the 10 highest of 421 MAGs. Two features other than composition lean the same way;
-    whether the contigs belong to the other strain is not settled here.
+    whether the contigs belong to the other strain is not settled here. Looked at in 100 kb windows (module 4),
+    u3347900ctg is itself two-part: only its first ~368 kb carries MAG 3.1230's methylation pattern, its end carries
+    MAG 2.441's own motif.
