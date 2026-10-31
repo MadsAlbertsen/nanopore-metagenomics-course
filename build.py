@@ -115,7 +115,11 @@ ISSUES = "https://github.com/MadsAlbertsen/nanopore-metagenomics-course/issues/n
 def footer(title: str) -> str:
     """The data note plus a link that opens a GitHub issue about this page."""
     q = urllib.parse.urlencode({"title": f"[{title}] ", "body": f"Page: {title}\n\nWhat I noticed or suggest:\n"})
-    return f'{FOOTER} <a href="{ISSUES}?{esc(q)}" target="_blank" rel="noopener">Report a problem or suggestion</a>'
+    licence = (
+        'Text and data: <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>; code: MIT.'
+    )
+    report = f'<a href="{ISSUES}?{esc(q)}" target="_blank" rel="noopener">Report a problem or suggestion</a>'
+    return f"{FOOTER} {licence} {report}"
 
 
 def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
