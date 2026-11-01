@@ -1,0 +1,101 @@
+<div class="intro">
+  <span class="kicker">Module 1</span>
+  <h1>Signal: what the sequencer measures, and how methylation shows up in it</h1>
+  <p>A nanopore sequencer does not read letters. It measures the electric current through a tiny pore while one DNA strand is pulled through it, thousands of times per second, and a basecaller (Dorado) turns that current into bases. This page looks at the measurement itself: one read's current over time, how Dorado's move table splits the current into bases, how well a simple model of the pore predicts the current, and how a methylated base changes it. The data are not the stool samples of the other modules (their raw current is not part of the example analysis) but a small set that keeps it: <span data-n="nReads"></span> reads from eight activated-sludge samples, aligned to four genome bins of their co-assembly.</p>
+  <div class="stats" id="sgStats"></div>
+</div>
+<section class="panel" id="sgExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>1. What the sequencer measures</h2>
+  <p>The flow cell holds many pores, each in a membrane with a voltage across it. Ions flow through an open pore; when a DNA strand is pulled through, the bases inside the pore block part of the flow, and the current, in picoampere (pA), changes with them. A motor protein feeds the strand at about <span data-n="speedSet"></span> bases per second (the setting of this run), and the current is sampled <span data-n="rate"></span> times per second, so a base lasts about <span data-n="perBase"></span> samples on average. The trace below is one whole read: <span data-n="traceLen"></span> of current for <span data-n="traceBases"></span> bases. The strand enters the pore with the sequencing adapter and the barcode first. Dorado basecalls them, recognises the barcode and then trims these samples (adapter and barcode) from the read: its tag ts gives the number of samples trimmed from the start (Dorado's SAM specification, software-docs.nanoporetech.com/dorado/1.4.0/basecaller/sam_spec/), <span data-n="traceTs"></span> here and a median of <span data-n="tsMedian"></span> over all reads (shaded). The read's bases then start with the genome: in <span data-n="leadShare"></span> of reads at most 10 bases come before the first base that aligns to a bin. The last <span data-n="traceTail"></span> are not basecalled either. Pick a window in the first second to see the samples one by one.</p>
+  <div class="spctl"><span>Window</span><span class="sgseg" id="sgZoom" role="group" aria-label="Window width"></span><label>start <input type="range" id="sgZs" min="0" max="950" step="5" aria-label="Window start"><b id="sgZsv" class="num"></b></label></div>
+  <div id="sgTrace" class="scroll"></div>
+  <div id="sgDetail" class="scroll"></div>
+  <div class="legend" id="sgTraceLegend"></div>
+  <p class="note" id="sgTraceNote"></p>
+</section>
+
+<div class="sgtwo">
+  <section class="panel">
+    <h2>How long one base lasts</h2>
+    <p>The basecaller looks at the current in steps of <span data-n="stride"></span> samples (its stride) and writes a move table: one entry per step, 1 where a new base starts. So by the move table a base lasts <span data-n="stride"></span>, 12, 18 or more samples, never fewer. Over all reads, <span data-n="dwell6"></span> of bases got the minimum of <span data-n="stride"></span> samples and the median is <span data-n="dwellMedian"></span> samples; all reads pooled give <span data-n="dwellMean"></span> samples per base, or <span data-n="speedPooled"></span> bases per second (the median read: <span data-n="speedMedian"></span>). Check: every read has exactly one move per base (<span data-n="movesOk"></span> reads) and its move table covers the signal from ts to Dorado's end tag ns.</p>
+    <div id="sgDwell"></div>
+  </section>
+  <section class="panel">
+    <h2>Speed per read</h2>
+    <div id="sgSpeed"></div>
+    <p class="note">Bases per second of each read: its bases divided by the time from ts to ns. The motor protein's speed varies between reads and along a read.</p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>2. From signal to bases</h2>
+  <p>Each base gets the samples between two moves. The current does not belong to one base, though: several bases sit in the narrow part of the pore at once. Oxford Nanopore publishes the expected current for every 9-base stretch (k-mer) of R10.4.1 pores (the 9-mer level table, github.com/nanoporetech/kmer_models), in normalised units. To compare the read with that model, Remora (github.com/nanoporetech/remora) places every base of the bin's reference sequence on the signal: it starts from the move table and shifts the base boundaries a few samples to fit the expected levels, after scaling the read's current to the table. Pick a stretch: the top shows the samples (grey dots) with the measured mean per reference base (dark line) and the model level (dashed; ONT's 9-mer levels as Remora rescales them, in pA through the read's scaling); below are the reference bases on Remora's boundaries and the read's own bases on the move table's, coloured by their quality. Where the quality is low, bases are often wrong or missing, and the read's bases and the reference no longer line up one to one.</p>
+  <div class="sgpick" id="sgStretchPick" role="list"></div>
+  <div id="sgStretch" class="scroll"></div>
+  <div class="legend" id="sgStretchLegend"></div>
+  <p class="note" id="sgStretchNote"></p>
+</section>
+
+<div class="sgtwo">
+  <section class="panel">
+    <h2>Does the model predict the current?</h2>
+    <p>Positive control before using the model: in the read of section 1, the mean current per reference base against the model's level, at positions without a modified-base call nearby. With Dorado's own boundaries (move table, which does not use the model) the correlation is <span data-n="readMove"></span>; with Remora's boundaries <span data-n="readRefined"></span>. Over all reads the medians are <span data-n="rMove"></span> (move table) and <span data-n="rRefined"></span> (refined). The refined number is made by the fitting: a table whose levels were shuffled between k-mers (a wrong model) gives r <span data-n="rMoveShuf"></span> on the move table's boundaries but <span data-n="rShuffled"></span> after refining (median of <span data-n="nShuffled"></span> reads). The move-table number is a lower bound: the model predicts the current at least this well, and part of the gap comes from the coarse 6-sample boundaries (using only the middle half of bases of 24 samples or more gives a median of <span data-n="rMoveLong"></span>). Refined boundaries are best read as the model's view of the read: a change the model does not know, such as a methylated base, is partly absorbed by them.</p>
+    <div class="spctl"><span>Boundaries</span><span class="sgseg" id="sgFitB" role="group" aria-label="Base boundaries"></span></div>
+    <div id="sgScatter"></div>
+  </section>
+  <section class="panel">
+    <h2>Correlation per read</h2>
+    <div id="sgRHist"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>move table</span><span><i class="sw" style="background:var(--c2)"></i>refined (Remora)</span><span><i class="sw" style="background:var(--c4)"></i>refined against a shuffled table</span></div>
+    <p class="note">Pearson correlation between measured mean and model level per reference base, one value per read (shuffled table: every tenth read). Normalised units: the read's current minus its shift, divided by its scale (Remora's scale: about <span data-n="scalePa"></span> pA per unit here).</p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>3. Seeing methylation</h2>
+  <p>Besides the bases, Dorado's modified-base models give, for every A and C of a read, the probability that it carries a methyl group (6mA on A; 5mC and 4mC on C), stored in the read's MM and ML tags (SAM tag specification, samtools hts-specs). Bacteria methylate short sequence motifs (module 6), so a bin's motifs show up as sequences whose A or C is called modified far more often than the rest. A crude search: per bin, every exact sequence of 4-6 bases, ranked by the share of calls at its A (or C) with probability 0.5 or more. The table shows three motifs read from that list, each methylated in one bin only; the list for any bin is below it. A dedicated tool (Nanomotif, module 6) also finds longer and two-part motifs, which this search misses.</p>
+  <div class="sgtwo">
+    <div><h2>Share of calls modified, per motif and bin</h2><div class="scroll" id="sgMotifTable"></div>
+      <p class="note">6mA calls at the motif's A (underlined) with probability 0.5 or more, of all calls there; pooled over the eight samples. Cell colour: share (viridis).</p></div>
+    <div><h2>Top sequences of one bin</h2>
+      <div class="spctl"><label>Bin <select id="sgKbin" aria-label="Bin"></select></label><label>Modification <select id="sgKmod" aria-label="Modification"></select></label></div>
+      <div class="scroll" id="sgKmers"></div></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>What a methylated base does to the current</h2>
+  <p>For every occurrence of a motif in every read, the measured current minus the model's level, base by base around the modified A (position 0; negative positions come before it in the read), averaged per bin. The model knows only unmodified DNA. In the bins that do not methylate the motif the lines agree closely, so what is left there is the model's own small error at this sequence. In the bin that methylates it the current differs over several bases, from about 2 before to 6 after the A, as expected when several bases in the pore shape the current. The shift is small: <span data-n="effect"></span> normalised units at its largest (a unit is about <span data-n="scalePa"></span> pA), <span data-n="effectMove"></span> with the move table's boundaries; since refining partly absorbs it, read these as lower bounds. It is less than the spread between single occurrences (shaded: middle half of the methylated bin's values). One position of one read therefore says little; Dorado's modified-base models, trained with Remora, look at a stretch of signal and bases around each site (Remora's documentation, github.com/nanoporetech/remora).</p>
+  <div class="spctl"><label>Motif <select id="sgMotif" aria-label="Motif"></select></label><span>Boundaries</span><span class="sgseg" id="sgBound" role="group" aria-label="Base boundaries"></span><label class="check"><input type="checkbox" id="sgSplit"> split the methylated bin by Dorado's call</label><button class="link" id="sgCopy" type="button">Copy link to this view</button><span class="count" id="sgCopied" aria-live="polite"></span></div>
+  <div class="sgtwo">
+    <div><div id="sgProfile"></div><div class="legend" id="sgProfileLegend"></div></div>
+    <div><h2>Dorado's probability at the motif's A</h2><div id="sgMl"></div><div class="legend" id="sgMlLegend"></div>
+      <p class="note">Share of calls per probability bin (20 bins). Calls Dorado did not report are implicitly unmodified (MM flag '.') and are counted in the lowest bin.</p></div>
+  </div>
+  <p class="note" id="sgProfileNote"></p>
+</section>
+
+<div class="sgtwo">
+  <section class="panel">
+    <h2>From calls to a methylated share</h2>
+    <p>Most of Dorado's probabilities are near 0 or 1, so cutting at 0.5 sorts most calls clearly; <span data-n="mlMidOther"></span> of calls in the bins that do not methylate the motif and <span data-n="mlMidOwn"></span> in the methylating bin lie between 0.2 and 0.8. In the methylating bin, <span data-n="mlHigh"></span> of calls at the motif's A are 0.8 or more; in the other bins <span data-n="mlLow"></span> are below 0.2. A site's methylated share is the share of its reads called modified, and a motif's share pools all its sites. These reads give a median of only 1-2 reads per site, so single sites are noisy; the chart compares sites with 3 reads or more with what independent calls at the motif's pooled share would give. They are close, with a few more sites at low shares than independent calls would give (GATC: <span data-n="siteLow"></span>): some sites may be less methylated, but most calls that are not methylated are spread over many sites rather than marking a few unmethylated ones. The full data of the course (module 6, <a href="methylation.html">Methylation</a>) has many reads per site, and the methylated share per motif and contig is what binning and contig placement use there.</p>
+  </section>
+  <section class="panel">
+    <h2>Per site: observed against independent calls</h2>
+    <div id="sgSites"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>observed sites</span><span><i class="sw" style="background:var(--faint)"></i>expected if every call were independent</span></div>
+    <p class="note" id="sgSitesNote"></p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>4. Why this matters for the rest of the course</h2>
+  <p>Everything later in the course starts from Dorado's output, so its limits travel along. Bases are called from a current shaped by several bases at once, and the quality score says how sure the basecaller was; filtering (module 2) and assembly (module 3) have to live with the errors. A methylated base changes the current, and the bases show it too: over the three motifs, reads differ from the reference far more often over the motif in the bin that methylates it than in the other bins (table; a comparison between bins, not a test of the cause), while the bins' error per base overall is similar (<span data-n="errBase"></span>). The same modification calls are a signature of the genome a read came from: a cell's methyltransferase marks nearly every copy of its motif, so the methylated motifs help to check bins and to place contigs such as plasmids (module 6).</p>
+  <div class="scroll" id="sgErrors"></div>
+  <p class="note">Occurrences of the motif in the reference where the read has a different base, a missing base or an extra base inside the motif, of all occurrences covered by a read (at least 20 bases from the read's ends).</p>
+</section>

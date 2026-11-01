@@ -1,0 +1,122 @@
+# Guided examples for module 1 (signal). Each example sets the page up (state) and asks one question; the answer stays
+# hidden until clicked. Every number was computed from the example analysis (np26 scripts/30_course_signal.py data,
+# 2026-11-01) and still needs the independent check. check.py rejects settings not in data.json.
+# state keys: zw = detail window width in ms (1000, 200, 50); zs = window start in ms (0 to 1000 - zw);
+#   stretch = stretch number (1-4); fitb, bound = refined or move; motif = GATC, GANTC or GTNNAC; split = 0 or 1;
+#   kbin = bin id; kmod = 6mA, 5mC or 4mC.
+
+- title: Where the bases start
+  state: {zw: 1000, zs: 0}
+  question: >-
+    The detail shows the first second of the read. Where does Dorado start turning the current into bases, and how
+    does that compare with all reads? What did the samples before that point come from?
+  answer: >-
+    At sample 1,132 (0.23 s; the tag ts). Over all 6,379 reads the median is 0.23 s, and 90% lie between 0.17 and
+    0.36 s. In 92% of reads at most 10 bases come before the first base that aligns to a genome bin, so the bases
+    start with the genome, and the samples before ts hold the adapter and the barcode that enter the pore first. Their
+    current is in the same range as the DNA's, so the boundary is not visible by eye; Dorado finds it.
+
+- title: How long is one base?
+  state: {zw: 50, zs: 400}
+  question: >-
+    A 50 ms window (250 samples). Hover over the coloured boxes: how many samples does each base get, and in what
+    steps? How does that fit the speed of 400 bases per second?
+  answer: >-
+    22 bases start in this window, with 6, 12, 24, 30, 42 or 78 samples: always a multiple of 6, because the move
+    table moves in steps of 6 samples (the basecaller's stride). Thirteen of the 22 get the minimum of 6. At 5,000 samples
+    per second and 400 bases per second a base would last 12.5 samples; all reads pooled give 13.07 samples per base
+    (383 bases per second), the median base gets 12 and 44% of bases get 6. The speed is not even: a few slow bases
+    take many samples.
+
+- title: Model against measured
+  state: {stretch: 1}
+  question: >-
+    A clean stretch: all 40 read bases match the reference, quality 33 or more. How far apart are the measured mean
+    (dark line) and the model level (dashed), compared with how much the level changes from base to base?
+  answer: >-
+    The model levels range from 55.6 to 125.0 pA over these 40 bases, and the measured means follow them: the median
+    gap is 2.0 pA. Three bases are off by more than 8 pA, the largest 17.9 pA at reference base 21 (G). From one base
+    to the next the model level changes by a median of 20.1 pA and up to 61.5 pA, so a gap of a few pA is small
+    against the steps the current takes.
+
+- title: Where the quality drops
+  state: {stretch: 2}
+  question: >-
+    The 40 bases of the read with an insertion or deletion and the lowest mean quality. Find the bases outlined in
+    red. What does the read get wrong, and what are the quality scores there?
+  answer: >-
+    After a run of eight T, the read has GA where the reference has C: an extra G (an insertion) and an A in place of
+    the C. The quality falls from 23-25 before the run to 13 at its end and to 9 on the A and the next four bases,
+    then rises again. The quality score marks the stretch where the basecaller was unsure, and that is where the
+    errors are.
+
+- title: How good is the model?
+  state: {fitb: move}
+  question: >-
+    The scatter shows this read's measured mean per reference base against the model, with Dorado's move-table
+    boundaries. Switch to refined boundaries. Why is the refined correlation not a fair test of the model, and what
+    does the move-table number say?
+  answer: >-
+    With the move table r = 0.759 for this read (median 0.725 over all reads); with Remora's refined boundaries r =
+    0.987 (median 0.985). But refining moves the boundaries to fit the model: against a table whose levels were
+    shuffled between k-mers, refining still gives a median of 0.750 (638 reads), while the same shuffled table gives
+    r 0.00 on the move table's boundaries: the 0.750 comes entirely from the fitting. The move-table number does not
+    use the model, but it is a lower bound: the model predicts the current at least this well, and part of the gap
+    comes from the coarse 6-sample boundaries (the middle half of bases of 24 samples or more gives a median of
+    0.841).
+
+- title: Which bin methylates GATC?
+  state: {motif: GATC, kbin: "1.1314", kmod: 6mA}
+  question: >-
+    Look at the motif table and at the top sequences of bin 1.1314 (6mA). How sure can you be that this bin
+    methylates GATC, and the others do not?
+  answer: >-
+    In bin 1.1314, 80% of 58,274 calls at the A of GATC are 0.5 or more; in the other three bins 4.7-5.6%, close to
+    their share at all A (3.7-5.7%). GATC tops the bin's 4-base list, and the next 4-base sequences reach only 29-33%,
+    each a piece of GATC with one other base (ATCT, AGAT, GGAT, ...). Its 5-base list is all GATC with one more base,
+    at about 80% like GATC itself. The 6-base list also shows CCGAAA (95% at its last A), a motif this page does
+    not follow up.
+
+- title: The current at a methylated GATC
+  state: {motif: GATC, bound: refined}
+  question: >-
+    The chart shows the measured minus the model's level around the A of GATC, averaged per bin. Which positions
+    differ in bin 1.1314, and how large is the difference in pA?
+  answer: >-
+    Bin 1.1314 differs from the mean of the other three at positions -2 and -1 (lower), +1 (higher) and +4 to +5
+    (lower); the largest difference is -0.088 normalised units at -2, about 2.7 pA. The other three bins agree with
+    each other within 0.011. All these positions lie in the window where the model's 9-mer contains the A (-2 to +6).
+    The shaded middle half of single occurrences is 0.12-0.20 units wide, wider than the shift.
+
+- title: Signal and call agree
+  state: {motif: GATC, split: 1}
+  question: >-
+    Split bin 1.1314 by Dorado's call. Do the occurrences Dorado called unmodified look like the methylated bin or
+    like the other bins?
+  answer: >-
+    Like the other bins: the 11,736 occurrences called unmodified differ from the other bins' mean by at most 0.019
+    units, the 46,538 called modified by up to 0.105. So the current at GATC in this bin is shifted where Dorado calls
+    6mA: a consistency check, not an independent one, since Dorado's call uses the same current. The split is clean for
+    GATC; in GTNNAC the occurrences called unmodified still shift by 0.076 units (65% of the effect), in GANTC by
+    0.028. Whether the unmodified calls are truly unmethylated sites or missed calls, the signal alone cannot say.
+
+- title: Same pattern, other motifs
+  state: {motif: GTNNAC}
+  question: >-
+    Switch between GTNNAC (bin 3.8098) and GANTC (bin 1.197376). Is the change in current at a 6mA the same in all
+    three motifs?
+  answer: >-
+    The shape is the same: lower at -2 and -1, higher at +1, lower from +4 to +5 or +6. The size differs: largest
+    difference +0.117 at +1 for GTNNAC, -0.064 at -2 for GANTC, against at most 0.020 and 0.022 between the other
+    bins. So the 6mA leaves a similar mark whatever the motif, small at every single position.
+
+- title: Errors at methylated motifs
+  state: {motif: GANTC}
+  question: >-
+    Look at the table in section 4. How often do the reads differ from the reference over GANTC in bin 1.197376,
+    which methylates it, and in the other bins? Is bin 1.197376 simply a worse bin?
+  answer: >-
+    In 30.7% of 15,541 GANTC occurrences in bin 1.197376, against 3.3-3.7% in the other bins. It is not a worse bin:
+    its error per aligned base overall is the lowest of the four (0.67%), and its GATC and GTNNAC occurrences differ
+    in 1.3% and 2.2%. GTNNAC in bin 3.8098 shows the same (22.2% against 2.2-2.6%), GATC in bin 1.1314 less (4.7%
+    against 1.3-2.0%).

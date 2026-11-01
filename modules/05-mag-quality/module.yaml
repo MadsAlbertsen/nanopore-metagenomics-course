@@ -1,0 +1,44 @@
+number: 5
+slug: mag-quality
+title: 'MAG quality: how complete, how clean'
+nav: MAG quality
+summary: Completeness and contamination estimates (CheckM2, CheckM), the quality classes they set, and extra evidence
+  from methylation and read support for whether a MAG is one genome.
+status: draft
+mag_link: '#?mag={id}'
+takeaways:
+- 'Completeness and contamination are estimates, not measurements; CheckM and CheckM2 can disagree by 20-28 points: CheckM
+  rated all 13 MAGs of the order TANB77 lower, which fits a lineage poorly represented in CheckM''s references.'
+- 'A quality class is a rule applied to those estimates (MIMAG high quality: more than 90% complete, less than 5% contamination,
+  rRNA and tRNA genes); read the rule, not only the label.'
+- A MAG that is one circular contig is a strong sign of a whole genome, but closing the circle is still the assembler's
+  call.
+- 'Long reads add evidence the standard tools do not see: methylation per contig and per window, and reads that cross
+  each join.'
+- 'A flag is a question, not a verdict: a misjoin, a strain region and an island with its own methylation can look alike.'
+discussion: Would you publish MAG 2.441 as it is? What would you do with contig u3347900ctg, and what extra data would
+  settle it?
+teacher:
+  time: About 60 minutes (an estimate, not yet tried with students).
+  before: What a MAG is (module 4). Marker genes are explained on the page.
+  flow:
+  - '10 min: what completeness and contamination are and why they can only be estimated; CheckM against CheckM2.'
+  - '10 min: the quality rule table and example 8 (read the rule, not only the label).'
+  - '15 min: examples 1-4 in the overview plot and the MAG cards.'
+  - '15 min: examples 5 and 7 with the methylation and read-support tracks; example 6 on microdiversity.'
+  - '10 min: take-home points; let students decide keep / flag / split for one MAG before the discussion question.'
+  discussion_points:
+  - MAG 2.441 is medium quality only on CheckM2 contamination (7.98%); the methylation screen flags u3347900ctg, whose
+    first ~368 kb looks like MAG 3.1230 and whose end carries 2.441's own motif.
+  - 'Data that would help: CheckM2 without that contig, reads across the ~368 kb junction, and more strain-resolved assembly;
+    publishing it with the flag stated is also defensible.'
+  - 'As example 5 says: a join between two strains of one species leaves few clipped reads, so read support alone cannot
+    settle it (module 3 explains why strains are hard to assemble apart).'
+  pitfalls:
+  - Completeness and contamination are estimates; 5% contamination does not mean 5% of the sequence is foreign.
+  - 'CheckM and CheckM2 differ most for one lineage here: all 13 TANB77 MAGs are 19.8-28.4 points lower by CheckM (example
+    3).'
+  - 'A methylation flag says the methylation differs, not that the contig is foreign: islands and strain regions can look
+    the same.'
+  - mmlong2's tRNA condition accepts any tRNAscan-SE count (example 8), so one 'high quality' MAG would be medium quality
+    read as MIMAG intends.

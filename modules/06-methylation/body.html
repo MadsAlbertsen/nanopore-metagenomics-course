@@ -1,0 +1,107 @@
+<div class="intro">
+  <span class="kicker">Module 6</span>
+  <h1>Methylation: misassemblies, contamination and placing contigs</h1>
+  <p>Bacteria mark their own DNA. Each genome's methyltransferases add a methyl group at short sequence motifs, and nanopore reads carry those marks: the basecaller reads them along with the bases. A genome's set of methylated motifs is therefore a signature of the cell its DNA came from, a signal separate from depth and sequence composition. This page shows how the example analysis uses that signature three ways: to find contigs that do not belong in their MAG, to find places inside a contig where two different sequences were joined, and to place contigs that binning left out, such as plasmids, in a MAG. Each use has a test with a known answer, and each has limits.</p>
+  <div class="stats" id="meStats"></div>
+</div>
+<section class="panel" id="meExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<div class="metwo">
+  <section class="panel">
+    <h2>1. A genome's own signature</h2>
+    <p>Methyltransferases recognise a short motif, such as GATC, and methylate an adenine (6mA) or a cytosine (5mC, 4mC) in it. Many are part of restriction-modification systems: a restriction enzyme cuts DNA where the motif is not methylated, which protects the cell against phages. (The Nanomotif paper, Heidelbach et al. 2024, a bioRxiv preprint, describes this background.) Because the enzyme works on every copy of its motif, nearly all sites are marked: here the median motif is methylated at <span data-n="fracMod"></span> of its sites in its MAG (Nanomotif reports only motifs methylated at most sites). Using methylation to bin genomes and to link plasmids to their hosts was shown earlier with PacBio reads (Beaulaurier et al. 2018, Nature Biotechnology).</p>
+    <p>Nanomotif finds the motifs of each MAG from the reads' methylation calls. It found <span data-n="motifs"></span> motifs (<span data-n="mods"></span>) in <span data-n="magsWith"></span> MAGs, a median of <span data-n="perMag"></span> per MAG. Some motifs are common: the chart shows how many MAGs share each. All <span data-n="shallow"></span> MAGs below 5x lack motifs (too few reads per site to call methylation), and <span data-n="noMotif10"></span> MAGs without motifs are below 10x.</p>
+  </section>
+  <section class="panel">
+    <h2>Motifs shared by many MAGs</h2>
+    <div id="meTop"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>6mA</span><span><i class="sw" style="background:var(--c2)"></i>5mC</span><span><i class="sw" style="background:var(--c3)"></i>4mC</span><span>· bar: MAGs whose motif list holds it</span></div>
+    <h2 style="margin-top:6px">MAGs with and without motifs, by depth</h2>
+    <div id="meDepth"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>with motifs</span><span><i class="sw" style="background:var(--faint)"></i>without</span></div>
+  </section>
+</div>
+
+<div class="metwo">
+  <section class="panel">
+    <h2>2. A MAG's fingerprint</h2>
+    <p>For every contig with at least 5x depth, the analysis counts, for each motif Nanomotif found in any MAG, how many of its sites are covered and how many are methylated (a site counts as methylated when at least half of its reads say so). The share of methylated sites per contig and motif is the fingerprint: a column per motif, a row per contig. Contigs of one genome should look alike. A motif counts as methylated at 60% of sites or more, unmethylated at 25% or less; with fewer than 10 sites it is unknown. Pick a MAG below, or open a guided example.</p>
+  </section>
+  <section class="panel">
+    <h2>3. Contamination: each contig against the rest of its MAG</h2>
+    <p>The screen compares each contig with the rest of its MAG (a median over the other contigs, weighted by their sites). A contig that lacks a motif the rest has, or carries one the rest lacks, is in conflict; two conflicts or more flag it. Known answer first: <span data-n="cutGenomes"></span> circular single-contig high-quality MAGs were cut into 100 kb pieces and each received one piece from a genome with other motifs, three times over. The screen flagged <span data-n="cutMoved"></span> moved pieces and <span data-n="cutKept"></span> pieces left in place. On the real MAGs it flags <span data-n="flagged"></span> of <span data-n="informative"></span> contigs with enough data, in <span data-n="flaggedMags"></span> MAGs; <span data-n="noInfo"></span> binned contigs have too little data (mostly below 5x).</p>
+  </section>
+</div>
+
+<section class="spctl panel" aria-label="MAG settings">
+  <label>MAG <input id="meFind" list="meMags" placeholder="find a MAG" aria-label="Find a MAG" style="width:220px"></label>
+  <datalist id="meMags"></datalist>
+  <span class="count" id="meMagName"></span>
+  <button class="link" id="meCopy" type="button">Copy link to this view</button>
+  <span class="count" id="meCopied" aria-live="polite"></span>
+</section>
+<div class="megrid">
+  <section class="panel"><h2>Fingerprint</h2>
+    <div class="legend"><span>Share of motif sites methylated</span><span class="ramp" id="meRamp"></span><span>0 → 1</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v1)"></i>lacks the rest's motif</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v2)"></i>extra motif</span><span><i class="sw" style="background:repeating-linear-gradient(135deg,var(--v4) 0 2px,transparent 2px 5px)"></i>fewer than 10 sites</span></div>
+    <div class="scroll" id="meFp"></div>
+    <p class="note">Rows: contigs (colour square: the screen's verdict); columns: motifs methylated in at least one contig of the MAG. Hover a cell for the numbers.</p>
+  </section>
+  <section class="panel"><h2>Flagged contigs in all MAGs</h2>
+    <div class="scroll mescroll" id="meFlagged"></div>
+    <p class="note">Contigs with two or more conflicting motifs, longest first. Click one to open its MAG.</p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>4. Misassemblies: each 100 kb window against the rest of its contig</h2>
+  <p>The same comparison inside a contig finds joins: every contig of 200 kb or more is cut into 100 kb windows, each compared with the rest of its contig. In a simulation, a stretch of another genome inserted into a contig was flagged, the methylation change was placed within about 1 kb of both joins, and reads were clipped at both, so splits were proposed; an island with its own methylation in reads of the same genome was flagged without clipping (methylation only). On real data, <span data-n="winCut"></span> of windows were flagged in the cut-test genomes, <span data-n="winBinned"></span> in contigs of MAGs and <span data-n="winUnbinned"></span> in contigs outside MAGs. Reads cross the edges of flagged windows like any other position (median span ratio <span data-n="spanEdge"></span>, as the baseline's <span data-n="spanBase"></span>; <span data-n="weakEdge"></span> edges weak), so most flags are stretches with their own methylation, not assembly errors. Of <span data-n="bpAll"></span> edges, <span data-n="bpSplit"></span> have a proposed split (many clipped reads, or no reads crossing), <span data-n="bpMags"></span>. A join between two strains of one species leaves few clipped reads, so reads cannot rule that case out.</p>
+  <div class="spctl"><label>Contig <select id="meWin" aria-label="Contig whose windows are shown"></select></label><span class="count">contigs of the open MAG with a flagged window</span></div>
+  <div class="scroll" id="meTrack"></div>
+  <div id="meWinMotifs"></div>
+  <p class="note">Track: thin bar the contig against the rest of the MAG, thick bar its 100 kb windows against the rest of the contig. Triangles: edges of flagged windows (filled: few or no reads cross). Short line under an edge: where the methylation changes; dark vertical line: a proposed split. The table: for the motifs in conflict in any window, methylated sites of covered sites per window.</p>
+</section>
+
+<div class="metwo">
+  <section class="panel">
+    <h2>5. Placing contigs and plasmids</h2>
+    <p>A cell's methyltransferases also mark plasmids and phages inside it, so a contig binning left out can be placed by matching its methylated motifs to a MAG's (Nanomotif does this too; the analysis uses its own version). A contig fits a MAG when no motif conflicts and at least one methylated motif is shared; it is placed when one MAG shares more methylated motifs than any other. Known answer: each binned contig was taken out of its MAG and placed as if unbinned. Of <span data-n="ctrl"></span> such contigs with a methylated motif, <span data-n="ctrlRight"></span> went back to their own MAG, <span data-n="ctrlWrong"></span> to another, the rest nowhere or to a tie. Contigs of single-contig MAGs have no MAG left to go to (host absent): <span data-n="absent"></span> were placed anyway; these contigs are all 200 kb or more, so they say nothing about short ones. Of <span data-n="unb"></span> unbinned contigs with a methylated motif, <span data-n="unbPlaced"></span> were placed by methylation; of <span data-n="circ"></span> circular ones (likely plasmids and phages), <span data-n="circPlaced"></span>. Wrong placements are mostly short contigs and contigs that share one distinct motif (related forms such as CCWGG, CCAGG and CCTGG count once): <span data-n="wrongShort"></span> of placements under 50 kb and <span data-n="wrongOne"></span> on one distinct motif were wrong.</p>
+  </section>
+  <section class="panel">
+    <h2>Second checks that do not use methylation: depth and composition</h2>
+    <p>Depth: a contig from a cell should rise and fall with that cell's genome over the ten days. The check compares the shape of the depth profile (log depth per Gb sequenced, centred and scaled), not its level, so a plasmid with a constant number of copies per cell still matches its host; a copy number that changes over the days makes the check miss true placements, and days with depth near zero make it noisier. Composition: the contig's tetranucleotide profile against each MAG's. For each check all MAGs are ranked, and it passes when the placed MAG is among the 3 best (a binned contig's own MAG without it). In the control, wrong placements fell from <span data-n="cMeth"></span> of those kept with methylation alone to <span data-n="cDepth"></span> with depth, <span data-n="cComp"></span> with composition and <span data-n="cBoth"></span> with both; composition kept more of the right ones (<span data-n="keepComp"></span>, depth <span data-n="keepDepth"></span>). Binning used depth and composition, so these numbers are an upper bound. Composition kept only <span data-n="circComp"></span> circular placements: plasmids and phages can differ in composition from their host, so it is no usable check for them, and for circular contigs the page leans on methylation and depth (<span data-n="circDepth"></span>).</p>
+    <p class="concl"><b>Conclusion.</b> Methylation alone over-places short contigs and contigs that share few distinct motifs with a MAG. A second check cuts the wrong share in the control to 2-3%. With depth support, placements of contigs of 50 kb or more were <span data-n="longRight"></span> right, short ones only <span data-n="shortRight"></span> (few contigs). The short control contigs favour both checks (binners added them because composition and depth fit), and unbinned short contigs are shorter still. So for unbinned contigs expect roughly 5-10% of placements with composition or both checks to be wrong, and about 1 in 10 with depth alone; all are lower bounds. Trust placements of contigs of 50 kb or more that share at least 2 distinct methylated motifs (related forms such as CCWGG, CCAGG and CCTGG count once) and whose depth follows the MAG: in the control <span data-n="trustCtrl"></span> such placements were wrong; <span data-n="trustUnb"></span> unbinned contigs qualify, and <span data-n="trustCirc"></span> circular contigs of any length share at least 2 distinct motifs with depth support. A placement means "carries a compatible methylation pattern and follows the MAG's depth (or composition)", not proof of belonging.</p>
+  </section>
+</div>
+<section class="panel">
+  <h2>Placement results: four checks side by side</h2>
+  <div class="scroll" id="meChecks"></div>
+  <p class="note" id="meChecksNote"></p>
+  <h2 style="margin-top:8px">Control by number of distinct shared methylated motifs</h2>
+  <div class="scroll" id="meCtrl"></div>
+  <p class="note">Control: binned contigs whose MAG has other contigs, each placed with its own MAG's profile left out. Right / wrong: placed in its own MAG or another; with depth: and that MAG among the 3 whose depth the contig follows best. Distinct motifs: related forms of one specificity (CCWGG, CCAGG and CCTGG; CTGCAG and CTGCAGT; a motif and its reverse complement) count once. "Shared motifs" elsewhere on the page counts all forms.</p>
+</section>
+<section class="spctl panel" aria-label="Placement settings">
+  <label>Contigs <select id="meSet" aria-label="Which contigs">
+    <option value="circular">Unbinned, circular</option><option value="unbinned">Unbinned, all</option>
+    <option value="control">Control: binned, own MAG left out</option><option value="absent">Host absent: single-contig MAGs</option>
+  </select></label>
+  <label>Show <select id="meShow" aria-label="Which outcomes">
+    <option value="trusted">Trusted: ≥ 50 kb, ≥ 2 distinct motifs, depth support</option><option value="depth">Placed, with depth support</option><option value="comp">Placed, with composition support</option><option value="both">Placed, with both</option><option value="placed">Placed by methylation alone</option><option value="all">All with a methylated motif</option>
+  </select></label>
+  <label>Length <select id="meLen" aria-label="Contig length">
+    <option value="all">All</option><option value="short">Under 50 kb</option><option value="mid">50-200 kb</option><option value="long">200 kb or more</option>
+  </select></label>
+  <span class="count" id="mePCount"></span>
+</section>
+<div class="spgrid">
+  <section class="panel" id="mePCard"></section>
+  <aside><section class="panel list melist"><h2>Contigs</h2><div class="rows" id="mePRows" role="list"></div></section></aside>
+</div>
+
+<section class="panel">
+  <h2>6. Where it fails</h2>
+  <p>Methylation only helps where it can be measured and where genomes differ. Below 5x depth there is no data: all <span data-n="shallow"></span> MAGs under 5x lack motifs, and <span data-n="noInfo"></span> binned contigs have too little methylation data to be screened. Common motifs carry little information: GATC is in the motif lists of <span data-n="gatc"></span> MAGs, and a contig methylated only at GATC-like motifs fits many MAGs equally well, so it stays unplaced (a tie). Two MAGs that share all their motifs cannot be told apart, which can happen for close strains; a strain that differs in one methyltransferase can, as module 5's MAG 2.441 shows. Short contigs have few motif sites, so fewer motifs are known and conflicts can be missed, which fits short placements going wrong more often. A low-depth MAG with little known methylation conflicts with almost nothing, so it can attract wrong placements (example 5). Plasmids and phages can carry their own methyltransferases, move between hosts, or block methylation; then their pattern does not match their host's.</p>
+</section>

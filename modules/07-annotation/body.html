@@ -1,0 +1,108 @@
+<div class="intro">
+  <span class="kicker">Module 7</span>
+  <h1>Annotation: what is in a genome, and how sure are we</h1>
+  <p>Annotation answers two questions about a MAG: which organism is it, and what can it do? Both answers are predictions made by comparing the MAG with reference databases, and each comes with evidence of different strength. GTDB-Tk (<span data-n="gtdbVersion"></span>) names every MAG from its marker genes and its similarity to reference genomes. Bakta (<span data-n="baktaVersion"></span>) finds the genes in each MAG and names them by similarity to known proteins. For each claim this page shows what it rests on: how close the nearest reference genome is and how much of it aligns, and for each gene which database match gave it its name, or that nothing did.</p>
+  <div class="stats" id="anStats"></div>
+</div>
+<section class="panel" id="anExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>1. How GTDB-Tk names a MAG</h2>
+    <p>GTDB-Tk finds 120 bacterial (or 53 archaeal) marker genes in a MAG, places the MAG in a tree of reference genomes from the Genome Taxonomy Database (GTDB), and compares it with the closest reference genomes by average nucleotide identity (ANI) (Chaumeil et al. 2022, Bioinformatics). A MAG gets a species name when its ANI to that species' reference genome is within the species' radius (95% for most species) and enough of the genomes align: an alignment fraction (AF) of 0.5 or more, where GTDB-Tk takes the larger of the two genomes' aligned shares (GTDB-Tk documentation, version 2.5: --min_af and summary.tsv). Here <span data-n="species"></span> MAGs got a species name, at a median ANI of <span data-n="spAni"></span> and a median AF of <span data-n="spAf"></span>. When no reference is close enough, the name stops at a higher rank, chosen from the MAG's position in the tree, and GTDB-Tk reports the relative evolutionary divergence (RED), a scaled depth in the tree that GTDB uses to set ranks (Parks et al. 2018, Nature Biotechnology); all MAGs without a species name here have one. The chart shows each MAG's closest reference.</p>
+  </section>
+  <section class="panel">
+    <h2>2. Latin names, placeholder names and genus only</h2>
+    <p>A species name is not always a Latin name. GTDB gives a species without a published Latin name, often one known only from MAGs, a placeholder name such as CAG-417 sp000432835, after the genome that defines the species. Here <span data-n="latin"></span> MAGs have a Latin species name, <span data-n="placeholder"></span> a placeholder name and <span data-n="genusOnly"></span> are named only to genus; no MAG stops above genus. Of those <span data-n="genusOnly"></span>, <span data-n="byTree"></span> were named from the tree alone, <span data-n="byRed"></span> by RED, and <span data-n="byAni"></span> had a close reference genome but missed its radius or the AF limit (examples 2 and 3). <span data-n="archaea"></span> is an archaeon. A placeholder name or a missing species says the organism is little studied, and that matters for its genes: there are fewer known proteins to compare them with.</p>
+    <div class="scroll" id="anNovel"></div>
+    <p class="note">MAGs without a species name. Closest reference: the highest ANI GTDB-Tk reports for the MAG (blank: none close enough to compute). Click a row to open the MAG.</p>
+  </section>
+</div>
+
+<section class="spctl panel" aria-label="MAG">
+  <label>MAG <input id="anFind" list="anMags" placeholder="find a MAG" aria-label="Find a MAG" style="width:240px"></label>
+  <datalist id="anMags"></datalist>
+  <button class="link" id="anCopy" type="button">Copy link to this view</button>
+  <span class="count" id="anCopied" aria-live="polite"></span>
+</section>
+<div class="spgrid">
+  <div class="detail">
+    <section class="panel">
+      <h2>Closest reference genome of each MAG</h2>
+      <div class="plotwrap" id="anAni"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>species name</span><span><i class="sw" style="background:var(--c2)"></i>no species name</span><span>· dashed: ANI 95% (most species' radius) and AF 0.5 · ring: the open MAG</span></div>
+      <p class="note" id="anAniNote"></p>
+    </section>
+    <section class="panel">
+      <h2>Share of genes without a name, per MAG</h2>
+      <div class="plotwrap" id="anHyp"></div>
+      <p class="note">One dot per MAG: hypothetical proteins as a share of its protein-coding genes (CDS). Bar: median of the row. Rows with one MAG show its dot only. Click a dot to open the MAG.</p>
+    </section>
+  </div>
+  <aside><section class="panel" id="anCard" aria-live="polite"></section></aside>
+</div>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>3. How many genes get a name</h2>
+    <p>Bakta finds the protein-coding genes (CDS) of a MAG and compares each predicted protein with known proteins. Of <span data-n="cds"></span> CDS in the 421 MAGs, <span data-n="hyp"></span> stay "hypothetical protein": no match gave them a name. Per MAG the share runs from <span data-n="hypRange"></span> (median <span data-n="hypMedian"></span>, half of the MAGs between <span data-n="hypIqr"></span>). It goes with how well the lineage is known: the median is <span data-n="hypLatin"></span> for MAGs with a Latin species name, <span data-n="hypPlaceholder"></span> with a placeholder name and <span data-n="hypNone"></span> for those named to genus only; Bacteroidota have a median of <span data-n="hypBact"></span>, Bacillota <span data-n="hypBaci"></span>. The highest share is the one archaeon, <i>Methanocatella smithii</i> (<span data-n="hypArch"></span>). Bakta "was designed to annotate bacteria (isolates &amp; MAGs) and plasmids, only" (Bakta documentation), and its database is built from bacterial and phage proteins (Schwengers et al. 2021), so an archaeal genome finds few matches (example 4).</p>
+  </section>
+  <section class="panel">
+    <h2>4. What a gene name rests on</h2>
+    <p>Bakta looks for evidence in steps (Schwengers et al. 2021, Microbial Genomics). With the light database used here, the main evidence for a protein is a match to a UniRef50 cluster: a group of known proteins that are at least 50% identical to its representative (Suzek et al. 2015, Bioinformatics). A match counts when the two proteins align over at least 80% of both and are at least 50% identical; the cluster's name becomes the gene's name. The median identity of the matches is <span data-n="idMedian"></span>, and <span data-n="idHigh"></span> are 90% identical or more: most names are carried over from a related protein, not an identical one. Some names say little: <span data-n="vague"></span> named proteins are a domain of unknown function (DUF) or "uncharacterized". Hypothetical proteins are searched for Pfam domains (Mistry et al. 2021, Nucleic Acids Research); <span data-n="pfam"></span> have one, a hint at their function that Bakta does not turn into a name (the bar below counts in "Pfam domain only" those without a cluster match).</p>
+  </section>
+</div>
+<div class="antwo">
+  <section class="panel">
+    <h2>Evidence for each gene, all MAGs</h2>
+    <div id="anEvBar"></div>
+    <div class="legend" id="anEvLegend"></div>
+  </section>
+  <section class="panel">
+    <h2>Identity to the cluster's representative</h2>
+    <div id="anIdHist"></div>
+    <p class="note">Named and unnamed cluster matches (<span data-n="clusterHits"></span> CDS), in 5% steps of amino-acid identity. Bakta's light database holds only UniRef50 clusters, so 50% is the floor.</p>
+  </section>
+</div>
+
+<section class="panel" id="anMap">
+  <h2>5. Gene map</h2>
+  <p>Eight MAGs, several of them also shown in other modules, with every gene in place. Each arrow is one gene on its strand, coloured by the evidence behind its name; hover for the product, the identity to the cluster's representative and any Pfam domains. Click the contig overview to move the window, or search for a product, gene symbol or Pfam domain.</p>
+  <div class="spctl">
+    <label>MAG <select id="anMapMag" aria-label="MAG shown in the gene map"></select></label>
+    <label>Contig <select id="anCtg" aria-label="Contig"></select></label>
+    <label>Window <select id="anWin" aria-label="Window width"><option value="10">10 kb</option><option value="20">20 kb</option><option value="50">50 kb</option></select></label>
+    <button class="link" id="anPrev" type="button">← Back</button><button class="link" id="anNext" type="button">Forward →</button>
+    <label>Find <input id="anQ" type="search" placeholder="e.g. Tet(W), MCR_alpha, flagellin" aria-label="Find a product, gene or Pfam domain" style="width:230px"></label>
+    <span class="count" id="anMapInfo"></span>
+  </div>
+  <div class="legend" id="anMapLegend"></div>
+  <div class="scroll" id="anOverview"></div>
+  <div class="scroll" id="anZoom"></div>
+  <div class="anmapgrid">
+    <div class="scroll antable" id="anGenes"></div>
+    <div><h3 class="anh3">Search results</h3><div class="scroll antable" id="anHits"></div></div>
+  </div>
+  <p class="note">Positions in bp on the contig. Identity: amino-acid identity to the representative of the matched UniRef50 cluster (for resistance genes too; AMRFinderPlus's own identity to its reference protein is not in Bakta's tables). Contig labels: the module-5 methylation screen's verdict where it flagged a contig.</p>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>6. Resistance genes: a name is not a trait</h2>
+    <p>Bakta runs AMRFinderPlus, NCBI's tool for resistance genes (Feldgarden et al. 2021, Scientific Reports). It named <span data-n="amrGenes"></span> genes in <span data-n="amrMags"></span> MAGs by a match to a reference resistance protein, most often tetracycline ribosomal protection proteins (table). A further <span data-n="amrFam"></span> genes in <span data-n="amrFamMags"></span> MAGs matched only a resistance-protein family model; these include regulators and sensors such as VanR- and BlaR1-family proteins, which do not give resistance on their own. A match says that a gene like a known resistance gene is there. It does not say that the gene is active or that the bacterium survives the drug; that needs growth tests. Only the MAGs were annotated, so plasmids and other contigs outside the MAGs are missing here. The data are from one person and have no drug tests, so these genes say nothing about the diet or about how this person would respond to antibiotics.</p>
+  </section>
+  <section class="panel">
+    <h2>Genes named by a reference resistance protein</h2>
+    <div class="scroll anamr" id="anAmr"></div>
+    <p class="note">AMRFinderPlus protein matches, by product. Click a row to list its MAGs, then a MAG to open it.</p>
+    <div id="anAmrMags"></div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>7. Where annotation falls short</h2>
+  <p>Every name on this page is a prediction from similarity, and its strength depends on the reference data. Lineages known mainly from genomes have few studied proteins, so most of their genes stay hypothetical, and a database built for bacteria leaves an archaeon's key genes unnamed even where a Pfam domain shows what they are (example 4). The light database matches proteins to clusters at 50% identity or more, so a name often comes from a distant relative and says the protein family more than its exact role. GTDB names follow fixed lines (a 95% ANI radius, AF 0.5): for a MAG that is about 94-95% identical to many species, as in example 3, GTDB-Tk cannot assign an existing species, and a fixed boundary cannot separate genomes this close to it. A gene missing from a MAG may sit in the part of the genome that was not binned (most MAGs here are less than 100% complete, module 5), and genes on plasmids or phages outside the MAG are not annotated at all. This page does not compare the two diet periods; module 8 does, using abundance, not genes.</p>
+</section>

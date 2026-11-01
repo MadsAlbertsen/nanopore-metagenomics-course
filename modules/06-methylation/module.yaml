@@ -1,0 +1,52 @@
+number: 6
+slug: methylation
+title: "Methylation: misassemblies, contamination and placing contigs"
+nav: Methylation
+summary: >-
+  Every genome methylates its own short motifs, and nanopore reads show it directly. How that signature finds
+  misassembled contigs and contamination, and places unbinned contigs such as plasmids in their MAG.
+status: draft
+mag_link: "#?mag={id}"
+takeaways:
+  - "A genome's methyltransferases mark nearly every copy of their motifs (median 96.6% of sites here), so the set of
+    methylated motifs is a signature of the cell a contig came from, a signal separate from depth and composition."
+  - "Compared with the rest of its MAG, a contig with two or more conflicting motifs is flagged: in the cut-genome test
+    264 of 264 moved pieces and 0.47% of the pieces left in place."
+  - "Windows inside a contig find joins of different sequences; reads tell an assembly error from an island or strain
+    region only where they are clipped or fail to cross, and a join between two strains of one species leaves few
+    clipped reads."
+  - "Methylation alone places some contigs wrongly (10% of placements in the test), mostly short ones and those sharing
+    one distinct motif; a second check by depth or composition cuts that to 2-3%. Unbinned placements are expected to
+    be roughly 5-10% wrong with composition or both checks, about 1 in 10 with depth alone; all lower bounds."
+  - "Trust placements of contigs of 50 kb or more that share at least 2 distinct methylated motifs (related forms such
+    as CCWGG, CCAGG and CCTGG count once) and whose depth follows the MAG: 6 of 431 such placements were wrong in the
+    test; 149 unbinned contigs qualify."
+  - "Common motifs such as GATC, shallow genomes (no data below 5x) and plasmids or phages with their own
+    methyltransferases are where methylation says little."
+discussion: >-
+  Contig u4270247ctg is circular, shares four methylated motifs with MAG 2.126 and with no other MAG, but its depth
+  runs against the MAG's. Would you add it to the MAG, and what further evidence would settle it?
+teacher:
+  time: About 75 minutes (an estimate, not yet tried with students).
+  before: What a MAG and binning are (module 4); module 5's MAG cards help but are not needed.
+  flow:
+    - "10 min: why methylation is a signature (section 1); the common-motif chart and why shallow MAGs have no motifs."
+    - "15 min: fingerprints and the contig screen with the cut-genome test (examples 1 and 2)."
+    - "15 min: windows inside contigs, read support and proposed splits (example 3)."
+    - "25 min: placing contigs: the known-answer test, the four checks side by side, then examples 4-8."
+    - "10 min: where it fails; take-home points and the discussion question."
+  discussion_points:
+    - "Methylation fits u4270247ctg to MAG 2.126 on four motifs (three of 2.126's five Nanomotif motifs), but depth
+      ranks that MAG 354 of 421 and composition 82. A changing plasmid copy number would explain a depth miss; a
+      mobile element in another cell with the same motifs would explain both."
+    - "Evidence that would help: the element's genes (plasmid or phage, host range), its depth in more samples, or a
+      method that links DNA within one cell, such as proximity ligation (Hi-C)."
+    - "Composition is no usable check for plasmids and phages here: it kept 22 of 61 circular placements."
+  pitfalls:
+    - "Count distinct motifs, not all forms: CCWGG, CCAGG and CCTGG are one specificity, as are CTGCAG and CTGCAGT and
+      a motif and its reverse complement."
+    - "The control numbers are an upper bound: binning used depth and composition, and the short control contigs were
+      binned because they fit; unbinned short contigs are shorter still."
+    - "A flag means the methylation differs, not that the contig is foreign: islands, phages and strain regions can
+      look the same."
+    - "A low-depth MAG with few known motifs conflicts with almost nothing and can attract wrong placements (example 5)."

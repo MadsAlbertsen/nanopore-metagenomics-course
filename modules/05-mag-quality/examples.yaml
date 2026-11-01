@@ -1,0 +1,127 @@
+# Guided examples for module 5 (MAG quality). Each example sets the page up (state) and asks one question; the answer
+# stays hidden until clicked. Every number was computed from the example analysis (mmlong2 MAG table and the MAG
+# explorer's methylation screen, window motif table, read check and breakpoints; 2026-10-31); revised after the
+# independent check (2026-10-31). check.py rejects MAGs or settings not in data.json.
+# state keys: mag = MAG whose card is open; color = q, circ, rrna, trna, meth, var, diff, gunc, cov;
+#   est = c2 (CheckM2) or c1 (CheckM version 1) on the axes; show = all, HQ, MQ; sort = cont, comp, diff, var, flag, cov.
+
+- title: A clean, circular genome
+  state: {mag: c.32, color: circ}
+  question: >-
+    Open: Butyrivibrio_A crossota (MAG c.32), one circular contig. Go through its checklist. Which evidence says it is
+    one complete genome with nothing else in it, and which test cannot be applied to a MAG of one contig?
+  answer: >-
+    Everything agrees. CheckM2 gives 100% completeness and 0.34% contamination, CheckM 99.3% and 0.67% with no strain
+    heterogeneity. It carries 4 copies each of the 5S, 16S and 23S rRNA genes, and Bakta and tRNAscan-SE find 21 and 22 distinct
+    tRNA types (types, not amino acids, which MIMAG counts). GUNC's clade separation score is 0, and there are only 43
+    single-base variant sites (0.002%) despite a depth of about 3,100x. The
+    contig is 2.40 Mb and closed into a circle. The contig-against-MAG methylation test needs a rest of the MAG to
+    compare with, so it cannot test this MAG; the window test can, and all 24 windows of 100 kb agree with the rest of
+    the contig. A circle is the assembler's call: these checks make a wrong join unlikely, but do not prove there is none.
+
+- title: Missing rRNA genes
+  state: {mag: "2.337", color: rrna}
+  question: >-
+    Colour shows the rRNA genes. Ten MAGs lack at least one of the 5S, 16S and 23S genes. Open: Mediterraneibacter_A
+    sp934418295 (MAG 2.337), the most complete of them by CheckM2. Is a missing rRNA gene what keeps these MAGs
+    from high quality?
+  answer: >-
+    No. MAG 2.337 has a 23S gene but no 5S or 16S, and 16 and 15 unique tRNAs, but CheckM2 puts it at 76.6% complete,
+    already below the 90% the rule asks for; the other nine are less complete still. The other way round, all 257 MAGs
+    with CheckM2 completeness of 90% or more and contamination of 5% or less carry all three rRNA genes and pass the
+    tRNA condition as mmlong2 codes it; read as MIMAG intends, one of them (1.7190, last example) would not. At 4.8x depth, MAG
+    2.337 has methylation data for only 6 of its 32 contigs. Where its rRNA genes went (another contig, another MAG,
+    or not assembled) this page cannot show.
+
+- title: CheckM and CheckM2 disagree
+  state: {mag: c.104, est: c1, color: diff, sort: diff}
+  question: >-
+    The axes now show CheckM (version 1) estimates, the colour how much it differs from CheckM2 in completeness.
+    Open: CAG-269 sp003525075 (MAG c.104), one circular contig of 1.59 Mb. How complete is it by each tool? Look at
+    the top of the list: what do the MAGs with the largest differences have in common?
+  answer: >-
+    CheckM2 says 100%, CheckM 76.2%: by CheckM it would not be high quality. CheckM is more than 15 points lower for 21
+    of the 421 MAGs (1.0 to 3.0 Mb) and more than 15 points higher for one (Muricoprocola aceti, 2.266). What most of
+    the 21 share is their lineage: all 13 MAGs of the order TANB77 (all in family CAG-508, which holds CAG-269; 1.0 to
+    1.6 Mb) are 19.8 to 28.4 points lower. This fits a lineage that is poorly represented in CheckM's reference tree;
+    the CheckM2 authors showed similar gaps for other lineages with small genomes, such as Patescibacteria and DPANN
+    (Chklovski et al. 2023). The true completeness is not known, though a circular contig fits a whole chromosome.
+    CheckM still matters: mmlong2 keeps a MAG only if CheckM completeness is 50% or more and completeness − 5 ×
+    contamination is above 30 (65.6 here). The lowest TANB77 MAG has 56.0% by CheckM, so others of this order may
+    have been dropped by that filter; this page cannot show it.
+
+- title: Near the contamination limit
+  state: {mag: "2.293", color: meth, sort: cont}
+  question: >-
+    The list is sorted by CheckM2 contamination. Open: Lachnospira hominis (MAG 2.293), 100% complete and the third
+    highest contamination of the 421 MAGs. Do CheckM and CheckM2 agree? What does CheckM's strain heterogeneity say
+    about the extra copies, and does the methylation screen point at a contig?
+  answer: >-
+    They agree: CheckM2 8.85%, CheckM 8.05% contamination, so the MAG is medium quality. Strain heterogeneity is 0%:
+    none of CheckM's duplicated marker pairs are 90% or more identical, so the extra copies are not from a close
+    strain; they could come from a more distant organism, or be true paralogs. GUNC passes it (score 0.05). The screen flags one contig, u15689908ctg (719 kb, 22% of the MAG), which
+    carries six GCGC-type 5mC motifs the rest lacks; two more contigs differ from the rest by a single motif. The
+    GCGC signal is patchy, also between windows inside contigs, and Nanomotif found no motif for this MAG. Whether the
+    duplicated genes sit on the flagged contig would need CheckM's per-gene output, which is not on this page.
+
+- title: Two strains of one species
+  state: {mag: "2.441", color: meth}
+  question: >-
+    Open: MAG 2.441. GTDB places it and MAG 3.1230 in Hominiventricola filiformis (module 4 showed them on the
+    methylation map). Why is 2.441 medium quality? Which contig does the screen flag, and whose motif does it carry?
+    Then open 3.1230 and compare the fingerprints.
+  answer: >-
+    CheckM2 gives 91.5% completeness but 7.98% contamination (the 10th highest of 421); CheckM gives 71.9% and 1.75%,
+    with strain heterogeneity 100%: every pair of duplicated markers is 90% or more identical, as expected from two
+    close strains. The screen flags u3347900ctg (499 kb) for carrying ACGAGGC 6mA, a motif Nanomotif found in MAG
+    3.1230 but not in 2.441. The windows show the contig is two-part. In its first 300 kb, 83-89% of AYGAGGC sites are
+    methylated, as in 3.1230, and 2.441's own motif CNAAAGC is not (0 of 34, 43 and 42 sites per window). From 300 kb
+    on it is the other way round: CNAAAGC at 24 of 26 and 35 of 35 sites, AYGAGGC at 0 of 11 and 0 of 13. The change
+    lies at about 368 kb (366-375 kb). Reads do not settle that junction: 7 of 19 cross the nearby window edge at 400
+    kb, there is no clipping peak at 350-450 kb, and a join between two strains of one species would leave few clipped
+    reads anyway. So only the first ~368 kb looks like 3.1230; moving the whole contig would be wrong, and the open
+    question is whether to split it.
+
+- title: Many variant sites, little contamination
+  state: {mag: "2.151", color: var, sort: var}
+  question: >-
+    Colour and list now show microdiversity: the share of positions that are single-base variant sites. Open: Oscillibacter
+    welbionis (MAG 2.151), at the top of the list. What do the contamination estimates say? Compare with the second
+    MAG in the list, Enterocloster sp900541315 (2.511).
+  answer: >-
+    MAG 2.151 has single-base variant sites at 0.845% of positions (15,106 sites), the most of the 421 MAGs (median
+    0.022%), but
+    CheckM2 contamination is only 0.13%. Strains folded by the assembly into one sequence add variant sites but no
+    duplicated genes, so contamination estimates cannot see them; CheckM's few extra marker copies (1.38%) are all
+    near-identical (strain heterogeneity 100%), which fits close strains. MAG 2.511
+    (0.561%) has both: 8.84% contamination and strain heterogeneity 93.8%. Across the 421 MAGs, lower-depth MAGs have
+    more variant sites (rank correlation −0.41), so depth affects how many sites are called: a site needs at least 6
+    reads, and the other base in at least 3 of them and 10%, and low depth lowers the power to call variants. MAG 2.151
+    has 9.5x. Telling strains from errors would need the variant calls themselves.
+
+- title: High quality, but a proposed split
+  state: {mag: "1.717", color: meth, sort: flag}
+  question: >-
+    Open: Scatosoma sp900552625 (MAG 1.717), high quality. Look at its second contig in the track. What does the
+    flagged window lack, and what do the reads say at its edges?
+  answer: >-
+    CheckM2 gives 90.8% and 1.35%, CheckM 96.8% and 0.81%. In contig u35312041ctg_1-950675, the window at 600-700 kb
+    lacks RTACNNNNNNNTCC 6mA, one of the MAG's own Nanomotif motifs (and GGANNNNNNNGTAY, the same motif read on the
+    other strand). At the left edge the methylation changes at about 613 kb (range 592-636 kb), and 17 of 30 reads (57%)
+    are clipped at 612.0 kb, a larger share than at any of the 331 control boundaries (at most 42%), so a split is
+    proposed there. At the right edge
+    (700 kb) reads cross as usual and only the methylation changes. Marker genes cannot see a misjoin that keeps the
+    gene count right. Splits are proposals and were not applied; the 100 kb could be a misjoin or a region of its own.
+
+- title: Read the rule, not only the label
+  state: {mag: "1.7190", color: trna}
+  question: >-
+    Colour shows the tRNAs. Open: Oscillibacter segnis (MAG 1.7190), high quality. Check its tRNA row against the
+    rule above the plot. Should it be high quality?
+  answer: >-
+    Both tools find fewer than 18 unique tRNAs (Bakta 17, tRNAscan-SE 16). mmlong2's code accepts a MAG when Bakta finds
+    18 or more or when tRNAscan-SE finds any (probably a missing "≥ 18" for tRNAscan-SE), so it passes; read as MIMAG
+    intends (18 or more), it would be medium quality. It is the only one of the 421 MAGs whose class depends on this.
+    MAG 1.1787 (Bakta 17, tRNAscan-SE 18) passes because either tool may supply the count. Everything else meets the high-quality
+    rule (CheckM2 98.3% and 4.28%, all three rRNA genes). A label is only as good as the code that set it: check the
+    rule when a result matters.

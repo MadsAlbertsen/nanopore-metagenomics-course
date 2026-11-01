@@ -1,0 +1,62 @@
+number: 1
+slug: signal
+title: "Signal: what the sequencer measures, and how methylation shows up in it"
+nav: Signal
+summary: >-
+  The current through one pore, sample by sample; how Dorado's move table splits it into bases; how well ONT's 9-mer
+  model predicts it; and how a methylated base changes the current and the calls. On a small separate data set that
+  keeps the raw signal.
+status: draft
+data_note: >-
+  Data of this module: about 6,400 reads from eight activated-sludge samples (Native Barcoding Kit SQK-NBD114.24,
+  R10.4.1, PromethION P2 Solo; Dorado sup v5.2.0 with 6mA, 5mC and 4mC calls), aligned to four genome bins of their
+  co-assembly; not the stool data of the other modules. Every number about the data comes from that set; quoted
+  sources are marked as such.
+takeaways:
+  - "The sequencer measures a current, 5,000 times per second here; at about 400 bases per second a base lasts about
+    13 samples on average (383 bases per second, all reads pooled), and the speed varies between reads and along a read."
+  - "Dorado's move table assigns the samples to bases in steps of 6 (one move per base, checked for every read); the
+    samples before ts, the adapter and barcode, are not turned into bases."
+  - "The current depends on several bases at once: ONT's 9-mer table predicts it at least as well as a median
+    correlation of 0.725 per read with Dorado's coarse boundaries (0.841 on the middle of long bases). Refining the
+    boundaries to the model raises that to 0.985, but a shuffled model, r 0.00 on the move table, also reaches 0.750
+    after refining: that part comes entirely from the fitting."
+  - "A crude search finds one 6mA motif in each of three bins (GATC, GANTC, GTNNAC; 78-90% of calls modified, 3-6% in
+    the other bins). Dorado's probabilities are mostly near 0 or 1."
+  - "A 6mA changes the mean current by at least about 2-4 pA (0.06-0.12 normalised units with refined boundaries,
+    which partly absorb it; 3-5 pA or 0.10-0.16 units with the move table's) over the bases whose 9-mer holds it, less
+    than the spread between single reads, but the same way in all three motifs."
+  - "Basecalling errors are far more common at methylated motifs: the read differs from the reference over GANTC in 31% of its
+    occurrences in the bin that methylates it, 3-4% elsewhere."
+discussion: >-
+  Over GANTC, reads of the bin that methylates it differ from the reference in about one occurrence of three. What
+  could that do to an assembly of this genome built from these reads, and what would you check before trusting a
+  gene that contains many GANTC sites?
+teacher:
+  time: About 60 minutes (an estimate, not yet tried with students).
+  before: No other module needed. What a base, a read and a quality score are helps (glossary). Module 6 builds on
+    section 3.
+  flow:
+    - "10 min: what the sequencer measures (section 1); examples 1 and 2 (where the bases start, samples per base)."
+    - "15 min: from signal to bases, and the 9-mer model (section 2); examples 3-5."
+    - "20 min: methylation: the motif table, the current at a methylated base and Dorado's calls (section 3);
+      examples 6-9."
+    - "10 min: why it matters (section 4, example 10); take-home points and the discussion question."
+  discussion_points:
+    - "Reads that miss or swap bases at the same motif in most copies can pull the consensus wrong there, and an
+      assembly polished with the same reads keeps the error; genes with many such sites then carry frameshifts or
+      wrong amino acids. Checks: how many reads agree at the site, the same reads called with another basecalling
+      model, or reads from another technology."
+    - "Whether the assembly here is wrong at these sites is not tested on this page: the reference is the
+      co-assembly, and the comparison only shows that reads disagree with it far more often at methylated motifs."
+    - "The 9-mer window explains why the effect spreads over several bases: a base's current depends on 6 bases
+      before it and 2 after (Remora's dominant position in ONT's table), so the A sits in the 9-mers of 9 bases."
+  pitfalls:
+    - "Normalised units are per read (the read's current minus its shift, divided by its scale); one unit is about
+      31 pA here. Comparing raw pA between reads mixes in pore-to-pore differences."
+    - "A refined correlation of 0.985 does not mean the model is that good: a shuffled model also reaches 0.750
+      after refining (0.00 on the move table). The move-table number is a lower bound for the model: part of its gap
+      comes from the coarse 6-sample boundaries."
+    - "The motif search is crude: exact sequences of 4-6 bases, one modified position. Two-part motifs, longer ones
+      and mixed bins are missed; module 6 uses Nanomotif."
+    - "With 1-2 reads per site, a single site's methylated share is mostly noise; pool per motif, or use deeper data."
