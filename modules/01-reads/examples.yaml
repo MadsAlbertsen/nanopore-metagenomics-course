@@ -1,0 +1,87 @@
+# Guided examples for module 1 (raw reads). Each example sets the page up (state) and asks one question; the answer
+# stays hidden until clicked. Every number was computed from the example analysis (np26 scripts/27_course_reads.py
+# data: ~3,000 random raw reads per sample, the analysis's filter and Porechop_ABI output, alignments to the
+# co-assembly; 2026-11-01) and still needs the independent check. check.py rejects settings not in data.json.
+# state keys: sample = all or DNA01-DNA10; unit = reads or bases; q = mean Q cut-off (0-20); len = length cut-off
+#   (0, 200, 500, 1000, 2000, 3000, 5000, 10000); start = read start shown (1-based); join = split read shown (1-based).
+
+- title: Reads or bases?
+  state: {sample: all, unit: reads, q: 10, len: 1000}
+  question: >-
+    The page is set to the analysis's filter: mean Q 10 or more and 1,000 bp or more, all ten samples. What share of
+    the reads does it remove, and what share of the bases? Switch the count between reads and bases and look at the
+    length histogram: why are the two shares so different?
+  answer: >-
+    It removes 11,937 of 30,022 reads (39.8%) but only 9.4 of 89.5 Mb (10.6%) of the bases. Most removed reads are
+    short: the length histogram in reads has a large grey peak below 1,000 bp, which nearly disappears when counted in
+    bases. The full run agrees: 38.06 million of 61.2 million reads were kept (62%), and 166.9 of an estimated 184.8 Gb
+    (90%; the run's own read count, before any filter, gave 185.9 Gb).
+
+- title: The weak sample
+  state: {sample: DNA02, unit: reads, q: 10, len: 1000}
+  question: >-
+    Sample DNA02 (day 2) yielded far fewer reads than the others. What share of its reads and bases does the filter
+    remove, and which of the two cut-offs removes most of its reads? Set the length cut-off to "any" to see the
+    quality cut-off alone.
+  answer: >-
+    The filter removes 1,759 of 2,986 reads (58.9%) and 16.5% of the bases, the most of any sample (others 32-41% of
+    reads). The length cut-off does most of it: 42% of DNA02's reads are shorter than 200 bp. With the length cut-off
+    off, mean Q 10 alone removes 16.5% of its reads and 12.2% of its bases. In the table, DNA02 has the lowest share of
+    bases kept and the lowest median Q of all reads (20.1); its kept reads look like the other samples' (median Q 23.9).
+
+- title: How strict on quality?
+  state: {sample: all, unit: bases, q: 15, len: 1000}
+  question: >-
+    Raise the quality cut-off from 10 to 15 (it is set to 15 here; move it back and forth). How many more bases does
+    the stricter filter remove? Where in the heat map are the reads it removes?
+  answer: >-
+    At mean Q 15 the filter removes 13.5% of the bases instead of 10.6%: about 2.6 Mb more of 89.5 Mb, and 529 more
+    reads. They sit in the band between the two lines at Q 10 and 15, at all lengths. Most bases are in reads of mean Q
+    20-30, so a stricter quality cut-off costs little here; a stricter length cut-off costs more (2,000 bp: 18.6% of the
+    bases; 3,000 bp: 27.8%).
+
+- title: The longest reads
+  state: {sample: all, unit: bases, q: 0, len: 0}
+  question: >-
+    With both cut-offs off and counting bases, look at the far right of the length histogram and the heat map. How long
+    are the longest sampled reads, and what is their quality? Would you keep them?
+  answer: >-
+    The three longest reads are 404 kb (DNA07), 357 kb and 90 kb (both DNA02), all with a mean Q below 4: in the heat
+    map they are the lone cells at the bottom right. Q 3 means about one error in every two bases, so these are not
+    long molecules read well; the quality cut-off removes them. The next longest read (72 kb, mean
+    Q 11.1) is kept, and it turns out to be a joined read (example 7).
+
+- title: A read that kept its barcode
+  state: {start: 2}
+  question: >-
+    This read from sample DNA04 kept its start. Find the barcode, the rapid adapter and where the genome begins. Is the
+    barcode the one DNA04 was given? Where did Porechop_ABI cut, compared with where the genome starts?
+  answer: >-
+    The barcode lies at bases 9-32 and matches barcode 20, DNA04's, without differences; before it are 8 bases of the
+    front flank. The rapid adapter follows at bases 33-82, also without differences. The read aligns to contig
+    u35413295ctg of MAG 2.62 (Phocaeicola plebeius) from base 84, and Porechop_ABI cut after base 84: it removed the
+    adapter and two more bases (it trims a little extra by default), here one base of genome. In the sampled reads it
+    cut within 5 bases of the adapter's end in 664 of the 688 kept reads that carried the adapter.
+
+- title: Two genomes in one read
+  state: {join: 16}
+  question: >-
+    This 8.3 kb read from DNA05 was split by Porechop_ABI. Where do the two pieces align, and what lies between them?
+  answer: >-
+    The first piece (5.1 kb) aligns to MAG 2.359 (Prevotella copri_B), the second (3.1 kb) to MAG 2.409 (Faecousia
+    intestinalis): two molecules from two genomes, read as one. Between them sits the start of the second molecule:
+    barcode 22 without differences, then the rapid adapter (5 differences in 50 bases), which the independent search
+    found too. Barcode 22 belongs to DNA06, not DNA05: the second molecule came from another sample's library, and the
+    read was sorted by the barcode at its start. Left whole, such a read would join two genomes during assembly.
+
+- title: Splitting is not the whole story
+  state: {join: 26, unit: reads}
+  question: >-
+    This is the longest kept read (72 kb, mean Q 11.1, DNA07). Porechop_ABI split off its last 6 kb. Look at the
+    alignments of the first, 66 kb piece: does it come from one genome?
+  answer: >-
+    No. Its alignments of 100 bases or more fall on contigs of ten different MAGs (MAG c.60 at the start, MAG s.13 twice
+    on opposite strands, MAG c.33 for the last 21 kb, and others), with no adapter between them that Porechop_ABI
+    recognised. So some joined reads have no
+    findable adapter at the joins. The assembler, myloasm, split 1.18% of the reads as chimeric in the full run, against
+    0.27% split by Porechop_ABI.
