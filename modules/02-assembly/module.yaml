@@ -17,8 +17,9 @@ takeaways:
   MAGs: 69% of the contigs of 1 Mb or more have a link, and one group of 816 linked nodes holds a third of the bases.'
 - A loop is how a circular genome or plasmid shows in the graph. 121 of the 122 loops of 1 Mb or more are in a MAG, but
   only 12 of the 343 small ones (under 100 kb) that mmlong2 kept.
-- The graph can point to what binning missed (a 94 kb contig that closes MAG s.171 into a loop), but it cannot tell on
-  its own whether two linked versions of a genome are two strains or one population.
+- The graph can point to contigs a MAG lacks (a 94 kb contig that closes MAG s.171 into a loop, but could not join a
+  MAG that mmlong2 made from one contig before binning), but it cannot tell on its own whether two linked versions of a
+  genome are two strains or one population.
 discussion: Two strains of one species share 99.5% of their sequence. What decides whether an assembler gives you one
   contig or two, and which would you want for your own question?
 teacher:
@@ -45,7 +46,9 @@ teacher:
   - The simulations are illustrations with toy rules, not myloasm's code; the 'What myloasm does' table is the source-based
     part.
   - Longer reads help only when some read actually spans the repeat; depth matters too (example 2).
-  - A circular contig is the assembler's decision, not proof of a whole chromosome.
+  - A circular contig is the assembler's decision, not proof of a whole chromosome; mmlong2 split 6 of the 122 loops of
+    1 Mb or more at likely misassemblies, and contig u23166933ctg (MAG s.13) ends in a copy of its start without being
+    marked circular.
   - Graph nodes are contigs before polishing; 42,626 of the 63,068 were removed by myloasm afterwards (duplicates,
     alternates and others), so a node is not always a contig of the final assembly.
   - Depths in sections 4 and 5 are myloasm's own (reads matching at about 99% identity), not the read depth used for
