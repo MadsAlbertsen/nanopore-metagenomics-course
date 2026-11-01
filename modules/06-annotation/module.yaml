@@ -4,4 +4,50 @@ title: "Annotation: what is in a genome, and how sure are we"
 nav: Annotation
 summary: >-
   Taxonomy, genes and their functions for selected MAGs, and the evidence behind each claim.
-status: planned
+status: draft
+mag_link: "#?mag={id}"
+takeaways:
+  - "GTDB-Tk names a species only when the closest reference genome is within the species' ANI radius (95% for most
+    species) and the alignment fraction is 0.5 or more: 407 of 421 MAGs here, at a median ANI of 98.3%. The other 14
+    stop at genus."
+  - "A species name can be a placeholder (217 MAGs, such as CAG-417 sp000432835): a species known from genomes only.
+    Little-studied lineages have more genes without a name: median 45% hypothetical with a placeholder name, 24%
+    with a Latin name."
+  - "About a third of all genes (34.9%) have no name. 70% of the cluster matches are only 50-70%
+    identical, so a name often says the protein family more than its exact role."
+  - "Every gene name has an evidence level: an expert match to a curated reference protein, a cluster match, only a
+    Pfam domain, or nothing. Check it before building on a name."
+  - "A tool built for bacteria leaves 90% of the archaeon's genes hypothetical, even its elongation factors, RNA
+    polymerase and methyl-coenzyme M reductase, whose Pfam domains are found."
+  - "A resistance-gene match (169 genes in 112 MAGs) says a gene is there, not that it is active or that the
+    bacterium survives the drug."
+discussion: >-
+  A collaborator wants to report that this person's gut bacteria are tetracycline resistant, because 97 genes named
+  after tetracycline resistance proteins were found in the MAGs. What does this page's evidence support, what would you
+  need to make the claim, and how would you word it?
+teacher:
+  time: About 60 minutes (an estimate, not yet tried with students).
+  before: What a MAG is (module 3) and MAG quality (module 4); no background in taxonomy tools needed.
+  flow:
+    - "10 min: how GTDB-Tk names a MAG (section 1) on the ANI and AF chart; example 1."
+    - "10 min: MAGs without a species name and what decides it (section 2, examples 2 and 3)."
+    - "15 min: how many genes get a name and what the name rests on (sections 3 and 4; examples 4 and 5)."
+    - "15 min: the gene map: examples 6 to 8 (a name from a distant relative, a resistance gene, module 5's flagged
+      contigs)."
+    - "10 min: where annotation falls short; take-home points and the discussion question."
+  discussion_points:
+    - "The page supports: genes that match tetracycline resistance proteins sit in many MAGs (tet(W) alone in 42).
+      It does not show expression, resistance or how much of the community carries them; a match is not a trait."
+    - "To claim resistance one needs growth tests of isolates or of the community with the drug; expression data
+      (RNA) would show whether the genes are active."
+    - "Wording: 'genes similar to known tetracycline resistance genes were found in N MAGs', with the evidence level
+      (AMRFinderPlus protein match) and that plasmids outside MAGs were not annotated."
+    - "97 is a gene count, not a count of bacteria or of cells; some tet genes sit next to genes named after
+      mobile-element functions (example 7). One person's data cannot say whether this is typical."
+  pitfalls:
+    - "ANI and AF together decide a species: a high ANI over a small share of the genome (example 2) is not enough."
+    - "The identity on this page is to the UniRef50 cluster's representative, not to the reference resistance protein
+      AMRFinderPlus matched."
+    - "'Hypothetical' means no match in this database, not no function; a Pfam domain often hints at one (example 4)."
+    - "Placeholder names such as CAG-417 sp000432835 are valid GTDB species, not errors or missing names."
+    - "A gene missing from a MAG may be in the unbinned part of the genome; most MAGs are less than 100% complete."

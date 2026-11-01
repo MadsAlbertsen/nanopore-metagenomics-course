@@ -1,0 +1,28 @@
+.antwo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start }
+.antwo p, section > p:not(.note) { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 110ch }
+.plotwrap { width: 100%; min-height: 200px }
+.plotwrap svg { display: block; touch-action: manipulation }
+.plotwrap circle.pt { cursor: pointer }
+.evbar { display: flex; width: 100%; border-radius: 3px; overflow: hidden; background: var(--v4) }
+.evbar span { display: block; height: 100% }
+#anCard { gap: 12px }
+#anCard table.chk th { width: 130px; color: var(--ink); white-space: normal; vertical-align: top }
+#anCard table.chk td { font-size: 12.5px }
+#anCard code, #anAmrMags code { font-family: var(--mono); font-size: 11.5px; background: var(--accent-soft); color: var(--ink); padding: 1px 6px; border-radius: 4px }
+table.chk { border-collapse: collapse; width: 100% }
+table.chk th, table.chk td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--line) }
+table.ct tr.click { cursor: pointer }
+table.ct tr.click:hover td { background: var(--accent-soft) }
+table.ct.gt td { white-space: normal }
+table.ct.gt td.pf { font-size: 11.5px; color: var(--muted); min-width: 180px }
+table.ct td .sw { margin-right: 6px }
+.antable { max-height: 360px; overflow-y: auto }
+.anamr { max-height: 380px; overflow-y: auto }
+.anmapgrid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px; align-items: start }
+.anh3 { font-size: 14px; margin: 0 0 6px }
+svg .glbl { font-size: 10.5px; fill: #fff; pointer-events: none; font-family: var(--mono) }
+svg path.gene { cursor: default }
+#anAmrMags button.link { font-size: 12.5px }
+@media (max-width: 980px) { .antwo, .anmapgrid, .spgrid { grid-template-columns: minmax(0, 1fr) } }
+.antable thead th { position: sticky; top: 0; background: var(--surface); z-index: 1 }
+table.ct.gt td.ev { white-space: nowrap }
