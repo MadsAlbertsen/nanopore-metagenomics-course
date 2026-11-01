@@ -11,7 +11,22 @@ const LOGLEN = R.len.map((l) => Math.log10(Math.max(l, 1)));
 const LENS = [0, 200, 500, 1000, 2000, 3000, 5000, 10000];
 const DEFAULTS = { sample: "all", unit: "reads", q: 10, len: 1000, start: 0, join: 0 };
 const st = { ...DEFAULTS };
-const SEG = { flank: "var(--c5)", barcode: "var(--c4)", adapter: "var(--c2)", genome: "var(--c1)" };
+const SEG = { leader: "var(--c7)", flank: "var(--c5)", barcode: "var(--c4)", adapter: "var(--c2)", genome: "var(--c1)" };
+// per-base labels of a sequence excerpt (np26 readstart.label_excerpt); U bases are masked ('.') in the data
+const LAB = {
+  L: ["sequencing adapter end", SEG.leader], F: ["front flank", SEG.flank], B: ["barcode", SEG.barcode],
+  T: ["rear flank (transposon end)", SEG.adapter], G: ["genome (aligned to a MAG contig)", SEG.genome], U: ["not shown (not aligned, not recognised)", "var(--v4)"],
+};
+const labLegend = (labels) => Object.keys(LAB).filter((c) => labels.includes(c)).map((c) => `<span class="sw" style="background:${LAB[c][1]}${c === "G" ? ";opacity:.5" : ""}"></span>${LAB[c][0]}`).join(" ");
+// one excerpt: letters on coloured boxes, quality bars below; masked bases as grey boxes without a letter
+function drawExcerpt(svg, x0, y0, cw, i, base, label, q, tipText) {
+  const [, col] = LAB[label];
+  el("rect", { x: x0, y: y0, width: cw, height: 18, fill: col, "fill-opacity": label === "G" ? 0.18 : label === "U" ? 0.6 : 0.3 }, svg);
+  if (base !== ".") { const t = el("text", { x: x0 + cw / 2, y: y0 + 13, "text-anchor": "middle", class: "mlbl" }, svg); t.textContent = base; t.style.fill = "var(--ink)"; }
+  const bh = (Math.min(q, 40) / 40) * 30;
+  const b = el("rect", { x: x0 + 1, y: y0 + 52 - bh, width: cw - 2, height: Math.max(bh, 1), fill: viridis(Math.min(q, 40) / 40) }, svg);
+  b.addEventListener("mousemove", (ev) => showTip(ev, tipText)); b.addEventListener("mouseleave", hideTip);
+}
 const width = (id, min = 280) => Math.max(min, $(id).clientWidth || min);
 
 // --- numbers in the text, all from the data
@@ -29,41 +44,45 @@ function fillNumbers() {
   const rng = (a, d = 2) => `${Math.min(...a).toFixed(d)}-${Math.max(...a).toFixed(d)}%`;
   const N = {
     startNear: pct(noad[0] + noad[1], tot, 0), adStart: `${num(sum("adapter_start"))} (${pct(sum("adapter_start"), reads)})`,
-    bcAdStart: num(sum("barcode_adapter_start")),
+    bcAdStart: num(sum("barcode_adapter_start")), adPartial: `${num(sum("adapter_start_partial"))} (${pct(sum("adapter_start_partial"), reads)})`,
+    shortMapped: pct(m.short.mapped, m.short.reads, 0), shortMag: `${pct(m.short.on_mag, m.short.reads, 0)} of reads and ${pct(m.short.mag_bp, m.short.bases, 0)} of bases, against ${pct(m.kept.on_mag, m.kept.reads, 0)} and ${pct(m.kept.mag_bp, m.kept.bases, 0)} for kept reads`,
+    adKept: num(t.adapter_kept_reads), splitKept: mid.porechop_split,
     keptMag: pct(m.kept.mag_bp, m.kept.bases, 0),
     longest: low.length > 1 ? `${low.length} longest raw reads (${fmtBp(Math.min(...low))} to ${fmtBp(Math.max(...low))})` : "longest raw read",
     adReads: num(t.adapter_reads), adWithin: num(t.within_5bp), otherMed: t.other_trim_median, otherTrim: num(t.other_trimmed),
     trimBases: pct(t.bases_trimmed, t.bases_kept_reads, 2), fullStart: rng(fp, 0) + " of reads per sample",
     fullBases: pct(full("filtered_bases") - full("trimmed_bases"), full("filtered_bases"), 2),
-    split: `${mid.porechop_split} (${pct(mid.porechop_split, mid.kept_reads, 2)})`, splitFull: rng(fs),
+    split: `${mid.porechop_split_all} (${pct(mid.porechop_split_all, mid.kept_reads, 2)})`, splitFull: rng(fs),
     midHere: mid.found_here, midBoth: mid.both, kTwo: kinds["two MAGs"] || 0, kBoth: kinds["same stretch, both strands"] || 0, kOne: kinds["one piece kept"] || 0,
   };
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
   $("rdStats").innerHTML = [
     [num(reads), "reads sampled (10 samples)"], [pct(kept, reads, 0), "of reads kept by the filter"], [pct(keptB, bases, 0), "of bases kept"],
-    [gb(full("est_bases")), "in the full run (estimated from the samples)"], [pct(mid.porechop_split, mid.kept_reads, 1), "of kept reads split"],
+    [gb(full("est_bases")), "in the full run (estimated from the samples)"], [pct(mid.porechop_split_all, mid.kept_reads, 1), "of kept reads split by Porechop_ABI"],
   ].map(([n, t2]) => `<div class="stat"><b>${n}</b><span>${t2}</span></div>`).join("");
 }
 
 // --- 1. read layout drawing
 function drawLayout() {
   const w = width("rdLayout", 520), h = 112, svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Layout of a rapid barcoding read" });
-  const parts = [["flank", 16, "front flank"], ["barcode", 24, "barcode (24 bp)"], ["adapter", 50, "rapid adapter (50 bp)"], ["genome", 150, "genome →"]];
+  const parts = [["leader", 30, "sequencing adapter (Rapid Adapter, motor protein)"], ["flank", 16, "front flank"], ["barcode", 24, "barcode (24 bp)"], ["adapter", 50, "rear flank: transposon end (50 bp)"], ["genome", 120, "genome →"]];
   const total = parts.reduce((a, p) => a + p[1], 0), x0 = 4, sc = (w - 8) / total;
   const row = (y, list, label) => {
     let x = x0;
     el("text", { x: x0, y: y - 6, class: "lbl" }, svg).textContent = label;
     for (const [k, n, name] of list) {
       const r = el("rect", { x, y, width: n * sc - 2, height: 22, rx: 3, fill: SEG[k], "fill-opacity": k === "genome" ? 0.35 : 0.8 }, svg);
-      r.addEventListener("mousemove", (ev) => showTip(ev, `<b>${esc(name)}</b>${k === "adapter" ? `<br><span class="mono">${DATA.rapid_adapter}</span>` : ""}`));
+      r.addEventListener("mousemove", (ev) => showTip(ev, `<b>${esc(name)}</b>${k === "adapter" ? `<br><span class="mono">${DATA.rapid_adapter}</span><br>Porechop_ABI calls it the rapid adapter` : ""}${k === "leader" ? "<br>only its end is read; ends in ...GTACTTCGTTCAGTTACG" : ""}`));
       r.addEventListener("mouseleave", hideTip);
-      if (n * sc > 60) { const t = el("text", { x: x + 6, y: y + 15, class: "lbl" }, svg); t.textContent = name; t.style.fill = "var(--ink)"; }
+      if (n * sc > 7 * name.length) { const t = el("text", { x: x + 6, y: y + 15, class: "lbl" }, svg); t.textContent = name; t.style.fill = "var(--ink)"; }
       x += n * sc;
     }
   };
   row(20, parts, "Read as it leaves the pore (start of the molecule on the left)");
   row(76, [["genome", total, "genome → (barcode region cut off when the reads were sorted by barcode)"]], "Most reads after sorting by barcode");
-  $("rdLayout").replaceChildren(svg);
+  const leg = document.createElement("div"); leg.className = "legend";
+  leg.innerHTML = parts.map(([k, n, name]) => `<span><i class="sw" style="background:${SEG[k]}"></i>${esc(name)}</span>`).join("");
+  $("rdLayout").replaceChildren(svg, leg);
 }
 
 // --- bar chart of where the genome starts
@@ -94,23 +113,17 @@ function drawStart() {
   const per = Math.max(30, Math.floor((width("rdStart", 360) - 20) / 11)), cw = 11, rowH = 64, rows = Math.ceil(s.seq.length / per);
   const svg = el("svg", { width: per * cw + 20, height: rows * rowH + 6, role: "img", "aria-label": "Bases and qualities of a read start" });
   const [bs, be] = s.barcode, [as, ae] = s.adapter;
-  const region = (i) => (i >= s.genome ? "genome" : i >= as && i < ae ? "adapter" : i >= bs && i < be ? "barcode" : i < bs ? "flank" : "");
   for (let i = 0; i < s.seq.length; i++) {
-    const r = Math.floor(i / per), x = 10 + (i % per) * cw, y0 = r * rowH + 4, reg = region(i), q = s.qual[i];
-    if (reg) el("rect", { x, y: y0, width: cw, height: 18, fill: SEG[reg], "fill-opacity": reg === "genome" ? 0.18 : 0.3 }, svg);
-    const t = el("text", { x: x + cw / 2, y: y0 + 13, "text-anchor": "middle", class: "mlbl" }, svg); t.textContent = s.seq[i]; t.style.fill = "var(--ink)";
-    const bh = Math.min(q, 40) / 40 * 30;
-    const b = el("rect", { x: x + 1, y: y0 + 52 - bh, width: cw - 2, height: Math.max(bh, 1), fill: viridis(Math.min(q, 40) / 40) }, svg);
-    b.addEventListener("mousemove", (ev) => showTip(ev, `base ${i + 1}: ${s.seq[i]}, Q ${q} (${reg || "between barcode and adapter"})`));
-    b.addEventListener("mouseleave", hideTip);
+    const r = Math.floor(i / per), x = 10 + (i % per) * cw, y0 = r * rowH + 4, c = s.labels[i];
+    drawExcerpt(svg, x, y0, cw, i, s.seq[i], c, s.qual[i], `base ${i + 1}: ${s.seq[i] === "." ? "not shown" : s.seq[i]}, Q ${s.qual[i]} (${LAB[c][0]})`);
     if (i === s.genome) el("path", { d: `M${x},${y0 - 1} l5,-5 h-10 z`, fill: "var(--ink)" }, svg);
     if (i === s.trim) el("line", { x1: x, x2: x, y1: y0, y2: y0 + 54, stroke: "var(--ink)", "stroke-dasharray": "3 2" }, svg);
   }
   $("rdStart").replaceChildren(svg);
   $("rdStartNote").innerHTML = `Sample ${s.sample} (barcode ${s.barcode[3]}), read of ${num(s.length)} bp, mean Q ${s.q}. ` +
-    `Barcode at bases ${bs + 1}-${be} (${s.barcode[2]} differences), rapid adapter at ${as + 1}-${ae} (${s.adapter[2]} differences); ` +
+    `Barcode at bases ${bs + 1}-${be} (${s.barcode[2]} differences), rear flank (transposon end) at ${as + 1}-${ae} (${s.adapter[2]} differences); ` +
     `the read aligns to contig ${esc(s.contig)} of MAG ${esc(s.mag)} (<i>${esc(s.mag_name)}</i>) from base ${s.genome + 1}; Porechop_ABI cut after base ${s.trim}. ` +
-    `<span class="sw" style="background:${SEG.flank}"></span>flank remnant <span class="sw" style="background:${SEG.barcode}"></span>barcode <span class="sw" style="background:${SEG.adapter}"></span>adapter <span class="sw" style="background:${SEG.genome};opacity:.5"></span>genome. Bars: quality per base (height and colour, Q 0-40).`;
+    `${labLegend(s.labels)}. Bars: quality per base (height and colour, Q 0-40).`;
 }
 
 // --- mean Q along the read
@@ -234,9 +247,9 @@ function drawMap() {
     `</tbody></table><p class="note">Reads on MAG contigs: at least one alignment to a contig in a MAG. Bases on MAG contigs: read bases inside such alignments, as a share of all bases of the group.</p>`;
 }
 function drawTrim() {
-  $("rdTrim").innerHTML = `<table class="ct"><thead><tr><th></th><th colspan="4">Sampled reads after the filter</th><th colspan="3">Full run</th></tr><tr><th>Sample</th><th class="r">Adapter at start</th><th class="r">Start trimmed</th><th class="r">End trimmed</th><th class="r">Split</th><th class="r">Start trimmed</th><th class="r">End trimmed</th><th class="r">Split</th></tr></thead><tbody>` +
+  $("rdTrim").innerHTML = `<table class="ct"><thead><tr><th></th><th colspan="4">Sampled reads after the filter</th><th colspan="3">Full run</th></tr><tr><th>Sample</th><th class="r">Rear flank at start</th><th class="r">Start trimmed</th><th class="r">End trimmed</th><th class="r">Split</th><th class="r">Start trimmed</th><th class="r">End trimmed</th><th class="r">Split</th></tr></thead><tbody>` +
     S.map((s) => { const p = s.full.porechop; return `<tr><td>${s.sample}</td><td class="r">${pct(s.adapter_start_kept, s.kept_reads)}</td><td class="r">${pct(s.start_trimmed, s.kept_reads)}</td><td class="r">${pct(s.end_trimmed, s.kept_reads)}</td><td class="r">${s.split}</td><td class="r">${p.pct_reads_start_trimmed.toFixed(1)}%</td><td class="r">${p.pct_reads_end_trimmed.toFixed(1)}%</td><td class="r">${p.pct_reads_split.toFixed(2)}%</td></tr>`; }).join("") +
-    `</tbody></table><p class="note">Shares of kept reads. Adapter at start: the 50-base rapid adapter found in the first 150 bases (at most 10 differences). Split: reads Porechop_ABI cut at a middle adapter (sampled: number of reads; full run: share).</p>`;
+    `</tbody></table><p class="note">Shares of kept reads. Rear flank at start: the 50-base rear flank (Porechop_ABI's rapid adapter) found in the first 150 bases (at most 10 differences). Split: reads Porechop_ABI cut at a middle adapter (sampled: reads with a piece kept; full run: Porechop_ABI's share).</p>`;
 }
 
 // --- 6. joined reads
@@ -270,23 +283,21 @@ function drawJoin() {
   const jn = j.junction;
   if (jn) {
     const cw = 10, per = Math.max(30, Math.floor((width("rdJunction", 360) - 10) / cw)), rows = Math.ceil(jn.seq.length / per);
-    const s2 = el("svg", { width: per * cw + 10, height: rows * 56 + 20, role: "img", "aria-label": "Bases at the junction" });
+    const s2 = el("svg", { width: per * cw + 10, height: rows * 60 + 20, role: "img", "aria-label": "Bases at the junction" });
     el("text", { x: 4, y: 12, class: "lbl" }, s2).textContent = `Junction: read bases ${num(jn.start + 1)}-${num(jn.start + jn.seq.length)}`;
     const cut0 = j.pieces[0][1] - jn.start, cut1 = j.pieces[1][0] - jn.start;
     for (let i = 0; i < jn.seq.length; i++) {
-      const r = Math.floor(i / per), x0 = 4 + (i % per) * cw, y0 = 18 + r * 56, inAd = i >= jn.adapter[0] && i < jn.adapter[1], inBc = jn.barcode && i >= jn.barcode[0] && i < jn.barcode[1], removed = i >= cut0 && i < cut1;
-      el("rect", { x: x0, y: y0, width: cw, height: 16, fill: inAd ? SEG.adapter : inBc ? SEG.barcode : removed ? "var(--v4)" : "var(--accent)", "fill-opacity": inAd || inBc ? 0.35 : 0.22 }, s2);
-      const t = el("text", { x: x0 + cw / 2, y: y0 + 12, "text-anchor": "middle", class: "mlbl" }, s2); t.textContent = jn.seq[i]; t.style.fill = "var(--ink)";
-      const q = jn.qual[i], bh = Math.min(q, 40) / 40 * 24;
-      const b = el("rect", { x: x0 + 1, y: y0 + 44 - bh, width: cw - 2, height: Math.max(1, bh), fill: viridis(Math.min(q, 40) / 40) }, s2);
-      b.addEventListener("mousemove", (ev) => showTip(ev, `read base ${num(jn.start + i + 1)}: ${jn.seq[i]}, Q ${q}${inAd ? " (adapter)" : inBc ? ` (barcode ${jn.barcode[3]})` : removed ? " (removed)" : " (kept piece)"}`)); b.addEventListener("mouseleave", hideTip);
+      const r = Math.floor(i / per), x0 = 4 + (i % per) * cw, y0 = 18 + r * 60, c = jn.labels[i], removed = i >= cut0 && i < cut1;
+      drawExcerpt(s2, x0, y0, cw, i, jn.seq[i], c, jn.qual[i], `read base ${num(jn.start + i + 1)}: ${jn.seq[i] === "." ? "not shown" : jn.seq[i]}, Q ${jn.qual[i]} (${LAB[c][0]}; ${removed ? "removed by Porechop_ABI" : "in a kept piece"})`);
+      if (i === cut0 || i === cut1) el("line", { x1: x0, x2: x0, y1: y0, y2: y0 + 54, stroke: "var(--ink)", "stroke-dasharray": "3 2" }, s2);
     }
     $("rdJunction").replaceChildren(s2);
   } else $("rdJunction").replaceChildren();
   const pieces = j.pieces.map(([a, b]) => fmtBp(b - a)).join(" + ");
   $("rdJoinNote").innerHTML = `Read ${st.join + 1}: sample ${j.sample}, ${num(j.length)} bp, mean Q ${j.q}. Kept after splitting and the length filter: ${pieces}. ` +
-    `Rapid adapter found in the middle by the independent search: ${j.middle_adapter ? "yes" : "no"}. ` +
-    (jn ? `Junction: ${jn.barcode ? `barcode ${jn.barcode[3]} (yellow, ${jn.barcode[2]} differences; sample ${j.sample} has barcode ${S.find((x) => x.sample === j.sample).barcode}) and ` : ""}adapter (orange, ${jn.adapter[3] === "-" ? "reverse strand" : "forward strand"}, ${jn.adapter[2]} differences) between the two kept pieces (green); grey: other removed bases. ` : "") +
+    `Alignment under each kept piece: ${j.piece_mapq.map((m) => (m ? `${m[0] ? "MAG " + esc(m[0]) : "contig not in a MAG"}, mapping quality ${m[1]}${m[1] < 20 ? " (low: similar contigs elsewhere)" : ""}` : "none")).join("; ")}. ` +
+    `Rear flank found in the middle by the independent search: ${j.middle_adapter ? "yes" : "no"}. ` +
+    (jn ? `Junction (dashed lines: Porechop_ABI's cuts): ${jn.barcode ? `barcode ${jn.barcode[3]} (${jn.barcode[2]} differences; sample ${j.sample} has barcode ${S.find((x) => x.sample === j.sample).barcode}), then ` : ""}the rear flank (${jn.adapter[2]} differences). ${labLegend(jn.labels)}. ` : "") +
     `Faint boxes: alignments under 100 bases; several of them fall on contig ends that themselves carry adapter sequence.`;
 }
 

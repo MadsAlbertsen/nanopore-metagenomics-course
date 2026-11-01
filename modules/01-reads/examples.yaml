@@ -15,7 +15,7 @@
     It removes 11,937 of 30,022 reads (39.8%) but only 9.4 of 89.5 Mb (10.6%) of the bases. Most removed reads are
     short: the length histogram in reads has a large grey peak below 1,000 bp, which nearly disappears when counted in
     bases. The full run agrees: 38.06 million of 61.2 million reads were kept (62%), and 166.9 of an estimated 184.8 Gb
-    (90%; the run's own read count, before any filter, gave 185.9 Gb).
+    (90%; stage-1 QC of the full read files gave 185.9 Gb).
 
 - title: The weak sample
   state: {sample: DNA02, unit: reads, q: 10, len: 1000}
@@ -54,23 +54,25 @@
 - title: A read that kept its barcode
   state: {start: 2}
   question: >-
-    This read from sample DNA04 kept its start. Find the barcode, the rapid adapter and where the genome begins. Is the
+    This read from sample DNA04 kept its start. Find the barcode, the 50-base rear flank of the tag and where the genome begins. Is the
     barcode the one DNA04 was given? Where did Porechop_ABI cut, compared with where the genome starts?
   answer: >-
     The barcode lies at bases 9-32 and matches barcode 20, DNA04's, without differences; before it are 8 bases of the
-    front flank. The rapid adapter follows at bases 33-82, also without differences. The read aligns to contig
+    front flank. The rear flank (Porechop_ABI's "rapid adapter") follows at bases 33-82, also without differences. The read aligns to contig
     u35413295ctg of MAG 2.62 (Phocaeicola plebeius) from base 84, and Porechop_ABI cut after base 84: it removed the
-    adapter and two more bases (it trims a little extra by default), here one base of genome. In the sampled reads it
-    cut within 5 bases of the adapter's end in 664 of the 688 kept reads that carried the adapter.
+    tag and two more bases (it trims a little extra by default): base 83, which is not shown because it neither aligns
+    nor belongs to the tag, and the first base of genome. In the sampled reads, 705 kept reads carried the rear flank;
+    in 664 of the 688 that remained after trimming, the cut lay within 5 bases of the rear flank's end.
 
 - title: Two genomes in one read
   state: {join: 16}
   question: >-
     This 8.3 kb read from DNA05 was split by Porechop_ABI. Where do the two pieces align, and what lies between them?
   answer: >-
-    The first piece (5.1 kb) aligns to MAG 2.359 (Prevotella copri_B), the second (3.1 kb) to MAG 2.409 (Faecousia
-    intestinalis): two molecules from two genomes, read as one. Between them sits the start of the second molecule:
-    barcode 22 without differences, then the rapid adapter (5 differences in 50 bases), which the independent search
+    The first piece (5.1 kb) aligns to MAG 2.359 (Prevotella copri_B), though with low mapping quality (4: another place
+    in the assembly fits almost as well); the second (3.1 kb) aligns to MAG 2.409 (Faecousia intestinalis) with
+    mapping quality 60: two molecules from two genomes, read as one. Between them sits the start of the second molecule:
+    barcode 22 without differences, then the rear flank (5 differences in 50 bases), which the independent search
     found too. Barcode 22 belongs to DNA06, not DNA05: the second molecule came from another sample's library, and the
     read was sorted by the barcode at its start. Left whole, such a read would join two genomes during assembly.
 

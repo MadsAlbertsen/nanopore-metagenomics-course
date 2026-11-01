@@ -7,9 +7,10 @@ summary: >-
   need splitting, and what filtering costs.
 status: draft
 takeaways:
-  - "A rapid barcoding read starts with adapter and barcode before the genome. Here the barcode sorting step had
-    already cut that region off most reads: in 72% of mapped reads without an adapter the genome starts within 10
-    bases of the read start, and 6% of the sampled reads still carried the rapid adapter."
+  - "A rapid barcoding read starts with the end of the sequencing adapter and a barcoded tag (front flank, barcode,
+    50-base rear flank) before the genome. Here the barcode sorting step had already cut that region off most reads: in
+    72% of mapped reads without the tag the genome starts within 10 bases of the read start, and 6% of the sampled
+    reads still carried the full rear flank."
   - "Count both reads and bases. The analysis's filter (mean Q 10, 1,000 bp) removed 40% of the sampled reads but only
     11% of their bases, because most removed reads are short; the full run kept 166.9 of about 185 Gb."
   - "Removed reads mostly come from the same genomes: most of them align to the co-assembly, and the low-quality ones
