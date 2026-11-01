@@ -1,5 +1,6 @@
-// Module 2: assembly. No data.json: the three toy simulations run here with fixed seeds, so one page state always
-// gives the same picture and numbers (the answers in examples.yaml were read off these functions).
+// Module 2: assembly. Sections 1-3: three toy simulations with fixed seeds, so one page state always gives the same
+// picture and numbers (the answers in examples.yaml were read off these functions). Sections 4-5: pieces of myloasm's
+// real assembly graph (data.json, made by np26 scripts/28_course_assembly.py).
 const mulberry = (seed) => () => {
   seed = (seed + 0x6d2b79f5) | 0;
   let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
@@ -8,7 +9,7 @@ const mulberry = (seed) => () => {
 };
 const IDS = [100, 99.99, 99.9, 99.5, 99, 98, 97, 95];  // identity between the two toy strains, %
 const ERRS = [0, 0.5, 1, 2, 3];  // substitution errors in the toy reads, %
-const DEF = { rl: 5, rep: 6, step: 1, id: 99.5, cova: 20, covb: 10, err: 1 };
+const DEF = { rl: 5, rep: 6, step: 1, id: 99.5, cova: 20, covb: 10, err: 1, g: "circle", col: "mag", node: "" };
 const st = { ...DEF };
 const kb = (bp) => (bp / 1000).toLocaleString("en", { maximumFractionDigits: 1 }) + " kb";
 const plural = (n, one, many) => `${n.toLocaleString("en")} ${n === 1 ? one : many}`;
@@ -313,8 +314,155 @@ function drawStrains() {
   return sim;
 }
 
+// ---------- 4. real graph pieces and 5. small circles (DATA from np26 scripts/28_course_assembly.py)
+// node: [name, length (polished for primary contigs), myloasm depth, kind, MAGs ("a,b"), circular (0 no, 1 possibly,
+// 2 yes), x, y, optional pieces [[range, MAG]] of a contig mmlong2 split]; link: [i, j, overlap bp] (i = j: a loop)
+const SUB = Object.fromEntries(DATA.subgraphs.map((g) => [g.id, g]));
+const KIND_TXT = ["in a MAG", "in the final assembly, not in a MAG", "not kept by mmlong2 (mostly under 3 kb)", "removed by myloasm after the graph was written"];
+const CIRC_TXT = ["", "circular-possibly", "circular-yes"];
+const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0) + "%";
+const fmtN = (n) => n.toLocaleString("en");
+const magName = (id) => (DATA.mags[id] ? DATA.mags[id].name : "");
+const nodeMags = (n) => (n[4] ? n[4].split(",") : []);
+const pairOf = (g, a, b) => g.pairs.find((p) => p[0] === a && p[1] === b);
+const rText = (p) => (p ? p[4].toFixed(p[4] > 0.99 ? 3 : 2) : "?");
+const kbs = (bp) => (bp >= 1e8 ? Math.round(bp / 1e6) + " Mb" : bp >= 1e6 ? (bp / 1e6).toFixed(2) + " Mb" : (bp / 1000).toFixed(bp < 1e4 ? 1 : 0) + " kb");
+const byName = (g, name) => g.nodes.find((n) => n[0] === name);
+const SUB_TEXT = {
+  circle: { title: "One loop: a whole genome", text: (g) => { const n = g.nodes[0], m = DATA.mags[n[4]]; return `One node of ${kbs(n[1])} whose end overlaps its own start by ${kbs(g.links[0][2])}: a loop. myloasm marks it ${CIRC_TXT[n[5]]}, and mmlong2 took it as a MAG on its own: ${n[4]}, ${m.name} (phylum Cyanobacteriota), ${m.compl}% complete by CheckM2. Not every long genome looks like this: ${DATA.graph.circLong[1]} of the ${DATA.graph.circLong[0]} loops of 1 Mb or more stand alone in the graph like this one. A loop is the assembler's decision; CheckM2's completeness is a separate check.`; } },
+  closing: { title: "A loop through two contigs", text: (g) => { const a = byName(g, "u20959663ctg"), b = byName(g, "u10633016ctg"), m = DATA.mags[a[4]], ol = g.links.map((l) => l[2]).sort((x, y) => y - x), p = pairOf(g, "u10633016ctg", "u20959663ctg"); return `MAG ${a[4]} (${m.name}, ${kbs(a[1])}, one contig) is not circular on its own. Both of its ends overlap a ${kbs(b[1])} contig (by ${kbs(ol[0])} and ${kbs(ol[1])}), so the two together make a loop; a third, short link (${kbs(ol[2])}) joins them the other way round. The ${kbs(b[1])} contig has the same depth (${b[2]}x against ${a[2]}x), mmlong2's contig taxonomy (Metabuli) gives it the same species, and its depth over the ten days follows the MAG's (r = ${rText(p)}). Yet it is not in the MAG.`; } },
+  repeats: { title: "One genome in pieces", text: (g) => { const big = g.nodes.filter((n) => n[4] === "1.19"), m = DATA.mags["1.19"], r = byName(g, "u13177708ctg"), dps = big.map((n) => n[2]); return `MAG 1.19 (${m.name}, ${m.compl}% complete by CheckM2) has ${m.n} contigs, all in this group, which has ${g.nodes.length} nodes. The MAG's contigs have depths of ${Math.min(...dps)}-${Math.max(...dps)}x; the removed node ${r[0]} (${kbs(r[1])}) has ${r[2]}x and links to three of them. That fits a repeat present twice in the genome and merged into one node, as in section 1, but the graph alone does not prove it. The three short contigs here that are not in the MAG are in the same genus by mmlong2's contig taxonomy (Metabuli).`; } },
+  strains: { title: "Strains kept apart", text: (g) => { const ms = [...new Set(g.nodes.flatMap(nodeMags))], al = g.pairs.filter((p) => p[2] !== null), ids = al.map((p) => p[3] * 100), cov = al.map((p) => p[2] * 100), rs = g.pairs.map((p) => p[4]); return `${ms.length} MAGs, all ${magName(ms[0])}; three of them are a single contig of 1.8-1.9 Mb, linked at their ends. The three long contigs align to each other over ${Math.round(Math.min(...cov))}-${Math.round(Math.max(...cov))}% of their length at ${Math.min(...ids).toFixed(1)}-${Math.max(...ids).toFixed(1)}% identity: closely related strains that myloasm kept as separate contigs instead of merging them (section 3; its documentation says it resolves strains down to about 99% identity). Their depths over the ten days do not all follow each other (r = ${Math.min(...rs).toFixed(2)} to ${Math.max(...rs).toFixed(2)}).`; } },
+  copri: { title: "Two MAGs, one population?", text: (g) => { const p = pairOf(g, "u12841889ctg", "u37043497ctg"), rem = g.nodes.filter((n) => n[3] === 3), a = DATA.mags["2.359"], b = DATA.mags["3.5197"]; return `MAG 2.359 (one contig, ${kbs(a.size)}) and MAG 3.5197 (${b.n} contigs) are both ${a.name}, at about 2,000x. They are linked through ${rem.length} nodes that myloasm removed, all at the same depth. The ${kbs(byName(g, "u12841889ctg")[1])} contig of 3.5197 aligns over ${Math.round(p[2] * 100)}% of its length to 2.359's contig at ${(p[3] * 100).toFixed(1)}% identity, and their depths over the ten days match almost exactly (r = ${rText(p)}). Two strains that rise and fall together, or variants within one population? The graph cannot tell; <a href="interpretation.html">module 7</a> follows these two MAGs over the days.`; } },
+  shared: { title: "A loop with two versions", text: (g) => { const a = byName(g, "u23166933ctg"), m = DATA.mags["s.13"], rem = g.nodes.filter((n) => n[3] === 3).sort((x, y) => x[1] - y[1]); return `MAG s.13 (${m.name}, ${kbs(a[1])}, one contig at ${a[2]}x) closes into a loop through either of two removed nodes of ${kbs(rem[0][1])} and ${kbs(rem[1][1])}, both at ${rem[0][2]}x. A third removed node (${kbs(rem[2][1])}) links it to MAG s.289, another species (${magName("s.289")}), whose contig also loops onto itself. myloasm kept none of the three nodes and does not mark s.13 as circular: where two versions of a region exist, the assembler has to choose, and here it left the loop open.`; } },
+  second: { title: "The second-largest group", text: () => { const c = DATA.graph.second; return `${fmtN(c.nodes)} nodes (${kbs(c.bp)}) with contigs of ${c.mags} MAGs, all of the order Bacteroidales; ${c.unbinned} contigs here are in no MAG and ${c.removed} nodes were removed by myloasm. Coloured by MAG, the seven MAGs with most bases here get a colour, the rest are grey. Click a node to ring all nodes of its MAG.`; } },
+  largest: { title: "The largest group", text: () => { const c = DATA.graph.largest; return `${fmtN(c.nodes)} nodes, ${kbs(c.bp)}: ${pct(DATA.graph.classes[4][2], DATA.graph.primaryBp)} of the primary assembly's bases. Contigs of ${c.mags} MAGs, all of the phylum Bacillota (mostly the orders Lachnospirales and Oscillospirales); ${fmtN(c.unbinned)} contigs here are in no MAG. Most nodes have one to three links. Click a node: all nodes of its MAG get a ring, which shows how one genome's contigs sit in the group.`; } },
+};
+
+function fillNumbers() {
+  const c = DATA.check, g = DATA.graph, cl = g.classes, single = cl[0][1] + cl[1][1], singleBp = cl[0][2] + cl[1][2];
+  const circ = DATA.circles, small = circ.filter((x) => x[1] < 1e5), big = circ.filter((x) => x[1] >= 1e6), lens = small.map((x) => x[1]).sort((a, b) => a - b);
+  const mid = lens.length % 2 ? lens[(lens.length - 1) / 2] : (lens[lens.length / 2 - 1] + lens[lens.length / 2]) / 2;
+  const lk = (k) => `${fmtN(g.linkedByLength[k][2])} of ${fmtN(g.linkedByLength[k][1])} (${pct(g.linkedByLength[k][2], g.linkedByLength[k][1])})`;
+  g.circLong = [big.length, big.filter((x) => x[6] === 1).length];
+  const N = {
+    primary: fmtN(c.primary), linearPct: pct(c.linearWithin2, c.linear), trimR: c.trimR.toFixed(2), pieces: fmtN(c.pieces), split: fmtN(c.splitContigs),
+    removed: fmtN(g.removedNodes), removedBp: (g.removedBp / 1e6).toFixed(0) + " Mb", nodes: fmtN(g.nodes), graphBp: (g.bp / 1e9).toFixed(2) + " Gb", links: fmtN(g.links), selfLoops: fmtN(g.selfLoops),
+    components: fmtN(g.components), singles: fmtN(g.singleComponents), singlePct: pct(single, c.primary), singleBpPct: pct(singleBp, g.primaryBp), primaryBp: (g.primaryBp / 1e9).toFixed(2) + " Gb",
+    linkedShort: lk(0), linkedMid: lk(1), linkedLong: lk(2), largestNodes: fmtN(g.largest.nodes), largestBp: (g.largest.bp / 1e6).toFixed(0) + " Mb", largestMags: g.largest.mags,
+    secondNodes: g.second.nodes, secondMags: g.second.mags, bothBinned: g.magLinks.both, sameMag: `${g.magLinks.same} (${pct(g.magLinks.same, g.magLinks.both)})`,
+    ratioSame: g.magLinks.ratioSame.toFixed(2), ratioDiff: g.magLinks.ratioDiff.toFixed(2),
+    circ: fmtN(circ.length), circBig: big.length, circBigMag: big.filter((x) => x[3] === 0).length, circBigHq: big.filter((x) => x[3] === 0 && DATA.mags[x[4].split(",")[0]].q === "HQ").length, circSmall: fmtN(small.length), circSmallMedian: kbs(mid),
+    circSmallKept: fmtN(small.filter((x) => x[3] < 2).length), circSmallMag: small.filter((x) => x[3] === 0).length,
+  };
+  for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
+  const tot = g.primaryBp;
+  $("gClasses").innerHTML = `<table class="sc"><thead><tr><th>Where the contig is</th><th class="r">Contigs</th><th>Share of bases</th><th class="r">Bases</th><th class="r"></th></tr></thead><tbody>${cl.map(([label, n, bp]) => `<tr><td>${esc(label)}</td><td class="r">${fmtN(n)}</td><td style="width:40%"><div class="bar"><span style="width:${(100 * bp) / tot}%"></span></div></td><td class="r">${(bp / 1e6).toFixed(0)}&nbsp;Mb</td><td class="r">${pct(bp, tot)}</td></tr>`).join("")}</tbody></table>`;
+}
+
+function drawGraph() {
+  const g = SUB[st.g], host = $("gSvg"), big = g.nodes.length > 50, txt0 = SUB_TEXT[g.id];
+  $("gList").innerHTML = DATA.subgraphs.map((x) => `<button role="listitem" data-sg="${x.id}" aria-current="${x.id === st.g}">${esc(SUB_TEXT[x.id].title)}</button>`).join("");
+  $("gTitle").textContent = txt0.title; $("gText").innerHTML = txt0.text(g);
+  const W = Math.max(300, host.clientWidth), H = big ? Math.round(Math.min(760, Math.max(440, W * 0.8))) : 400, m = big ? 16 : 56;
+  const svg = svgBox(host, W, H, `Assembly graph: ${txt0.title}`);
+  const xs = g.nodes.map((n) => n[6]), ys = g.nodes.map((n) => n[7]);
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), sx = Math.max(...xs) - x0, sy = Math.max(...ys) - y0;
+  const sc = Math.min(sx ? (W - 2 * m) / sx : Infinity, sy ? (H - 2 * m) / sy : Infinity);
+  const k = Number.isFinite(sc) ? sc : 0, ox = (W - sx * k) / 2, oy = (H - sy * k) / 2;
+  const P = g.nodes.map((n) => [ox + (n[6] - x0) * k, oy + (n[7] - y0) * k]);
+  const R = (len) => (big ? 1.8 + 9 * Math.sqrt(len / 7e6) : 5 + 30 * Math.sqrt(len / 7e6));
+  // colours: the 7 MAGs with most bases in this piece get --c1..--c7, other MAGs --v0
+  const magBp = new Map();
+  for (const n of g.nodes) if (n[3] === 0) for (const id of nodeMags(n)) magBp.set(id, (magBp.get(id) || 0) + n[1]);
+  const top = [...magBp].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).slice(0, 7).map((x) => x[0]);
+  const magCol = (id) => (top.includes(id) ? `var(--c${top.indexOf(id) + 1})` : "var(--v0)");
+  const LOGMAX = 3.5;  // depth colour scale: 1x to about 3,000x (log10)
+  const fill = (n) => st.col === "depth" ? viridis(Math.log10(Math.max(1, n[2])) / LOGMAX)
+    : n[3] === 0 ? magCol(nodeMags(n)[0]) : n[3] === 1 ? "var(--faint)" : "var(--surface)";
+  const sel = st.node ? byName(g, st.node) : null, selMags = sel ? nodeMags(sel) : [];
+  // links (several between one pair are drawn as curves side by side)
+  const count = new Map(), seen = new Map();
+  for (const [i, j] of g.links) { const key = Math.min(i, j) + "-" + Math.max(i, j); count.set(key, (count.get(key) || 0) + 1); }
+  const lw = big ? 1 : 1.8;
+  for (const [i, j, ol] of g.links) {
+    const [xa, ya] = P[i], r = R(g.nodes[i][1]);
+    let path;
+    if (i === j) {
+      const lr = big ? 5 : 11, cx = xa + (r + lr * 0.6) * 0.7071, cy = ya - (r + lr * 0.6) * 0.7071;
+      path = el("circle", { cx, cy, r: lr, fill: "none", stroke: "var(--muted)", "stroke-width": lw }, svg);
+    } else {
+      const key = Math.min(i, j) + "-" + Math.max(i, j), kk = seen.get(key) || 0, tot = count.get(key);
+      seen.set(key, kk + 1);
+      const [xb, yb] = P[j], dx = xb - xa, dy = yb - ya, len = Math.hypot(dx, dy) || 1, off = (kk - (tot - 1) / 2) * (big ? 10 : 26);
+      const cx = (xa + xb) / 2 - (dy / len) * off, cy = (ya + yb) / 2 + (dx / len) * off;
+      path = el("path", { d: `M${xa},${ya} Q${cx},${cy} ${xb},${yb}`, fill: "none", stroke: "var(--muted)", "stroke-width": lw }, svg);
+    }
+    path.addEventListener("mouseenter", (ev) => showTip(ev, `${i === j ? "Loop" : "Link"}: <span class="mono">${esc(g.nodes[i][0])}</span>${i === j ? "" : ` – <span class="mono">${esc(g.nodes[j][0])}</span>`}<br>overlap ${kbs(ol)}`));
+    path.addEventListener("mouseleave", hideTip);
+  }
+  g.nodes.forEach((n, i) => {
+    const [x, y] = P[i], r = R(n[1]), isSel = sel && n[0] === sel[0], sameMag = sel && !isSel && nodeMags(n).some((id) => selMags.includes(id));
+    const c = el("circle", { cx: x, cy: y, r, fill: fill(n), stroke: isSel ? "var(--ink)" : sameMag ? "var(--ink)" : n[3] >= 2 ? "var(--muted)" : "var(--surface)",
+      "stroke-width": isSel ? 3.5 : sameMag ? 2 : n[3] >= 2 ? 1.5 : big ? 0.6 : 1.5, "stroke-dasharray": n[3] === 3 ? "3 2" : "none", tabindex: big ? -1 : 0, role: "button", "aria-label": `${n[0]}, ${kbs(n[1])}` }, svg);
+    c.style.cursor = "pointer";
+    c.addEventListener("mouseenter", (ev) => showTip(ev, nodeTip(n)));
+    c.addEventListener("mouseleave", hideTip);
+    c.addEventListener("click", () => { st.node = st.node === n[0] ? "" : n[0]; drawGraph(); writeHash(); });
+    c.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); c.dispatchEvent(new MouseEvent("click")); } });
+    if (!big) txt(svg, x, y + r + 14, `${kbs(n[1])}${n[4] ? " · " + n[4] : ""}`, { "text-anchor": "middle" });
+    if (big && (isSel || sameMag)) el("circle", { cx: x, cy: y, r: r + (isSel ? 7 : 4), fill: "none", stroke: isSel ? "var(--v1)" : "var(--ink)", "stroke-width": isSel ? 2.5 : 1.5, "pointer-events": "none" }, svg);
+  });
+  // legend
+  if (st.col === "depth") {
+    const stops = Array.from({ length: 11 }, (_, q) => `${viridis(q / 10)} ${q * 10}%`).join(",");
+    $("gLegend").innerHTML = `<span>myloasm depth: 1x <i class="ramp" style="background:linear-gradient(90deg,${stops})"></i> ${fmtN(Math.round(10 ** LOGMAX))}x (log scale)</span><span><i class="sw" style="border:1.5px dashed var(--muted)"></i>removed by myloasm</span>`;
+  } else {
+    $("gLegend").innerHTML = top.map((id) => `<span><i class="sw" style="background:${magCol(id)}"></i>${esc(id)} ${esc(magName(id))}</span>`).join("")
+      + (magBp.size > top.length ? `<span><i class="sw" style="background:var(--v0)"></i>${magBp.size - top.length} other MAGs</span>` : "")
+      + `<span><i class="sw" style="background:var(--faint)"></i>in no MAG</span><span><i class="sw" style="border:1.5px solid var(--muted)"></i>not kept by mmlong2</span><span><i class="sw" style="border:1.5px dashed var(--muted)"></i>removed by myloasm</span>`;
+  }
+  // compared pairs
+  $("gPairs").innerHTML = g.pairs.length ? `<table class="sc"><thead><tr><th>Contig</th><th>compared with</th><th class="r">aligned</th><th class="r">identity</th><th class="r" title="Correlation of depth over the ten days">r (days)</th></tr></thead><tbody>${g.pairs.map((p) => `<tr><td class="mono">${esc(p[0])}</td><td class="mono">${esc(p[1])}</td><td class="r">${p[2] === null ? "–" : Math.round(p[2] * 100) + "%"}</td><td class="r">${p[3] === null ? "–" : (p[3] * 100).toFixed(1) + "%"}</td><td class="r">${rText(p)}</td></tr>`).join("")}</tbody></table>` : "";
+  $("gInfo").innerHTML = sel ? nodeInfo(g, sel) : `<p class="note">Click a node for its details and links to its MAG in other modules.</p>`;
+  // MAGs in this piece
+  const rows = [...magBp].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([id, bp]) => {
+    const mg = DATA.mags[id], here = g.nodes.filter((n) => nodeMags(n).includes(id)).length;
+    return `<tr class="${selMags.includes(id) ? "hl" : ""}"><td class="mono">${esc(id)}</td><td><i>${esc(mg.name)}</i></td><td>${mg.q}</td><td class="r">${mg.compl}%</td><td class="r">${mg.cont}%</td><td class="r">${here} of ${mg.n}</td><td class="r">${kbs(bp)}</td><td>${magLinks(id, "assembly", true)}</td></tr>`;
+  });
+  $("gMags").innerHTML = rows.length ? `<thead><tr><th>MAG</th><th>Name (GTDB)</th><th>Quality</th><th class="r">Complete</th><th class="r">Contamination</th><th class="r">Contigs here</th><th class="r">Bases here</th><th></th></tr></thead><tbody>${rows.join("")}</tbody>${magBp.size > rows.length ? `<tfoot><tr><td colspan="8" class="st">and ${magBp.size - rows.length} more MAGs</td></tr></tfoot>` : ""}` : "";
+}
+function nodeTip(n) {
+  const ms = nodeMags(n);
+  return `<span class="mono">${esc(n[0])}</span><br>${kbs(n[1])}, depth ${n[2]}x${n[5] ? ", " + CIRC_TXT[n[5]] : ""}<br>${KIND_TXT[n[3]]}${ms.length ? ": " + ms.map((id) => `${esc(id)} ${esc(magName(id))}`).join("; ") : ""}`;
+}
+function nodeInfo(g, n) {
+  const i = g.nodes.indexOf(n), ms = nodeMags(n);
+  const links = g.links.filter((l) => l[0] === i || l[1] === i).map((l) => (l[0] === l[1] ? `loop onto itself (${kbs(l[2])})` : `<span class="mono">${esc(g.nodes[l[0] === i ? l[1] : l[0]][0])}</span> (${kbs(l[2])})`));
+  const pieces = n[8] ? `<p class="note">mmlong2 split this contig: ${n[8].map(([r, mg]) => `${esc(r)} ${mg ? "in MAG " + esc(mg) : "in no MAG"}`).join("; ")}.</p>` : "";
+  const mags = ms.map((id) => { const mg = DATA.mags[id]; return `<p><b>MAG ${esc(id)}</b> <i>${esc(mg.name)}</i>, ${mg.q}, ${mg.compl}% complete, ${mg.cont}% contamination (CheckM2), ${mg.n} contigs, ${kbs(mg.size)}.</p>${magLinks(id, "assembly")}`; }).join("");
+  return `<div class="ex"><p><b class="mono">${esc(n[0])}</b>: ${kbs(n[1])}, myloasm depth ${n[2]}x${n[5] ? ", " + CIRC_TXT[n[5]] : ""}; ${KIND_TXT[n[3]]}.</p><p>Links: ${links.length ? links.join(", ") : "none"}.</p>${pieces}${mags}</div>`;
+}
+
+function drawCircles() {
+  const host = $("cSvg"), W = Math.max(300, host.clientWidth), H = 330, ml = 52, mr = 14, mt = 12, mb = 40;
+  const svg = svgBox(host, W, H, "Circular contigs: length against depth");
+  const X = (bp) => ml + ((Math.log10(bp) - 3) / 4) * (W - ml - mr), Y = (d) => H - mb - (Math.log10(Math.max(1, d)) / 4) * (H - mt - mb);
+  for (const e of [3, 4, 5, 6, 7]) { el("line", { x1: X(10 ** e), x2: X(10 ** e), y1: mt, y2: H - mb, class: "grid" }, svg); txt(svg, X(10 ** e), H - mb + 16, ["1 kb", "10 kb", "100 kb", "1 Mb", "10 Mb"][e - 3], { "text-anchor": e === 7 ? "end" : "middle" }); }
+  for (const e of [0, 1, 2, 3, 4]) { el("line", { x1: ml, x2: W - mr, y1: Y(10 ** e), y2: Y(10 ** e), class: "grid" }, svg); txt(svg, ml - 6, Y(10 ** e) + 4, fmtN(10 ** e) + "x", { "text-anchor": "end" }); }
+  txt(svg, (ml + W - mr) / 2, H - 6, "contig length (log scale)", { "text-anchor": "middle" });
+  txt(svg, 12, (mt + H - mb) / 2, "myloasm depth (log scale)", { "text-anchor": "middle", transform: `rotate(-90 12 ${(mt + H - mb) / 2})` });
+  const col = ["var(--c1)", "var(--c2)", "var(--faint)"];
+  for (const c of DATA.circles) {
+    const p = el("circle", { cx: X(c[1]), cy: Y(c[2]), r: 3.2, fill: col[Math.min(2, c[3])], "fill-opacity": 0.8 }, svg);
+    p.addEventListener("mouseenter", (ev) => showTip(ev, `<span class="mono">${esc(c[0])}</span><br>${kbs(c[1])}, depth ${c[2]}x, ${CIRC_TXT[c[5]]}<br>${KIND_TXT[c[3]]}${c[4] ? ": " + c[4].split(",").map((id) => `${esc(id)} ${esc(magName(id))}`).join("; ") : ""}${c[6] > 1 ? `<br>also linked to other nodes (group of ${c[6]})` : ""}`));
+    p.addEventListener("mouseleave", hideTip);
+  }
+  $("cLegend").innerHTML = `<span><i class="sw" style="background:var(--c1)"></i>in a MAG</span><span><i class="sw" style="background:var(--c2)"></i>in the final assembly, not in a MAG</span><span><i class="sw" style="background:var(--faint)"></i>not kept by mmlong2</span>`;
+}
+
 // ---------- state, examples, start
-const SECTIONS = { repeat: "secRepeat", steps: "secSteps", strains: "secStrains" };
+const SECTIONS = { repeat: "secRepeat", steps: "secSteps", strains: "secStrains", graphs: "secReal", circles: "secCircles" };
 const clampInt = (v, lo, hi, d) => { const x = parseInt(v, 10); return Number.isFinite(x) ? Math.max(lo, Math.min(hi, x)) : d; };
 function applyState(s) {
   st.rl = clampInt(s.rl, 1, 30, DEF.rl); st.rep = clampInt(s.rep, 1, 10, DEF.rep); st.step = clampInt(s.step, 1, STEPS.length, DEF.step);
@@ -323,9 +471,12 @@ function applyState(s) {
   st.err = ERRS.includes(parseFloat(s.err)) ? parseFloat(s.err) : DEF.err;
   $("rl").value = st.rl; $("rep").value = st.rep; $("cova").value = st.cova; $("covb").value = st.covb;
   $("sid").value = IDS.indexOf(st.id); $("err").value = ERRS.indexOf(st.err);
+  st.g = SUB[s.g] ? s.g : DEF.g; st.col = s.col === "depth" ? "depth" : "mag";
+  st.node = SUB[st.g].nodes.some((n) => n[0] === s.node) ? s.node : "";
+  $("gCol").value = st.col;
 }
 function writeHash() { writeHashParams({ ...st, ex: examples.current >= 0 ? examples.current + 1 : undefined }); }
-function drawAll() { drawRepeat(); drawSteps(); drawStrains(); }
+function drawAll() { drawRepeat(); drawSteps(); drawStrains(); drawGraph(); drawCircles(); }
 const examples = setupExamples($("asExamples"), (k) => {
   const s = EXAMPLES[k].state;
   applyState({ ...DEF, ...s }); drawAll(); writeHash();
@@ -339,6 +490,9 @@ $("err").addEventListener("input", () => { st.err = ERRS[+$("err").value]; drawS
 $("stList").addEventListener("click", (ev) => { const b = ev.target.closest("[data-step]"); if (b) { st.step = +b.dataset.step; drawSteps(); writeHash(); } });
 $("stPrev").addEventListener("click", () => { if (st.step > 1) { st.step--; drawSteps(); writeHash(); } });
 $("stNext").addEventListener("click", () => { if (st.step < STEPS.length) { st.step++; drawSteps(); writeHash(); } });
+$("gList").addEventListener("click", (ev) => { const b = ev.target.closest("[data-sg]"); if (b) { st.g = b.dataset.sg; st.node = ""; drawGraph(); writeHash(); } });
+$("gCol").addEventListener("change", () => { st.col = $("gCol").value; drawGraph(); writeHash(); });
+fillNumbers();
 (function start() {
   const s = readHashParams(), ex = parseInt(s.ex, 10);
   if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState({ ...DEF, ...EXAMPLES[ex - 1].state, ...s }); }

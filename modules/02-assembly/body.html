@@ -1,7 +1,7 @@
 <div class="intro">
   <span class="kicker">Module 2</span>
   <h1>Assembly: from overlapping reads to contigs</h1>
-  <p>An assembler gets millions of reads in no order and has to rebuild the genomes they came from. It finds reads that share sequence (overlaps), joins them into a graph and reads contigs off that graph. Repeats and closely related strains are what make this hard. Our data were assembled with myloasm (version 0.2.0, inside mmlong2), all ten samples together. The three small examples below are simulations: toy genomes and toy rules, made to show one idea each. They are not myloasm itself; the panel after them says what myloasm does, from its authors' paper. Before this step the reads were filtered and trimmed (module 1). Next: <a href="binning.html">module 3</a> sorts these contigs into genomes.</p>
+  <p>An assembler gets millions of reads in no order and has to rebuild the genomes they came from. It finds reads that share sequence (overlaps), joins them into a graph and reads contigs off that graph. Repeats and closely related strains are what make this hard. Our data were assembled with myloasm (version 0.2.0, inside mmlong2), all ten samples together. Sections 1 to 3 are simulations: toy genomes and toy rules, made to show one idea each. They are not myloasm itself; the panel after them says what myloasm does, from its authors' paper. Sections 4 and 5 show myloasm's real assembly graph from our data. Before this step the reads were filtered and trimmed (module 1). Next: <a href="binning.html">module 3</a> sorts these contigs into genomes.</p>
   <div class="stats" aria-label="Our assembly in numbers: myloasm's primary assembly">
     <div class="stat"><b>166.5 Gb</b><span>reads in (10 samples, after filtering and trimming)</span></div>
     <div class="stat"><b>11.5 h</b><span>myloasm run time, 60 threads</span></div>
@@ -98,9 +98,59 @@
   </div>
 </section>
 
-<section class="panel placeholder" id="secReal">
-  <div class="exhead"><h2>4. Real graphs from our assembly</h2><span class="chip">coming soon</span></div>
-  <p>In preparation: pieces of myloasm's assembly graph from our own data. A large repeat with the reads that span it, a species with low and with high microdiversity (one clean path against a tangle of strains), and a circular contig closing on itself. These need the graph file from the computing cluster and will be added when it arrives.</p>
+<section class="panel" id="secReal">
+  <div class="exhead"><h2>4. Real graphs from our assembly</h2><span class="chip">our data</span></div>
+  <div class="txt">
+    <p>myloasm saves its graph as a GFA file. Each node is one contig before polishing, each link an overlap between the ends of two contigs, or between the two ends of one contig (a loop). The nodes carry the contig names (<code>u…ctg</code>), so the graph can be tied to the final contigs and the MAGs. We checked this first: all <span data-n="primary"></span> contigs of myloasm's primary assembly are nodes of the same name and depth. For <span data-n="linearPct"></span> of the linear ones the polished length is within 2% of the node's (all contigs of 100 kb or more); circular contigs are shorter than their node by about the overlap of their loop (correlation <span data-n="trimR"></span>). mmlong2 adds <code>np26_coassembly_</code> to each name and <code>_start-end</code> to the <span data-n="pieces"></span> pieces of the <span data-n="split"></span> contigs it split.</p>
+    <p>The graph also holds <span data-n="removed"></span> nodes (<span data-n="removedBp"></span>) that are not in the primary assembly: myloasm removed them after writing the graph. Its log counts 16,853 duplicates and 9,435 alternates (near-identical versions of kept contigs) among them, but does not itemise the rest. Depths below are myloasm's (reads matching at about 99% identity), not the read depth that binning used.</p>
+  </div>
+  <div class="stats" aria-label="The graph in numbers">
+    <div class="stat"><b data-n="nodes"></b><span>nodes (contigs before polishing, <span data-n="graphBp"></span>)</span></div>
+    <div class="stat"><b data-n="links"></b><span>links, <span data-n="selfLoops"></span> of them loops of a contig onto itself</span></div>
+    <div class="stat"><b data-n="components"></b><span>connected groups of nodes; <span data-n="singles"></span> are a single node</span></div>
+    <div class="stat"><b data-n="singlePct"></b><span>of the primary contigs have no link to another node; they hold <span data-n="singleBpPct"></span> of its bases</span></div>
+  </div>
+  <div class="duo">
+    <div class="sub">
+      <h3 class="subh">Where the bases of the primary assembly sit</h3>
+      <div id="gClasses"></div>
+      <p class="note">Polished lengths of the <span data-n="primary"></span> primary contigs (<span data-n="primaryBp"></span>), by the group of linked nodes each one is in. A loop does not count as a link to another node.</p>
+    </div>
+    <div class="txt">
+      <p>Most contigs stand alone, but most of the long ones do not: <span data-n="linkedShort"></span> of contigs under 100 kb have a link to another node, <span data-n="linkedMid"></span> of those of 100 kb to 1 Mb and <span data-n="linkedLong"></span> of those of 1 Mb or more. A contig ends where the graph branches or where the reads run out; a branch stays in the graph as links to the contigs on each side. One group of <span data-n="largestNodes"></span> nodes holds <span data-n="largestBp"></span>, with contigs of <span data-n="largestMags"></span> MAGs, all of the phylum Bacillota; the second largest (<span data-n="secondNodes"></span> nodes) holds <span data-n="secondMags"></span> MAGs, all Bacteroidota. Links run between genomes, not only within them: of <span data-n="bothBinned"></span> pairs of linked contigs that are both in MAGs, <span data-n="sameMag"></span> are in the same MAG. Their depths are closer (median ratio <span data-n="ratioSame"></span>, against <span data-n="ratioDiff"></span> for pairs in different MAGs). The graph does not say what the shared sequence is.</p>
+    </div>
+  </div>
+  <div class="spctl" role="group" aria-label="Pieces of the graph">
+    <div class="exlist" id="gList" role="list"></div>
+  </div>
+  <div class="spctl">
+    <label>Colour <select id="gCol" aria-label="Colour nodes by"><option value="mag">by MAG</option><option value="depth">by depth (myloasm)</option></select></label>
+    <span class="note">Circle area: contig length. Hover for details, click a node to select it.</span>
+  </div>
+  <div class="stepgrid gridwide">
+    <div class="sub">
+      <div id="gSvg" class="figbox"></div>
+      <div class="legend" id="gLegend"></div>
+    </div>
+    <div class="stside">
+      <h3 class="subh" id="gTitle"></h3>
+      <p class="steptext" id="gText"></p>
+      <div id="gPairs"></div>
+      <div id="gInfo" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="scroll"><table class="ct" id="gMags"></table></div>
+  <p class="note">From myloasm's final contig graph (final_contig_graph.gfa; sequences not used) and mmlong2's contig and MAG tables. Positions come from a force layout (linked nodes pulled together), so distances mean nothing. Identity and aligned share: minimap2 (asm20) between the final contigs; depth over the days: correlation of the contigs' read depth per gigabase sequenced in each sample (log scale).</p>
+</section>
+
+<section class="panel" id="secCircles">
+  <div class="exhead"><h2>5. Small circles: what happens to them</h2><span class="chip">our data</span></div>
+  <div class="txt">
+    <p>A contig whose end overlaps its own start is a loop in the graph, and myloasm marks it circular ("yes" or "possibly", see the panel on myloasm above). <span data-n="circ"></span> primary contigs loop onto themselves. Of the <span data-n="circBig"></span> of 1 Mb or more, <span data-n="circBigMag"></span> are in a MAG, <span data-n="circBigHq"></span> of them of high quality by CheckM2. The small ones are another story: <span data-n="circSmall"></span> are under 100 kb (median <span data-n="circSmallMedian"></span>). mmlong2 keeps <span data-n="circSmallKept"></span> of them (it drops most contigs under 3 kb), and only <span data-n="circSmallMag"></span> of these are in a MAG. myloasm's authors treat small circles as plasmids and phages; we have not checked what each one is. Binning groups contigs by depth and composition (module 3), and a plasmid's copy number can give it another depth than its host's chromosome. <a href="methylation.html">Module 5</a> tries to place such contigs by their methylation.</p>
+  </div>
+  <div id="cSvg" class="figbox"></div>
+  <div class="legend" id="cLegend"></div>
+  <p class="note">Every primary contig with a loop in the graph: polished length and myloasm's depth, both on log scales.</p>
 </section>
 
 <section class="panel" id="secSources">
