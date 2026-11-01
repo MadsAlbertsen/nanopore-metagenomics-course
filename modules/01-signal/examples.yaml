@@ -24,8 +24,9 @@
   answer: >-
     22 bases start in this window, with 6, 12, 24, 30, 42 or 78 samples: always a multiple of 6, because the move
     table moves in steps of 6 samples (the basecaller's stride). Thirteen of the 22 get the minimum of 6. At 5,000 samples
-    per second and 400 bases per second a base would last 12.5 samples; over all reads the mean is 13.0 and the
-    median 12, and 44% of bases get 6. The speed is not even: a few slow bases take many samples.
+    per second and 400 bases per second a base would last 12.5 samples; all reads pooled give 13.07 samples per base
+    (383 bases per second), the median base gets 12 and 44% of bases get 6. The speed is not even: a few slow bases
+    take many samples.
 
 - title: Model against measured
   state: {stretch: 1}
@@ -53,13 +54,16 @@
   state: {fitb: move}
   question: >-
     The scatter shows this read's measured mean per reference base against the model, with Dorado's move-table
-    boundaries. Switch to refined boundaries. Why is the refined correlation not a fair test of the model, and which
-    number is?
+    boundaries. Switch to refined boundaries. Why is the refined correlation not a fair test of the model, and what
+    does the move-table number say?
   answer: >-
     With the move table r = 0.759 for this read (median 0.725 over all reads); with Remora's refined boundaries r =
     0.987 (median 0.985). But refining moves the boundaries to fit the model: against a table whose levels were
-    shuffled between k-mers, refining still gives a median of 0.750 (638 reads). The move-table number does not use
-    the model, so it is the fair test: the 9-mer model predicts the current well, though not perfectly.
+    shuffled between k-mers, refining still gives a median of 0.750 (638 reads), while the same shuffled table gives
+    r 0.00 on the move table's boundaries: the 0.750 comes entirely from the fitting. The move-table number does not
+    use the model, but it is a lower bound: the model predicts the current at least this well, and part of the gap
+    comes from the coarse 6-sample boundaries (the middle half of bases of 24 samples or more gives a median of
+    0.841).
 
 - title: Which bin methylates GATC?
   state: {motif: GATC, kbin: "1.1314", kmod: 6mA}
@@ -82,7 +86,7 @@
     Bin 1.1314 differs from the mean of the other three at positions -2 and -1 (lower), +1 (higher) and +4 to +5
     (lower); the largest difference is -0.088 normalised units at -2, about 2.7 pA. The other three bins agree with
     each other within 0.011. All these positions lie in the window where the model's 9-mer contains the A (-2 to +6).
-    The shaded middle half of single occurrences is about 0.14 units wide, wider than the shift.
+    The shaded middle half of single occurrences is 0.12-0.20 units wide, wider than the shift.
 
 - title: Signal and call agree
   state: {motif: GATC, split: 1}
@@ -92,8 +96,9 @@
   answer: >-
     Like the other bins: the 11,736 occurrences called unmodified differ from the other bins' mean by at most 0.019
     units, the 46,538 called modified by up to 0.105. So the current at GATC in this bin is shifted where Dorado calls
-    6mA, an independent check that both see the same thing. Whether the unmodified calls are truly unmethylated sites
-    or missed calls, the signal alone cannot say.
+    6mA: a consistency check, not an independent one, since Dorado's call uses the same current. The split is clean for
+    GATC; in GTNNAC the occurrences called unmodified still shift by 0.076 units (65% of the effect), in GANTC by
+    0.028. Whether the unmodified calls are truly unmethylated sites or missed calls, the signal alone cannot say.
 
 - title: Same pattern, other motifs
   state: {motif: GTNNAC}

@@ -26,6 +26,8 @@ function effect(m, key = "refined") {
 }
 const range = (a, f, unit = "") => { const lo = Math.min(...a), hi = Math.max(...a); return (lo === hi ? f(lo) : `${f(lo)}-${f(hi)}`) + unit; };
 const atLeast = (h, from) => h.slice(from).reduce((s, x) => s + x, 0);
+// share of calls with probability 0.2-0.8 (bins 4-15 of 20)
+const mid = (v) => v.hist.slice(4, 16).reduce((s, x) => s + x, 0) / v.calls;
 
 // --- numbers in the text, all from the data
 function fillNumbers() {
@@ -38,12 +40,16 @@ function fillNumbers() {
     nReads: num(R.n), speedSet: D.source.speed_setting, rate: num(D.source.rate), perBase: (D.source.rate / D.source.speed_setting).toFixed(1),
     traceLen: `${(T.n / T.rate).toFixed(1)} s`, traceBases: num(T.length), traceTs: `${num(T.ts)} samples (${(T.ts / T.rate).toFixed(2)} s)`,
     tsMedian: `${D.ts.median_s.toFixed(2)} s`, leadShare: pct(D.bam.lead_le10), traceTail: `${((T.n - T.ns) / T.rate).toFixed(2)} s`,
-    stride: dw.stride, dwell6: pct(dw.hist[dw.stride] / tot), dwellMedian: dw.median, dwellMean: dw.mean.toFixed(1), speedMedian: D.speed.median,
+    stride: dw.stride, dwell6: pct(dw.hist[dw.stride] / tot), dwellMedian: dw.median, dwellMean: dw.mean.toFixed(2), speedMedian: D.speed.median,
     movesOk: `${num(R.moves_ok)} of ${num(R.n)}`, readMove: F.read_r.move.toFixed(3), readRefined: F.read_r.refined.toFixed(3),
     rShuffled: F.median.r_shuffled.toFixed(3), nShuffled: num(F.n_shuffled), rMove: F.median.r_move.toFixed(3), rRefined: F.median.r_refined.toFixed(3),
     scalePa: Math.round(F.scale_pa), effect: range(eff, (x) => x.toFixed(2)), mlHigh: range(mlHigh, (x) => (100 * x).toFixed(0), "%"), mlLow: range(mlLow, (x) => (100 * x).toFixed(0), "%"),
     siteLow: (() => { const sc = motifOf("GATC").site_check; return `${num(sc.observed[0] + sc.observed[1])} sites below 40% against ${num(Math.round(sc.expected[0] + sc.expected[1]))} expected, of ${num(sc.sites)}`; })(),
     errBase: `${range(eb, (x) => (100 * x).toFixed(2), "%")} of aligned reference bases`,
+    speedPooled: dw.pooled_speed, rMoveShuf: (Math.abs(F.median.r_move_shuffled) < 0.0005 ? 0 : F.median.r_move_shuffled).toFixed(2), rMoveLong: F.median.r_move_long.toFixed(3),
+    effectMove: range(M.map((m) => Math.max(...effect(m, "move").map(Math.abs))), (x) => x.toFixed(2)),
+    mlMidOther: range(M.flatMap((m) => BINS.filter((b) => b !== m.methylated_in).map((b) => mid(m.bins[b]))), (x) => (100 * x).toFixed(0), "%"),
+    mlMidOwn: range(M.map((m) => mid(m.bins[m.methylated_in])), (x) => (100 * x).toFixed(0), "%"),
   };
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
   $("sgStats").innerHTML = [

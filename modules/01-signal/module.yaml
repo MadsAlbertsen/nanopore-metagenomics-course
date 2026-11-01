@@ -14,17 +14,19 @@ data_note: >-
   sources are marked as such.
 takeaways:
   - "The sequencer measures a current, 5,000 times per second here; at about 400 bases per second a base lasts about
-    13 samples on average, and the speed varies between reads and along a read."
+    13 samples on average (383 bases per second, all reads pooled), and the speed varies between reads and along a read."
   - "Dorado's move table assigns the samples to bases in steps of 6 (one move per base, checked for every read); the
     samples before ts, the adapter and barcode, are not turned into bases."
-  - "The current depends on several bases at once: ONT's 9-mer table predicts it well (median correlation 0.725 per read with
-    Dorado's boundaries). Refining the boundaries to the model raises that to 0.985, but a shuffled model still
-    reaches 0.750, so a refined fit is partly made by the fitting."
-  - "A crude search finds one 6mA motif in each of three bins (GATC, GANTC, GTNNAC; 79-90% of calls modified, 3-6% in
+  - "The current depends on several bases at once: ONT's 9-mer table predicts it at least as well as a median
+    correlation of 0.725 per read with Dorado's coarse boundaries (0.841 on the middle of long bases). Refining the
+    boundaries to the model raises that to 0.985, but a shuffled model, r 0.00 on the move table, also reaches 0.750
+    after refining: that part comes entirely from the fitting."
+  - "A crude search finds one 6mA motif in each of three bins (GATC, GANTC, GTNNAC; 78-90% of calls modified, 3-6% in
     the other bins). Dorado's probabilities are mostly near 0 or 1."
-  - "A 6mA changes the mean current by only about 0.06-0.12 normalised units (2-4 pA) over the bases whose 9-mer holds
-    it, less than the spread between single reads, but the same way in all three motifs."
-  - "Basecalling errors pile up at methylated motifs: the read differs from the reference over GANTC in 31% of its
+  - "A 6mA changes the mean current by at least about 2-4 pA (0.06-0.12 normalised units with refined boundaries,
+    which partly absorb it; 3-5 pA or 0.10-0.16 units with the move table's) over the bases whose 9-mer holds it, less
+    than the spread between single reads, but the same way in all three motifs."
+  - "Basecalling errors are far more common at methylated motifs: the read differs from the reference over GANTC in 31% of its
     occurrences in the bin that methylates it, 3-4% elsewhere."
 discussion: >-
   Over GANTC, reads of the bin that methylates it differ from the reference in about one occurrence of three. What
@@ -53,7 +55,8 @@ teacher:
     - "Normalised units are per read (the read's current minus its shift, divided by its scale); one unit is about
       31 pA here. Comparing raw pA between reads mixes in pore-to-pore differences."
     - "A refined correlation of 0.985 does not mean the model is that good: a shuffled model also reaches 0.750
-      after refining. Use the move-table number to judge the model."
+      after refining (0.00 on the move table). The move-table number is a lower bound for the model: part of its gap
+      comes from the coarse 6-sample boundaries."
     - "The motif search is crude: exact sequences of 4-6 bases, one modified position. Two-part motifs, longer ones
       and mixed bins are missed; module 6 uses Nanomotif."
     - "With 1-2 reads per site, a single site's methylated share is mostly noise; pool per motif, or use deeper data."
