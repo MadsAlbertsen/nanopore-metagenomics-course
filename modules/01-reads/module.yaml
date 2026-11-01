@@ -3,8 +3,8 @@ slug: reads
 title: "Raw reads: what they look like, and why we filter and split them"
 nav: Raw reads
 summary: >-
-  The structure of a read for rapid and ligation library preps, read length and quality, adapters, joined reads that
-  need splitting, and what filtering costs.
+  The structure of a rapid barcoding read, read length and quality, adapters, joined reads that need splitting, and
+  what filtering costs, on the example data set's own reads.
 status: draft
 takeaways:
   - "A rapid barcoding read starts with the end of the sequencing adapter and a barcoded tag (front flank, barcode,
@@ -45,5 +45,3 @@ teacher:
       a sequencing service, which often holds only reads that passed, would differ."
     - "Porechop_ABI's trimming numbers differ between the samples here (14-40% of reads trimmed at the start) and the
       full run (25-43%): it picks the adapter sets it searches for from the reads it is given."
-    - "This module shows rapid barcoding reads only. Ligation reads carry adapters at both ends; a ligation data set
-      is still to come."
