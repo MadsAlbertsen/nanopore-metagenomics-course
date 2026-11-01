@@ -1,0 +1,102 @@
+# Guided examples for module 6 (annotation). Each example sets the page up (state) and asks one question; the answer
+# stays hidden until clicked. Every number was computed from the example analysis (np26 scripts/29_course_annotation.py
+# data: GTDB-Tk summaries and Bakta tables; 2026-11-01) and still needs the independent check. check.py rejects names
+# not in data.json.
+# state keys: mag = MAG in the card; map = MAG in the gene map; ctg = contig; pos = window start (bp); win = window
+#   width in kb (10, 20, 50); q = search text (product, gene symbol or Pfam domain); amr = resistance gene in the table.
+
+- title: How sure is a species name?
+  state: {mag: "1.308", map: "1.308"}
+  question: >-
+    Open: Bacteroides caccae (MAG 1.308), also shown in modules 3, 5 and 7. Find it in the ANI and AF chart and read
+    its card. Why does GTDB-Tk give it a species name, and how many of its genes have a name?
+  answer: >-
+    Its closest reference genome is Bacteroides caccae at 99.22% ANI with an alignment fraction of 0.867: above the
+    species radius of 95% and above the AF limit of 0.5, and the tree placement agrees ("congruent species
+    assignments"). Of its 4,265 CDS, 717 (16.8%) are hypothetical, the 23rd lowest share of the 421 MAGs; 3,542 are
+    named from a protein cluster. Bacteroides is well studied, and its proteins find many relatives.
+
+- title: Close, but too little aligned
+  state: {mag: "2.255"}
+  question: >-
+    Open MAG 2.255 (Muricoprocola sp.), one contig of 2.64 Mb. Its closest reference is more than 95% identical. Why
+    does it get no species name?
+  answer: >-
+    The closest reference, Muricoprocola shaoxingensis, is 97.85% identical by ANI, but only 0.329 of the genomes
+    align (AF), below GTDB-Tk's limit of 0.5. ANI is measured only over the aligned part, so a high ANI over a third
+    of a genome does not make the same species. GTDB-Tk stops at genus. Why so little aligns, the data here do not
+    show. 755 of its 2,428 CDS (31%) are hypothetical.
+
+- title: Close to many species
+  state: {mag: "3.2807", map: "3.2807"}
+  question: >-
+    Open MAG 3.2807 (Collinsella sp.). Read the warning in its card, its closest reference and its placement
+    reference. Why does it get no species name?
+  answer: >-
+    GTDB-Tk places it next to Collinsella sp902494715 (94.51% ANI, AF 0.687), below that species' 95% radius; the
+    warning ("falls outside its pre-defined ANI radius") refers to this placement reference. Its highest ANI to any
+    reference is 94.97% (Collinsella sp902465465, radius 95.0%, AF 0.623), and the 99 other Collinsella references GTDB-Tk
+    lists are 92.6-94.97% identical, 17 of them within 0.5 points of their own radius. GTDB-Tk cannot assign it to an
+    existing species; a fixed ANI boundary cannot separate genomes this close to it. Its genes are well named (15.0%
+    hypothetical), so missing a species name does not mean its genes are unknown.
+
+- title: An archaeon in a bacterial annotation tool
+  state: {mag: "c.14", map: "c.14", q: "MCR_alpha"}
+  question: >-
+    Open Methanocatella smithii (MAG c.14), the only archaeon, a circular 1.79 Mb genome. What share of its genes is
+    hypothetical? Look at the two search hits for MCR_alpha and their neighbours in the gene map.
+  answer: >-
+    1,610 of 1,786 CDS (90.1%) are hypothetical, the highest share of all MAGs; only 176 got a name. The search
+    finds two hypothetical proteins with the Pfam domains of methyl-coenzyme M reductase alpha (MCR_alpha), at
+    1.04 and 1.15 Mb, each next to genes with MCR_gamma and MCR_beta domains: the enzyme that releases methane in
+    methanogens. In the same window, genes with elongation factor, ribosomal protein and RNA polymerase domains are
+    hypothetical too. Bakta was designed for bacteria, and its protein clusters do not name these archaeal proteins;
+    the Pfam domains show what they are. GTDB-Tk, which has archaeal markers, names this genome to species at 99.33%
+    ANI.
+
+- title: A placeholder species
+  state: {mag: "c.100", map: "c.100"}
+  question: >-
+    Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome also shown in module 7. How sure is its name,
+    and how much of its gene content is known? Compare with Bacteroides caccae (example 1).
+  answer: >-
+    The name is as solid as B. caccae's: 98.36% ANI and AF 0.896 to the species' reference genome. But the species
+    has no published Latin name, hence the placeholder name, and 907 of its 1,347 CDS (67.3%) are hypothetical
+    against 16.8% in B. caccae. Its order RF39 has a placeholder name too. MAGs with a placeholder name have a median
+    of 45% hypothetical, those with a Latin name 24% (the chart's first rows).
+
+- title: A name from a distant relative
+  state: {map: "c.32", mag: "c.32", pos: 244000, q: "flagellin"}
+  question: >-
+    Open Butyrivibrio_A crossota (MAG c.32), one circular contig, also in modules 4 and 7. The window shows a gene
+    named Flagellin and a hypothetical protein next to it. How strong is the evidence for each?
+  answer: >-
+    The gene at 252,506-253,732 is named Flagellin by a UniRef50 cluster match at 51% identity to the cluster's
+    representative, just above Bakta's 50% floor. The next gene (254,026-255,240) matched no cluster and stays
+    hypothetical, but carries the Pfam domain Flagellin_C. Both point to flagellin-like proteins; neither says which
+    flagellin or whether it is made. Half of all cluster matches in the 421 MAGs are below 62.6% identity.
+
+- title: A resistance gene and its neighbours
+  state: {mag: "1.717", map: "1.717", q: "Tet(W)"}
+  question: >-
+    Open Scatosoma sp900552625 (MAG 1.717), also in module 4. Where is its tetracycline resistance gene, how strong
+    is the evidence, and what lies around it?
+  answer: >-
+    tet(W) sits on contig u9907485ctg (236 kb) at 5,808-7,727, named by AMRFinderPlus from a reference resistance
+    protein; its cluster match is 98% identical. Nearby are genes named after mobile-element functions: a
+    MobA/VirD2-like nuclease and a conjugative transposon-like helix-turn-helix domain within 6 kb, and a hypothetical
+    protein with resolvase and recombinase domains at 15.8 kb. That fits a mobile element but does not prove one,
+    and the gene's presence does not show that the bacterium resists tetracycline. tet(W) is the most common match:
+    46 genes in 42 MAGs.
+
+- title: What module 5's flagged contigs carry
+  state: {mag: "2.167", map: "2.167", ctg: "u6615594ctg", q: "Elongation factor G"}
+  question: >-
+    Open Dorea formicigenerans (MAG 2.167). Module 5 flags its two small contigs (178 and 175 kb) because their
+    methylation differs from the main contig. Do their genes settle whether they belong?
+  answer: >-
+    Both are mostly named: 43 of 159 and 22 of 160 CDS are hypothetical. u6615594ctg carries a cluster of cobalamin
+    (vitamin B12) synthesis genes and a gene named Elongation factor G (66% identity). The main contig already has two genes
+    named Elongation factor G (85% and 66% identity), so another gene with this name is not by itself a sign of a
+    second genome. Gene names do not settle it; module 4's single-copy marker genes
+    (CheckM2) and module 5's methylation are made for this question.

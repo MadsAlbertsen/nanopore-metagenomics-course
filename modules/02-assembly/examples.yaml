@@ -70,3 +70,96 @@
     lacks myloasm's protections (a base-quality check at variant positions and relaxed thresholds where no exact
     matches exist). myloasm also compares 21-letter words, so an error elsewhere only loses one match instead of
     blocking the overlap. 3% errors is the limit of what myloasm is documented for (reads above about 97% accuracy).
+
+# Examples 7-13 use the real graph (sections 4 and 5; data.json from np26 scripts/28_course_assembly.py).
+# state keys: g = piece of the graph (circle, closing, repeats, strains, copri, shared, second, largest);
+#   col = colour (mag, depth); node = a selected node of that piece. Numbers checked on data.json (2026-11-01).
+
+- title: A genome as one loop
+  state: {go: graphs, g: circle}
+  question: >-
+    This piece of the graph is a single node with one link. Where does the link go, and what does that say about
+    the genome? How complete is the MAG made from it, and is a loop enough to call a genome complete?
+  answer: >-
+    The link runs from the contig's end back to its own start (an overlap of 23 kb), so the 1.91 Mb contig closes
+    into a circle; myloasm marks it circular-yes. mmlong2 took it as a MAG on its own (c.34, Zag111 sp002102825),
+    100% complete with 0.3% contamination by CheckM2. A loop is the assembler's decision; CheckM2's estimate is an
+    independent check, and here both agree. 110 of the 122 loops of 1 Mb or more stand alone like this one.
+
+- title: A contig left out of its MAG
+  state: {go: graphs, g: closing, node: u10633016ctg}
+  question: >-
+    The selected 94 kb contig is in no MAG. Which MAG does the graph tie it to, and what other evidence on the page
+    points the same way?
+  answer: >-
+    Its two ends overlap the two ends of the 2.02 Mb contig that is MAG s.171 (51-20 sp001917175), by 22.6 and 24.5
+    kb, so together they make a loop. myloasm gives both the same depth (418x and 416x); the read depth that binning
+    used is lower for the small contig (369x against 482x), as expected when reads from the shared ends are split
+    between the two. mmlong2's contig taxonomy gives it the same species, and its depth over the ten days follows
+    the MAG's contig more closely than any other of the 4,400 contigs of 50 kb or more (r = 0.994). So it likely
+    belongs to the same genome. It could not join the MAG: mmlong2 1.2.1 makes a MAG from a single contig of 1 Mb or
+    more before binning when CheckM2 finds it complete enough (here 96.3%), and takes that contig out of binning.
+
+- title: A repeat at twice the depth
+  state: {go: graphs, g: repeats, col: depth}
+  question: >-
+    MAG 1.19 is six contigs, all in this piece of the graph. Coloured by depth, which node stands out, and what could
+    it be? Compare with the repeat in section 1.
+  answer: >-
+    The six contigs of the MAG have depths of 7-11x. The removed node u13177708ctg (21 kb) has 17x, about twice
+    that, and links to two of them and to a short contig in no MAG. A stretch present twice in the genome gives
+    twice the depth and is merged
+    into one node, so the contigs around it cannot continue: the same as the merged repeat node in section 1. The
+    graph alone does not prove that it is a repeat; the depth and the links fit one.
+
+- title: Strains kept apart
+  state: {go: graphs, g: strains}
+  question: >-
+    How many MAGs are in this piece, and of which species? How similar are the three long contigs, and how does
+    that compare with what section 3 showed for the two rules?
+  answer: >-
+    Four MAGs, all Streptococcus thermophilus; three are a single contig of 1.83-1.87 Mb. These align to each other
+    over 93-97% of their length, and 86-94% of their bases match. Counting only substitutions the aligned parts are
+    99.0-99.4% identical; counting insertions and deletions too, 88-94%. The toy's mismatch-tolerant rule (up to
+    5% substitutions) would merge them
+    (section 3); myloasm kept them apart, as its documentation says it can down to about 99% identity, and only
+    their ends are linked. Their depths over the ten days do not all follow each other (r = 0.28 to 0.92).
+
+- title: One genome or two?
+  state: {go: graphs, g: copri}
+  question: >-
+    Two MAGs of Prevotella copri_B sit in one piece of the graph. What links them, and what do the alignment and
+    the depth over the days say? Can the graph decide whether they are one population or two strains?
+  answer: >-
+    They are linked directly (an 18.7 kb overlap between 2.359's contig and one of 3.5197's) and through four nodes
+    that myloasm removed, all at about 2,000x like the contigs. The 1.49 Mb contig of MAG 3.5197 aligns to the
+    single contig of MAG 2.359 over 87% of its length, and 84% of its bases match (99.3% identity counting
+    substitutions only, 90% counting insertions and deletions too). The two follow each other over the ten days
+    almost exactly (r = 0.999). So much of 3.5197 is a second version of
+    2.359's genome that rises and falls with it. The graph cannot say whether these are two strains that always
+    move together or variants within one population; module 7 finds the same open question from the abundances.
+
+- title: Where a split contig sits
+  state: {go: graphs, g: largest, node: u28510213ctg}
+  question: >-
+    The selected contig is in the largest group. Why are nodes of two MAGs ringed, and does the graph show which MAG
+    the contig belongs to?
+  answer: >-
+    mmlong2 split this 447 kb contig: positions 1-299,380 are in MAG 3.1230, 311,106-447,366 in MAG 2.441, and the
+    12 kb between them in no MAG. Both MAGs are Hominiventricola filiformis, and five contigs of each are in this
+    group. In the graph the contig links only to two short nodes that lead on to other MAGs (2.209 and s.173), not
+    to the contigs of 2.441 or 3.1230, so the graph does not settle it. Module 3 shows the same two MAGs from the
+    binning side.
+
+- title: Small circles
+  state: {go: circles}
+  question: >-
+    How many of the small circular contigs (under 100 kb) are in a MAG, compared with those of 1 Mb or more? Why
+    might binning leave them out?
+  answer: >-
+    Of 398 small circles, mmlong2 keeps 343 and only 12 of these are in a MAG; 8 of the 12 are only "possibly"
+    circular and 1 is a piece of a circle mmlong2 split. Of the 246 whole contigs marked circular-yes, 3 are in a
+    MAG. Of the 122 loops of 1 Mb or more, 121 are in a MAG, though mmlong2 split 6 of them. Binning groups contigs
+    by depth and composition, and a plasmid or phage can differ from its host in both: copy number changes its
+    depth. Some small circles also have very little depth (45 of the 398 at 2x or less). Module 5 tries to place
+    such contigs by their methylation.
