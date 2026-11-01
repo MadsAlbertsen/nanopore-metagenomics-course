@@ -27,17 +27,18 @@
     of a genome does not make the same species. GTDB-Tk stops at genus. Why so little aligns, the data here do not
     show. 755 of its 2,428 CDS (31%) are hypothetical.
 
-- title: Just under the line
+- title: Close to many species
   state: {mag: "3.2807", map: "3.2807"}
   question: >-
-    Open MAG 3.2807 (Collinsella sp.). Read the warning in its card and its closest reference. How far is it from a
-    species name?
+    Open MAG 3.2807 (Collinsella sp.). Read the warning in its card, its closest reference and its placement
+    reference. Why does it get no species name?
   answer: >-
-    Its closest reference, Collinsella sp902465465, is 94.97% identical by ANI with an AF of 0.623; the species'
-    radius is 95.0%. GTDB-Tk warns that the MAG "falls outside its pre-defined ANI radius" and names it to genus
-    only: 0.03 percentage points decide. By GTDB's rule it is a new species, but the rule is a fixed line, not a
-    measured gap between species. Its genes are well named (15.0% hypothetical), so being a new species does not
-    mean its genes are unknown.
+    GTDB-Tk places it next to Collinsella sp902494715 (94.51% ANI, AF 0.687), below that species' 95% radius; the
+    warning ("falls outside its pre-defined ANI radius") refers to this placement reference. Its highest ANI to any
+    reference is 94.97% (Collinsella sp902465465, radius 95.0%, AF 0.623), and the 99 other Collinsella references GTDB-Tk
+    lists are 92.6-94.97% identical, 17 of them within 0.5 points of their own radius. GTDB-Tk cannot assign it to an
+    existing species; a fixed ANI boundary cannot separate genomes this close to it. Its genes are well named (15.0%
+    hypothetical), so missing a species name does not mean its genes are unknown.
 
 - title: An archaeon in a bacterial annotation tool
   state: {mag: "c.14", map: "c.14", q: "MCR_alpha"}
@@ -60,7 +61,7 @@
     and how much of its gene content is known? Compare with Bacteroides caccae (example 1).
   answer: >-
     The name is as solid as B. caccae's: 98.36% ANI and AF 0.896 to the species' reference genome. But the species
-    is known only from genomes, hence the placeholder name, and 907 of its 1,347 CDS (67.3%) are hypothetical
+    has no published Latin name, hence the placeholder name, and 907 of its 1,347 CDS (67.3%) are hypothetical
     against 16.8% in B. caccae. Its order RF39 has a placeholder name too. MAGs with a placeholder name have a median
     of 45% hypothetical, those with a Latin name 24% (the chart's first rows).
 

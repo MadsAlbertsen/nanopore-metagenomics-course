@@ -10,7 +10,7 @@ const MAP_IDS = Object.keys(MAPS.mags);
 const EV = {
   cluster: { c: "var(--c1)", t: "Named protein cluster (UniRef50)", s: "named cluster" },
   amr_protein: { c: "var(--c2)", t: "AMRFinderPlus: reference resistance protein", s: "AMR protein" },
-  pfam_only: { c: "var(--c3)", t: "Hypothetical, with a Pfam domain", s: "Pfam domain only" },
+  pfam_only: { c: "var(--c3)", t: "Hypothetical, Pfam domain only (no cluster match)", s: "Pfam domain only" },
   amr_family: { c: "var(--c4)", t: "AMRFinderPlus: resistance protein family", s: "AMR family" },
   cluster_unnamed: { c: "var(--c5)", t: "Cluster match, cluster has no name", s: "unnamed cluster" },
   is_element: { c: "var(--c6)", t: "Insertion sequence name (ISfinder)", s: "IS name" },
@@ -51,7 +51,7 @@ function fillNumbers() {
     hypBact: `${phyl("Bacteroidota")} (${B.filter((b) => b.ranks[1] === "Bacteroidota").length} MAGs)`, hypBaci: `${phyl("Bacillota")} (${B.filter((b) => b.ranks[1] === "Bacillota").length} MAGs)`,
     hypArch: arch.length ? `${pct(arch[0].hyp, arch[0].cds)}, ${num(arch[0].hyp)} of ${num(arch[0].cds)} CDS` : "–",
     idMedian: `${(100 * NUM.id_median).toFixed(1)}%`, idHigh: `${num(NUM.id_ge90)} of ${num(NUM.cluster_hits)} (${pct(NUM.id_ge90, NUM.cluster_hits)})`,
-    vague: `${num(NUM.vague)} of ${num(NUM.named)} (${pct(NUM.vague, NUM.named)})`, pfam: `${num(ev.pfam_only)} of ${num(NUM.hyp)} (${pct(ev.pfam_only, NUM.hyp, 0)})`,
+    vague: `${num(NUM.vague)} of ${num(NUM.named)} (${pct(NUM.vague, NUM.named)})`, pfam: `${num(NUM.hyp_pfam)} of ${num(NUM.hyp)} (${pct(NUM.hyp_pfam, NUM.hyp, 0)})`,
     clusterHits: num(NUM.cluster_hits),
     amrGenes: NUM.amr_genes, amrMags: NUM.amr_mags, amrFam: NUM.amr_family_genes, amrFamMags: NUM.amr_family_mags,
   };
@@ -149,8 +149,9 @@ function drawCard() {
     <p class="tax">${ranks}</p></div>
     <table class="chk"><tbody>
       <tr><th>Named by</th><td>${METHOD[b.method]}${b.note ? `<div class="muted">${esc(b.note)}</div>` : ""}${b.warn ? `<div class="muted">Warning: ${esc(b.warn)}</div>` : ""}</td></tr>
-      <tr><th>Closest reference</th><td>${ref}</td></tr>
-      ${b.red !== null ? `<tr><th>RED</th><td>${b.red} <span class="muted">(reported where the tree position decided the rank)</span></td></tr>` : ""}
+      <tr><th>Closest reference</th><td>${ref}${b.related ? `<div class="muted">GTDB-Tk's other related references: ${b.related[0]}, at ${b.related[1]}-${b.related[2]}% ANI</div>` : ""}</td></tr>
+      ${b.place && !b.radius ? `<tr><th>Placement reference</th><td><i>${esc(b.place[0])}</i>: ANI ${b.place[1]}%, AF ${b.place[2]} (radius ${b.place[3]}%) <span class="muted">· the reference on the MAG's branch of the tree</span></td></tr>` : ""}
+      ${b.red !== null ? `<tr><th>RED</th><td>${b.red} <span class="muted">(GTDB-Tk reports it when it was needed for the classification)</span></td></tr>` : ""}
       <tr><th>Marker alignment</th><td>${b.msa}% of the marker-gene alignment covered</td></tr>
       <tr><th>Genes (CDS)</th><td>${num(b.cds)}: ${num(named)} named (${pct(named, b.cds)}), ${num(b.hyp)} hypothetical (${pct(b.hyp, b.cds)}); ${num(b.vague)} names are DUF or "uncharacterized"</td></tr>
       <tr><th>Resistance protein matches</th><td>${b.amr.length ? b.amr.map((a) => `<code>${esc(a)}</code>`).join(" ") : "none"}${ev.amr_family ? ` <span class="muted">· ${ev.amr_family} family-model match${ev.amr_family === 1 ? "" : "es"}</span>` : ""}</td></tr>

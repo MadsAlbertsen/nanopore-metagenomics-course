@@ -10,8 +10,8 @@ takeaways:
   - "GTDB-Tk names a species only when the closest reference genome is within the species' ANI radius (95% for most
     species) and the alignment fraction is 0.5 or more: 407 of 421 MAGs here, at a median ANI of 98.3%. The other 14
     stop at genus."
-  - "A species name can be a placeholder (217 MAGs, such as CAG-417 sp000432835): a species known from genomes only.
-    Little-studied lineages have more genes without a name: median 45% hypothetical with a placeholder name, 24%
+  - "A species name can be a placeholder (217 MAGs, such as CAG-417 sp000432835): a species without a published
+    Latin name, often known only from MAGs. Little-studied lineages have more genes without a name: median 45% hypothetical with a placeholder name, 24%
     with a Latin name."
   - "About a third of all genes (34.9%) have no name. 70% of the cluster matches are only 50-70%
     identical, so a name often says the protein family more than its exact role."
@@ -49,5 +49,8 @@ teacher:
     - "The identity on this page is to the UniRef50 cluster's representative, not to the reference resistance protein
       AMRFinderPlus matched."
     - "'Hypothetical' means no match in this database, not no function; a Pfam domain often hints at one (example 4)."
-    - "Placeholder names such as CAG-417 sp000432835 are valid GTDB species, not errors or missing names."
+    - "Placeholder names such as CAG-417 sp000432835 are valid GTDB species without a published Latin name, not errors
+      or missing names."
+    - "A MAG about 94-95% identical to many species (example 3) cannot be split cleanly by a fixed ANI boundary;
+      'genus only' there means GTDB-Tk could not assign an existing species, not a measured new species."
     - "A gene missing from a MAG may be in the unbinned part of the genome; most MAGs are less than 100% complete."
