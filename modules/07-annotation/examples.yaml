@@ -1,6 +1,6 @@
 # Guided examples for module 7 (annotation). Each example sets the page up (state) and asks one question; the answer
 # stays hidden until clicked. Every number was computed from the example analysis (np26 scripts/29_course_annotation.py
-# data: GTDB-Tk summaries and Bakta tables; 2026-11-01) and still needs the independent check. check.py rejects names
+# data: GTDB-Tk summaries and Bakta tables; 2026-11-01) and recomputed by an independent review (2026-11-01). check.py rejects names
 # not in data.json.
 # state keys: mag = MAG in the card; map = MAG in the gene map; ctg = contig; pos = window start (bp); win = window
 #   width in kb (10, 20, 50); q = search text (product, gene symbol or Pfam domain); amr = resistance gene in the table.

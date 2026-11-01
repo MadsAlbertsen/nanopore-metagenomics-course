@@ -1,6 +1,6 @@
 # Guided examples for module 1 (signal). Each example sets the page up (state) and asks one question; the answer stays
 # hidden until clicked. Every number was computed from the example analysis (np26 scripts/30_course_signal.py data,
-# 2026-11-01) and still needs the independent check. check.py rejects settings not in data.json.
+# 2026-11-01) and recomputed by an independent review (2026-11-01). check.py rejects settings not in data.json.
 # state keys: zw = detail window width in ms (1000, 200, 50); zs = window start in ms (0 to 1000 - zw);
 #   stretch = stretch number (1-4); fitb, bound = refined or move; motif = GATC, GANTC or GTNNAC; split = 0 or 1;
 #   kbin = bin id; kmod = 6mA, 5mC or 4mC.
