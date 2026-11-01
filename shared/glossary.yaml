@@ -104,3 +104,45 @@
 - term: "HQ and MQ (high and medium quality)"
   text: "The quality classes of the MAGs, from mmlong2's rule based on MIMAG: high quality (HQ) is CheckM2 completeness of 90% or more, contamination of 5% or less, and the rRNA and tRNA genes; medium quality (MQ) is at least 50% and at most 10%."
   modules: [mag-quality, binning]
+- term: "Mean read quality (mean Q)"
+  text: "One quality value per read: the per-base Q scores turned into error probabilities, averaged, and turned back into a Q score. A few poor bases pull it down more than a plain average of Q scores would. The read filter in this course keeps reads of mean Q 10 or more."
+  modules: [reads]
+- term: "Demultiplexing"
+  text: "Sorting the reads of a flow cell into samples by their barcode. Here Dorado also trimmed the barcode region off most reads while doing so."
+  modules: [reads]
+- term: "Rapid barcoding (transposase)"
+  text: "A library prep in which an enzyme (a transposase) cuts the DNA and attaches a barcoded tag in one step; an adapter carrying the motor protein is then attached to the tagged ends. The example data were made with the Rapid Barcoding Kit SQK-RBK114-24."
+  modules: [reads]
+- term: "Adapter trimming"
+  text: "Cutting adapter and barcode sequence off the read ends so it does not end up in the assembly; here done with Porechop_ABI, which also splits reads at adapters found in the middle."
+  modules: [reads]
+- term: "Node and link (in an assembly graph)"
+  text: "In myloasm's graph file (GFA) each node is one contig the assembler built, and a link says that the end of one node overlaps the end of another. A node linked to itself is a circle."
+  modules: [assembly]
+- term: "Connected group (component)"
+  text: "Nodes that can be reached from each other through links. Most contigs in this assembly form a group on their own; repeats and related strains tie others into large groups."
+  modules: [assembly]
+- term: "Alignment fraction (AF)"
+  text: "The share of a genome that aligns to another genome when ANI is computed. GTDB-Tk names a species only if the AF is at least 0.5, besides the ANI being within the species radius."
+  modules: [annotation]
+- term: "Species radius"
+  text: "The ANI around a GTDB species' reference genome within which a new genome is assigned to that species; usually 95%, for some species higher."
+  modules: [annotation]
+- term: "RED (relative evolutionary divergence)"
+  text: "A genome's relative depth in the GTDB tree, from 0 at the root to 1 at the tips. GTDB-Tk uses it to decide the rank (genus, family, ...) of a genome that has no close reference."
+  modules: [annotation]
+- term: "Placeholder species name"
+  text: "A GTDB species name such as CAG-417 sp000432835: a species without a validly published Latin name, often known only from MAGs."
+  modules: [annotation]
+- term: "Hypothetical protein"
+  text: "A predicted gene that the annotation tool could not give a function. It may still carry a known protein domain (Pfam), or have no recognisable relative at all."
+  modules: [annotation]
+- term: "UniRef50 cluster"
+  text: "A group of known proteins that are at least 50% identical to each other. Bakta's light database names a gene after the cluster it matches."
+  modules: [annotation]
+- term: "Pfam domain"
+  text: "A protein family or part of a protein recognised from its sequence pattern. A domain hints at what a protein does without naming the protein."
+  modules: [annotation]
+- term: "AMRFinderPlus"
+  text: "NCBI's tool for finding antimicrobial resistance genes; Bakta runs it. A match says the gene resembles a known resistance protein, not that the bacterium is resistant."
+  modules: [annotation]
