@@ -1,5 +1,5 @@
 // Module 8: interpretation. DATA = {samples, day, diet, gb, on_assembly, phyla, mags, bc, ...} from the example analysis
-// (np26 scripts/22_course_interpretation.py). share = percent of the sample's read bases on the MAG's contigs.
+// (np26 scripts/22_course_interpretation.py) and metab (scripts/31). share = percent of the sample's read bases on the MAG's contigs.
 const D = DATA, S = D.samples, N = S.length, M = D.mags;
 const MAX_PICK = 3;
 const MEASURES = {
@@ -14,7 +14,7 @@ const DIET_B = D.diet.map((d, k) => (d === DIETS[1] ? k : -1)).filter((k) => k >
 const meanShare = M.map((m) => m.share.reduce((a, b) => a + b, 0) / N);
 const considered = meanShare.map((v) => v >= D.min_mean);
 const byMean = M.map((_, i) => i).sort((a, b) => meanShare[b] - meanShare[a]);
-const st = { measure: "share", by: "phylum", B: new Set(DIET_B), picked: [byMean[0]], log: false };
+const st = { measure: "share", by: "phylum", B: new Set(DIET_B), picked: [byMean[0]], log: false, mv: "rate" };
 
 // --- values in the current measure
 function val(i, k, measure = st.measure) {
@@ -60,6 +60,7 @@ function stateHash() {
   if (B.join() !== DIET_B.join()) p.b = B.map((k) => D.day[k]).join(",");
   p.mag = st.picked.length ? st.picked.map((i) => M[i].id).join(",") : "none";
   if (st.log) p.log = 1;
+  if (st.mv === "count") p.mv = "count";
   if (examples.current >= 0) p.ex = examples.current + 1;
   return p;
 }
@@ -71,6 +72,7 @@ function applyState(s) {
   if (s.mag === undefined) st.picked = [byMean[0]];
   else st.picked = [...new Set(String(s.mag).split(",").map((id) => M.findIndex((m) => m.id === id)).filter((i) => i >= 0))].slice(0, MAX_PICK);
   st.log = String(s.log) === "1";
+  st.mv = s.mv === "count" ? "count" : "rate";
   $("ipMeasure").value = st.measure; $("ipBy").value = st.by; $("ipLog").checked = st.log; $("ipFind").value = "";
 }
 function pick(i) {
@@ -105,6 +107,7 @@ function setup() {
   $("ipMeasure").addEventListener("input", (e) => { st.measure = e.target.value; draw(); });
   $("ipBy").addEventListener("input", (e) => { st.by = e.target.value; draw(); });
   $("ipLog").addEventListener("input", (e) => { st.log = e.target.checked; draw(); });
+  $("mtShow").addEventListener("input", (e) => { st.mv = e.target.value; draw(); });
   $("ipFind").addEventListener("change", (e) => {
     const i = M.findIndex((m) => m.id === e.target.value.split(" ")[0]);
     if (i >= 0 && !st.picked.includes(i)) pick(i);
@@ -313,11 +316,106 @@ function drawBc() {
   $("ipBcNote").textContent = `0 means two days have the same MAG composition, 1 that they share nothing. Computed on the share of read bases in MAGs (each day scaled to 100%), so the measure setting does not change it. Mean within the first group ${f(wA)}, within the second ${f(wB)}, between the groups ${f(bt)}. Consecutive days differ by ${Math.min(...cons).toFixed(2)}-${Math.max(...cons).toFixed(2)} (largest: day ${D.day[big]} to ${D.day[big + 1]}; the diet switch, day ${D.day[sw - 1]} to ${D.day[sw]}: ${cons[sw - 1].toFixed(2)}).`;
 }
 
+// --- who could do what: metabolic potential of selected MAGs (DATA.metab, np26 scripts/31_course_metabolism.py)
+// metab.mags: per MAG genes, CAZyme genes (GH, PL, CE), genes per category (metab.cats), families [family, genes,
+// category], marker genes per KO (metab.markers order), Bakta-named SusC-like and butyryl-CoA:acetate CoA-transferase
+// genes, and Bakta-named carbohydrate enzymes [all, with a dbCAN call].
+const MT = D.metab, MTI = MT.mags.map((x) => M.findIndex((m) => m.id === x.id));
+const MT_CATS = { starch: "Starch, glycogen", fructan: "Fructans (inulin)", plant_fibre: "Plant cell-wall fibres", host_glycan: "Host glycans (mucin)", other: "Other substrates", mixed: "Several substrates", unmapped: "Not in the mapping" };
+const MT_SHOWN = ["starch", "fructan", "plant_fibre", "host_glycan"];
+const MT_GROUPS = { riser: "Higher in days 6-10", faller: "Lower in days 6-10", stable: "Stable, abundant", control: "Control (Faecalibacterium)" };
+const MT_COLOUR = { riser: "var(--c1)", faller: "var(--c2)", stable: "var(--c3)", control: "var(--c4)" };
+const KO = Object.fromEntries(MT.markers.map(([ko, short, group, desc], j) => [short, { ko, short, group, desc, j }]));
+// marker columns: label, the marker genes that count, and what they show
+const MT_MARKERS = [
+  ["Butyrate", ["bcd", "buk", "ptb"], "butyryl-CoA dehydrogenase (bcd); butyrate kinase (buk) and phosphate butyryltransferase (ptb). The butyryl-CoA:acetate CoA-transferase has no clean KEGG profile: its Bakta name is counted under but"],
+  ["but", ["but"], "butyryl-CoA:acetate CoA-transferase (or acetyl-CoA hydrolase/transferase) by Bakta name"],
+  ["Propionate (succinate)", ["mcmA", "mmdA", "mmdA-Na"], "methylmalonyl-CoA mutase and decarboxylase"],
+  ["Propionate (propanediol)", ["pduP", "pduC"], "propionaldehyde dehydrogenase, propanediol dehydratase"],
+  ["Propionate (acrylate)", ["lcdA"], "lactoyl-CoA dehydratase"],
+  ["Acetogen", ["acsB"], "acetyl-CoA synthase of the Wood-Ljungdahl pathway (makes acetate from H2 + CO2)"],
+  ["Bile salts", ["bsh"], "bile salt hydrolase"],
+  ["Urease", ["ureC"], "urease"],
+  ["Protein: indole, p-cresol, phenol", ["tnaA", "hpdB", "tpl"], "tryptophanase, 4-hydroxyphenylacetate decarboxylase, tyrosine phenol-lyase"],
+  ["Stickland", ["prdA", "grdB"], "proline and glycine reductases (amino-acid fermentation)"],
+];
+const mtCount = (x, short) => (short === "but" ? x.but : x.ko[KO[short].j]);
+const mtRate = (x, n) => (st.mv === "count" ? n : (1000 * n) / x.genes);
+const mtFmt = (v) => (st.mv === "count" ? String(v) : v.toFixed(v >= 10 ? 0 : 1));
+const dietChange = (i) => change(i, S.map((_, k) => k).filter((k) => !DIET_B.includes(k)), DIET_B, "share");
+const mtOrder = () => MT.mags.map((_, r) => r).sort((a, b) => dietChange(MTI[b]).lfc - dietChange(MTI[a]).lfc);
+function mtFocus() {
+  for (let j = st.picked.length - 1; j >= 0; j--) { const r = MTI.indexOf(st.picked[j]); if (r >= 0) return r; }
+  return -1;
+}
+
+function drawMtDots() {
+  const host = $("mtDots"), W = Math.max(300, host.clientWidth), H = 300, mg = { l: 54, r: 10, t: 14, b: 46 };
+  const groups = ["riser", "faller", "stable"], cats = MT_SHOWN;
+  const vals = MT.mags.flatMap((x) => cats.map((c) => mtRate(x, x.cat[MT.cats.indexOf(c)])));
+  const yMax = niceMax(Math.max(...vals) * 1.05 || 1), cw = (W - mg.l - mg.r) / cats.length, lane = cw / (groups.length + 1);
+  const Y = (v) => H - mg.b - (v / yMax) * (H - mg.t - mg.b);
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "CAZyme genes per substrate category for each selected MAG" });
+  for (const t of [0, 0.25, 0.5, 0.75, 1].map((f) => f * yMax)) { el("line", { class: "grid", x1: mg.l, x2: W - mg.r, y1: Y(t), y2: Y(t) }, svg); const tx = el("text", { x: mg.l - 6, y: Y(t) + 4, "text-anchor": "end", class: "lbl" }, svg); tx.textContent = +t.toPrecision(3); }
+  yLabel(svg, st.mv === "count" ? "CAZyme genes" : "CAZyme genes per 1,000 genes", mg, H);
+  const focus = mtFocus();
+  cats.forEach((c, ci) => {
+    const x0 = mg.l + ci * cw, t = el("text", { x: x0 + cw / 2, y: H - mg.b + 16, "text-anchor": "middle", class: "lbl" }, svg); t.textContent = MT_CATS[c];
+    if (ci) el("line", { class: "grid", x1: x0, x2: x0, y1: mg.t, y2: H - mg.b }, svg);
+    groups.forEach((g, gi) => {
+      const xs = x0 + lane * (gi + 1), rows = MT.mags.map((x, r) => [x, r]).filter(([x]) => x.group === g);
+      const v = rows.map(([x]) => mtRate(x, x.cat[MT.cats.indexOf(c)])).sort((a, b) => a - b);
+      const med = v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+      el("line", { x1: xs - lane * 0.35, x2: xs + lane * 0.35, y1: Y(med), y2: Y(med), stroke: MT_COLOUR[g], "stroke-width": 2 }, svg);
+      rows.forEach(([x, r], k) => {
+        const val = mtRate(x, x.cat[MT.cats.indexOf(c)]), jitter = ((k % 3) - 1) * Math.min(5, lane * 0.15);
+        const dot = el("circle", { class: "dot", cx: xs + jitter, cy: Y(val), r: r === focus ? 6 : 4.2, fill: MT_COLOUR[g], "fill-opacity": 0.85, stroke: r === focus ? "var(--ink)" : "var(--surface)", "stroke-width": r === focus ? 2 : 1 }, svg);
+        hover(dot, () => `<b>${magLabel(MTI[r])}</b><br>${MT_GROUPS[g]}: ${fold(dietChange(MTI[r]).lfc)}<br>${MT_CATS[c]}: ${x.cat[MT.cats.indexOf(c)]} genes of ${x.genes} (${((1000 * x.cat[MT.cats.indexOf(c)]) / x.genes).toFixed(1)} per 1,000)<br>click to pick`, () => pick(MTI[r]));
+      });
+    });
+  });
+  host.innerHTML = ""; host.appendChild(svg);
+  $("mtDotsLegend").innerHTML = groups.map((g) => `<span><i class="sw" style="background:${MT_COLOUR[g]}"></i>${MT_GROUPS[g]} (${MT.mags.filter((x) => x.group === g).length})</span>`).join("") + `<span>· bar: median of the group · ringed: picked</span>`;
+}
+
+function drawMtTable() {
+  const focus = mtFocus(), order = mtOrder();
+  const cats = MT_SHOWN.map((c) => MT.cats.indexOf(c));
+  const colMax = cats.map((ci) => Math.max(...MT.mags.map((x) => mtRate(x, x.cat[ci]))));
+  const cell = (v, max) => { const t = max > 0 ? v / max : 0; return `<td class="r mtc" style="background:${viridis(t)};color:${t > 0.6 ? "#15212b" : "#ffffff"}">${mtFmt(v)}</td>`; };
+  const mk = (x, shorts) => { const n = shorts.reduce((s, k) => s + mtCount(x, k), 0); return `<td class="r">${n ? `<b>${n}</b>` : `<span class="muted">–</span>`}</td>`; };
+  const rows = order.map((r) => {
+    const x = MT.mags[r], i = MTI[r], c = dietChange(i);
+    return `<tr class="click${r === focus ? " hl" : ""}" data-r="${r}"><td><i class="sw" style="background:${MT_COLOUR[x.group]}"></i>${magLabel(i)}</td><td class="r">${fold(c.lfc)}</td><td class="r">${x.genes.toLocaleString("en")}</td><td class="r">${x.cazy} <span class="muted">(${((100 * x.cazy) / x.genes).toFixed(1)}%)</span></td>${cats.map((ci, j) => cell(mtRate(x, x.cat[ci]), colMax[j])).join("")}${MT_MARKERS.map(([, s]) => mk(x, s)).join("")}</tr>`;
+  }).join("");
+  $("mtTable").innerHTML = `<table class="ct mt"><thead><tr><th>MAG</th><th class="r">Days 6-10 against 1-5</th><th class="r">Genes</th><th class="r">CAZyme genes</th>${MT_SHOWN.map((c) => `<th class="r">${MT_CATS[c]}</th>`).join("")}${MT_MARKERS.map(([lab, , d]) => `<th class="r" title="${esc(d)}">${lab}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+  for (const tr of $("mtTable").querySelectorAll("tr[data-r]")) tr.addEventListener("click", () => pick(MTI[+tr.dataset.r]));
+}
+
+function drawMtDetail() {
+  const r = mtFocus(), host = $("mtDetail");
+  if (r < 0) { host.innerHTML = `<p class="note">Pick one of the ${MT.mags.length} MAGs (click a row or a dot) to see its CAZyme families and marker genes.</p>`; return; }
+  const x = MT.mags[r], i = MTI[r], c = dietChange(i);
+  const fams = x.fams.slice(0, 14).map(([f, n, cat]) => `<code title="${esc(MT_CATS[cat] || cat)}">${f} ${n}</code>`).join(" ");
+  const markers = MT.markers.map(([ko, short, , desc], j) => [ko, short, desc, x.ko[j]]).filter((m) => m[3] > 0);
+  host.innerHTML = `<div class="head"><h3>${magLabel(i)}</h3></div>
+    <p class="note">${esc(M[i].phylum)} · ${M[i].q} · ${MT_GROUPS[x.group]}: ${fold(c.lfc)} (mean ${fmtV(c.a, "share")} in days 1-5, ${fmtV(c.b, "share")} in days 6-10) · ${x.genes.toLocaleString("en")} genes</p>
+    <p class="note"><b>CAZyme genes (glycoside hydrolases, lyases, esterases): ${x.cazy}</b>, ${MT_SHOWN.map((cc) => `${MT_CATS[cc].toLowerCase()} ${x.cat[MT.cats.indexOf(cc)]}`).join(", ")}; other or several substrates ${x.cat[MT.cats.indexOf("other")] + x.cat[MT.cats.indexOf("mixed")]}. Largest families (genes): </p><div class="motifs">${fams || "none"}</div>
+    <p class="note"><b>Marker genes:</b> ${markers.length ? markers.map(([ko, short, desc, n]) => `${esc(desc)} <span class="mono">${short}</span> (${ko}${n > 1 ? `, ${n} genes` : ""})`).join("; ") : "none of the listed ones"}. Bakta names: ${x.but} butyryl-CoA:acetate CoA-transferase-like, ${x.susc} SusC-like (outer-membrane sugar import).</p>
+    <p class="note">Check with a second method: Bakta named ${x.bnamed[0]} genes as carbohydrate enzymes; ${x.bnamed[1]} of them also have a dbCAN call.</p>
+    ${magLinks(M[i].id, "interpretation")}`;
+}
+
+function drawMetab() {
+  $("mtShow").value = st.mv;
+  drawMtDots(); drawMtTable(); drawMtDetail();
+}
+
 function draw(push = true) {
   for (const b of $("ipDays").querySelectorAll("[data-day]")) b.setAttribute("aria-pressed", st.B.has(+b.dataset.day));
   $("ipMeasure").value = st.measure; $("ipBy").value = st.by; $("ipLog").checked = st.log;
   hideTip();
-  drawComp(); drawLine(); drawChange(); drawBc();
+  drawComp(); drawLine(); drawChange(); drawBc(); drawMetab();
   if (push) writeHashParams(stateHash());
 }
 

@@ -11,3 +11,7 @@ svg .mean { stroke-width: 1.5; stroke-dasharray: 5 4 }
 .picked td .link { font-size: 12px }
 table.ct.picked th, table.ct.picked td { white-space: normal; vertical-align: top }
 .picked th { min-width: 70px }
+table.ct.mt tr.click { cursor: pointer }
+table.ct.mt tr.click:hover td { background: var(--accent-soft) }
+table.ct.mt td.mtc { font-variant-numeric: tabular-nums; min-width: 44px }
+table.ct.mt th { white-space: normal; vertical-align: bottom; max-width: 92px }

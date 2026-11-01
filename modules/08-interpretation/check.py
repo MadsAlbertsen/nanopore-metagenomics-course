@@ -3,6 +3,7 @@
 MEASURES = {"share", "binned", "gb"}
 GROUP_BY = {"phylum", "mag"}
 MAX_PICK = 3
+MT_VIEWS = {"rate", "count"}
 
 
 def check(data: dict, examples: list[dict]) -> None:
@@ -17,6 +18,8 @@ def check(data: dict, examples: list[dict]) -> None:
                 ok = value in GROUP_BY
             elif key == "log":
                 ok = value in {0, 1}
+            elif key == "mv":
+                ok = value in MT_VIEWS
             elif key == "b":
                 chosen = text.split(",")
                 ok = all(d.isdigit() and int(d) in days for d in chosen) and 0 < len(set(chosen)) < len(days)
