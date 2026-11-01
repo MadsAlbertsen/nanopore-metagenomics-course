@@ -1,0 +1,83 @@
+<div class="intro">
+  <span class="kicker">Module 1</span>
+  <h1>Raw reads: what they look like, and why we filter and split them</h1>
+  <p>A nanopore read is the basecaller's best guess at one DNA molecule as it passed through a pore, with a quality score for every base. Before assembly the example analysis removes reads that are short or of low quality, trims adapter left at the read ends and splits the few reads in which two molecules were read as one. This page follows about 3,000 random reads from each of the ten samples (picked from the full run, before any filtering) through those steps, and shows what each step removes. The numbers for the whole run come from the same steps run on all reads.</p>
+  <div class="stats" id="rdStats"></div>
+</div>
+<section class="panel" id="rdExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<div class="rdtwo">
+  <section class="panel">
+    <h2>1. What is on a read besides the genome</h2>
+    <p>The ten samples were prepared with the Rapid Barcoding Kit (SQK-RBK114.24). A transposase cuts the DNA and attaches a barcoded tag at the cut, and an adapter carrying the motor protein (the Rapid Adapter) is then attached to the tagged ends (Oxford Nanopore's product page and protocol for the kit). So a read starts with the end of the sequencing adapter, then the tag: front flank, barcode and a 50-base rear flank (the transposon end of the tag; Dorado's barcode definitions, barcode_kits.cpp, call it the rear flank, Porechop_ABI calls it the rapid adapter), and then the genome. Reads that kept them show them in this order (sections 2 and 6). Here Dorado basecalled without trimming and then sorted the reads by barcode, and that sorting step cut off the barcode region where it found it. As a result, in <span data-n="startNear"></span> of mapped reads (1,000 bp or longer, no rear flank found) the genome starts within 10 bases of the read start. <span data-n="adStart"></span> of all sampled reads still carry the full 50-base rear flank (10 or fewer differences) in their first 150 bases, <span data-n="bcAdStart"></span> with their own barcode right before it; with up to 14 differences, which mostly adds partial copies, <span data-n="adPartial"></span>.</p>
+    <div id="rdLayout" class="scroll"></div>
+  </section>
+  <section class="panel">
+    <h2>Where the genome starts in a read</h2>
+    <div id="rdFirst"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>no rear flank found at the start</span><span><i class="sw" style="background:var(--c2)"></i>rear flank found</span></div>
+    <p class="note">Read bases before the first alignment to the co-assembly (alignments of at least 100 bases; mapped reads of 1,000 bp or longer). Bars are shares of each group; the last bar holds 150 bases or more.</p>
+  </section>
+</div>
+
+<div class="rdtwo">
+  <section class="panel">
+    <h2>2. The first bases of a read</h2>
+    <p>These reads kept their barcode tag, so the start of the molecule can be seen base by base. Pick one. Each letter is coloured by its quality score (Q, viridis: dark is low, yellow is high); Q 10 means about 1 error in 10, Q 20 one in 100. Box colours mark the flank, barcode and rear flank, found by edit distance, and the genome where the read aligns to a MAG contig (triangle: first aligned base); bases that are neither are not shown (grey). The dashed line marks where Porechop_ABI cut. The chart beside averages the quality along the first and last 300 bases of all reads of 1,000 bp or more: it is lower over roughly the first 30 and the last 20 bases, and in reads with the tag it dips again where the tag ends and the genome begins (around base 70). An average of error probabilities is pulled down by the poorest reads, so it lies below a typical read's mean Q.</p>
+    <div class="rdpick" id="rdStartPick" role="list"></div>
+    <div id="rdStart" class="scroll"></div>
+    <p class="note" id="rdStartNote"></p>
+  </section>
+  <section class="panel">
+    <h2>Mean quality along the read</h2>
+    <div id="rdProfile"></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>no rear flank at the start</span><span><i class="sw" style="background:var(--c2)"></i>rear flank at the start</span><span>· mean Q per position = -10 log10 of the mean error probability</span></div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>3. Length and quality, and what a filter removes</h2>
+  <p>Read length and mean quality vary a lot within one sample. The mean Q of a read is computed from the mean error probability over its bases (as Dorado, seqkit and chopper do), not from the mean of the Q scores. The example analysis kept reads of mean Q 10 or more and 1,000 bp or more. Move the two cut-offs and see what a filter costs: it removes many reads but few bases, because most removed reads are short. Counts of reads and counts of bases tell different stories, so switch between them. The table gives each sample at the current cut-offs, next to the full run.</p>
+  <div class="spctl rdctl">
+    <label>Sample <select id="rdSample"></select></label>
+    <label>Count <select id="rdUnit"><option value="reads">reads</option><option value="bases">bases</option></select></label>
+    <label>Mean Q at least <input type="range" id="rdQ" min="0" max="20" step="1"><b id="rdQv" class="num"></b></label>
+    <label>Length at least <select id="rdLen"></select></label>
+    <button class="link" id="rdCopy" type="button">Copy link to this view</button>
+    <span class="count" id="rdCopied" aria-live="polite"></span>
+  </div>
+  <p class="rdsum" id="rdSum"></p>
+  <div class="rdthree">
+    <div><h2>Read length</h2><div id="rdLenH"></div></div>
+    <div><h2>Mean quality per read</h2><div id="rdQH"></div></div>
+    <div><h2>Length and quality together</h2><div id="rdHeat"></div><div class="legend"><span id="rdHeatUnit"></span><span class="ramp" id="rdRamp"></span><span>few → many (log)</span></div></div>
+  </div>
+  <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>kept</span><span><i class="sw" style="background:var(--v4)"></i>removed</span><span>· lines: the cut-offs</span></div>
+  <div class="scroll" id="rdTable"></div>
+  <p class="note">Sampled: random reads of each sample's full read file. Full run: reads in the file, and reads and bases after the analysis's filter (mean Q 10, 1,000 bp) and after adapter trimming. Read N50: half of all bases are in reads at least this long.</p>
+</section>
+
+<div class="rdtwo">
+  <section class="panel">
+    <h2>4. Do the removed reads belong to the genomes?</h2>
+    <p>All sampled reads, removed ones included, were aligned to the co-assembly (module 2). Nearly all kept reads align, and <span data-n="keptMag"></span> of their bases align to contigs in MAGs. Reads removed for low quality align less often (errors make alignment harder, and some may not come from the assembled genomes); short reads removed at 1,000 bp mostly align (<span data-n="shortMapped"></span> of reads), but fewer of them land on MAG contigs (<span data-n="shortMag"></span>). Most removed reads therefore come from the same genomes as the kept ones, but some are not in the assembly at all, and what they are these data do not show. The <span data-n="longest"></span> have a mean Q below 4 and are removed too.</p>
+    <div class="scroll" id="rdMap"></div>
+  </section>
+  <section class="panel">
+    <h2>5. Adapter trimming</h2>
+    <p>After the filter, Porechop_ABI looked for known adapters at both ends of every read and cut them off. On the sampled reads, <span data-n="adKept"></span> kept reads carried the rear flank at the start; Porechop_ABI trimmed all <span data-n="adReads"></span> of them that remained after trimming (the rest fell below 1,000 bp), <span data-n="adWithin"></span> within 5 bases of the rear flank's end as found here (an independent check). It also cut a few bases (median <span data-n="otherMed"></span>) from <span data-n="otherTrim"></span> other reads where no tag is recognisable here; Porechop_ABI accepts short partial matches at the very end of a read. In all, trimming removed <span data-n="trimBases"></span> of the kept bases. On the full run it trimmed more reads (<span data-n="fullStart"></span> at the start) and removed <span data-n="fullBases"></span> of the bases; Porechop_ABI picks the adapter sets it searches for from the reads it is given, which may explain the difference (not checked).</p>
+    <div class="scroll" id="rdTrim"></div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>6. Joined reads, split at a middle adapter</h2>
+  <p>Sometimes a read holds two molecules: the second followed the first through the pore and was not recognised as a new read. The adapter and tag of the second molecule then sit in the middle of the read. Porechop_ABI split <span data-n="split"></span> of the kept sampled reads at such a middle adapter (its own count; full run: <span data-n="splitFull"></span> per sample, also its own count); <span data-n="splitKept"></span> of them still have a piece of 1,000 bp or more and are listed below. An independent search for the 50-base rear flank at least 150 bases from both ends found <span data-n="midHere"></span> kept reads, <span data-n="midBoth"></span> of them among Porechop_ABI's, so the share is small either way. Where the pieces align shows why splitting matters: in <span data-n="kTwo"></span> reads the two pieces come from two different MAGs, and in <span data-n="kBoth"></span> the second piece reads the same DNA back on the other strand. Usually one piece was shorter than 1,000 bp and was dropped (<span data-n="kOne"></span> reads). For three reads whose alignments all lie on MAG contigs the bases at the junction are shown: the second molecule starts with its tag (barcode and rear flank; in one read also the end of the sequencing adapter), and in one read that barcode belongs to another sample (example 6). Bases that are neither aligned to a MAG contig nor recognised are not shown. Pick a read to see its pieces and alignments.</p>
+  <div class="rdjoin">
+    <div class="scroll rdjlist" id="rdJoinList"></div>
+    <div><div id="rdJoin" class="scroll"></div><div id="rdJunction" class="scroll"></div><p class="note" id="rdJoinNote"></p></div>
+  </div>
+</section>
