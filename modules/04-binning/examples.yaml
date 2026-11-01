@@ -1,0 +1,88 @@
+# Guided examples for module 4 (binning). Each example sets the page up (state) and asks one question; the answer
+# stays hidden until clicked. Answers state only what the example analysis shows; every number was checked on the
+# data and again by an independent check (2026-10-30). check.py rejects MAGs, views or samples not in data.json.
+# state keys: a, b = view of the left and right map (gcdepth, pair, depth, tnf, methylation, combined_all,
+#   combined_meth); ax, ay, bx, by = samples on the axes when a view is "pair"; color = phylum, binned, purity,
+#   comp, cont; mark = MAG to ring; sel = MAG whose contigs are selected; only = 1 to hide contigs not in a MAG;
+#   len = length class of the score table (purity, purity_10kb, purity_50kb, purity_200kb).
+
+- title: GC and depth
+  state: {a: gcdepth, b: combined_all, color: phylum}
+  question: >-
+    The left map is the classic first look at a metagenome: GC content against depth over all reads. Can you pick
+    out single genomes? Compare with the right map, which uses all features. What does the score table say?
+  answer: >-
+    Most genomes overlap in GC and pooled depth. For a contig in a MAG, on average 16% of its nearest contigs in
+    this view are in the same MAG (GC alone 7%, pooled depth alone 3%; chance about 1%). With depth in each sample,
+    tetranucleotides and GC together it is 88%. One or two numbers per contig cannot tell hundreds of genomes apart.
+
+- title: Two genomes that look alike
+  state: {a: gcdepth, b: pair, bx: DNA04, by: DNA08, mark: "1.308", sel: "2.500", color: phylum}
+  question: >-
+    Ringed: Bacteroides caccae (MAG 1.308). Highlighted: Blautia_A aquisgranensis (MAG 2.500). Where are they on the
+    left map? On the right they are placed by depth on day 4 and day 8, two samples with about the same amount of
+    sequencing (25.6 and 25.3 Gb). What changed?
+  answer: >-
+    On the left they overlap: GC 40-44% and 41-45%, pooled depth 41-68x and 36-73x. On the right they part: every B.
+    caccae contig has 1.6-2.1 times more depth on day 8 than on day 4, and every Blautia_A contig 1.5-11 times less.
+    Depth in several samples separates genomes whose abundance changes differently, even when GC and total depth are
+    the same.
+
+- title: Depth over the ten days
+  state: {a: depth, b: tnf, mark: "1.308", sel: "2.500", color: phylum}
+  question: >-
+    Same two MAGs. Look at the depth over time chart below the maps: one line per contig. Do the contigs of one MAG
+    move together? What happens around the diet change after day 5?
+  answer: >-
+    Most lines of each MAG run in parallel (a short contig can be noisy): the contigs of one genome share its
+    abundance in every sample, which is what binners use. Per Gb sequenced, B. caccae is on average about 2.3-2.4
+    times higher in days 6-10 than in days 1-5 and Blautia_A about 2.5 times lower (module 8 uses shares of read bases and gives 2.5
+    and 2.6). This is one person with one
+    sample per day, so the change cannot be put on the diet rather than on time. Day 2 had only 1.7 Gb of reads, so
+    its values are the noisiest.
+
+- title: Too few reads for depth
+  state: {a: depth, b: tnf, mark: "2.190", color: phylum}
+  question: >-
+    Ringed: Ruthenibacterium lactatiformans (MAG 2.190), 42 contigs of 10 kb or more. Which map keeps it together?
+    Look at its depth in the tooltip, and at the Ringed MAG panel.
+  answer: >-
+    Tetranucleotides keep it together (100% of the nearest contigs in the same MAG), depth across the samples does
+    not (5%). Its depth is about 4x over all reads, but its contigs' median depth is 0-1x in each sample, so the
+    depth profile is mostly noise. For genomes this rare, composition does the binning.
+
+- title: Close relatives
+  state: {a: tnf, b: depth, mark: "3.1761", color: phylum}
+  question: >-
+    Ringed: Anaerostipes amylophilus (MAG 3.1761), about 100x. Now the other way round: which map keeps it together,
+    and which contigs sit next to it on the tetranucleotide map?
+  answer: >-
+    Depth works (76% same-MAG neighbours), tetranucleotides less (32%). Its nearest contigs by composition are from
+    four other Anaerostipes MAGs (three A. hadrus, one A. amylophilus). Related genomes have similar composition,
+    but these differ in abundance (33-253x), so depth tells them apart.
+
+- title: Short and long contigs
+  state: {a: tnf, b: depth, color: purity, only: 1, len: purity_10kb}
+  question: >-
+    Coloured by the share of each contig's nearest contigs that are in its own MAG. Switch the contig length in the
+    score table between 10-50 kb and 200 kb or more. Which feature gets better with length, and which worse?
+  answer: >-
+    Depth gets better (15% for 10-50 kb, 56% for 200 kb or more): a short contig has few reads, so its depth is
+    noisy. Tetranucleotides seem to get worse (87% against 67%), but this is likely a selection effect: one random
+    10 kb piece cut from each long MAG contig scores 28%, a 100 kb piece 53%. Short contigs end up in a MAG mostly
+    when their composition fits, so they would agree with their MAG largely by construction.
+
+- title: Two strains of one species
+  state: {a: tnf, b: methylation, mark: "2.441", sel: "3.1230", color: cont}
+  question: >-
+    Ringed: MAG 2.441, highlighted: MAG 3.1230. GTDB places both in Hominiventricola filiformis. Colour shows
+    CheckM2 contamination of each contig's MAG. Do tetranucleotides tell the two MAGs apart? Does methylation?
+  answer: >-
+    Not by composition: both have about 45% GC and share one group on the tetranucleotide map (two other contigs of
+    MAG 2.441 lie elsewhere there). On the methylation map two contigs of MAG 2.441 (u28510213ctg_311106-447366 and
+    u3347900ctg, 635 kb together) sit with MAG 3.1230, and the first 299 kb of contig u28510213ctg is in MAG 3.1230.
+    Their depth change over time lies between the two MAGs, somewhat closer to MAG 3.1230's. CheckM2 gives MAG 2.441
+    8.0% contamination, among the 10 highest of 421 MAGs. Two features other than composition lean the same way;
+    whether the contigs belong to the other strain is not settled here. Looked at in 100 kb windows (module 5),
+    u3347900ctg is itself two-part: only its first ~368 kb carries MAG 3.1230's methylation pattern, its end carries
+    MAG 2.441's own motif.

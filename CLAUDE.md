@@ -3,7 +3,7 @@
 ## What this is
 Public, interactive course pages (one self-contained HTML file per module) that follow one nanopore metagenomics data
 set from raw reads to interpretation. The analysis behind them lives in the private np26 repository (sibling folder
-../np26); its scripts write each module's data.json here (np26 scripts/2x_course_<module>.py, COURSE_DIR).
+../np26); its scripts write each module's data.json here (np26 scripts/<nn>_course_<module>.py, COURSE_DIR).
 
 ## Rules for the content
 - Pages state only what the example analysis or a cited source shows. Every number in a text or an example answer is

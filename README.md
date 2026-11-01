@@ -6,13 +6,14 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 
 | Module | Status |
 |---|---|
-| 1. Raw reads: what they look like, and why we filter and split them | draft |
-| 2. Assembly: from overlapping reads to contigs | draft |
-| 3. Binning: sorting contigs into genomes | ready |
-| 4. MAG quality: how complete, how clean | draft |
-| 5. Methylation: misassemblies, contamination and placing contigs | draft |
-| 6. Annotation: what is in a genome, and how sure are we | draft |
-| 7. Interpretation: what changes over ten days | draft |
+| 1. Signal: what the sequencer measures, and how methylation shows up in it | draft |
+| 2. Raw reads: what they look like, and why we filter and split them | draft |
+| 3. Assembly: from overlapping reads to contigs | draft |
+| 4. Binning: sorting contigs into genomes | ready |
+| 5. MAG quality: how complete, how clean | draft |
+| 6. Methylation: misassemblies, contamination and placing contigs | draft |
+| 7. Annotation: what is in a genome, and how sure are we | draft |
+| 8. Interpretation: what changes over ten days | draft |
 
 ## The data
 
@@ -21,6 +22,10 @@ low-carbohydrate, low-calorie diet),
 sequenced together on one PromethION flow cell (Oxford Nanopore, Rapid Barcoding Kit SQK-RBK114-24, R10.4.1),
 assembled with myloasm and binned with mmlong2. The pages hold only derived data (statistics, contig features,
 MAG summaries); no read files.
+
+Module 1 (signal) uses a small separate data set that includes the raw signal: about 6,400 reads from eight
+activated-sludge samples (Native Barcoding Kit SQK-NBD114.24, R10.4.1, PromethION P2 Solo), aligned to four genome
+bins of their co-assembly. The page holds only one read's current, a few short stretches of reads, and summaries.
 
 ## Build
 

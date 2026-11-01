@@ -2,8 +2,9 @@
 
 Each module is a folder modules/<nn>-<slug>/ with
   module.yaml   number, slug, title, nav (short name), summary, status (ready, draft or planned); optional
-                takeaways (list) and discussion (one open question), shown at the end of the page, and mag_link
-                (address part that opens a MAG on this page, e.g. "#?mag={id}") for links between modules
+                takeaways (list) and discussion (one open question), shown at the end of the page, mag_link
+                (address part that opens a MAG on this page, e.g. "#?mag={id}") for links between modules, and
+                data_note (the page's data note in the footer, for a module that uses other data than FOOTER's)
   body.html     the page body (markup only)
   module.js     the page's script (uses shared/common.js; DATA and EXAMPLES are set before it runs)
   module.css    optional extra styles
@@ -115,14 +116,14 @@ def modules_json(mods: list[dict]) -> str:
 ISSUES = "https://github.com/MadsAlbertsen/nanopore-metagenomics-course/issues/new"
 
 
-def footer(title: str) -> str:
+def footer(title: str, note: str = FOOTER) -> str:
     """The data note plus a link that opens a GitHub issue about this page."""
     q = urllib.parse.urlencode({"title": f"[{title}] ", "body": f"Page: {title}\n\nWhat I noticed or suggest:\n"})
     licence = (
         'Text and data: <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>; code: MIT.'
     )
     report = f'<a href="{ISSUES}?{esc(q)}" target="_blank" rel="noopener">Report a problem or suggestion</a>'
-    return f"{FOOTER} {licence} {report}"
+    return f"{esc(note)} {licence} {report}"
 
 
 def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
@@ -141,7 +142,7 @@ def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
             "MODULE_JS": (d / "module.js").read_text(),
             "DATA": script_json(data),
             "EXAMPLES": script_json(examples),
-            "FOOTER": footer(m["nav"]),
+            "FOOTER": footer(m["nav"], m.get("data_note", FOOTER)),
         },
     )
 

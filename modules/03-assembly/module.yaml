@@ -1,0 +1,56 @@
+number: 3
+slug: assembly
+title: 'Assembly: from overlapping reads to contigs'
+nav: Assembly
+summary: How a long-read assembler such as myloasm turns overlapping reads into a graph and contigs, what repeats
+  and closely related strains do to that graph, and what our own assembly graph looks like.
+status: draft
+takeaways:
+- An assembler never sees where a read came from, only which reads overlap; contigs are paths through the graph those
+  overlaps make.
+- A read that runs through a whole repeat into unique sequence on both sides settles it; a repeat that no read happens
+  to span ends the contig, so read length and depth both matter.
+- In the toy, a mismatch-tolerant rule merged two strains 99.5% identical; a variant-aware rule kept them apart only with
+  enough depth per strain and accurate reads. myloasm finds such positions with pairs of k-mers that differ in one base.
+- 'Read accuracy matters: myloasm is documented for reads of about 97% accuracy or better.'
+- 'In our real graph most contigs stand alone, but long ones are often linked at their ends, also to contigs of other
+  MAGs: 69% of the contigs of 1 Mb or more have a link, and one group of 816 linked nodes holds a third of the bases.'
+- A loop is how a circular genome or plasmid shows in the graph. 121 of the 122 loops of 1 Mb or more are in a MAG, but
+  only 12 of the 343 small ones (under 100 kb) that mmlong2 kept.
+- The graph can point to contigs a MAG lacks (a 94 kb contig that closes MAG s.171 into a loop, but could not join a
+  MAG that mmlong2 made from one contig before binning), but it cannot tell on its own whether two linked versions of a
+  genome are two strains or one population.
+discussion: Two strains of one species share 99.5% of their sequence. What decides whether an assembler gives you one
+  contig or two, and which would you want for your own question?
+teacher:
+  time: About 70 minutes (an estimate, not yet tried with students).
+  before: Students should know what a read is and that reads carry errors (module 2, or a short recap).
+  flow:
+  - '5 min: why assembly is hard (no positions, repeats, strains); show the run''s numbers at the top of the page.'
+  - '15 min: section 1 with examples 1 and 2; let students move the read-length slider before opening the answers.'
+  - '10 min: section 2, stepping through reads to contig together; example 3 on transitive edges.'
+  - '10 min: section 3 with examples 4-6 on strains, depth and read errors.'
+  - '5 min: the table of what myloasm does.'
+  - '15 min: section 4, the real graph: the numbers and bars first, then examples 7-12 (loop, missed contig, repeat,
+    strains, one genome or two, a split contig).'
+  - '5 min: section 5 with example 13 on small circles, then the discussion question.'
+  discussion_points:
+  - 'One contig per strain needs differences the assembler can trust: enough positions that differ, enough reads per strain,
+    and reads accurate enough that true differences stand out from errors (examples 4-6).'
+  - 'Which is wanted depends on the question: a merged contig is fine for ''is this species there?'', separate strains
+    matter for gene content or tracking a strain over time.'
+  - 'Link forward: module 4 shows two MAGs of one species (2.441 and 3.1230), and module 5 a contig that is two-part.'
+  - 'Real data (example 10): three Streptococcus thermophilus contigs 99.0-99.4% identical were kept apart; the two
+    Prevotella copri_B MAGs (example 11) show that kept apart is not the same as understood.'
+  pitfalls:
+  - The simulations are illustrations with toy rules, not myloasm's code; the 'What myloasm does' table is the source-based
+    part.
+  - Longer reads help only when some read actually spans the repeat; depth matters too (example 2).
+  - A circular contig is the assembler's decision, not proof of a whole chromosome; mmlong2 split 6 of the 122 loops of
+    1 Mb or more at likely misassemblies, and contig u23166933ctg (MAG s.13) ends in a copy of its start without being
+    marked circular.
+  - Graph nodes are contigs before polishing; 42,626 of the 63,068 were removed by myloasm afterwards (duplicates,
+    alternates and others), so a node is not always a contig of the final assembly.
+  - Depths in sections 4 and 5 are myloasm's own (reads matching at about 99% identity), not the read depth used for
+    binning in module 4; positions in the drawings come from a force layout, so distances mean nothing.
+  - Links say that two contig ends overlap, not why; the page does not show what the shared sequence is.
