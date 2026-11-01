@@ -48,7 +48,7 @@ teacher:
   - 'A CAZyme family''s food category comes from characterised enzymes of the family; one gene can act on something
     else. Read the categories as a rough guide, and the counts as potential, not as what was digested on these days.'
   - 'The 17 MAGs were chosen by a rule fixed before looking at their genes (largest changes among high-quality MAGs).
-    The two most abundant MAGs (Prevotella copri_B, medium quality, about 1.9-fold lower) are in no group; the sixth
+    The most abundant MAG (Prevotella copri_B 2.359, medium quality) and a second P. copri_B (3.5197, 5th), both about 1.9-fold lower, are in no group; the sixth
     faller beat the seventh by a hair (log2 -1.378 against -1.376).'
   - 'Risers and fallers differ in phylum (fallers all Bacillota, risers mostly not): a gene that separates the groups
     may only be separating phyla.'
