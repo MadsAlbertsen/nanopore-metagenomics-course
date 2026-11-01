@@ -6,12 +6,12 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 
 | Module | Status |
 |---|---|
-| 1. Raw reads: what they look like, and why we filter and split them | in preparation |
-| 2. Assembly: from overlapping reads to contigs | draft (real graphs to come) |
+| 1. Raw reads: what they look like, and why we filter and split them | draft |
+| 2. Assembly: from overlapping reads to contigs | draft |
 | 3. Binning: sorting contigs into genomes | ready |
 | 4. MAG quality: how complete, how clean | draft |
 | 5. Methylation: misassemblies, contamination and placing contigs | draft |
-| 6. Annotation: what is in a genome, and how sure are we | in preparation |
+| 6. Annotation: what is in a genome, and how sure are we | draft |
 | 7. Interpretation: what changes over ten days | draft |
 
 ## The data
