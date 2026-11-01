@@ -10,10 +10,10 @@
   modules: [reads, interpretation]
 - term: "Q score (quality)"
   text: "The basecaller's confidence in a base on a log scale: Q10 means 1 error in 10 expected, Q20 1 in 100, Q30 1 in 1,000."
-  modules: [reads]
+  modules: [signal, reads]
 - term: "Adapter and barcode"
   text: "Short known sequences added in the library prep. The adapter lets the DNA enter the pore; the barcode tells which sample a read came from, so several samples can share a flow cell."
-  modules: [reads]
+  modules: [signal, reads]
 - term: "Joined (chimeric) read"
   text: "A read that holds two molecules one after the other, with an adapter in the middle. It is split at the adapter before assembly."
   modules: [reads, assembly]
@@ -40,16 +40,16 @@
   modules: [assembly]
 - term: "Circular contig"
   text: "A contig whose end overlaps its start, so the assembler closed it into a circle: likely a whole chromosome, plasmid or phage."
-  modules: [assembly, mag-quality]
+  modules: [assembly, mag-quality, methylation]
 - term: "Misassembly (misjoin)"
   text: "A contig that joins sequence that does not belong together in the genome."
-  modules: [assembly, mag-quality]
+  modules: [assembly, mag-quality, methylation]
 - term: "Co-assembly"
   text: "One assembly of the reads from several samples together, here all ten days. Each contig then has a depth in each sample."
   modules: [assembly, binning]
 - term: "Depth (coverage)"
-  text: "How many reads cover a position, averaged over a contig. Higher depth means a more abundant genome or more sequencing."
-  modules: [assembly, binning, mag-quality, interpretation]
+  text: "How many reads cover a position, averaged over a contig. Higher depth means a more abundant genome or more sequencing. Unless a page says otherwise, depth is read depth: the reads of each sample mapped to the contigs, as binning uses it. The assembly graph in module 3 shows myloasm's own depth instead (reads matching the contig at about 99% identity), which can differ."
+  modules: [assembly, binning, mag-quality, methylation, interpretation]
 - term: "Binning"
   text: "Sorting contigs into groups that each come from one genome, using features that differ between genomes, such as depth in each sample and sequence composition."
   modules: [binning]
@@ -67,7 +67,7 @@
   modules: [binning]
 - term: "Methylation motif"
   text: "A short sequence that a bacterium marks with a methyl group at nearly every occurrence, set by its own enzymes (written as the motif plus the modified base, such as GATC 6mA). Nanopore reads show it directly."
-  modules: [binning, mag-quality]
+  modules: [signal, binning, mag-quality, methylation]
 - term: "Completeness and contamination"
   text: "Estimates of how much of a genome a MAG holds and how much of it seems to come from other genomes, from genes that most genomes of a lineage carry (CheckM) or from protein functions (CheckM2)."
   modules: [mag-quality]
@@ -111,7 +111,7 @@
   text: "Sorting the reads of a flow cell into samples by their barcode. Here Dorado also trimmed the barcode region off most reads while doing so."
   modules: [reads]
 - term: "Rapid barcoding (transposase)"
-  text: "A library prep in which an enzyme (a transposase) cuts the DNA and attaches a barcoded tag in one step; an adapter carrying the motor protein is then attached to the tagged ends. The example data were made with the Rapid Barcoding Kit SQK-RBK114-24."
+  text: "A library prep in which an enzyme (a transposase) cuts the DNA and attaches a barcoded tag in one step; an adapter carrying the motor protein is then attached to the tagged ends. The example data were made with the Rapid Barcoding Kit SQK-RBK114.24."
   modules: [reads]
 - term: "Adapter trimming"
   text: "Cutting adapter and barcode sequence off the read ends so it does not end up in the assembly; here done with Porechop_ABI, which also splits reads at adapters found in the middle."
@@ -146,3 +146,42 @@
 - term: "AMRFinderPlus"
   text: "NCBI's tool for finding antimicrobial resistance genes; Bakta runs it. A match says the gene resembles a known resistance protein, not that the bacterium is resistant."
   modules: [annotation]
+- term: "Raw signal (current)"
+  text: "What a nanopore sequencer measures: the electric current through one pore, in picoampere (pA), while a DNA strand is pulled through it. The bases in the narrow part of the pore block part of the flow, so the current changes with them."
+  modules: [signal]
+- term: "Sample rate"
+  text: "How often the current is measured: 5,000 times per second in module 1. With the strand moving at about 400 bases per second, a base lasts about 12 samples (median), but the speed varies."
+  modules: [signal]
+- term: "Basecaller (Dorado)"
+  text: "The program that turns the current into bases with a quality per base; Dorado is Oxford Nanopore's. Its modified-base models also say which bases carry a methyl group."
+  modules: [signal, reads]
+- term: "Move table and stride"
+  text: "The basecaller looks at the current in steps of a few samples (the stride: 6 here) and writes a move table, one entry per step and 1 where a new base starts. So by the move table a base lasts 6, 12, 18 or more samples."
+  modules: [signal]
+- term: "Trimmed samples (ts and ns tags)"
+  text: "Dorado's tags that say which part of the current became bases: ts is the number of samples trimmed from the start (the adapter and barcode), and the move table covers the current from ts to ns. The samples outside are not basecalled."
+  modules: [signal]
+- term: "9-mer level table (k-mer model)"
+  text: "Oxford Nanopore's table of the expected current for every 9-base stretch of DNA in an R10.4.1 pore. A base's current depends on several bases at once, so the model works on 9-mers, not single bases."
+  modules: [signal]
+- term: "Normalised current"
+  text: "A read's current minus its shift, divided by its scale, so reads from different pores can be compared; one unit is about 31 pA in module 1."
+  modules: [signal]
+- term: "Signal-to-reference refinement (Remora)"
+  text: "Placing each base of a reference sequence on the current by shifting the move table's base boundaries a few samples to fit the 9-mer table's levels. It shows the read as the model sees it, so it partly hides changes the model does not know, such as a methylated base."
+  modules: [signal]
+- term: "Modified-base probability (MM and ML tags)"
+  text: "For every A and C of a read, Dorado's probability that it carries a methyl group, stored in the read's MM and ML tags. Most probabilities are near 0 or 1; module 1 counts 0.5 or more as modified."
+  modules: [signal, methylation]
+- term: "6mA, 5mC and 4mC"
+  text: "The three methylated bases called here: N6-methyladenine (6mA) on an A, and 5-methylcytosine (5mC) and N4-methylcytosine (4mC) on a C. A motif is written with its modified base, such as GATC 6mA."
+  modules: [signal, methylation]
+- term: "Methylated share"
+  text: "For one site, the share of its reads called modified; for a motif, the same pooled over all its sites. Module 6 counts a site as methylated when at least half of its reads say so, and gives the share of methylated sites per motif and contig."
+  modules: [signal, methylation]
+- term: "Nanomotif"
+  text: "The tool that finds each MAG's methylated motifs from the reads' modified-base calls, including longer and two-part motifs; it reports motifs methylated at most of their sites."
+  modules: [methylation, binning, mag-quality]
+- term: "MAG names (1.308, c.34, s.171)"
+  text: "The labels mmlong2 gives its MAGs. c.34: a circular contig of 250 kb or more kept as a MAG on its own before binning (CheckM2 completeness 80% or more); s.171: a linear contig of 1 Mb or more kept the same way (90% or more); 1.308, 2.441, 3.1230: MAGs from binning, the first number being the binning round."
+  modules: [binning, mag-quality]

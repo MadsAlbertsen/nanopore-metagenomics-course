@@ -1,7 +1,7 @@
 // Module 7: annotation. DATA from the example analysis (np26 scripts/29_course_annotation.py):
 // numbers (headline counts), evidence (evidence class names), amr (AMRFinderPlus protein matches by product),
 // bins (per MAG: GTDB-Tk ranks, method, closest reference [species, ANI, AF], RED, gene evidence counts),
-// maps (gene maps for a few MAGs: contigs [id, length, circular, module-5 verdict] and genes
+// maps (gene maps for a few MAGs: contigs [id, length, circular, module-6 verdict] and genes
 // [contig, start, stop, strand, product, symbol, evidence, identity %, Pfam]; products, symbols and pfam are lookups).
 const NUM = DATA.numbers, B = DATA.bins, MAPS = DATA.maps, EVN = DATA.evidence;
 const magIdx = new Map(B.map((b, i) => [b.id, i]));

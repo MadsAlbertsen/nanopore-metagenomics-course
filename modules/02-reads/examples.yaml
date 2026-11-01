@@ -1,7 +1,7 @@
 # Guided examples for module 2 (raw reads). Each example sets the page up (state) and asks one question; the answer
 # stays hidden until clicked. Every number was computed from the example analysis (np26 scripts/27_course_reads.py
 # data: ~3,000 random raw reads per sample, the analysis's filter and Porechop_ABI output, alignments to the
-# co-assembly; 2026-11-01) and still needs the independent check. check.py rejects settings not in data.json.
+# co-assembly; 2026-11-01) and recomputed by an independent review (2026-11-01). check.py rejects settings not in data.json.
 # state keys: sample = all or DNA01-DNA10; unit = reads or bases; q = mean Q cut-off (0-20); len = length cut-off
 #   (0, 200, 500, 1000, 2000, 3000, 5000, 10000); start = read start shown (1-based); join = split read shown (1-based).
 

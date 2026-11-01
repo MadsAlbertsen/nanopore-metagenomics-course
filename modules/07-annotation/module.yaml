@@ -3,7 +3,7 @@ slug: annotation
 title: "Annotation: what is in a genome, and how sure are we"
 nav: Annotation
 summary: >-
-  Taxonomy, genes and their functions for selected MAGs, and the evidence behind each claim.
+  Species names and genes of all 421 MAGs, the evidence behind each name, and a gene map for eight of them.
 status: draft
 mag_link: "#?mag={id}"
 takeaways:
