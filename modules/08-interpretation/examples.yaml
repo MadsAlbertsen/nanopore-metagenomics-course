@@ -124,12 +124,13 @@
     it fit what diet studies report?
   answer: >-
     Five of the six fallers carry 4.6-16.6 plant-fibre CAZyme genes per 1,000 genes (Dorea_A longicatena, c.76, only
-    1.0), and all six have 14-40 CAZyme genes per 1,000. Five of the six risers have at most 1.0 plant-fibre gene per
-    1,000 and 4-9 CAZyme genes per 1,000 in all. Diet studies found fewer plant-polysaccharide degrading Firmicutes
+    1.0), and all six have 14-40 CAZyme genes per 1,000. Five of the six risers have few or none (at most 1.0 per
+    1,000) and 4-9 CAZyme genes per 1,000 in all. Diet studies found fewer plant-polysaccharide degrading Firmicutes
     (Roseburia, Eubacterium rectale) on diets with little carbohydrate (Duncan et al. 2007, Appl Environ Microbiol;
     David et al. 2014, Nature), so the direction fits. But the sixth riser, Bacteroides cellulosilyticus (c.119), has the
-    most CAZyme genes of all 17 (94 per 1,000, 43 of them plant fibre). Six against six MAGs from one person, with the
-    diet changed together with time: a pattern worth testing, not a result.
+    most CAZyme genes of all 17 (94 per 1,000, 43 of them plant fibre). And look at the phylum column: all six fallers
+    are Bacillota, five of the six risers are not, so the contrast largely follows phylum. Six against six MAGs from one
+    person, with the diet changed together with time: a pattern worth testing, not a result.
 
 - title: "A known answer: Bacteroides cellulosilyticus"
   state: {m: share, by: phylum, mag: "c.119", mv: count}
@@ -139,8 +140,9 @@
     polysaccharide utilisation loci (McNulty et al. 2013, PLoS Biol). Does the MAG show that? How do the two
     stable Bacteroidota MAGs, c.31 and c.36, compare?
   answer: >-
-    c.119 has 490 CAZyme genes (9.4% of its 5,227 genes), 224 of them in plant-fibre families and 63 in host-glycan
-    families (fucosidases GH29 and GH95, sialidases GH33, GH20), and Bakta names 129 genes SusC-like and 102 SusD-like:
+    c.119 has 490 CAZyme genes (9.4% of its 5,227 genes), 224 of them in plant-fibre families and 62 in host-glycan
+    families (GH92 alpha-mannosidases 15, GH88 9, GH20 7, GH109 6, GH29 fucosidases 5, PL29 4, GH33 sialidases 4), and
+    Bakta names 129 genes SusC-like and 102 SusD-like:
     the outer-membrane import pairs of polysaccharide utilisation loci. That is the known answer, recovered. The stable
     Cryptobacteroides (c.31) has 81 CAZyme genes and 20 SusC-like genes, the stable Prevotella sp003447235 (c.36) only
     43 (1.6% of its genes) and 15 SusC-like genes. Bacteroidota differ widely: a phylum name is not a function.
@@ -151,27 +153,30 @@
     Picked: the two Agathobacter rectalis MAGs (c.40 and c.38) and the control Faecalibacterium hattorii (c.49). Which
     of the 17 MAGs carry butyrate genes? Do the two A. rectalis MAGs differ in their genes or in their change?
   answer: >-
-    Butyryl-CoA dehydrogenase (bcd) plus a butyryl-CoA:acetate CoA-transferase (but, by Bakta name) are in both A.
-    rectalis, Roseburia intestinalis (1.406) and the control F. hattorii, which has no butyrate kinase (buk), as
-    expected for Faecalibacterium (Vital et al. 2014, mBio). Butyrivibrio_A crossota (c.32, stable) has the other route
-    (bcd, ptb, buk); Vescimonas sp900548615 (c.55, a riser) has bcd, a but-named gene and genes above the butyrate
-    kinase threshold, but no ptb was found. The two A.
+    Six MAGs have a complete route (column "Butyrate route"). Butyryl-CoA dehydrogenase (bcd) plus a
+    butyryl-CoA:acetate CoA-transferase (but, by Bakta name) are in both A. rectalis, Roseburia intestinalis (1.406)
+    and the control F. hattorii, which has no butyrate kinase (buk), as expected for Faecalibacterium (Vital et al.
+    2014, mBio). Butyrivibrio_A crossota (c.32, stable) has the other route (bcd, ptb, buk); Vescimonas sp900548615
+    (c.55, a riser) has bcd, a but-named gene and genes above the butyrate kinase threshold, but no gene above the ptb
+    threshold. Two Bacteroidota (c.31, c.119) have a but-like name or a buk-like gene but no bcd: no route. The two A.
     rectalis carry nearly the same repertoire (66 and 64 CAZyme genes, the same butyrate genes), yet c.40 is 3.4 times
     lower in days 6-10 and c.38 stays level (1.1 times). Gene content does not explain why one strain fell: what
-    differs may lie in genes not on this list, or outside the genomes.
+    differs may lie in genes not on this list, or outside the genomes. Butyrate genes also do not split risers from
+    fallers: two of six fallers and one of six risers have the route.
 
 - title: What does not fit
   state: {m: share, by: phylum, mag: "c.50,c.34", mv: rate}
   question: >-
     Picked: CAZU01 sp000432275 (c.50) and Zag111 sp002102825 (c.34), the two largest risers. What could they live on,
-    according to their genes? Then look at the bile salt column: diet studies report more bile-tolerant bacteria on an
-    animal-based diet (David et al. 2014). Do the risers carry the bile salt hydrolase?
+    according to their genes? Then look at the bile salt column: on an animal-based diet, David et al. (2014, Nature)
+    measured more bacterial bile salt hydrolase expression. Do the risers here carry the gene?
   answer: >-
     Both have few CAZyme genes (18 and 17, about 9 per 1,000 genes): 4 and 8 in starch and glycogen families, most of
     the rest in families for other substrates such as the bacterial cell wall. Neither has any of the butyrate,
     propionate, acetogen or protein-fermentation markers in the table. They belong to lineages known mainly from MAGs
     (CAG-239 in Pseudomonadota; Gastranaerophilaceae, non-photosynthetic relatives of cyanobacteria), and this short
-    marker list cannot say what they grow on. The bile salt hydrolase is in all six fallers and in one riser
-    (Vescimonas, c.55): the opposite of a simple reading of David et al. But that study used an animal-based diet,
-    while here only carbohydrate and calories were recorded, and a hydrolase gene is not the same as bile tolerance.
-    Gene repertoires can match a story for some MAGs and not for others; report both.
+    marker list cannot say what they grow on. The bile salt hydrolase gene is in 11 of the 17 MAGs: all six fallers,
+    three of the four stable ones, the control, and one riser (Vescimonas, c.55). So it does not mark the risers; it
+    mostly marks the Bacillota, the phylum of the fallers. That study used an animal-based diet, while here only
+    carbohydrate and calories were recorded, and a gene is neither expression nor bile tolerance. Gene repertoires can
+    match a story for some MAGs and not for others; report both.

@@ -321,15 +321,15 @@ function drawBc() {
 // category], marker genes per KO (metab.markers order), Bakta-named SusC-like and butyryl-CoA:acetate CoA-transferase
 // genes, and Bakta-named carbohydrate enzymes [all, with a dbCAN call].
 const MT = D.metab, MTI = MT.mags.map((x) => M.findIndex((m) => m.id === x.id));
-const MT_CATS = { starch: "Starch, glycogen", fructan: "Fructans (inulin)", plant_fibre: "Plant cell-wall fibres", host_glycan: "Host glycans (mucin)", other: "Other substrates", mixed: "Several substrates", unmapped: "Not in the mapping" };
+const MT_CATS = { starch: "Starch, glycogen", fructan: "Fructans (inulin)", plant_fibre: "Plant cell-wall fibres", host_glycan: "Host glycans", other: "Other substrates", mixed: "Several substrates", unmapped: "Not in the mapping" };
 const MT_SHOWN = ["starch", "fructan", "plant_fibre", "host_glycan"];
 const MT_GROUPS = { riser: "Higher in days 6-10", faller: "Lower in days 6-10", stable: "Stable, abundant", control: "Control (Faecalibacterium)" };
 const MT_COLOUR = { riser: "var(--c1)", faller: "var(--c2)", stable: "var(--c3)", control: "var(--c4)" };
 const KO = Object.fromEntries(MT.markers.map(([ko, short, group, desc], j) => [short, { ko, short, group, desc, j }]));
 // marker columns: label, the marker genes that count, and what they show
 const MT_MARKERS = [
-  ["Butyrate", ["bcd", "buk", "ptb"], "butyryl-CoA dehydrogenase (bcd); butyrate kinase (buk) and phosphate butyryltransferase (ptb). The butyryl-CoA:acetate CoA-transferase has no clean KEGG profile: its Bakta name is counted under but"],
-  ["but", ["but"], "butyryl-CoA:acetate CoA-transferase (or acetyl-CoA hydrolase/transferase) by Bakta name"],
+  ["Butyrate route", "route", "a complete route: butyryl-CoA dehydrogenase (bcd) plus a last step, either a butyryl-CoA:acetate CoA-transferase (but, by Bakta name) or phosphate butyryltransferase (ptb) / butyrate kinase (buk) above their KOfam thresholds"],
+  ["but-like name", ["but"], "genes Bakta names butyryl-CoA:acetate CoA-transferase or acetyl-CoA hydrolase/transferase (the second name also covers enzymes that are not part of butyrate production)"],
   ["Propionate (succinate)", ["mcmA", "mmdA", "mmdA-Na"], "methylmalonyl-CoA mutase and decarboxylase"],
   ["Propionate (propanediol)", ["pduP", "pduC"], "propionaldehyde dehydrogenase, propanediol dehydratase"],
   ["Propionate (acrylate)", ["lcdA"], "lactoyl-CoA dehydratase"],
@@ -383,12 +383,15 @@ function drawMtTable() {
   const cats = MT_SHOWN.map((c) => MT.cats.indexOf(c));
   const colMax = cats.map((ci) => Math.max(...MT.mags.map((x) => mtRate(x, x.cat[ci]))));
   const cell = (v, max) => { const t = max > 0 ? v / max : 0; return `<td class="r mtc" style="background:${viridis(t)};color:${t > 0.6 ? "#15212b" : "#ffffff"}">${mtFmt(v)}</td>`; };
-  const mk = (x, shorts) => { const n = shorts.reduce((s, k) => s + mtCount(x, k), 0); return `<td class="r">${n ? `<b>${n}</b>` : `<span class="muted">–</span>`}</td>`; };
+  const mk = (x, shorts) => {
+    if (shorts === "route") return `<td class="r">${x.butr ? "<b>yes</b>" : `<span class="muted">–</span>`}</td>`;
+    const n = shorts.reduce((s, k) => s + mtCount(x, k), 0); return `<td class="r">${n ? `<b>${n}</b>` : `<span class="muted">–</span>`}</td>`;
+  };
   const rows = order.map((r) => {
     const x = MT.mags[r], i = MTI[r], c = dietChange(i);
-    return `<tr class="click${r === focus ? " hl" : ""}" data-r="${r}"><td><i class="sw" style="background:${MT_COLOUR[x.group]}"></i>${magLabel(i)}</td><td class="r">${fold(c.lfc)}</td><td class="r">${x.genes.toLocaleString("en")}</td><td class="r">${x.cazy} <span class="muted">(${((100 * x.cazy) / x.genes).toFixed(1)}%)</span></td>${cats.map((ci, j) => cell(mtRate(x, x.cat[ci]), colMax[j])).join("")}${MT_MARKERS.map(([, s]) => mk(x, s)).join("")}</tr>`;
+    return `<tr class="click${r === focus ? " hl" : ""}" data-r="${r}"><td><i class="sw" style="background:${MT_COLOUR[x.group]}"></i>${magLabel(i)}</td><td>${esc(M[i].phylum)}</td><td class="r">${fold(c.lfc)}</td><td class="r">${x.genes.toLocaleString("en")}</td><td class="r">${x.cazy} <span class="muted">(${((100 * x.cazy) / x.genes).toFixed(1)}%)</span></td>${cats.map((ci, j) => cell(mtRate(x, x.cat[ci]), colMax[j])).join("")}${MT_MARKERS.map(([, s]) => mk(x, s)).join("")}</tr>`;
   }).join("");
-  $("mtTable").innerHTML = `<table class="ct mt"><thead><tr><th>MAG</th><th class="r">Days 6-10 against 1-5</th><th class="r">Genes</th><th class="r">CAZyme genes</th>${MT_SHOWN.map((c) => `<th class="r">${MT_CATS[c]}</th>`).join("")}${MT_MARKERS.map(([lab, , d]) => `<th class="r" title="${esc(d)}">${lab}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+  $("mtTable").innerHTML = `<table class="ct mt"><thead><tr><th>MAG</th><th>Phylum</th><th class="r">Days 6-10 against 1-5</th><th class="r">Genes</th><th class="r">CAZyme genes</th>${MT_SHOWN.map((c) => `<th class="r">${MT_CATS[c]}</th>`).join("")}${MT_MARKERS.map(([lab, , d]) => `<th class="r" title="${esc(d)}">${lab}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
   for (const tr of $("mtTable").querySelectorAll("tr[data-r]")) tr.addEventListener("click", () => pick(MTI[+tr.dataset.r]));
 }
 
@@ -401,7 +404,7 @@ function drawMtDetail() {
   host.innerHTML = `<div class="head"><h3>${magLabel(i)}</h3></div>
     <p class="note">${esc(M[i].phylum)} · ${M[i].q} · ${MT_GROUPS[x.group]}: ${fold(c.lfc)} (mean ${fmtV(c.a, "share")} in days 1-5, ${fmtV(c.b, "share")} in days 6-10) · ${x.genes.toLocaleString("en")} genes</p>
     <p class="note"><b>CAZyme genes (glycoside hydrolases, lyases, esterases): ${x.cazy}</b>, ${MT_SHOWN.map((cc) => `${MT_CATS[cc].toLowerCase()} ${x.cat[MT.cats.indexOf(cc)]}`).join(", ")}; other or several substrates ${x.cat[MT.cats.indexOf("other")] + x.cat[MT.cats.indexOf("mixed")]}. Largest families (genes): </p><div class="motifs">${fams || "none"}</div>
-    <p class="note"><b>Marker genes:</b> ${markers.length ? markers.map(([ko, short, desc, n]) => `${esc(desc)} <span class="mono">${short}</span> (${ko}${n > 1 ? `, ${n} genes` : ""})`).join("; ") : "none of the listed ones"}. Bakta names: ${x.but} butyryl-CoA:acetate CoA-transferase-like, ${x.susc} SusC-like (outer-membrane sugar import).</p>
+    <p class="note"><b>Marker genes:</b> ${markers.length ? markers.map(([ko, short, desc, n]) => `${esc(desc)} <span class="mono">${short}</span> (${ko}${n > 1 ? `, ${n} genes` : ""})`).join("; ") : "none of the listed ones"}. Complete butyrate route: ${x.butr ? "yes" : "no"}. Bakta names: ${x.but} butyryl-CoA:acetate CoA-transferase or acetyl-CoA hydrolase/transferase, ${x.susc} SusC-like (outer-membrane sugar import).</p>
     <p class="note">Check with a second method: Bakta named ${x.bnamed[0]} genes as carbohydrate enzymes; ${x.bnamed[1]} of them also have a dbCAN call.</p>
     ${magLinks(M[i].id, "interpretation")}`;
 }
