@@ -68,7 +68,8 @@
     rest of 2.569 is mixed for TTTAAA (92% of 53 sites methylated in u10205617ctg, 25% of 61 in the 552 kb
     u4227186ctg), so no motif of it counts as known methylated and it shares nothing with the contig. Depth disagrees clearly: the
     contig follows 2.158 with r = -0.649 (rank 412 of 421) and its own MAG with r = 0.977 (rank 1); composition ranks
-    2.158 at 270. Placements on one shared motif were wrong in 27% of cases in the test.
+    2.158 at 270. In the test, placements on only one shared motif (all forms counted) were wrong in 39 of 142 cases (27%; 26% when
+    one distinct motif is counted, as in the table).
 
 - title: A circular contig with every kind of support
   state: {mag: c.71, pset: circular, pshow: depth, contig: u24259230ctg}

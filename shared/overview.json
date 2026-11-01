@@ -1,10 +1,18 @@
 [
  {
+  "module": "signal",
+  "step": "Signal",
+  "facts": [
+   "Another data set (activated sludge, not the stool samples): 6,379 reads with raw signal from 8 samples; median 12 samples per base, 394 bases per second (median read)",
+   "6mA at GATC, GANTC and GTNNAC, each methylated in one of 4 genome bins (79-90% of calls there, 3-6% in the others)"
+  ]
+ },
+ {
   "module": "reads",
   "step": "Reads",
   "facts": [
    "10 samples, 38.1 M reads (166.9 Gb) of 1 kb or more and mean quality Q10 or more",
-   "166.5 Gb after adapter trimming and splitting; read N50 6.0 kb"
+   "166.5 Gb (38.0 M reads) after adapter trimming and splitting; read N50 6.0 kb"
   ]
  },
  {

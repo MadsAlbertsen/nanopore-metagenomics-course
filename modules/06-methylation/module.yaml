@@ -28,7 +28,8 @@ discussion: >-
   runs against the MAG's. Would you add it to the MAG, and what further evidence would settle it?
 teacher:
   time: About 75 minutes (an estimate, not yet tried with students).
-  before: What a MAG and binning are (module 4); module 5's MAG cards help but are not needed.
+  before: What a MAG and binning are (module 4); module 5's MAG cards and module 1's section 3 (how a methylated base
+    is called) help but are not needed.
   flow:
     - "10 min: why methylation is a signature (section 1); the common-motif chart and why shallow MAGs have no motifs."
     - "15 min: fingerprints and the contig screen with the cut-genome test (examples 1 and 2)."

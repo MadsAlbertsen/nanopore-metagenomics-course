@@ -19,7 +19,7 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 
 Ten daily stool samples from one person (days 1-5 on a high-carbohydrate, high-calorie diet, days 6-10 on a
 low-carbohydrate, low-calorie diet),
-sequenced together on one PromethION flow cell (Oxford Nanopore, Rapid Barcoding Kit SQK-RBK114-24, R10.4.1),
+sequenced together on one PromethION flow cell (Oxford Nanopore, Rapid Barcoding Kit SQK-RBK114.24, R10.4.1),
 assembled with myloasm and binned with mmlong2. The pages hold only derived data (statistics, contig features,
 MAG summaries); no read files.
 

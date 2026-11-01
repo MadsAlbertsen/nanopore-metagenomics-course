@@ -56,7 +56,7 @@
         <option value="purity">10 kb or more</option><option value="purity_10kb">10-50 kb</option><option value="purity_50kb">50-200 kb</option><option value="purity_200kb">200 kb or more</option>
       </select></label>
       <div id="spScores"></div>
-      <p class="note">For each contig in a MAG: the share of its 10 nearest contigs (fewer for small MAGs) that are in the same MAG, using only that feature set. The black tick is chance (MAG labels shuffled). Left: all MAG contigs; right: those with methylation data (5x depth or more), so every feature is compared on the same contigs. The MAGs were made from these same features, so a high score means agreement with the binners, not proof that the MAGs are right.</p>
+      <p class="note">For each contig in a MAG: the share of its 10 nearest contigs (fewer for small MAGs) that are in the same MAG, using only that feature set. A contig that is the only one of its MAG at this length has no other contig to find and is left out, so the table counts fewer MAG contigs than the maps show. The black tick is chance (MAG labels shuffled). Left: all MAG contigs; right: those with methylation data (5x depth or more), so every feature is compared on the same contigs. The MAGs were made from these same features, so a high score means agreement with the binners, not proof that the MAGs are right.</p>
     </section>
   </aside>
 </div>
