@@ -1,16 +1,15 @@
 // Module 1: signal. DATA from the example analysis (np26 scripts/30_course_signal.py): source (run settings), reads
-// (counts and the move-table check), dwell (samples per base by the move table), speed, ts, trace (one read's current:
-// envelope of the whole read, every sample of its first second, move-table boundaries and bases there), fit (model
-// against measured current), stretches (40 reference bases each: samples, read bases on the move table, reference bases
-// on Remora's boundaries, model and measured level), bins, kmers (crude motif search), motifs (per motif and bin: calls,
-// current around the modified base), bam (read starts; read errors over each motif).
+// (counts), speed, ts, trace (one read's current: envelope of the whole read, every sample of its first second, Dorado's
+// base boundaries and bases there), fit (scale_pa: pA per normalised unit), stretches (40 reference bases each: samples,
+// reference bases placed on the current by Remora, the read's bases aligned to them, model and measured level), bins,
+// kmers (crude motif search), motifs (per motif and bin: calls, current around the modified base), bam (read starts;
+// read errors over each motif). The data also hold move-table and model-fit numbers the page no longer shows.
 const D = DATA, T = D.trace, F = D.fit, BINS = D.bins.map((b) => b.id), M = D.motifs;
 const num = (n) => Number(n).toLocaleString("en");
 const pct = (x, d = 0) => `${(100 * x).toFixed(d)}%`;
 const BINCOL = Object.fromEntries(BINS.map((b, i) => [b, `var(--c${i + 1})`]));
 const ZOOMS = [[1000, "1 s"], [200, "0.2 s"], [50, "0.05 s"]];
-const BOUNDS = [["refined", "refined (Remora)"], ["move", "move table"]];
-const DEFAULTS = { zw: 1000, zs: 0, stretch: 1, fitb: "refined", motif: "GATC", bound: "refined", split: 0, kbin: BINS[0], kmod: "6mA" };
+const DEFAULTS = { zw: 1000, zs: 0, stretch: 1, motif: "GATC", split: 0, kbin: BINS[0], kmod: "6mA" };
 const st = { ...DEFAULTS };
 const OFF = []; for (let o = D.offsets[0]; o <= D.offsets[1]; o++) OFF.push(o);
 const width = (id, min = 280) => Math.max(min, $(id).clientWidth || min);
@@ -20,9 +19,9 @@ const motifOf = (name) => M.find((m) => m.motif === name);
 // a motif with its modified base underlined (HTML)
 const motifHtml = (m, pos) => `<span class="mono">${esc(m.slice(0, pos))}<u>${esc(m[pos])}</u>${esc(m.slice(pos + 1))}</span>`;
 // measured minus model per offset: the motif's methylating bin against the mean of the others
-function effect(m, key = "refined") {
-  const mb = m.methylated_in, own = m.bins[mb][key].mean, others = BINS.filter((b) => b !== mb);
-  return own.map((v, i) => v - others.reduce((s, b) => s + m.bins[b][key].mean[i], 0) / others.length);
+function effect(m) {
+  const mb = m.methylated_in, own = m.bins[mb].refined.mean, others = BINS.filter((b) => b !== mb);
+  return own.map((v, i) => v - others.reduce((s, b) => s + m.bins[b].refined.mean[i], 0) / others.length);
 }
 const range = (a, f, unit = "") => { const lo = Math.min(...a), hi = Math.max(...a); return (lo === hi ? f(lo) : `${f(lo)}-${f(hi)}`) + unit; };
 const atLeast = (h, from) => h.slice(from).reduce((s, x) => s + x, 0);
@@ -31,7 +30,7 @@ const mid = (v) => v.hist.slice(4, 16).reduce((s, x) => s + x, 0) / v.calls;
 
 // --- numbers in the text, all from the data
 function fillNumbers() {
-  const R = D.reads, dw = D.dwell, tot = dw.hist.reduce((s, x) => s + x, 0);
+  const R = D.reads;
   const eff = M.map((m) => Math.max(...effect(m).map(Math.abs)));
   const mlHigh = M.map((m) => { const v = m.bins[m.methylated_in]; return atLeast(v.hist, 16) / v.calls; });
   const mlLow = M.flatMap((m) => BINS.filter((b) => b !== m.methylated_in).map((b) => { const v = m.bins[b]; return (v.hist.slice(0, 4).reduce((s, x) => s + x, 0) + v.implicit) / v.calls; }));
@@ -40,14 +39,9 @@ function fillNumbers() {
     nReads: num(R.n), speedSet: D.source.speed_setting, rate: num(D.source.rate), perBase: (D.source.rate / D.source.speed_setting).toFixed(1),
     traceLen: `${(T.n / T.rate).toFixed(1)} s`, traceBases: num(T.length), traceTs: `${num(T.ts)} samples (${(T.ts / T.rate).toFixed(2)} s)`,
     tsMedian: `${D.ts.median_s.toFixed(2)} s`, leadShare: pct(D.bam.lead_le10), traceTail: `${((T.n - T.ns) / T.rate).toFixed(2)} s`,
-    stride: dw.stride, dwell6: pct(dw.hist[dw.stride] / tot), dwellMedian: dw.median, dwellMean: dw.mean.toFixed(2), speedMedian: D.speed.median,
-    movesOk: `${num(R.moves_ok)} of ${num(R.n)}`, readMove: F.read_r.move.toFixed(3), readRefined: F.read_r.refined.toFixed(3),
-    rShuffled: F.median.r_shuffled.toFixed(3), nShuffled: num(F.n_shuffled), rMove: F.median.r_move.toFixed(3), rRefined: F.median.r_refined.toFixed(3),
     scalePa: Math.round(F.scale_pa), effect: range(eff, (x) => x.toFixed(2)), mlHigh: range(mlHigh, (x) => (100 * x).toFixed(0), "%"), mlLow: range(mlLow, (x) => (100 * x).toFixed(0), "%"),
     siteLow: (() => { const sc = motifOf("GATC").site_check; return `${num(sc.observed[0] + sc.observed[1])} sites below 40% against ${num(Math.round(sc.expected[0] + sc.expected[1]))} expected, of ${num(sc.sites)}`; })(),
     errBase: `${range(eb, (x) => (100 * x).toFixed(2), "%")} of aligned reference bases`,
-    speedPooled: dw.pooled_speed, rMoveShuf: (Math.abs(F.median.r_move_shuffled) < 0.0005 ? 0 : F.median.r_move_shuffled).toFixed(2), rMoveLong: F.median.r_move_long.toFixed(3),
-    effectMove: range(M.map((m) => Math.max(...effect(m, "move").map(Math.abs))), (x) => x.toFixed(2)),
     mlMidOther: range(M.flatMap((m) => BINS.filter((b) => b !== m.methylated_in).map((b) => mid(m.bins[b]))), (x) => (100 * x).toFixed(0), "%"),
     mlMidOwn: range(M.map((m) => mid(m.bins[m.methylated_in])), (x) => (100 * x).toFixed(0), "%"),
   };
@@ -121,7 +115,7 @@ function drawDetail() {
   if (T.ts > a && T.ts < b) { el("line", { x1: x(T.ts), x2: x(T.ts), y1: m.t, y2: h - m.b, stroke: "var(--c7)", "stroke-width": 2 }, svg); text(svg, x(T.ts) + 4, m.t + 12, "ts: first base"); }
   $("sgDetail").replaceChildren(svg);
   $("sgTraceNote").textContent = `Window ${st.zs}-${st.zs + st.zw} ms of the read (${num(b - a)} samples). ` +
-    (showBases ? `Coloured boxes: the bases by the move table, ${T.bounds.filter((s, i) => s >= a && s < b && i < T.bases.length).length} in this window; hover for quality and samples. ` : "Choose 0.2 s or 0.05 s to see the bases. ") +
+    (showBases ? `Coloured boxes: the bases where Dorado placed them, ${T.bounds.filter((s, i) => s >= a && s < b && i < T.bases.length).length} in this window; hover for quality and samples. ` : "Choose 0.2 s or 0.05 s to see the bases. ") +
     `Read of bin ${T.bin}, mean Q ${T.qs}. Bases outside the aligned part would be shown as '.'.`;
 }
 function drawZoom() { segShow("sgZoom", st.zw); $("sgZs").max = 1000 - st.zw; $("sgZs").value = st.zs; $("sgZsv").textContent = `${st.zs} ms`; drawTrace(); drawDetail(); }
@@ -141,12 +135,6 @@ function bars(id, values, labels, opts = {}) {
   if (opts.xlab) text(svg, (w + m.l) / 2, h - 2, opts.xlab, { "text-anchor": "middle" });
   $(id).replaceChildren(svg);
 }
-function drawDwell() {
-  const dw = D.dwell, s = dw.stride, tot = dw.hist.reduce((a, b) => a + b, 0), vals = [], labels = [];
-  for (let k = s; k <= 60; k += s) { vals.push(dw.hist[k] / tot); labels.push(k); }
-  vals.push(dw.hist[dw.hist.length - 1] / tot); labels.push(">60");
-  bars("sgDwell", vals, labels, { fmt: (v) => pct(v), xlab: "samples per base (move table)", tip: (i, v) => `${labels[i]} samples${typeof labels[i] === "number" ? ` (${(labels[i] / D.source.rate * 1000).toFixed(1)} ms)` : ""}: ${pct(v, 1)} of bases`, label: "Samples per base" });
-}
 function drawSpeed() {
   const sp = D.speed, labels = sp.hist.map((_, i) => sp.start + i * sp.step);
   bars("sgSpeed", sp.hist, labels.map((l, i) => (i % 5 === 0 ? l : "")), { xlab: "bases per second (per read; the end bars hold all slower or faster reads)", tip: (i, v) => `${labels[i]}-${labels[i] + sp.step} bases/s: ${num(v)} reads`, color: "var(--c3)", label: "Bases per second" });
@@ -158,7 +146,7 @@ function drawStretch() {
   $("sgStretchPick").innerHTML = D.stretches.map((s, k) => `<button role="listitem" data-k="${k + 1}" aria-current="${k + 1 === st.stretch}">${k + 1}. ${esc(s.title)}</button>`).join("");
   const n = S.pa.length, m = { l: 40, r: 8, t: 10 }, plotH = 190, rowH = 20;
   const px = Math.max(2.2, (width("sgStretch", 520) - m.l - m.r) / n), w = m.l + m.r + n * px;
-  const gap = 26, h = m.t + plotH + 12 + rowH * 2 + gap + 26 + 24;
+  const h = m.t + plotH + 12 + rowH + 18 + 24;
   const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Samples, levels and bases of a stretch" });
   const vals = S.pa.concat(S.expected.filter((v) => v !== null)), lo = Math.min(...vals) - 4, hi = Math.max(...vals) + 4;
   const x = (s) => m.l + s * px, y = (v) => m.t + (1 - (v - lo) / (hi - lo)) * plotH;
@@ -171,78 +159,31 @@ function drawStretch() {
     if (S.expected[i] !== null) el("line", { x1: a, x2: b, y1: y(S.expected[i]), y2: y(S.expected[i]), stroke: "var(--c2)", "stroke-width": 2.5, "stroke-dasharray": "5 3" }, svg);
     if (S.measured[i] !== null) el("line", { x1: a, x2: b, y1: y(S.measured[i]), y2: y(S.measured[i]), stroke: "var(--ink)", "stroke-width": 2 }, svg);
   }
-  // rows: reference bases on Remora's boundaries, read bases on the move table's
-  const yRef = m.t + plotH + 12, yRead = yRef + rowH + gap;
-  text(svg, m.l - 4, yRef + 14, "ref", { "text-anchor": "end" }); text(svg, m.l - 4, yRead + 14, "read", { "text-anchor": "end" });
-  const refRead = {}; for (const [q, r] of S.ops) if (q >= 0 && r >= 0) refRead[r] = q;
-  const insAfter = new Set(S.ops.filter(([q, r]) => r < 0).map(([q]) => q));
-  // connectors: each read base to the reference base it aligns to (slanted where the two segmentations disagree)
-  const shifts = [];
-  for (const [r, q] of Object.entries(refRead)) {
-    const xr = x((S.refined[r] + S.refined[+r + 1]) / 2), xq = x((S.move[q] + S.move[q + 1]) / 2);
-    shifts.push(Math.abs(S.move[q] - S.refined[r]));
-    el("line", { x1: xr, y1: yRef + rowH + 1, x2: xq, y2: yRead - 1, stroke: "var(--muted)", "stroke-width": 1 }, svg);
-  }
+  // one row: the reference bases on Remora's boundaries, coloured by the quality of the read base aligned to each
+  const yRow = m.t + plotH + 12;
+  const refRead = {}, inserted = []; let last = -1;
+  for (const [q, r] of S.ops) { if (r >= 0) { last = r; if (q >= 0) refRead[r] = q; } else inserted.push([last, q]); }
   for (let i = 0; i < S.ref.length; i++) {
     const a = x(S.refined[i]), b = x(S.refined[i + 1]), q = refRead[i];
-    const missing = q === undefined, wrong = !missing && S.read[q] !== S.ref[i];
-    const r = el("rect", { x: a, y: yRef, width: Math.max(1, b - a - 0.6), height: rowH, fill: missing ? "var(--v1)" : "var(--accent-soft)", stroke: "var(--line)", "stroke-width": 0.5 }, svg);
-    tipOn(r, `reference base ${i + 1}: ${S.ref[i]}<br>model level ${S.expected[i] ?? "–"} pA, measured ${S.measured[i] ?? "–"} pA<br>${S.refined[i + 1] - S.refined[i]} samples (Remora)${missing ? "<br><b>missing in the read (deletion)</b>" : wrong ? `<br><b>read has ${S.read[q]}</b>` : ""}`);
-    if (b - a > 8) { const t = text(svg, (a + b) / 2, yRef + 14, S.ref[i], { "text-anchor": "middle", class: "mlbl" }); t.style.fill = "var(--ink)"; t.style.pointerEvents = "none"; }
+    const missing = q === undefined, wrong = !missing && S.read[q] !== S.ref[i], bad = missing || wrong;
+    const r = el("rect", { x: a, y: yRow, width: Math.max(1, b - a - 0.6), height: rowH, fill: missing ? "var(--surface)" : viridis(Math.min(S.q[q], 50) / 50), stroke: bad ? "var(--v1)" : "none", "stroke-width": bad ? 2.5 : 0 }, svg);
+    tipOn(r, `base ${i + 1}: ${S.ref[i]}${missing ? "<br><b>missing in the read</b>" : `, read quality Q ${S.q[q]}${wrong ? `<br><b>the read has ${S.read[q]}</b>` : ""}`}<br>model level ${S.expected[i] ?? "–"} pA, measured ${S.measured[i] ?? "–"} pA<br>${S.refined[i + 1] - S.refined[i]} samples${!missing && S.p6ma[q] !== null ? `<br>6mA probability ${S.p6ma[q].toFixed(2)}` : ""}`);
+    if (b - a > 8) { const t = text(svg, (a + b) / 2, yRow + 14, S.ref[i], { "text-anchor": "middle", class: "mlbl" }); t.style.fill = missing || S.q[q] > 27 ? "#15212b" : "#fff"; t.style.pointerEvents = "none"; }
+    if (!missing && S.p6ma[q] !== null && S.p6ma[q] >= 0.5) el("path", { d: `M${(a + b) / 2},${yRow + rowH + 3} l4,7 h-8 z`, fill: "var(--c3)" }, svg);
   }
-  for (let i = 0; i < S.read.length; i++) {
-    const a = x(S.move[i]), b = x(S.move[i + 1]), q = S.q[i], ins = insAfter.has(i);
-    const r_ = Object.keys(refRead).find((k) => refRead[k] === i), wrong = r_ !== undefined && S.ref[r_] !== S.read[i];
-    const r = el("rect", { x: a, y: yRead, width: Math.max(1, b - a - 0.6), height: rowH, fill: viridis(Math.min(q, 50) / 50), stroke: wrong || ins ? "var(--v1)" : "none", "stroke-width": wrong || ins ? 2.5 : 0 }, svg);
-    const p = S.p6ma[i];
-    tipOn(r, `read base ${i + 1}: ${S.read[i]}, Q ${q}<br>${S.move[i + 1] - S.move[i]} samples (move table)${p !== null ? `<br>6mA probability ${p.toFixed(2)}` : ""}${ins ? "<br><b>extra base (insertion)</b>" : wrong ? `<br><b>reference has ${S.ref[r_]}</b>` : ""}`);
-    if (b - a > 8) { const t = text(svg, (a + b) / 2, yRead + 14, S.read[i], { "text-anchor": "middle", class: "mlbl" }); t.style.fill = q > 27 ? "#15212b" : "#fff"; t.style.pointerEvents = "none"; }
-    if (p !== null && p >= 0.5) el("path", { d: `M${(a + b) / 2},${yRead + rowH + 3} l4,7 h-8 z`, fill: "var(--c3)" }, svg);
+  // an extra base in the read: a red tick between the two bases it sits between
+  for (const [r, q] of inserted) {
+    const xi = x(S.refined[r + 1]);
+    const tk = el("rect", { x: xi - 2, y: yRow - 5, width: 4, height: rowH + 10, fill: "var(--v1)" }, svg);
+    tipOn(tk, `<b>extra base in the read: ${S.read[q]}</b>, Q ${S.q[q]}<br>between bases ${r + 1} and ${r + 2}`);
   }
   for (let ms = 0; ms * T.rate / 1000 <= n; ms += 10) text(svg, x(ms * T.rate / 1000), h - 6, `${ms} ms`, { "text-anchor": "middle" });
   $("sgStretch").replaceChildren(svg);
-  $("sgStretchLegend").innerHTML = `<span><i class="sw" style="background:var(--faint)"></i>samples</span><span><i class="sw" style="background:var(--ink)"></i>measured mean per reference base</span><span><i class="sw" style="background:var(--c2)"></i>model level (9-mer table, scaled to the read)</span><span><i class="sw" style="background:${VIRIDIS[0]}"></i><i class="sw" style="background:${VIRIDIS[9]}"></i>read base quality (Q 0-50)</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v1)"></i>differs from the reference</span><span><i class="sw" style="background:var(--c3)"></i>6mA called (probability 0.5 or more)</span>`;
+  $("sgStretchLegend").innerHTML = `<span><i class="sw" style="background:var(--faint)"></i>samples</span><span><i class="sw" style="background:var(--ink)"></i>measured mean per base</span><span><i class="sw" style="background:var(--c2)"></i>model level (9-mer table, scaled to the read)</span><span><i class="sw" style="background:${VIRIDIS[0]}"></i><i class="sw" style="background:${VIRIDIS[9]}"></i>read's quality (Q 0-50)</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v1)"></i>read wrong or missing</span><span><i class="sw" style="background:var(--v1);width:4px"></i>extra base in the read</span><span><i class="sw" style="background:var(--c3)"></i>6mA called (probability 0.5 or more)</span>`;
   const qmin = Math.min(...S.q), diffs = S.expected.map((e, i) => (e !== null && S.measured[i] !== null ? S.measured[i] - e : 0));
   const k = diffs.reduce((b, v, i) => (Math.abs(v) > Math.abs(diffs[b]) ? i : b), 0);
-  shifts.sort((a, b) => a - b);
-  const far = shifts.filter((v) => v >= 10).length, mid = shifts.length % 2 ? shifts[(shifts.length - 1) / 2] : (shifts[shifts.length / 2 - 1] + shifts[shifts.length / 2]) / 2;
-  $("sgStretchNote").textContent = `${S.why} Bin ${S.bin}; ${S.ref.length} reference bases, ${S.read.length} read bases, ${num(n)} samples (${(n / T.rate * 1000).toFixed(0)} ms); lowest quality Q ${qmin}. ` +
-    `Lines join each read base to the reference base it aligns to: the start of a base differs between the two rows by a median of ${mid} samples, and by 10 samples or more (about a base's length) for ${far} of ${shifts.length} bases. ` +
-    `Largest gap between measured and model: ${diffs[k].toFixed(1)} pA at reference base ${k + 1}. Remora's boundaries can be as short as 4 samples; the move table's come in steps of ${D.dwell.stride}.`;
-}
-
-// --- model against measured
-function drawScatter() {
-  segShow("sgFitB", st.fitb);
-  const sc = F.scatter, ys = sc[st.fitb], xs = sc.expected, w = Math.min(width("sgScatter"), 460), h = Math.min(w, 380), m = { l: 40, r: 10, t: 10, b: 34 };
-  const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Measured against model level" });
-  const all = xs.concat(ys).filter((v) => v !== null), lo = Math.max(-4, Math.min(...all)), hi = Math.min(4, Math.max(...all));
-  const x = (v) => m.l + ((v - lo) / (hi - lo)) * (w - m.l - m.r), y = (v) => h - m.b - ((v - lo) / (hi - lo)) * (h - m.t - m.b);
-  for (let v = Math.ceil(lo); v <= hi; v++) { el("line", { x1: x(v), x2: x(v), y1: m.t, y2: h - m.b, class: "grid" }, svg); el("line", { x1: m.l, x2: w - m.r, y1: y(v), y2: y(v), class: "grid" }, svg); text(svg, x(v), h - m.b + 14, v, { "text-anchor": "middle" }); text(svg, m.l - 4, y(v) + 4, v, { "text-anchor": "end" }); }
-  el("line", { x1: x(lo), y1: y(lo), x2: x(hi), y2: y(hi), stroke: "var(--faint)", "stroke-dasharray": "4 3" }, svg);
-  const col = st.fitb === "refined" ? "var(--c2)" : "var(--c1)";
-  xs.forEach((v, i) => { if (v !== null && ys[i] !== null && ys[i] >= lo && ys[i] <= hi) el("circle", { cx: x(v), cy: y(ys[i]), r: 1.8, fill: col, "fill-opacity": 0.5 }, svg); });
-  text(svg, (w + m.l) / 2, h - 2, "model level (normalised)", { "text-anchor": "middle" });
-  text(svg, m.l + 4, m.t + 10, `measured, ${st.fitb === "refined" ? "refined" : "move-table"} boundaries: r = ${F.read_r[st.fitb].toFixed(3)}`);
-  $("sgScatter").replaceChildren(svg);
-}
-function drawRHist() {
-  const w = width("sgRHist"), h = 220, m = { l: 44, r: 8, t: 8, b: 34 }, [x0, x1, k] = F.hist_edges, from = 20;
-  const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Correlation per read" });
-  const series = [["r_move", "var(--c1)"], ["r_refined", "var(--c2)"], ["r_shuffled", "var(--c4)"]].map(([key, c]) => { const t = F[key].reduce((a, b) => a + b, 0); return [key, c, F[key].map((v) => v / t)]; });
-  const ymax = Math.max(...series.flatMap((s) => s[2]));
-  const bw = (x1 - x0) / k, x = (r) => m.l + ((r - from * bw) / (x1 - from * bw)) * (w - m.l - m.r), y = (v) => h - m.b - (v / ymax) * (h - m.t - m.b);
-  for (const v of [0, 0.5, 1]) { el("line", { x1: m.l, x2: w - m.r, y1: y(v * ymax), y2: y(v * ymax), class: "grid" }, svg); text(svg, m.l - 4, y(v * ymax) + 4, pct(v * ymax), { "text-anchor": "end" }); }
-  for (const [key, c, s] of series) {
-    let d = `M${x(from * bw)},${y(0)}`;
-    for (let i = from; i < k; i++) d += `L${x(i * bw)},${y(s[i])}L${x((i + 1) * bw)},${y(s[i])}`;
-    const p = el("path", { d, fill: "none", stroke: c, "stroke-width": 2 }, svg);
-    tipOn(p, `${key.replace("r_", "")}: median r ${F.median[key].toFixed(3)}`);
-  }
-  if (F.r_move.slice(0, from).some((v) => v > 0)) text(svg, m.l + 4, m.t + 10, `${num(F.r_move.slice(0, from).reduce((a, b) => a + b, 0))} reads below r = ${(from * bw).toFixed(1)} not shown`);
-  for (let r = 0.4; r <= 1.0001; r += 0.1) text(svg, x(r), h - m.b + 14, r.toFixed(1), { "text-anchor": "middle" });
-  text(svg, (w + m.l) / 2, h - 2, "correlation r per read (share of reads)", { "text-anchor": "middle" });
-  $("sgRHist").replaceChildren(svg);
+  $("sgStretchNote").textContent = `${S.why} Bin ${S.bin}; ${S.ref.length} bases of the genome, ${S.read.length} in the read, ${num(n)} samples (${(n / T.rate * 1000).toFixed(0)} ms); lowest quality Q ${qmin}. ` +
+    `Largest gap between measured and model: ${diffs[k].toFixed(1)} pA at base ${k + 1}.`;
 }
 
 // --- 3. motifs
@@ -265,13 +206,13 @@ function drawKmers() {
   $("sgKmers").innerHTML = html + `</tbody></table><p class="note">Bin ${esc(st.kbin)}, ${st.kmod}: the ${K.top.length / 3} highest shares among sequences of 4, 5 and 6 bases with at least 200 calls. All ${num(K.calls)} calls of the bin: ${pct(K.all, 1)} modified.</p>`;
 }
 function drawProfile() {
-  segShow("sgBound", st.bound); $("sgMotif").value = st.motif; $("sgSplit").checked = !!st.split;
-  const m = motifOf(st.motif), mb = m.methylated_in, key = st.bound;
+  $("sgMotif").value = st.motif; $("sgSplit").checked = !!st.split;
+  const m = motifOf(st.motif), mb = m.methylated_in, key = "refined";
   const w = width("sgProfile"), h = 280, mg = { l: 50, r: 10, t: 12, b: 36 };
   const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Measured minus model around the modified base" });
   const lines = BINS.map((b) => [b, m.bins[b][key].mean]);
   const band = m.bins[mb][key];
-  const extra = st.split && key === "refined" ? [["called modified", m.bins[mb].high], ["called unmodified", m.bins[mb].low]] : [];
+  const extra = st.split ? [["called modified", m.bins[mb].high], ["called unmodified", m.bins[mb].low]] : [];
   const all = lines.flatMap((l) => l[1]).concat(extra.flatMap((e) => e[1].mean)).concat(band.q25, band.q75);
   const lo = Math.min(...all) - 0.02, hi = Math.max(...all) + 0.02;
   const x = (o) => mg.l + ((o - OFF[0]) / (OFF.length - 1)) * (w - mg.l - mg.r), y = (v) => mg.t + (1 - (v - lo) / (hi - lo)) * (h - mg.t - mg.b);
@@ -295,10 +236,10 @@ function drawProfile() {
   $("sgProfile").replaceChildren(svg);
   $("sgProfileLegend").innerHTML = BINS.map((b) => `<span><i class="sw" style="background:${BINCOL[b]}"></i>bin ${esc(b)}${b === mb ? " (methylates it)" : ""}</span>`).join("") +
     (extra.length ? `<span>· dashed: bin ${esc(mb)} called modified; dotted: called unmodified</span>` : "") + `<span>· shaded: middle half of bin ${esc(mb)}'s occurrences</span>`;
-  const e = effect(m, key), k = e.reduce((b, v, i) => (Math.abs(v) > Math.abs(e[b]) ? i : b), 0);
+  const e = effect(m), k = e.reduce((b, v, i) => (Math.abs(v) > Math.abs(e[b]) ? i : b), 0);
   const others = BINS.filter((b) => b !== mb), spread = Math.max(...OFF.map((_, i) => Math.max(...others.map((b) => m.bins[b][key].mean[i])) - Math.min(...others.map((b) => m.bins[b][key].mean[i]))));
-  $("sgProfileNote").textContent = `${m.motif} with ${key === "refined" ? "Remora's" : "the move table's"} boundaries, normalised units. Bin ${mb} against the mean of the other three: largest difference ${e[k].toFixed(3)} at position ${OFF[k] > 0 ? "+" : ""}${OFF[k]}; the other three differ from each other by at most ${spread.toFixed(3)}.` +
-    (st.split && key === "refined" ? ` Split by Dorado's call in bin ${mb}: ${num(m.bins[mb].high.n)} occurrences called modified, ${num(m.bins[mb].low.n)} unmodified.` : st.split ? " The split is shown with Remora's boundaries only." : "");
+  $("sgProfileNote").textContent = `${m.motif}, normalised units. Bin ${mb} against the mean of the other three: largest difference ${e[k].toFixed(3)} at position ${OFF[k] > 0 ? "+" : ""}${OFF[k]}; the other three differ from each other by at most ${spread.toFixed(3)}.` +
+    (st.split ? ` Split by Dorado's call in bin ${mb}: ${num(m.bins[mb].high.n)} occurrences called modified, ${num(m.bins[mb].low.n)} unmodified.` : "");
   drawMl(); drawSites();
 }
 function drawMl() {
@@ -356,20 +297,16 @@ function applyState(s) {
   st.zw = ZOOMS.some(([z]) => z === +s.zw) ? +s.zw : DEFAULTS.zw;
   st.zs = Math.min(int(s.zs, DEFAULTS.zs, 0, 1000), 1000 - st.zw);
   st.stretch = int(s.stretch, DEFAULTS.stretch, 1, D.stretches.length);
-  st.fitb = s.fitb === "move" ? "move" : "refined";
   st.motif = M.some((m) => m.motif === s.motif) ? s.motif : DEFAULTS.motif;
-  st.bound = s.bound === "move" ? "move" : "refined";
   st.split = s.split === "1" || s.split === 1 || s.split === true ? 1 : 0;
   st.kbin = BINS.includes(String(s.kbin)) ? String(s.kbin) : DEFAULTS.kbin;
   st.kmod = D.kmers[st.kbin][s.kmod] ? s.kmod : DEFAULTS.kmod;
 }
-function drawAll(push = true) { drawZoom(); drawStretch(); drawScatter(); drawMotifTable(); drawKmers(); drawProfile(); if (push) write(); }
+function drawAll(push = true) { drawZoom(); drawStretch(); drawMotifTable(); drawKmers(); drawProfile(); if (push) write(); }
 
 function setup() {
-  fillNumbers(); drawDwell(); drawSpeed(); drawRHist(); drawErrors();
+  fillNumbers(); drawSpeed(); drawErrors();
   seg("sgZoom", ZOOMS, "zw", () => { st.zs = Math.min(st.zs, 1000 - st.zw); drawZoom(); });
-  seg("sgFitB", BOUNDS, "fitb", drawScatter);
-  seg("sgBound", BOUNDS, "bound", drawProfile);
   $("sgZs").addEventListener("input", (e) => { st.zs = +e.target.value; drawZoom(); write(); });
   $("sgStretchPick").addEventListener("click", (e) => { const b = e.target.closest("[data-k]"); if (b) { st.stretch = +b.dataset.k; drawStretch(); write(); } });
   $("sgMotif").innerHTML = M.map((m) => `<option value="${m.motif}">${m.motif} (${m.mod}, bin ${m.methylated_in})</option>`).join("");
@@ -396,4 +333,4 @@ setup();
   drawAll(false);
 })();
 let resizeTimer;
-addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { drawDwell(); drawSpeed(); drawRHist(); drawAll(false); }, 150); });
+addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { drawSpeed(); drawAll(false); }, 150); });

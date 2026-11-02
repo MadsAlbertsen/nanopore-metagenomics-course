@@ -155,20 +155,14 @@
 - term: "Basecaller (Dorado)"
   text: "The program that turns the current into bases with a quality per base; Dorado is Oxford Nanopore's. Its modified-base models also say which bases carry a methyl group."
   modules: [signal, reads]
-- term: "Move table and stride"
-  text: "The basecaller looks at the current in steps of a few samples (the stride: 6 here) and writes a move table, one entry per step and 1 where a new base starts. So by the move table a base lasts 6, 12, 18 or more samples."
-  modules: [signal]
 - term: "Trimmed samples (ts and ns tags)"
-  text: "Dorado's tags that say which part of the current became bases: ts is the number of samples trimmed from the start (the adapter and barcode), and the move table covers the current from ts to ns. The samples outside are not basecalled."
+  text: "Dorado's tags that say which part of the current became bases: ts is the number of samples trimmed from the start (the adapter and barcode), and the bases come from the current between ts and ns. The samples outside are not basecalled."
   modules: [signal]
 - term: "9-mer level table (k-mer model)"
   text: "Oxford Nanopore's table of the expected current for every 9-base stretch of DNA in an R10.4.1 pore. A base's current depends on several bases at once, so the model works on 9-mers, not single bases."
   modules: [signal]
 - term: "Normalised current"
   text: "A read's current minus its shift, divided by its scale, so reads from different pores can be compared; one unit is about 31 pA in module 1."
-  modules: [signal]
-- term: "Signal-to-reference refinement (Remora)"
-  text: "Placing each base of a reference sequence on the current by shifting the move table's base boundaries a few samples to fit the 9-mer table's levels. It shows the read as the model sees it, so it partly hides changes the model does not know, such as a methylated base."
   modules: [signal]
 - term: "Modified-base probability (MM and ML tags)"
   text: "For every A and C of a read, Dorado's probability that it carries a methyl group, stored in the read's MM and ML tags. Most probabilities are near 0 or 1; module 1 counts 0.5 or more as modified."

@@ -12,8 +12,6 @@ def check(data: dict, examples: list[dict]) -> None:
         "zw": lambda v: v in ZOOMS,
         "zs": lambda v: isinstance(v, int) and 0 <= v and v % 5 == 0,
         "stretch": lambda v: isinstance(v, int) and 1 <= v <= len(data["stretches"]),
-        "fitb": lambda v: v in ("refined", "move"),
-        "bound": lambda v: v in ("refined", "move"),
         "motif": lambda v: v in motifs,
         "split": lambda v: v in (0, 1),
         "kbin": lambda v: str(v) in bins,

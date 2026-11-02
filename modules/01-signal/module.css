@@ -17,5 +17,3 @@ table.ct tr.hl td:first-child, table.ct tr.hl td:nth-child(2) { background: var(
 .mono u { text-decoration-thickness: 2px; text-underline-offset: 2px }
 @media (max-width: 980px) { .sgtwo { grid-template-columns: 1fr } }
 section p a { color: var(--accent) }
-.sgwhy { border-left: 4px solid var(--accent) }
-.sgwhy ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13.5px }
