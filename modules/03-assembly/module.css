@@ -1,12 +1,12 @@
 /* Module 3: assembly */
-.txt { display: flex; flex-direction: column; gap: 8px; max-width: 95ch }
+.txt { display: flex; flex-direction: column; gap: 8px }
 .txt p { margin: 0 }
 .txt code, .refs code { font-family: var(--mono); font-size: 12px; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere }
 .spctl input[type=range] { width: 150px; padding: 0; accent-color: var(--accent) }
 .spctl b.num { color: var(--ink); font-weight: 500; min-width: 4.5ch }
 .figbox { width: 100%; min-width: 0 }
 .figbox svg { display: block; max-width: 100% }
-.result { margin: 0; font-size: 13.5px; max-width: 95ch }
+.result { margin: 0; font-size: 13.5px }
 .steps { gap: 8px 14px }
 .stepgrid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start }
 .stside { display: flex; flex-direction: column; gap: 10px; min-width: 0 }
@@ -21,8 +21,8 @@ table.steps-table td { white-space: normal; vertical-align: top }
 table.steps-table td:first-child { white-space: nowrap; font-weight: 500 }
 table.steps-table td.w { min-width: 220px }
 .placeholder { border-style: dashed; background: transparent }
-.placeholder p { margin: 0; max-width: 95ch; color: var(--muted) }
-.refs { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; max-width: 110ch }
+.placeholder p { margin: 0; color: var(--muted) }
+.refs { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px }
 .refs a { color: var(--accent) }
 svg .seglbl { font-size: 11px; fill: var(--surface); font-weight: 600 }
 svg .edge { stroke: var(--muted); stroke-width: 1.5; fill: none }
