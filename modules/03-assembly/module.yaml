@@ -3,7 +3,8 @@ slug: assembly
 title: 'Assembly: from overlapping reads to contigs'
 nav: Assembly
 summary: How a long-read assembler such as myloasm turns overlapping reads into a graph and contigs, what repeats
-  and closely related strains do to that graph, and what our own assembly graph looks like.
+  and closely related strains do to that graph, what our own assembly graph looks like, and how contigs that join two
+  genomes are found and cut.
 status: draft
 takeaways:
 - An assembler never sees where a read came from, only which reads overlap; contigs are paths through the graph those
@@ -20,10 +21,14 @@ takeaways:
 - The graph can point to contigs a MAG lacks (a 94 kb contig that closes MAG s.171 into a loop, but could not join a
   MAG that mmlong2 made from one contig before binning), but it cannot tell on its own whether two linked versions of a
   genome are two strains or one population.
+- 'Reads show where an assembler joined two genomes: they are clipped at the join. mmlong2 cut 488 contigs that kept
+  a piece (and 25 more that kept none) where at least 90% of the reads at a position were clipped, or no read covered a
+  stretch; in 9 the pieces went to two different MAGs, 8 of them of two genera. Joins that some reads cross are not
+  caught this way.'
 discussion: Two strains of one species share 99.5% of their sequence. What decides whether an assembler gives you one
   contig or two, and which would you want for your own question?
 teacher:
-  time: About 70 minutes (an estimate, not yet tried with students).
+  time: About 80 minutes (an estimate, not yet tried with students).
   before: Students should know what a read is and that reads carry errors (module 2, or a short recap).
   flow:
   - '5 min: why assembly is hard (no positions, repeats, strains); show the run''s numbers at the top of the page.'
@@ -33,7 +38,9 @@ teacher:
   - '5 min: the table of what myloasm does.'
   - '15 min: section 4, the real graph: the numbers and bars first, then examples 7-12 (loop, missed contig, repeat,
     strains, one genome or two, a split contig).'
-  - '5 min: section 5 with example 13 on small circles, then the discussion question.'
+  - '5 min: section 5 with example 13 on small circles.'
+  - '10 min: section 6 on misassemblies: the toy join with example 14 (let students move the slider first), then our
+    run''s cut contigs with examples 15 and 16; end with the discussion question.'
   discussion_points:
   - 'One contig per strain needs differences the assembler can trust: enough positions that differ, enough reads per strain,
     and reads accurate enough that true differences stand out from errors (examples 4-6).'
@@ -43,6 +50,8 @@ teacher:
   - 'Real data (example 10): three Streptococcus thermophilus contigs 99.0-99.4% identical were kept apart; the two
     Prevotella copri_B MAGs (example 11) show that kept apart is not the same as understood.'
   pitfalls:
+  - 'Section 6: a cut contig is not proof of a misjoin of two genomes; in 16 of the 25 cut contigs with two or more
+    pieces in MAGs, the pieces went back into one MAG. And the 90% rule leaves joins that some reads cross (module 6).'
   - The simulations are illustrations with toy rules, not myloasm's code; the 'What myloasm does' table is the source-based
     part.
   - Longer reads help only when some read actually spans the repeat; depth matters too (example 2).
