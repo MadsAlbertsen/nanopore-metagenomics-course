@@ -2,7 +2,7 @@
 # hidden until clicked. Every number was computed from the example analysis (np26 scripts/30_course_signal.py data,
 # 2026-11-01) and recomputed by an independent review (2026-11-01). check.py rejects settings not in data.json.
 # state keys: zw = detail window width in ms (1000, 200, 50); zs = window start in ms (0 to 1000 - zw);
-#   stretch = stretch number (1-4); fitb, bound = refined or move; motif = GATC, GANTC or GTNNAC; split = 0 or 1;
+#   stretch = stretch number (1-4); motif = GATC, GANTC or GTNNAC; split = 0 or 1;
 #   kbin = bin id; kmod = 6mA, 5mC or 4mC.
 
 - title: Where the bases start
@@ -21,54 +21,39 @@
   at: trace
   state: {zw: 50, zs: 400}
   question: >-
-    A 50 ms window (250 samples). Hover over the coloured boxes: how many samples does each base get, and in what
-    steps? How does that fit the speed of 400 bases per second?
+    A 50 ms window (250 samples). Hover over the coloured boxes: how many samples does each base get? How does that
+    fit the speed of 400 bases per second?
   answer: >-
-    22 bases start in this window, with 6, 12, 24, 30, 42 or 78 samples: always a multiple of 6, because the move
-    table moves in steps of 6 samples (the basecaller's stride). Thirteen of the 22 get the minimum of 6. At 5,000 samples
-    per second and 400 bases per second a base would last 12.5 samples; all reads pooled give 13.07 samples per base
-    (383 bases per second), the median base gets 12 and 44% of bases get 6. The speed is not even: a few slow bases
-    take many samples.
+    22 bases start in this window, with 6 to 78 samples each; 13 of the 22 get only 6 (Dorado places the boundaries
+    in steps of 6 samples, so every count is a multiple of 6). At 5,000 samples per second and 400 bases per second a
+    base would last 12.5 samples; all reads pooled give 13.07 samples per base (383 bases per second). The speed is
+    not even: most bases pass quickly and a few slow ones take many samples, and the speed also differs between reads
+    (speed per read, below).
 
 - title: Model against measured
   at: stretch
   state: {stretch: 1}
   question: >-
     A clean stretch: all 40 read bases match the reference, quality 33 or more. How far apart are the measured mean
-    (dark line) and the model level (dashed), compared with how much the level changes from base to base?
+    (solid line) and the model level (dashed), compared with how much the level changes from base to base?
   answer: >-
     The model levels range from 55.6 to 125.0 pA over these 40 bases, and the measured means follow them: the median
     gap is 2.0 pA. Three bases are off by more than 8 pA, the largest 17.9 pA at reference base 21 (G). From one base
     to the next the model level changes by a median of 20.1 pA and up to 61.5 pA, so a gap of a few pA is small
-    against the steps the current takes.
+    against the steps the current takes. But the bases were placed to fit the model, which flatters it: with Dorado's
+    own base boundaries the median gap in this stretch is 8.9 pA, still well below the steps.
 
 - title: Where the quality drops
   at: stretch
   state: {stretch: 2}
   question: >-
-    The 40 bases of the read with an insertion or deletion and the lowest mean quality. Find the bases outlined in
-    red. What does the read get wrong, and what are the quality scores there?
+    The 40 bases of the read with an insertion or deletion and the lowest mean quality. Find the red marks and hover
+    over them. What does the read get wrong, and what are the quality scores there?
   answer: >-
     After a run of eight T, the read has GA where the reference has C: an extra G (an insertion) and an A in place of
     the C. The quality falls from 23-25 before the run to 13 at its end and to 9 on the A and the next four bases,
     then rises again. The quality score marks the stretch where the basecaller was unsure, and that is where the
     errors are.
-
-- title: How good is the model?
-  at: fit
-  state: {fitb: move}
-  question: >-
-    The scatter shows this read's measured mean per reference base against the model, with Dorado's move-table
-    boundaries. Switch to refined boundaries. Why is the refined correlation not a fair test of the model, and what
-    does the move-table number say?
-  answer: >-
-    With the move table r = 0.759 for this read (median 0.725 over all reads); with Remora's refined boundaries r =
-    0.987 (median 0.985). But refining moves the boundaries to fit the model: against a table whose levels were
-    shuffled between k-mers, refining still gives a median of 0.750 (638 reads), while the same shuffled table gives
-    r 0.00 on the move table's boundaries: the 0.750 comes entirely from the fitting. The move-table number does not
-    use the model, but it is a lower bound: the model predicts the current at least this well, and part of the gap
-    comes from the coarse 6-sample boundaries (the middle half of bases of 24 samples or more gives a median of
-    0.841).
 
 - title: Which bin methylates GATC?
   at: motifs
@@ -85,7 +70,7 @@
 
 - title: The current at a methylated GATC
   at: profile
-  state: {motif: GATC, bound: refined}
+  state: {motif: GATC}
   question: >-
     The chart shows the measured minus the model's level around the A of GATC, averaged per bin. Which positions
     differ in bin 1.1314, and how large is the difference in pA?
