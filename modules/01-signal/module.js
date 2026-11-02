@@ -61,7 +61,7 @@ function seg(id, items, key, redraw) {
 const segShow = (id, v) => { for (const b of $(id).querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === String(v))); };
 
 // --- 1. the whole read and a window of its first second
-const REG = [["adapter and barcode (before ts, not basecalled)", "var(--c7)"], ["genome", "var(--c1)"], ["after ns (not basecalled)", "var(--c5)"]];
+const REG = [["adapter and barcode (before ts, trimmed from the read)", "var(--c7)"], ["genome", "var(--c1)"], ["after ns (not basecalled)", "var(--c5)"]];
 function drawTrace() {
   const w = width("sgTrace", 520), h = 150, m = { l: 40, r: 8, t: 8, b: 24 };
   const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Current of the whole read" });

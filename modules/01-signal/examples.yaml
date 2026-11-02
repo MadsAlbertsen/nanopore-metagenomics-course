@@ -35,12 +35,13 @@
   state: {stretch: 1}
   question: >-
     A clean stretch: all 40 read bases match the reference, quality 33 or more. How far apart are the measured mean
-    (dark line) and the model level (dashed), compared with how much the level changes from base to base?
+    (solid line) and the model level (dashed), compared with how much the level changes from base to base?
   answer: >-
     The model levels range from 55.6 to 125.0 pA over these 40 bases, and the measured means follow them: the median
     gap is 2.0 pA. Three bases are off by more than 8 pA, the largest 17.9 pA at reference base 21 (G). From one base
     to the next the model level changes by a median of 20.1 pA and up to 61.5 pA, so a gap of a few pA is small
-    against the steps the current takes.
+    against the steps the current takes. But the bases were placed to fit the model, which flatters it: with Dorado's
+    own base boundaries the median gap in this stretch is 8.9 pA, still well below the steps.
 
 - title: Where the quality drops
   at: stretch

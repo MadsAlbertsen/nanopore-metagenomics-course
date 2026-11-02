@@ -15,11 +15,12 @@ data_note: >-
 takeaways:
   - "The sequencer measures a current, 5,000 times per second here; at about 400 bases per second a base lasts about
     13 samples on average (383 bases per second, all reads pooled), and the speed varies between reads and along a read."
-  - "The samples before ts, the adapter and barcode, are not turned into bases; in 92% of reads at most 10
+  - "The samples before ts, the adapter and barcode, are trimmed from the read; in 92% of reads at most 10
     bases come before the first base of the genome."
   - "The current depends on several bases at once, so ONT's model gives the expected current for every 9-base
-    stretch; in the clean stretch of section 2 the measured mean per base is a median of 2.0 pA from it, against steps of about 20 pA
-    from base to base. Where the expected level hardly changes, as in a run of one base, the current says little."
+    stretch. In section 2 the measured mean per base is a median of 1.8-2.4 pA from it after placing the bases to fit
+    the model, and 4-11 pA with Dorado's own base boundaries, against steps of about 20 pA from base to base. Where the
+    expected level hardly changes, as in stretch 2's run of eight Ts, the current says little."
   - "A crude search finds one 6mA motif in each of three bins (GATC, GANTC, GTNNAC; 79-90% of calls modified, 3-6% in
     the other bins). Dorado's probabilities are mostly near 0 or 1."
   - "A 6mA changes the mean current by at least about 2-4 pA (0.06-0.12 normalised units) over the bases whose 9-mer

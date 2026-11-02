@@ -156,7 +156,7 @@
   text: "The program that turns the current into bases with a quality per base; Dorado is Oxford Nanopore's. Its modified-base models also say which bases carry a methyl group."
   modules: [signal, reads]
 - term: "Trimmed samples (ts and ns tags)"
-  text: "Dorado's tags that say which part of the current became bases: ts is the number of samples trimmed from the start (the adapter and barcode), and the bases come from the current between ts and ns. The samples outside are not basecalled."
+  text: "Dorado's tags that say which part of the current became bases: ts is the number of samples trimmed from the start (the adapter and barcode), and the bases come from the current between ts and ns. The samples before ts are trimmed from the read, and those after ns are not basecalled."
   modules: [signal]
 - term: "9-mer level table (k-mer model)"
   text: "Oxford Nanopore's table of the expected current for every 9-base stretch of DNA in an R10.4.1 pore. A base's current depends on several bases at once, so the model works on 9-mers, not single bases."
