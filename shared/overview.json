@@ -54,13 +54,5 @@
    "407 MAGs named to a GTDB species, 346 different species",
    "49 species with more than one MAG"
   ]
- },
- {
-  "module": "interpretation",
-  "step": "Interpretation",
-  "facts": [
-   "124 MAGs at 0.1% of read bases or more: 23 two-fold higher and 12 two-fold lower in days 6-10 than days 1-5",
-   "Bray-Curtis between days: 0.21 and 0.24 within the diet periods, 0.31 between them"
-  ]
  }
 ]

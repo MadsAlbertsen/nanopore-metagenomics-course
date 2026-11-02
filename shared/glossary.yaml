@@ -7,7 +7,7 @@
   modules: [reads]
 - term: "Read bases"
   text: "The sum of read lengths. Abundance in this course counts read bases, not reads, so a long read counts more than a short one."
-  modules: [reads, interpretation]
+  modules: [reads]
 - term: "Q score (quality)"
   text: "The basecaller's confidence in a base on a log scale: Q10 means 1 error in 10 expected, Q20 1 in 100, Q30 1 in 1,000."
   modules: [signal, reads]
@@ -52,13 +52,13 @@
   modules: [assembly, binning]
 - term: "Depth (coverage)"
   text: "How many reads cover a position, averaged over a contig. Higher depth means a more abundant genome or more sequencing. Unless a page says otherwise, depth is read depth: the reads of each sample mapped to the contigs, as binning uses it. The assembly graph in module 3 shows myloasm's own depth instead (reads matching the contig at about 99% identity), which can differ."
-  modules: [assembly, binning, mag-quality, methylation, interpretation]
+  modules: [assembly, binning, mag-quality, methylation]
 - term: "Binning"
   text: "Sorting contigs into groups that each come from one genome, using features that differ between genomes, such as depth in each sample and sequence composition."
   modules: [binning]
 - term: "MAG (metagenome-assembled genome)"
   text: "The contigs binning put together as one genome. A MAG is an estimate of a genome, not a guarantee."
-  modules: [binning, mag-quality, annotation, interpretation]
+  modules: [binning, mag-quality, annotation]
 - term: "GC content"
   text: "The share of G and C bases in a sequence; it differs between genomes."
   modules: [binning]
@@ -91,19 +91,13 @@
   modules: [assembly, binning, mag-quality]
 - term: "ANI (average nucleotide identity)"
   text: "The share of identical bases where two genomes align; about 95% is the usual boundary between species (Jain et al. 2018, Nature Communications)."
-  modules: [assembly, annotation, interpretation]
+  modules: [assembly, annotation]
 - term: "Microdiversity (variant sites)"
   text: "Single-base positions where the reads of one MAG consistently disagree; many such sites point to closely related strains mixed in one MAG. Low depth means fewer sites can be called."
   modules: [mag-quality]
 - term: "GTDB"
   text: "The Genome Taxonomy Database, a taxonomy built from genome sequences. MAGs are named by placing them among its reference genomes."
   modules: [annotation, mag-quality]
-- term: "Relative abundance"
-  text: "A genome's share of everything sequenced in a sample, here the share of read bases on its contigs. Shares add up to 100%, so one genome rising lowers the others."
-  modules: [interpretation]
-- term: "Bray-Curtis dissimilarity"
-  text: "How different two samples are in composition, from 0 (the same) to 1 (nothing shared)."
-  modules: [interpretation]
 - term: "HQ and MQ (high and medium quality)"
   text: "The quality classes of the MAGs, from mmlong2's rule based on MIMAG: high quality (HQ) is CheckM2 completeness of 90% or more, contamination of 5% or less, and the rRNA and tRNA genes; medium quality (MQ) is at least 50% and at most 10%."
   modules: [mag-quality, binning]
