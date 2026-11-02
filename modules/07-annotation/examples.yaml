@@ -9,7 +9,7 @@
   at: names
   state: {mag: "1.308", map: "1.308"}
   question: >-
-    Open: Bacteroides caccae (MAG 1.308), also shown in modules 4, 6 and 8. Find it in the ANI and AF chart and read
+    Open: Bacteroides caccae (MAG 1.308), also shown in modules 4 and 6. Find it in the ANI and AF chart and read
     its card. Why does GTDB-Tk give it a species name, and how many of its genes have a name?
   answer: >-
     Its closest reference genome is Bacteroides caccae at 99.22% ANI with an alignment fraction of 0.867: above the
@@ -62,7 +62,7 @@
   at: names
   state: {mag: "c.100", map: "c.100"}
   question: >-
-    Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome also shown in module 8. How sure is its name,
+    Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome. How sure is its name,
     and how much of its gene content is known? Compare with Bacteroides caccae (example 1).
   answer: >-
     The name is as solid as B. caccae's: 98.36% ANI and AF 0.896 to the species' reference genome. But the species
@@ -74,7 +74,7 @@
   at: genemap
   state: {map: "c.32", mag: "c.32", pos: 244000, q: "flagellin"}
   question: >-
-    Open Butyrivibrio_A crossota (MAG c.32), one circular contig, also in modules 5 and 8. The window shows a gene
+    Open Butyrivibrio_A crossota (MAG c.32), one circular contig, also in module 5. The window shows a gene
     named Flagellin and a hypothetical protein next to it. How strong is the evidence for each?
   answer: >-
     The gene at 252,506-253,732 is named Flagellin by a UniRef50 cluster match at 51% identity to the cluster's
