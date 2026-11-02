@@ -1,5 +1,5 @@
 .sgtwo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start }
-.sgtwo p:not(.note), section > p:not(.note) { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 110ch }
+.sgtwo p:not(.note), section > p:not(.note) { margin: 0; color: var(--muted); font-size: 13.5px }
 .sgseg { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; overflow: hidden }
 .sgseg button { all: unset; cursor: pointer; font-size: 13px; padding: 2px 12px; color: var(--muted) }
 .sgseg button[aria-pressed="true"] { background: var(--accent); color: var(--surface) }

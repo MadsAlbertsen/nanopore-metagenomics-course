@@ -1,5 +1,5 @@
 .antwo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start }
-.antwo p, section > p:not(.note) { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 110ch }
+.antwo p, section > p:not(.note) { margin: 0; color: var(--muted); font-size: 13.5px }
 .plotwrap { width: 100%; min-height: 200px }
 .plotwrap svg { display: block; touch-action: manipulation }
 .plotwrap circle.pt { cursor: pointer }
