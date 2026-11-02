@@ -21,9 +21,10 @@ takeaways:
 - The graph can point to contigs a MAG lacks (a 94 kb contig that closes MAG s.171 into a loop, but could not join a
   MAG that mmlong2 made from one contig before binning), but it cannot tell on its own whether two linked versions of a
   genome are two strains or one population.
-- 'Reads show where an assembler joined two genomes: they are clipped at the join. mmlong2 cut 488 contigs where at
-  least 90% of the reads were clipped (or no read covered a stretch); in 9 the pieces went to two different MAGs, 8 of
-  them of two genera. Joins that some reads cross are not caught this way.'
+- 'Reads show where an assembler joined two genomes: they are clipped at the join. mmlong2 cut 488 contigs that kept
+  a piece (and 25 more that kept none) where at least 90% of the reads at a position were clipped, or no read covered a
+  stretch; in 9 the pieces went to two different MAGs, 8 of them of two genera. Joins that some reads cross are not
+  caught this way.'
 discussion: Two strains of one species share 99.5% of their sequence. What decides whether an assembler gives you one
   contig or two, and which would you want for your own question?
 teacher:

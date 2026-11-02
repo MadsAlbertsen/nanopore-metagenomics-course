@@ -368,7 +368,8 @@ function fillNumbers() {
   Object.assign(N, {
     spContigs: fmtN(sp.contigs), spBp: (sp.rawBp / 1e6).toFixed(1) + " Mb", spPct: (100 * sp.rawBp / sp.primaryBp).toFixed(1) + "%", spPieces: fmtN(sp.pieces),
     spTrims: fmtN(sp.endTrims), spTrimMed: fmtN(sp.endTrimLostMedian) + " bp", spCross: sp.crossMag, spTwo: fmtN(pcs["2"]),
-    spMore: fmtN(Object.entries(pcs).filter(([k]) => +k >= 3).reduce((s, [, v]) => s + v, 0)), spLost: fmtN(sp.lostBp) + " bases",
+    spMore: fmtN(Object.entries(pcs).filter(([k]) => +k >= 3).reduce((s, [, v]) => s + v, 0)), spLost: fmtN(sp.lostBp) + " bases", spLostEnds: Math.round(sp.lostEndsBp / 1000) + " kb", spLostInside: Math.round(sp.lostInsideBp / 1000) + " kb",
+    spGone: sp.wholeGone, spGoneBp: `${kbs(sp.wholeGoneBp)}, each ${kb1(sp.wholeGoneMin)} to ${kb1(sp.wholeGoneMax)}`,
     spInMag2: sp.inMag2, spSame: sp.sameMag, spCrossGenus: sp.crossGenus,
   });
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
@@ -513,8 +514,12 @@ function simMis(kind, crossPct) {
   const part = (lo, hi) => depth.slice(lo / 100, hi / 100);
   const mean = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length;
   const zero = depth.filter((d) => d === 0).length * 100;
-  const cov = clipped + crossing, share = cov ? clipped / cov : 0;
-  return { reads: shown, aEnd, bStart, clipped, crossing, cov, share, atA, atB, depth, zero, cut: kind === "gap" ? zero > MIS.minGap : cov >= MIS.minReads && clipped >= MIS.minReads && share >= MIS.ratio,
+  // bam_error_detector counts a read clipped on its right at its last aligned base and one clipped on its left at its
+  // first aligned base, so A's clips (last base of A) and B's clips (first base of B) fall on neighbouring positions;
+  // each position is judged on its own: clipped there / reads covering it (the clipped reads plus those running across)
+  const side = (n) => ({ n, cov: n + crossing, share: n + crossing ? n / (n + crossing) : 0, ok: n >= MIS.minReads && n + crossing >= MIS.minReads && n / (n + crossing) >= MIS.ratio });
+  const sA = side(atA), sB = side(atB);
+  return { reads: shown, aEnd, bStart, clipped, crossing, sA, sB, atA, atB, depth, zero, cut: kind === "gap" ? zero > MIS.minGap : sA.ok || sB.ok,
     depthA: mean(part(2000, aEnd - 2000)), depthB: mean(part(bStart + 2000, MIS.G - 2000)) };
 }
 function drawMis() {
@@ -553,8 +558,8 @@ function drawMis() {
     + `<span><i class="sw" style="border:1px dashed var(--ink)"></i>${gap ? "edges of the stretch without reads" : "the join"}</span>`;
   const dep = `Depth ${Math.round(sim.depthA)}x on genome A, ${Math.round(sim.depthB)}x on genome B.`;
   $("misOut").innerHTML = gap
-    ? `<b>${fmtN(sim.zero)} bp have no read at all.</b> mmlong2 removes a stretch without reads when it is longer than ${MIS.minGap} bp and keeps the pieces on both sides (each 3 kb or more). Reads running into the stretch are clipped at its edges too (${sim.atA} on the left, ${sim.atB} on the right), so the clipping rule would also cut here. ${dep}`
-    : `<b>${sim.clipped} of the ${sim.cov} reads at the join (${pc(sim.share)}) are clipped there</b> (${sim.atA} from genome A, ${sim.atB} from genome B)${sim.crossing ? `; ${sim.crossing} ${sim.crossing === 1 ? "runs" : "run"} across` : ""}. mmlong2 cuts where at least 90% of at least 3 reads are clipped: <b>${sim.cut ? "cut" : "not cut"}</b>. ${dep}`;
+    ? `<b>${fmtN(sim.zero)} bp have no read at all.</b> mmlong2 removes a stretch without reads when it is longer than ${MIS.minGap} bp and keeps the pieces on both sides (each 3 kb or more). In this toy the reads that run into the stretch are clipped at its edges (${sim.atA} on the left, ${sim.atB} on the right); real reads could also skip such a stretch with a deletion, leaving no clipping. ${dep}`
+    : `<b>Last base of genome A: ${sim.sA.n} of ${sim.sA.cov} reads clipped (${pc(sim.sA.share)}); first base of genome B: ${sim.sB.n} of ${sim.sB.cov} (${pc(sim.sB.share)}).</b>${sim.crossing ? ` ${sim.crossing} ${sim.crossing === 1 ? "read runs across and counts" : "reads run across and count"} at both positions.` : ""} mmlong2 cuts where at least 90% of the reads at a position are clipped there, with at least 3 clipped reads; each side is judged on its own: <b>${sim.cut ? `cut (${sim.sA.ok && sim.sB.ok ? "both sides pass" : sim.sA.ok ? "genome A's side passes" : "genome B's side passes"})` : "not cut"}</b>. ${dep}`;
   return sim;
 }
 
