@@ -148,7 +148,7 @@
     substitutions only, 90% counting insertions and deletions too). The two follow each other over the ten days
     almost exactly (r = 0.999). So much of 3.5197 is a second version of
     2.359's genome that rises and falls with it. The graph cannot say whether these are two strains that always
-    move together or variants within one population; module 8 finds the same open question from the abundances.
+    move together or variants within one population.
 
 - title: Where a split contig sits
   at: real

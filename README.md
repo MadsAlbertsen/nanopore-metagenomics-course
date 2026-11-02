@@ -1,6 +1,6 @@
 # Nanopore metagenomics: from reads to genomes
 
-Interactive course pages that follow one long-read metagenomics data set from raw reads to interpretation. Each
+Interactive course pages that follow one long-read metagenomics data set from raw reads to annotated genomes. Each
 module explains one step with the real data and ends with guided examples: a question, the page set up to answer it,
 and an answer to open when ready. Every page is one self-contained HTML file that runs in the browser.
 
@@ -13,7 +13,6 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 | 5. MAG quality: how complete, how clean | draft |
 | 6. Methylation: misassemblies, contamination and placing contigs | draft |
 | 7. Annotation: what is in a genome, and how sure are we | draft |
-| 8. Interpretation: what changes over ten days | draft |
 
 ## The data
 
