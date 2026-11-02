@@ -17,6 +17,7 @@
   <div id="sgDetail" class="scroll"></div>
   <div class="legend" id="sgTraceLegend"></div>
   <p class="note" id="sgTraceNote"></p>
+  <div class="exslot" data-at="trace"></div>
 </section>
 
 <div class="sgtwo">
@@ -39,6 +40,7 @@
   <div id="sgStretch" class="scroll"></div>
   <div class="legend" id="sgStretchLegend"></div>
   <p class="note" id="sgStretchNote"></p>
+  <div class="exslot" data-at="stretch"></div>
 </section>
 
 <div class="sgtwo">
@@ -47,6 +49,7 @@
     <p>Positive control before using the model: in the read of section 1, the mean current per reference base against the model's level, at positions without a modified-base call nearby. With Dorado's own boundaries (move table, which does not use the model) the correlation is <span data-n="readMove"></span>; with Remora's boundaries <span data-n="readRefined"></span>. Over all reads the medians are <span data-n="rMove"></span> (move table) and <span data-n="rRefined"></span> (refined). The refined number is made by the fitting: a table whose levels were shuffled between k-mers (a wrong model) gives r <span data-n="rMoveShuf"></span> on the move table's boundaries but <span data-n="rShuffled"></span> after refining (median of <span data-n="nShuffled"></span> reads). The move-table number is a lower bound: the model predicts the current at least this well, and part of the gap comes from the coarse 6-sample boundaries (using only the middle half of bases of 24 samples or more gives a median of <span data-n="rMoveLong"></span>). Refined boundaries are best read as the model's view of the read: a change the model does not know, such as a methylated base, is partly absorbed by them.</p>
     <div class="spctl"><span>Boundaries</span><span class="sgseg" id="sgFitB" role="group" aria-label="Base boundaries"></span></div>
     <div id="sgScatter"></div>
+    <div class="exslot" data-at="fit"></div>
   </section>
   <section class="panel">
     <h2>Correlation per read</h2>
@@ -66,6 +69,7 @@
       <div class="spctl"><label>Bin <select id="sgKbin" aria-label="Bin"></select></label><label>Modification <select id="sgKmod" aria-label="Modification"></select></label></div>
       <div class="scroll" id="sgKmers"></div></div>
   </div>
+  <div class="exslot" data-at="motifs"></div>
 </section>
 
 <section class="panel">
@@ -78,6 +82,7 @@
       <p class="note">Share of calls per probability bin (20 bins). Calls Dorado did not report are implicitly unmodified (MM flag '.') and are counted in the lowest bin.</p></div>
   </div>
   <p class="note" id="sgProfileNote"></p>
+  <div class="exslot" data-at="profile"></div>
 </section>
 
 <div class="sgtwo">
@@ -98,4 +103,5 @@
   <p>Everything later in the course starts from Dorado's output, so its limits travel along. Bases are called from a current shaped by several bases at once, and the quality score says how sure the basecaller was; filtering (module 2) and assembly (module 3) have to live with the errors. A methylated base changes the current, and the bases show it too: over the three motifs, reads differ from the reference far more often over the motif in the bin that methylates it than in the other bins (table; a comparison between bins, not a test of the cause), while the bins' error per base overall is similar (<span data-n="errBase"></span>). The same modification calls are a signature of the genome a read came from: a cell's methyltransferase marks nearly every copy of its motif, so the methylated motifs help to check bins and to place contigs such as plasmids (module 6).</p>
   <div class="scroll" id="sgErrors"></div>
   <p class="note">Occurrences of the motif in the reference where the read has a different base, a missing base or an extra base inside the motif, of all occurrences covered by a read (at least 20 bases from the read's ends).</p>
+  <div class="exslot" data-at="errors"></div>
 </section>

@@ -29,7 +29,7 @@ window.__errors = [];
 addEventListener("error", (e) => __errors.push(String(e.message)));
 addEventListener("unhandledrejection", (e) => __errors.push(String(e.reason)));
 setTimeout(() => {
-  const h = document.querySelector(".exbody h3");
+  const h = document.querySelector(".ex h3");
   const out = { errors: __errors, example: h ? h.textContent : null };
   const json = JSON.stringify(out).replace(/</g, "\\\\u003c");
   document.body.insertAdjacentHTML("beforeend", "<pre id=probe>" + json + "</pre>");
@@ -87,6 +87,6 @@ def test_pages_and_examples(site):
     for name, k, r in results:
         if r["errors"]:
             problems.append(f"{name}: script errors {r['errors']}")
-        if k and not (r["example"] or "").startswith(f"{k}."):
+        if k and not (r["example"] or "").startswith(f"Example {k}."):
             problems.append(f"{name}: shows {r['example']!r}")
     assert not problems, "\n".join(problems)

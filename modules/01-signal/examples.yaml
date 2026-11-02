@@ -6,6 +6,7 @@
 #   kbin = bin id; kmod = 6mA, 5mC or 4mC.
 
 - title: Where the bases start
+  at: trace
   state: {zw: 1000, zs: 0}
   question: >-
     The detail shows the first second of the read. Where does Dorado start turning the current into bases, and how
@@ -17,6 +18,7 @@
     current is in the same range as the DNA's, so the boundary is not visible by eye; Dorado finds it.
 
 - title: How long is one base?
+  at: trace
   state: {zw: 50, zs: 400}
   question: >-
     A 50 ms window (250 samples). Hover over the coloured boxes: how many samples does each base get, and in what
@@ -29,6 +31,7 @@
     take many samples.
 
 - title: Model against measured
+  at: stretch
   state: {stretch: 1}
   question: >-
     A clean stretch: all 40 read bases match the reference, quality 33 or more. How far apart are the measured mean
@@ -40,6 +43,7 @@
     against the steps the current takes.
 
 - title: Where the quality drops
+  at: stretch
   state: {stretch: 2}
   question: >-
     The 40 bases of the read with an insertion or deletion and the lowest mean quality. Find the bases outlined in
@@ -51,6 +55,7 @@
     errors are.
 
 - title: How good is the model?
+  at: fit
   state: {fitb: move}
   question: >-
     The scatter shows this read's measured mean per reference base against the model, with Dorado's move-table
@@ -66,6 +71,7 @@
     0.841).
 
 - title: Which bin methylates GATC?
+  at: motifs
   state: {motif: GATC, kbin: "1.1314", kmod: 6mA}
   question: >-
     Look at the motif table and at the top sequences of bin 1.1314 (6mA). How sure can you be that this bin
@@ -78,6 +84,7 @@
     not follow up.
 
 - title: The current at a methylated GATC
+  at: profile
   state: {motif: GATC, bound: refined}
   question: >-
     The chart shows the measured minus the model's level around the A of GATC, averaged per bin. Which positions
@@ -89,6 +96,7 @@
     The shaded middle half of single occurrences is 0.12-0.20 units wide, wider than the shift.
 
 - title: Signal and call agree
+  at: profile
   state: {motif: GATC, split: 1}
   question: >-
     Split bin 1.1314 by Dorado's call. Do the occurrences Dorado called unmodified look like the methylated bin or
@@ -101,6 +109,7 @@
     0.028. Whether the unmodified calls are truly unmethylated sites or missed calls, the signal alone cannot say.
 
 - title: Same pattern, other motifs
+  at: profile
   state: {motif: GTNNAC}
   question: >-
     Switch between GTNNAC (bin 3.8098) and GANTC (bin 1.197376). Is the change in current at a 6mA the same in all
@@ -111,6 +120,7 @@
     bins. So the 6mA leaves a similar mark whatever the motif, small at every single position.
 
 - title: Errors at methylated motifs
+  at: errors
   state: {motif: GANTC}
   question: >-
     Look at the table in section 4. How often do the reads differ from the reference over GANTC in bin 1.197376,

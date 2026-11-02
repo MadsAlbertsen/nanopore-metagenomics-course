@@ -48,6 +48,7 @@
     <div class="legend"><span>Share of motif sites methylated</span><span class="ramp" id="meRamp"></span><span>0 → 1</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v1)"></i>lacks the rest's motif</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v2)"></i>extra motif</span><span><i class="sw" style="background:repeating-linear-gradient(135deg,var(--v4) 0 2px,transparent 2px 5px)"></i>fewer than 10 sites</span></div>
     <div class="scroll" id="meFp"></div>
     <p class="note">Rows: contigs (colour square: the screen's verdict); columns: motifs methylated in at least one contig of the MAG. Hover a cell for the numbers.</p>
+    <div class="exslot" data-at="fingerprint"></div>
   </section>
   <section class="panel"><h2>Flagged contigs in all MAGs</h2>
     <div class="scroll mescroll" id="meFlagged"></div>
@@ -62,6 +63,7 @@
   <div class="scroll" id="meTrack"></div>
   <div id="meWinMotifs"></div>
   <p class="note">Track: thin bar the contig against the rest of the MAG, thick bar its 100 kb windows against the rest of the contig. Triangles: edges of flagged windows (filled: few or no reads cross). Short line under an edge: where the methylation changes; dark vertical line: a proposed split. The table: for the motifs in conflict in any window, methylated sites of covered sites per window.</p>
+  <div class="exslot" data-at="windows"></div>
 </section>
 
 <div class="metwo">
@@ -100,6 +102,7 @@
   <section class="panel" id="mePCard"></section>
   <aside><section class="panel list melist"><h2>Contigs</h2><div class="rows" id="mePRows" role="list"></div></section></aside>
 </div>
+<div class="exslot panel" data-at="placement"></div>
 
 <section class="panel">
   <h2>6. Where it fails</h2>

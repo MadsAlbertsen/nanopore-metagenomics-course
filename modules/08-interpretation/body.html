@@ -38,6 +38,7 @@
     <div id="ipComp"></div>
     <div class="legend" id="ipCompLegend"></div>
     <p class="note" id="ipCompNote"></p>
+    <div class="exslot" data-at="community"></div>
   </section>
   <section class="panel">
     <div class="exhead"><h2>Picked MAGs over the ten days</h2>
@@ -45,6 +46,7 @@
     <div id="ipLine"></div>
     <div class="legend" id="ipLineLegend"></div>
     <div id="ipPicked"></div>
+    <div class="exslot" data-at="picked"></div>
   </section>
 </div>
 <div class="maps">
@@ -53,12 +55,14 @@
     <div id="ipChange"></div>
     <div class="legend" id="ipChangeLegend"></div>
     <p class="note" id="ipChangeNote"></p>
+    <div class="exslot" data-at="change"></div>
   </section>
   <section class="panel">
     <h2>How different are the days? (Bray-Curtis)</h2>
     <div id="ipBc" class="scroll"></div>
     <div class="legend" id="ipBcLegend"></div>
     <p class="note" id="ipBcNote"></p>
+    <div class="exslot" data-at="braycurtis"></div>
   </section>
 </div>
 <section class="panel" id="mtPanel">
@@ -73,6 +77,7 @@
   </div>
   <div id="mtTable" class="scroll"></div>
   <p class="note" id="mtNote">Values per 1,000 genes of the MAG, so large and small genomes compare (switch to number of genes above). The change column is the diet split as in the change chart (0.01% added to both means). Categories: starch and glycogen (alpha-glucans), fructans (inulin, levan), plant cell-wall fibres (cellulose, xylan, pectin, arabinan, mannan, galactan, beta-glucan), host glycans (host glycans such as mucin, and milk oligosaccharides); a family whose activities spread over several substrates counts as several substrates, and CE9 (an intracellular step of amino-sugar use found in most bacteria) is left out of host glycans. Marker columns count genes above KOfam's threshold for each KEGG orthologue (hover a column title for the genes). The butyryl-CoA:acetate CoA-transferase that most gut butyrate producers use has no clean KEGG profile and is found by its Bakta name; a complete butyrate route needs butyryl-CoA dehydrogenase plus a last step. A dash means no gene was found: MAGs are not complete, and a gene can fall just below a profile's threshold (the <i>Prevotella</i> c.36 gene Bakta names methylmalonyl-CoA decarboxylase scores 814 against a threshold of 830, so c.36 shows no succinate-pathway gene). The succinate-pathway gene of <i>Ornithomonoglobus</i> s.14 is named propionyl-CoA carboxylase by Bakta, a related enzyme. Checks: Pyrodigal in metagenome mode reproduces every Bakta gene's stop codon, and the genes used here (trained on each MAG) share the stop codon with 96.6-99.4% of Bakta's; of 214 genes in ten well-known CAZyme families that Bakta named, 196 (92%) carry a name that fits the family; of the genes Bakta named as carbohydrate enzymes, 65-100% per MAG have a dbCAN call (606 of 669 pooled, nearly half of them in <i>Bacteroides</i> c.119).</p>
+  <div class="exslot" data-at="metabolism"></div>
 </section>
 <section class="panel">
   <h2>What one person's time series can and cannot show</h2>

@@ -7,6 +7,7 @@
 #   log = 1 for a log scale in the picked-MAG chart.
 
 - title: Who takes the most read bases
+  at: community
   state: {m: share, by: mag, mag: "2.359"}
   question: >-
     The bars now show the seven MAGs with the highest mean share of all read bases over the ten days. How large a
@@ -22,6 +23,7 @@
     strains that move together.
 
 - title: How much is in MAGs at all
+  at: community
   state: {m: share, by: phylum, mag: none}
   question: >-
     Each bar is one day's read bases. Which parts are not in any MAG, and how large are they? Does the share in
@@ -34,6 +36,7 @@
     unbinned reads shifts all MAGs a little between the periods.
 
 - title: Sequencing effort is not abundance
+  at: community
   state: {m: gb, by: phylum, mag: "c.32"}
   question: >-
     The measure is now read bases, not divided by how much was sequenced. Picked: Butyrivibrio_A crossota (MAG c.32).
@@ -46,6 +49,7 @@
     23 higher and 12 lower. Raw amounts compare sequencing runs, not guts.
 
 - title: Two MAGs that go opposite ways
+  at: picked
   state: {m: share, by: phylum, mag: "1.308,2.500"}
   question: >-
     Picked: Bacteroides caccae (MAG 1.308) and Blautia_A aquisgranensis (MAG 2.500). How large is each change
@@ -60,6 +64,7 @@
     diet changed together with time, neither change can be put on the diet.
 
 - title: Day-to-day variation as a yardstick
+  at: braycurtis
   state: {m: share, by: phylum, mag: none}
   question: >-
     The Bray-Curtis table compares the MAG composition of every pair of days. Are days within one period more alike
@@ -75,6 +80,7 @@
     the diet.
 
 - title: Other ways to split the days
+  at: change
   state: {m: share, by: phylum, b: "2,4,6,8,10", mag: none}
   question: >-
     The second group is now the even days. How many of the 124 MAGs with a mean of 0.1% or more change two-fold
@@ -87,6 +93,7 @@
     other trend over the ten days.
 
 - title: A noisy rare MAG
+  at: picked
   state: {m: share, by: phylum, mag: "c.100", log: 1}
   question: >-
     Picked: CAG-417 sp000432835 (MAG c.100), mean 0.064% of all read bases. Its mean is 2.6 times higher in days
@@ -99,6 +106,7 @@
     (The chart shows 2.2-fold because it adds 0.01% to both means.)
 
 - title: Shares are not amounts
+  at: picked
   state: {m: share, by: phylum, mag: "2.359,3.5197"}
   question: >-
     Picked: the two Prevotella copri_B MAGs. Together they take 12.4% of the read bases on day 6 and 0.5% on day 10.
@@ -117,6 +125,7 @@
 # scripts/31_course_metabolism.py; numbers checked against results/metabolism/*.tsv, 2026-11-01). mv = rate (per
 # 1,000 genes, default) or count.
 - title: What the risers and fallers could digest
+  at: metabolism
   state: {m: share, by: phylum, mag: "c.40", mv: rate}
   question: >-
     Scroll to "Who could do what". The table lists the 17 chosen MAGs from the largest rise to the largest fall. Compare
@@ -133,6 +142,7 @@
     person, with the diet changed together with time: a pattern worth testing, not a result.
 
 - title: "A known answer: Bacteroides cellulosilyticus"
+  at: metabolism
   state: {m: share, by: phylum, mag: "c.119", mv: count}
   question: >-
     Picked: Bacteroides cellulosilyticus (MAG c.119); the table now shows numbers of genes. A cultured strain of this
@@ -148,6 +158,7 @@
     43 (1.6% of its genes) and 15 SusC-like genes. Bacteroidota differ widely: a phylum name is not a function.
 
 - title: Butyrate genes, and two strains of one species
+  at: metabolism
   state: {m: share, by: phylum, mag: "c.40,c.38,c.49", mv: rate}
   question: >-
     Picked: the two Agathobacter rectalis MAGs (c.40 and c.38) and the control Faecalibacterium hattorii (c.49). Which
@@ -165,6 +176,7 @@
     fallers: two of six fallers and one of six risers have the route.
 
 - title: What does not fit
+  at: metabolism
   state: {m: share, by: phylum, mag: "c.50,c.34", mv: rate}
   question: >-
     Picked: CAZU01 sp000432275 (c.50) and Zag111 sp002102825 (c.34), the two largest risers. What could they live on,

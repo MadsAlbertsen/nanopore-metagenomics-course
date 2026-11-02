@@ -6,6 +6,7 @@
 #   est = c2 (CheckM2) or c1 (CheckM version 1) on the axes; show = all, HQ, MQ; sort = cont, comp, diff, var, flag, cov.
 
 - title: A clean, circular genome
+  at: mags
   state: {mag: c.32, color: circ}
   question: >-
     Open: Butyrivibrio_A crossota (MAG c.32), one circular contig. Go through its checklist. Which evidence says it is
@@ -20,6 +21,7 @@
     the contig. A circle is the assembler's call: these checks make a wrong join unlikely, but do not prove there is none.
 
 - title: Missing rRNA genes
+  at: mags
   state: {mag: "2.337", color: rrna}
   question: >-
     Colour shows the rRNA genes. Ten MAGs lack at least one of the 5S, 16S and 23S genes. Open: Mediterraneibacter_A
@@ -34,6 +36,7 @@
     or not assembled) this page cannot show.
 
 - title: CheckM and CheckM2 disagree
+  at: mags
   state: {mag: c.104, est: c1, color: diff, sort: diff}
   question: >-
     The axes now show CheckM (version 1) estimates, the colour how much it differs from CheckM2 in completeness.
@@ -51,6 +54,7 @@
     have been dropped by that filter; this page cannot show it.
 
 - title: Near the contamination limit
+  at: mags
   state: {mag: "2.293", color: meth, sort: cont}
   question: >-
     The list is sorted by CheckM2 contamination. Open: Lachnospira hominis (MAG 2.293), 100% complete and the third
@@ -65,6 +69,7 @@
     duplicated genes sit on the flagged contig would need CheckM's per-gene output, which is not on this page.
 
 - title: Two strains of one species
+  at: mags
   state: {mag: "2.441", color: meth}
   question: >-
     Open: MAG 2.441. GTDB places it and MAG 3.1230 in Hominiventricola filiformis (module 4 showed them on the
@@ -83,6 +88,7 @@
     question is whether to split it.
 
 - title: Many variant sites, little contamination
+  at: mags
   state: {mag: "2.151", color: var, sort: var}
   question: >-
     Colour and list now show microdiversity: the share of positions that are single-base variant sites. Open: Oscillibacter
@@ -100,6 +106,7 @@
     has 9.5x. Telling strains from errors would need the variant calls themselves.
 
 - title: High quality, but a proposed split
+  at: mags
   state: {mag: "1.717", color: meth, sort: flag}
   question: >-
     Open: Scatosoma sp900552625 (MAG 1.717), high quality. Look at its second contig in the track. What does the
@@ -114,6 +121,7 @@
     gene count right. Splits are proposals and were not applied; the 100 kb could be a misjoin or a region of its own.
 
 - title: Read the rule, not only the label
+  at: mags
   state: {mag: "1.7190", color: trna}
   question: >-
     Colour shows the tRNAs. Open: Oscillibacter segnis (MAG 1.7190), high quality. Check its tRNA row against the

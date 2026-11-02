@@ -6,6 +6,7 @@
 #   95); cova, covb = depth of strain A (2-40) and B (1-40); err = read substitution errors (%: 0, 0.5, 1, 2, 3).
 
 - title: Reads shorter than the repeat
+  at: repeat
   state: {go: repeat, rl: 5, rep: 6}
   question: >-
     Reads of 5 kb, a repeat of 6 kb in two copies. How many contigs does the toy assembler make, and why? Then move
@@ -16,6 +17,7 @@
     exactly one position, and none does. At 9 kb copy 1 is spanned by 1 read and copy 2 by 4: one contig of 60 kb.
 
 - title: Long enough, but by chance not spanned
+  at: repeat
   state: {go: repeat, rl: 15, rep: 10}
   question: >-
     Now the repeat is 10 kb and the reads are 15 kb, longer than the repeat. Why are there still 3 contigs? What
@@ -27,6 +29,7 @@
     copy 2 by 1: one contig.
 
 - title: Transitive edges
+  at: steps
   state: {go: steps, step: 4}
   question: >-
     Step 4 of the toy assembly. The table lists all 14 overlaps. Which ones are removed as transitive, and why is
@@ -37,6 +40,7 @@
     neighbour on each side, so the graph has no branches: one unitig, which becomes one 24 kb contig in step 6.
 
 - title: Two strains, two rules
+  at: strains
   state: {go: strains, id: 99.5, cova: 20, covb: 10, err: 1}
   question: >-
     Two strains 99.5% identical (150 differences in 30 kb), strain A at 20x and strain B at 10x, reads with 1%
@@ -48,6 +52,7 @@
     strains; 6 reads are left unjoined.
 
 - title: A rare strain
+  at: strains
   state: {go: strains, id: 99.5, cova: 20, covb: 2, err: 1}
   question: >-
     Same strains, but strain B drops to 2x. How many of the differences does the variant-aware rule find now, and
@@ -60,6 +65,7 @@
     before its differences can keep it apart.
 
 - title: Too many read errors
+  at: strains
   state: {go: strains, id: 99.5, cova: 20, covb: 10, err: 3}
   question: >-
     Back to 10x for strain B, but now the reads have 3% substitution errors. What happens to both rules?
@@ -76,6 +82,7 @@
 #   col = colour (mag, depth); node = a selected node of that piece. Numbers checked on data.json (2026-11-01).
 
 - title: A genome as one loop
+  at: real
   state: {go: graphs, g: circle}
   question: >-
     This piece of the graph is a single node with one link. Where does the link go, and what does that say about
@@ -87,6 +94,7 @@
     independent check, and here both agree. 110 of the 122 loops of 1 Mb or more stand alone like this one.
 
 - title: A contig left out of its MAG
+  at: real
   state: {go: graphs, g: closing, node: u10633016ctg}
   question: >-
     The selected 94 kb contig is in no MAG. Which MAG does the graph tie it to, and what other evidence on the page
@@ -101,6 +109,7 @@
     more before binning when CheckM2 finds it complete enough (here 96.3%), and takes that contig out of binning.
 
 - title: A repeat at twice the depth
+  at: real
   state: {go: graphs, g: repeats, col: depth}
   question: >-
     MAG 1.19 is six contigs, all in this piece of the graph. Coloured by depth, which node stands out, and what could
@@ -113,6 +122,7 @@
     graph alone does not prove that it is a repeat; the depth and the links fit one.
 
 - title: Strains kept apart
+  at: real
   state: {go: graphs, g: strains}
   question: >-
     How many MAGs are in this piece, and of which species? How similar are the three long contigs, and how does
@@ -126,6 +136,7 @@
     their ends are linked. Their depths over the ten days do not all follow each other (r = 0.28 to 0.92).
 
 - title: One genome or two?
+  at: real
   state: {go: graphs, g: copri}
   question: >-
     Two MAGs of Prevotella copri_B sit in one piece of the graph. What links them, and what do the alignment and
@@ -140,6 +151,7 @@
     move together or variants within one population; module 8 finds the same open question from the abundances.
 
 - title: Where a split contig sits
+  at: real
   state: {go: graphs, g: largest, node: u28510213ctg}
   question: >-
     The selected contig is in the largest group. Why are nodes of two MAGs ringed, and does the graph show which MAG
@@ -152,6 +164,7 @@
     binning side.
 
 - title: Small circles
+  at: circles
   state: {go: circles}
   question: >-
     How many of the small circular contigs (under 100 kb) are in a MAG, compared with those of 1 Mb or more? Why
