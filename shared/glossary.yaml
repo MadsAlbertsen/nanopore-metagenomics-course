@@ -42,8 +42,11 @@
   text: "A contig whose end overlaps its start, so the assembler closed it into a circle: likely a whole chromosome, plasmid or phage."
   modules: [assembly, mag-quality, methylation]
 - term: "Misassembly (misjoin)"
-  text: "A contig that joins sequence that does not belong together in the genome."
+  text: "A contig that joins sequence that does not belong together in the genome. When the two parts come from different genomes, it is a chimeric contig. Reads mapped back to the contig are clipped at the join."
   modules: [assembly, mag-quality, methylation]
+- term: "Clipped read"
+  text: "A read that matches a contig only in part: the aligner leaves the rest of the read unaligned (clipped). Many reads clipped at the same position point to a misassembly there."
+  modules: [assembly, methylation]
 - term: "Co-assembly"
   text: "One assembly of the reads from several samples together, here all ten days. Each contig then has a depth in each sample."
   modules: [assembly, binning]

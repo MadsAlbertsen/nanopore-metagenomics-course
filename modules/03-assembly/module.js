@@ -1,6 +1,7 @@
 // Module 3: assembly. Sections 1-3: three toy simulations with fixed seeds, so one page state always gives the same
 // picture and numbers (the answers in examples.yaml were read off these functions). Sections 4-5: pieces of myloasm's
-// real assembly graph (data.json, made by np26 scripts/28_course_assembly.py).
+// real assembly graph (data.json, made by np26 scripts/28_course_assembly.py). Section 6: a toy join (fixed seed) and
+// the contigs mmlong2 cut at likely misassemblies (DATA.splits, same script).
 const mulberry = (seed) => () => {
   seed = (seed + 0x6d2b79f5) | 0;
   let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
@@ -9,7 +10,7 @@ const mulberry = (seed) => () => {
 };
 const IDS = [100, 99.99, 99.9, 99.5, 99, 98, 97, 95];  // identity between the two toy strains, %
 const ERRS = [0, 0.5, 1, 2, 3];  // substitution errors in the toy reads, %
-const DEF = { rl: 5, rep: 6, step: 1, id: 99.5, cova: 20, covb: 10, err: 1, g: "circle", col: "mag", node: "" };
+const DEF = { rl: 5, rep: 6, step: 1, id: 99.5, cova: 20, covb: 10, err: 1, g: "circle", col: "mag", node: "", mk: "join", mx: 0, sp: "" };
 const st = { ...DEF };
 const kb = (bp) => (bp / 1000).toLocaleString("en", { maximumFractionDigits: 1 }) + " kb";
 const plural = (n, one, many) => `${n.toLocaleString("en")} ${n === 1 ? one : many}`;
@@ -363,7 +364,16 @@ function fillNumbers() {
     circSmallYes: fmtN(small.filter((x) => x[3] < 2 && x[5] === 2 && !x[7]).length), circSmallYesMag: small.filter((x) => x[3] === 0 && x[5] === 2 && !x[7]).length,
     circBigSplit: big.filter((x) => x[3] === 0 && x[7]).length, circBigOut: big.filter((x) => x[3] !== 0).map((x) => `${kbs(x[1])}, ${CIRC_TXT[x[5]]}, ${x[2]}x`).join("; "),
   };
+  const sp = DATA.splits, pcs = sp.perContig, exK = EXAMPLES.findIndex((e) => e.title === "Where a split contig sits");
+  Object.assign(N, {
+    spContigs: fmtN(sp.contigs), spBp: (sp.rawBp / 1e6).toFixed(1) + " Mb", spPct: (100 * sp.rawBp / sp.primaryBp).toFixed(1) + "%", spPieces: fmtN(sp.pieces),
+    spTrims: fmtN(sp.endTrims), spTrimMed: fmtN(sp.endTrimLostMedian) + " bp", spCross: sp.crossMag, spTwo: fmtN(pcs["2"]),
+    spMore: fmtN(Object.entries(pcs).filter(([k]) => +k >= 3).reduce((s, [, v]) => s + v, 0)), spLost: fmtN(sp.lostBp) + " bases",
+    spInMag2: sp.inMag2, spSame: sp.sameMag, spCrossGenus: sp.crossGenus,
+  });
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
+  const exLink = document.querySelector('[data-n="spEx"]');
+  if (exLink) exLink.outerHTML = exK >= 0 ? `<button class="link" data-openex="${esc(EXAMPLES[exK].title)}">example ${exK + 1}</button>` : "an example";
   const tot = g.primaryBp;
   $("gClasses").innerHTML = `<table class="sc"><thead><tr><th>Where the contig is</th><th class="r">Contigs</th><th>Share of bases</th><th class="r">Bases</th><th class="r"></th></tr></thead><tbody>${cl.map(([label, n, bp]) => `<tr><td>${esc(label)}</td><td class="r">${fmtN(n)}</td><td style="width:40%"><div class="bar"><span style="width:${(100 * bp) / tot}%"></span></div></td><td class="r">${(bp / 1e6).toFixed(0)}&nbsp;Mb</td><td class="r">${pct(bp, tot)}</td></tr>`).join("")}</tbody></table>`;
 }
@@ -469,6 +479,116 @@ function drawCircles() {
   $("cLegend").innerHTML = `<span><i class="sw" style="background:var(--c1)"></i>in a MAG</span><span><i class="sw" style="background:var(--c2)"></i>in the final assembly, not in a MAG</span><span><i class="sw" style="background:var(--faint)"></i>not kept by mmlong2</span>`;
 }
 
+// ---------- 6. misassemblies: a toy join (simulated) and the contigs mmlong2 cut in our run (DATA.splits)
+const MIS = { G: 40000, J: 24000, gap: [20000, 21500], depthA: 20, depthB: 8, Lmin: 3000, Lmax: 9000, ratio: 0.9, minReads: 3, minGap: 100 };
+const CROSS = [0, 5, 10, 20, 50];  // % of the reads at the join that truly run across it
+// Reads from genome A (left) and B (right). A read that runs past the end of its genome's part of the contig no longer
+// matches and is clipped there; with "cross" > 0 that share of the reads at the join runs on into B (no clipping).
+function simMis(kind, crossPct) {
+  const rand = mulberry(23), reads = [], meanL = (MIS.Lmin + MIS.Lmax) / 2;
+  const [aEnd, bStart] = kind === "gap" ? MIS.gap : [MIS.J, MIS.J];
+  const add = (g, lo, hi, depth) => {
+    const n = Math.round((depth * (hi - lo + meanL)) / meanL);  // starts spread over the part plus one read length
+    for (let i = 0; i < n; i++) {
+      const L = Math.round(MIS.Lmin + rand() * (MIS.Lmax - MIS.Lmin)), s = Math.round(lo - L + rand() * (hi - lo + L)), e = s + L;
+      reads.push({ g, s, e, u: rand() });
+    }
+  };
+  add("A", 0, aEnd, MIS.depthA); add("B", bStart, MIS.G, MIS.depthB);
+  for (const r of reads) { r.atJoin = r.g === "A" ? r.s < aEnd && r.e > aEnd : r.s < bStart && r.e > bStart; r.cross = false; }
+  // exactly the chosen share of the reads at the join runs across (the reads with the lowest random draw u)
+  const at = reads.filter((r) => r.atJoin).sort((p, q) => p.u - q.u), nCross = kind === "join" ? Math.round((crossPct / 100) * at.length) : 0;
+  at.forEach((r, k) => { r.cross = k < nCross; });
+  for (const r of reads) {
+    const atJoin = r.atJoin;
+    r.a = r.cross ? Math.max(0, r.s) : r.g === "A" ? Math.max(0, r.s) : Math.max(bStart, r.s);   // aligned part
+    r.b = r.cross ? Math.min(MIS.G, r.e) : r.g === "A" ? Math.min(aEnd, r.e) : Math.min(MIS.G, r.e);
+    r.clip = atJoin && !r.cross ? (r.g === "A" ? [aEnd, Math.min(MIS.G, r.e)] : [Math.max(0, r.s), bStart]) : null;
+  }
+  const shown = reads.filter((r) => r.b > r.a);
+  const clipped = shown.filter((r) => r.clip).length, crossing = shown.filter((r) => r.cross).length;
+  const atA = shown.filter((r) => r.g === "A" && r.clip).length, atB = shown.filter((r) => r.g === "B" && r.clip).length;
+  const depth = new Array(MIS.G / 100).fill(0);
+  for (const r of shown) for (let k = Math.floor(r.a / 100); k < Math.ceil(r.b / 100); k++) depth[k]++;
+  const part = (lo, hi) => depth.slice(lo / 100, hi / 100);
+  const mean = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length;
+  const zero = depth.filter((d) => d === 0).length * 100;
+  const cov = clipped + crossing, share = cov ? clipped / cov : 0;
+  return { reads: shown, aEnd, bStart, clipped, crossing, cov, share, atA, atB, depth, zero, cut: kind === "gap" ? zero > MIS.minGap : cov >= MIS.minReads && clipped >= MIS.minReads && share >= MIS.ratio,
+    depthA: mean(part(2000, aEnd - 2000)), depthB: mean(part(bStart + 2000, MIS.G - 2000)) };
+}
+function drawMis() {
+  const sim = simMis(st.mk, st.mx), host = $("misSvg"), gap = st.mk === "gap";
+  for (const b of $("misKind").querySelectorAll("[data-mk]")) { const on = b.dataset.mk === st.mk; b.setAttribute("aria-current", on); b.setAttribute("aria-checked", on); }
+  $("misX").value = CROSS.indexOf(st.mx); $("misX").disabled = gap; $("misXv").textContent = gap ? "–" : st.mx + "%";
+  const W = Math.max(300, host.clientWidth), m = 12, X = (bp) => m + (bp / MIS.G) * (W - 2 * m);
+  // reads in rows, clipped parts included (a read's full extent: aligned part plus clipped part)
+  const sorted = sim.reads.map((r, i) => ({ s: Math.min(r.a, r.clip ? r.clip[0] : r.a), e: Math.max(r.b, r.clip ? r.clip[1] : r.b), i })).sort((p, q) => p.s - q.s);
+  const packed = pack(sorted, 300);
+  const nRows = Math.max(0, ...packed) + 1, rh = 4, yC = 22, yR = 66, yD = yR + nRows * rh + 30, dH = 46, H = yD + dH + 26;
+  const svg = svgBox(host, W, H, gap ? "Toy contig with a stretch that no read covers" : "Toy contig made of two genomes, with the reads mapped to it");
+  txt(svg, m, 12, gap ? "Toy contig (40 kb): genome A, 1.5 kb that no read supports, genome B" : "Toy contig (40 kb): the end of genome A joined to the start of genome B");
+  el("rect", { x: X(0), y: yC, width: X(sim.aEnd) - X(0), height: 16, fill: "var(--c1)" }, svg);
+  el("rect", { x: X(sim.bStart), y: yC, width: X(MIS.G) - X(sim.bStart), height: 16, fill: "var(--c2)" }, svg);
+  txt(svg, (X(0) + X(sim.aEnd)) / 2, yC + 12, "genome A", { class: "seglbl", "text-anchor": "middle" });
+  txt(svg, (X(sim.bStart) + X(MIS.G)) / 2, yC + 12, "genome B", { class: "seglbl", "text-anchor": "middle" });
+  if (gap) el("rect", { x: X(sim.aEnd), y: yC, width: X(sim.bStart) - X(sim.aEnd), height: 16, fill: "none", stroke: "var(--muted)", "stroke-dasharray": "3 2" }, svg);
+  const marks = gap ? [sim.aEnd, sim.bStart] : [MIS.J];
+  for (const p of marks) el("line", { x1: X(p), x2: X(p), y1: yC - 4, y2: yD + dH, stroke: "var(--ink)", "stroke-width": 1, "stroke-dasharray": "4 3" }, svg);
+  txt(svg, m, yR - 10, `Reads mapped to the contig (${sim.reads.length}); faded and dashed: the clipped part, which does not match the contig`);
+  sorted.forEach((it, k) => {
+    const r = sim.reads[it.i], y = yR + packed[k] * rh, col = r.cross ? "var(--ink)" : r.g === "A" ? "var(--c1)" : "var(--c2)";
+    el("line", { x1: X(r.a) + 0.5, x2: Math.max(X(r.a) + 1.5, X(r.b) - 0.5), y1: y, y2: y, stroke: col, "stroke-width": 2.4 }, svg);
+    if (r.clip) el("line", { x1: X(r.clip[0]) + 0.5, x2: Math.max(X(r.clip[0]) + 1.5, X(r.clip[1]) - 0.5), y1: y, y2: y, stroke: col, "stroke-width": 2.4, opacity: 0.5, "stroke-dasharray": "3 2" }, svg);
+  });
+  // depth track
+  const maxD = Math.max(...sim.depth, 1), Yd = (d) => yD + dH - (d / maxD) * dH;
+  txt(svg, m, yD - 8, "Read depth along the contig (aligned parts only)");
+  el("line", { x1: X(0), x2: X(MIS.G), y1: yD + dH, y2: yD + dH, class: "grid" }, svg);
+  const pts = sim.depth.map((d, k) => `${X(k * 100)},${Yd(d)} ${X((k + 1) * 100)},${Yd(d)}`).join(" ");
+  el("polygon", { points: `${X(0)},${yD + dH} ${pts} ${X(MIS.G)},${yD + dH}`, fill: "var(--v0)", stroke: "var(--muted)", "stroke-width": 1 }, svg);
+  txt(svg, X(MIS.G), yD + dH + 16, `max ${maxD}x`, { "text-anchor": "end" });
+  $("misLegend").innerHTML = `<span><i class="sw" style="background:var(--c1)"></i>read from genome A</span><span><i class="sw" style="background:var(--c2)"></i>read from genome B</span>`
+    + `<span><i class="sw" style="background:repeating-linear-gradient(90deg,var(--c1) 0 3px,transparent 3px 5px);opacity:0.5"></i>clipped part (faded, dashed)</span>` + (gap ? "" : `<span><i class="sw" style="background:var(--ink)"></i>read that runs across the join</span>`)
+    + `<span><i class="sw" style="border:1px dashed var(--ink)"></i>${gap ? "edges of the stretch without reads" : "the join"}</span>`;
+  const dep = `Depth ${Math.round(sim.depthA)}x on genome A, ${Math.round(sim.depthB)}x on genome B.`;
+  $("misOut").innerHTML = gap
+    ? `<b>${fmtN(sim.zero)} bp have no read at all.</b> mmlong2 removes a stretch without reads when it is longer than ${MIS.minGap} bp and keeps the pieces on both sides (each 3 kb or more). Reads running into the stretch are clipped at its edges too (${sim.atA} on the left, ${sim.atB} on the right), so the clipping rule would also cut here. ${dep}`
+    : `<b>${sim.clipped} of the ${sim.cov} reads at the join (${pc(sim.share)}) are clipped there</b> (${sim.atA} from genome A, ${sim.atB} from genome B)${sim.crossing ? `; ${sim.crossing} ${sim.crossing === 1 ? "runs" : "run"} across` : ""}. mmlong2 cuts where at least 90% of at least 3 reads are clipped: <b>${sim.cut ? "cut" : "not cut"}</b>. ${dep}`;
+  return sim;
+}
+
+const SPL = DATA.splits;
+const SP_ROWS = SPL.rows.filter((r) => r.cross);
+const spMagCol = (r) => { const ids = [...new Set(r.pieces.map((p) => p[4]).filter(Boolean))]; return (id) => (id ? `var(--c${ids.indexOf(id) + 1})` : "var(--faint)"); };
+const pieceTip = (r, p) => `<span class="mono">${esc(r.name)}</span> ${fmtN(p[0])}-${fmtN(p[1])}<br>${kbs(p[2])}, read depth ${p[3]}x<br>${p[4] ? `MAG ${esc(p[4])} ${esc(magName(p[4]))}` : "in no MAG"}<br>Metabuli: ${p[6] ? `<i>${esc(p[6])}</i>` : p[5] ? `<i>${esc(p[5])}</i> (genus)` : "no genus"}`;
+function drawSplits() {
+  const maxRaw = Math.max(...SP_ROWS.map((r) => r.raw));
+  const body = SP_ROWS.map((r, k) => {
+    const col = spMagCol(r);
+    let last = 0;
+    const segs = [];
+    r.pieces.forEach((p, q) => {
+      if (p[0] - 1 > last) segs.push(`<span class="gap" style="flex:${p[0] - 1 - last}"></span>`);
+      segs.push(`<span class="pc${q ? " cut" : ""}" data-r="${k}" data-p="${q}" style="flex:${p[2]};background:${col(p[4])}"></span>`);
+      last = p[1];
+    });
+    if (r.raw > last) segs.push(`<span class="gap" style="flex:${r.raw - last}"></span>`);
+    const list = r.pieces.map((p) => `<span><i class="sw" style="background:${col(p[4])}"></i>${p[5] ? `<i>${esc(p[5])}</i>` : "no genus"} ${kbs(p[2])}, ${Math.round(p[3])}x${p[4] ? ` (MAG ${esc(p[4])})` : " (no MAG)"}</span>`).join("");
+    return `<tr data-row="${k}" class="${r.name === st.sp ? "cur" : ""}" tabindex="0"><td class="mono">${esc(r.name)}</td><td class="r">${kbs(r.raw)}</td><td class="spcell"><div class="spbar" style="width:${(100 * r.raw) / maxRaw}%">${segs.join("")}</div></td><td class="splist">${list}</td></tr>`;
+  }).join("");
+  $("spTable").innerHTML = `<thead><tr><th>Contig (myloasm)</th><th class="r">Length</th><th>Pieces, to scale</th><th>Pieces: genus (Metabuli), length, read depth, MAG</th></tr></thead><tbody>${body}</tbody>`;
+  $("spLegend").innerHTML = `<span><i class="sw" style="background:var(--c1)"></i>piece in the contig's first MAG</span><span><i class="sw" style="background:var(--c2)"></i>in its second MAG</span><span><i class="sw" style="background:var(--faint)"></i>in no MAG</span><span>colours are per row</span>`;
+  const sel = SPL.rows.find((r) => r.name === st.sp);
+  $("spInfo").innerHTML = sel ? splitInfo(sel) : "";
+}
+function splitInfo(r) {
+  const col = spMagCol(r), mags = [...new Set(r.pieces.map((p) => p[4]).filter(Boolean))];
+  const rows = r.pieces.map((p) => `<tr><td><i class="sw" style="background:${col(p[4])}"></i>${fmtN(p[0])}-${fmtN(p[1])}</td><td class="r">${kbs(p[2])}</td><td class="r">${p[3]}x</td><td class="mono">${p[4] ? esc(p[4]) : "–"}</td><td>${p[4] ? `<i>${esc(magName(p[4]))}</i>` : "no MAG"}</td><td>${p[6] ? `<i>${esc(p[6])}</i>` : p[5] ? `<i>${esc(p[5])}</i>` : "–"}</td></tr>`).join("");
+  const magTxt = mags.map((id) => { const mg = DATA.mags[id]; return `<p><b>MAG ${esc(id)}</b> <i>${esc(mg.name)}</i>, ${mg.q}, ${mg.compl}% complete, ${mg.cont}% contamination (CheckM2), ${mg.n} contigs, ${kbs(mg.size)}. ${magLinks(id, "assembly", true)}</p>`; }).join("");
+  return `<div class="ex"><p><b class="mono">${esc(r.name)}</b>: ${kbs(r.raw)} in myloasm's assembly, cut by mmlong2 into ${r.pieces.length} pieces.</p><div class="scroll"><table class="sc"><thead><tr><th>Positions on the contig</th><th class="r">Length</th><th class="r">Read depth</th><th>MAG</th><th>MAG name (GTDB)</th><th>Metabuli species</th></tr></thead><tbody>${rows}</tbody></table></div>${magTxt}</div>`;
+}
+
 // ---------- state, examples, start
 const clampInt = (v, lo, hi, d) => { const x = parseInt(v, 10); return Number.isFinite(x) ? Math.max(lo, Math.min(hi, x)) : d; };
 function applyState(s) {
@@ -481,9 +601,11 @@ function applyState(s) {
   st.g = SUB[s.g] ? s.g : DEF.g; st.col = s.col === "depth" ? "depth" : "mag";
   st.node = SUB[st.g].nodes.some((n) => n[0] === s.node) ? s.node : "";
   $("gCol").value = st.col;
+  st.mk = s.mk === "gap" ? "gap" : "join"; st.mx = CROSS.includes(parseFloat(s.mx)) ? parseFloat(s.mx) : DEF.mx;
+  st.sp = SPL.rows.some((r) => r.name === s.sp) ? s.sp : "";
 }
 function writeHash() { writeHashParams({ ...st, ex: examples.current >= 0 ? examples.current + 1 : undefined }); }
-function drawAll() { drawRepeat(); drawSteps(); drawStrains(); drawGraph(); drawCircles(); }
+function drawAll() { drawRepeat(); drawSteps(); drawStrains(); drawGraph(); drawCircles(); drawMis(); drawSplits(); }
 const examples = setupExamples($("asExamples"), (k) => {
   const s = EXAMPLES[k].state;
   applyState({ ...DEF, ...s }); drawAll(); writeHash();
@@ -497,6 +619,19 @@ $("stPrev").addEventListener("click", () => { if (st.step > 1) { st.step--; draw
 $("stNext").addEventListener("click", () => { if (st.step < STEPS.length) { st.step++; drawSteps(); writeHash(); } });
 $("gList").addEventListener("click", (ev) => { const b = ev.target.closest("[data-sg]"); if (b) { st.g = b.dataset.sg; st.node = ""; drawGraph(); writeHash(); } });
 $("gCol").addEventListener("change", () => { st.col = $("gCol").value; drawGraph(); writeHash(); });
+$("misKind").addEventListener("click", (ev) => { const b = ev.target.closest("[data-mk]"); if (b) { st.mk = b.dataset.mk; drawMis(); writeHash(); } });
+$("misX").addEventListener("input", () => { st.mx = CROSS[+$("misX").value]; drawMis(); writeHash(); });
+const spRow = (ev) => ev.target.closest("tr[data-row]");
+$("spTable").addEventListener("click", (ev) => { const tr = spRow(ev); if (tr) { const n = SP_ROWS[+tr.dataset.row].name; st.sp = st.sp === n ? "" : n; drawSplits(); writeHash(); } });
+$("spTable").addEventListener("keydown", (ev) => { if ((ev.key === "Enter" || ev.key === " ") && spRow(ev)) { ev.preventDefault(); spRow(ev).click(); } });
+$("spTable").addEventListener("mousemove", (ev) => { const p = ev.target.closest("[data-p]"); if (p) showTip(ev, pieceTip(SP_ROWS[+p.dataset.r], SP_ROWS[+p.dataset.r].pieces[+p.dataset.p])); else hideTip(); });
+$("spTable").addEventListener("mouseleave", hideTip);
+// the link to the section 4 example on contig u28510213ctg (found by its title, so renumbering does not break it)
+$("secMis").addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-openex]"); if (!b) return;
+  const k = EXAMPLES.findIndex((e) => e.title === b.dataset.openex); if (k < 0) return;
+  examples.current = k; examples.draw(); applyState({ ...DEF, ...EXAMPLES[k].state }); drawAll(); writeHash(); examples.reveal();
+});
 fillNumbers();
 (function start() {
   const s = readHashParams(), ex = parseInt(s.ex, 10);

@@ -176,3 +176,45 @@
     by depth and composition, and a plasmid or phage can differ from its host in both: copy number changes its
     depth. Some small circles also have very little depth (45 of the 398 at 2x or less). Module 6 tries to place
     such contigs by their methylation.
+
+# Examples 14-16: section 6, misassemblies. state keys: go = misjoin (toy) or splits (our run); mk = toy case (join,
+#   gap); mx = share of the reads at the join that truly run across (%: 0, 5, 10, 20, 50); sp = a contig mmlong2 cut
+#   (data.json splits.rows). Toy numbers read off the page in headless Chrome, real ones from data.json (2026-11-02).
+
+- title: How many reads must be clipped?
+  at: misjoin
+  state: {go: misjoin, mk: join, mx: 0}
+  question: >-
+    The toy contig joins genome A (20x) to genome B (8x). How many of the reads at the join are clipped there, and
+    does mmlong2's rule cut? Then move "Reads that truly run across" up step by step: when does the rule stop cutting?
+  answer: >-
+    All 24 reads that reach the join are clipped there (18 from genome A, 6 from genome B): 100%, so the contig is
+    cut. With 5% of the reads running across, 23 of 24 are clipped (96%); with 10%, 22 of 24 (92%): still cut. With
+    20%, 19 of 24 are clipped (79%), below the 90% the rule needs, and the join stays in the contig. The depth also
+    changes at the join (about 21x against 9x here), but mmlong2's rule does not use depth.
+
+- title: Two genomes in one contig
+  at: misassembly
+  state: {go: splits, sp: u30930981ctg}
+  question: >-
+    myloasm made u30930981ctg, 3.33 Mb. mmlong2 cut it in two. What tells you that the two pieces come from two
+    different genomes, and what happened to them in binning?
+  answer: >-
+    The first piece (positions 1 to 2,363,361; 2.36 Mb) has a read depth of 119x, the second (2,363,363 to 3,330,204;
+    967 kb) 32x, nearly four times less. Metabuli places them in two genera, Agathobacter and Maccoya, and binning put
+    them in two MAGs whose GTDB names agree: 1.222 (Agathobacter sp905209075) and 1.986 (Maccoya intestinihominis),
+    both of high quality by CheckM2 (100% and 99.9% complete). The pieces are 2.36 of the 3.52 Mb of MAG 1.222 and
+    967 kb of the 2.72 Mb of MAG 1.986. Without the cut, the whole 3.33 Mb contig could only have gone into one MAG.
+
+- title: Same depth, different genus
+  at: misassembly
+  state: {go: splits, sp: u36397268ctg}
+  question: >-
+    Here the two pieces of u36397268ctg have almost the same read depth. Would depth alone have shown that this
+    contig joins two genomes? What does?
+  answer: >-
+    No: the first piece (2.17 Mb) has 17.5x, the second (452 kb) 19.6x, a ratio of 1.1. The genus does: Metabuli
+    places the first piece in Faecalibacterium and the second in Enterocloster, and binning put them in MAGs 2.671
+    (Faecalibacterium sp934533135, high quality, 93.6% complete) and 3.3941 (Enterocloster sp000431375, medium
+    quality, 56.1% complete). The cut itself came from the reads: mmlong2's rule looks only at clipping and gaps
+    without reads, so it caught this join although depth gives no hint of it.

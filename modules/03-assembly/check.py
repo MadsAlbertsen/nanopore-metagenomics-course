@@ -1,10 +1,11 @@
 """Every state key and value an example names must be one the page can show: a simulation setting, or a piece of the
-real graph in data.json (g), a colour (col) and a node of that piece (node)."""
+real graph in data.json (g), a colour (col) and a node of that piece (node), or a contig mmlong2 cut (sp, in
+data.json splits.rows)."""
 
 IDS = {100, 99.99, 99.9, 99.5, 99, 98, 97, 95}
 ERRS = {0, 0.5, 1, 2, 3}
 ALLOWED = {
-    "go": {"repeat", "steps", "strains", "graphs", "circles"},
+    "go": {"repeat", "steps", "strains", "graphs", "circles", "misjoin", "splits"},
     "rl": set(range(1, 31)),
     "rep": set(range(1, 11)),
     "step": set(range(1, 7)),
@@ -13,6 +14,8 @@ ALLOWED = {
     "covb": set(range(1, 41)),
     "err": ERRS,
     "col": {"mag", "depth"},
+    "mk": {"join", "gap"},
+    "mx": {0, 5, 10, 20, 50},
 }
 
 
@@ -23,6 +26,8 @@ def check(data, examples: list[dict]) -> None:
         for key, value in state.items():
             if key == "g":
                 ok = value in pieces
+            elif key == "sp":
+                ok = value in {r["name"] for r in data["splits"]["rows"]}
             elif key == "node":
                 ok = value in pieces.get(state.get("g"), set())
             else:
