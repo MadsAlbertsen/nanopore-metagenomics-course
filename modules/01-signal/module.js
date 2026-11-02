@@ -158,7 +158,7 @@ function drawStretch() {
   $("sgStretchPick").innerHTML = D.stretches.map((s, k) => `<button role="listitem" data-k="${k + 1}" aria-current="${k + 1 === st.stretch}">${k + 1}. ${esc(s.title)}</button>`).join("");
   const n = S.pa.length, m = { l: 40, r: 8, t: 10 }, plotH = 190, rowH = 20;
   const px = Math.max(2.2, (width("sgStretch", 520) - m.l - m.r) / n), w = m.l + m.r + n * px;
-  const h = m.t + plotH + 12 + rowH * 2 + 26 + 24;
+  const gap = 26, h = m.t + plotH + 12 + rowH * 2 + gap + 26 + 24;
   const svg = el("svg", { width: w, height: h, role: "img", "aria-label": "Samples, levels and bases of a stretch" });
   const vals = S.pa.concat(S.expected.filter((v) => v !== null)), lo = Math.min(...vals) - 4, hi = Math.max(...vals) + 4;
   const x = (s) => m.l + s * px, y = (v) => m.t + (1 - (v - lo) / (hi - lo)) * plotH;
@@ -172,10 +172,17 @@ function drawStretch() {
     if (S.measured[i] !== null) el("line", { x1: a, x2: b, y1: y(S.measured[i]), y2: y(S.measured[i]), stroke: "var(--ink)", "stroke-width": 2 }, svg);
   }
   // rows: reference bases on Remora's boundaries, read bases on the move table's
-  const yRef = m.t + plotH + 12, yRead = yRef + rowH + 6;
+  const yRef = m.t + plotH + 12, yRead = yRef + rowH + gap;
   text(svg, m.l - 4, yRef + 14, "ref", { "text-anchor": "end" }); text(svg, m.l - 4, yRead + 14, "read", { "text-anchor": "end" });
   const refRead = {}; for (const [q, r] of S.ops) if (q >= 0 && r >= 0) refRead[r] = q;
   const insAfter = new Set(S.ops.filter(([q, r]) => r < 0).map(([q]) => q));
+  // connectors: each read base to the reference base it aligns to (slanted where the two segmentations disagree)
+  const shifts = [];
+  for (const [r, q] of Object.entries(refRead)) {
+    const xr = x((S.refined[r] + S.refined[+r + 1]) / 2), xq = x((S.move[q] + S.move[q + 1]) / 2);
+    shifts.push(Math.abs(S.move[q] - S.refined[r]));
+    el("line", { x1: xr, y1: yRef + rowH + 1, x2: xq, y2: yRead - 1, stroke: "var(--muted)", "stroke-width": 1 }, svg);
+  }
   for (let i = 0; i < S.ref.length; i++) {
     const a = x(S.refined[i]), b = x(S.refined[i + 1]), q = refRead[i];
     const missing = q === undefined, wrong = !missing && S.read[q] !== S.ref[i];
@@ -197,7 +204,10 @@ function drawStretch() {
   $("sgStretchLegend").innerHTML = `<span><i class="sw" style="background:var(--faint)"></i>samples</span><span><i class="sw" style="background:var(--ink)"></i>measured mean per reference base</span><span><i class="sw" style="background:var(--c2)"></i>model level (9-mer table, scaled to the read)</span><span><i class="sw" style="background:${VIRIDIS[0]}"></i><i class="sw" style="background:${VIRIDIS[9]}"></i>read base quality (Q 0-50)</span><span><i class="sw" style="box-shadow:0 0 0 2px var(--v1)"></i>differs from the reference</span><span><i class="sw" style="background:var(--c3)"></i>6mA called (probability 0.5 or more)</span>`;
   const qmin = Math.min(...S.q), diffs = S.expected.map((e, i) => (e !== null && S.measured[i] !== null ? S.measured[i] - e : 0));
   const k = diffs.reduce((b, v, i) => (Math.abs(v) > Math.abs(diffs[b]) ? i : b), 0);
+  shifts.sort((a, b) => a - b);
+  const far = shifts.filter((v) => v >= 10).length, mid = shifts.length % 2 ? shifts[(shifts.length - 1) / 2] : (shifts[shifts.length / 2 - 1] + shifts[shifts.length / 2]) / 2;
   $("sgStretchNote").textContent = `${S.why} Bin ${S.bin}; ${S.ref.length} reference bases, ${S.read.length} read bases, ${num(n)} samples (${(n / T.rate * 1000).toFixed(0)} ms); lowest quality Q ${qmin}. ` +
+    `Lines join each read base to the reference base it aligns to: the start of a base differs between the two rows by a median of ${mid} samples, and by 10 samples or more (about a base's length) for ${far} of ${shifts.length} bases. ` +
     `Largest gap between measured and model: ${diffs[k].toFixed(1)} pA at reference base ${k + 1}. Remora's boundaries can be as short as 4 samples; the move table's come in steps of ${D.dwell.stride}.`;
 }
 
