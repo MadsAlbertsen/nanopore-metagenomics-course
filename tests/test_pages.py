@@ -28,12 +28,16 @@ PROBE = """<script>
 window.__errors = [];
 addEventListener("error", (e) => __errors.push(String(e.message)));
 addEventListener("unhandledrejection", (e) => __errors.push(String(e.reason)));
-setTimeout(() => {
+// Pages decode their data asynchronously, so with an example in the address wait (up to 8 s) for its card.
+const __start = Date.now();
+function probe() {
   const h = document.querySelector(".ex h3");
+  if (!h && /ex=/.test(location.hash) && Date.now() - __start < 8000) { setTimeout(probe, 200); return; }
   const out = { errors: __errors, example: h ? h.textContent : null };
   const json = JSON.stringify(out).replace(/</g, "\\\\u003c");
   document.body.insertAdjacentHTML("beforeend", "<pre id=probe>" + json + "</pre>");
-}, 1500);
+}
+setTimeout(probe, 1500);
 </script>"""
 
 
@@ -52,7 +56,7 @@ def load(page: Path, fragment: str = "") -> dict:
     profile = tempfile.mkdtemp(prefix="chrome-")
     try:
         cmd = [CHROME, "--headless=new", "--disable-gpu", "--no-sandbox", f"--user-data-dir={profile}"]
-        cmd += ["--window-size=1440,1800", "--virtual-time-budget=5000", "--dump-dom", page.as_uri() + fragment]
+        cmd += ["--window-size=1440,1800", "--virtual-time-budget=12000", "--dump-dom", page.as_uri() + fragment]
         dom = subprocess.run(cmd, capture_output=True, text=True, timeout=120).stdout
     finally:
         shutil.rmtree(profile, ignore_errors=True)
