@@ -7,6 +7,7 @@
 #   len = length class of the score table (purity, purity_10kb, purity_50kb, purity_200kb).
 
 - title: GC and depth
+  at: maps
   state: {a: gcdepth, b: combined_all, color: phylum}
   question: >-
     The left map is the classic first look at a metagenome: GC content against depth over all reads. Can you pick
@@ -17,6 +18,7 @@
     tetranucleotides and GC together it is 88%. One or two numbers per contig cannot tell hundreds of genomes apart.
 
 - title: Two genomes that look alike
+  at: maps
   state: {a: gcdepth, b: pair, bx: DNA04, by: DNA08, mark: "1.308", sel: "2.500", color: phylum}
   question: >-
     Ringed: Bacteroides caccae (MAG 1.308). Highlighted: Blautia_A aquisgranensis (MAG 2.500). Where are they on the
@@ -29,6 +31,7 @@
     the same.
 
 - title: Depth over the ten days
+  at: depth
   state: {a: depth, b: tnf, mark: "1.308", sel: "2.500", color: phylum}
   question: >-
     Same two MAGs. Look at the depth over time chart below the maps: one line per contig. Do the contigs of one MAG
@@ -42,6 +45,7 @@
     its values are the noisiest.
 
 - title: Too few reads for depth
+  at: maps
   state: {a: depth, b: tnf, mark: "2.190", color: phylum}
   question: >-
     Ringed: Ruthenibacterium lactatiformans (MAG 2.190), 42 contigs of 10 kb or more. Which map keeps it together?
@@ -52,6 +56,7 @@
     depth profile is mostly noise. For genomes this rare, composition does the binning.
 
 - title: Close relatives
+  at: maps
   state: {a: tnf, b: depth, mark: "3.1761", color: phylum}
   question: >-
     Ringed: Anaerostipes amylophilus (MAG 3.1761), about 100x. Now the other way round: which map keeps it together,
@@ -62,6 +67,7 @@
     but these differ in abundance (33-253x), so depth tells them apart.
 
 - title: Short and long contigs
+  at: scores
   state: {a: tnf, b: depth, color: purity, only: 1, len: purity_10kb}
   question: >-
     Coloured by the share of each contig's nearest contigs that are in its own MAG. Switch the contig length in the
@@ -73,6 +79,7 @@
     when their composition fits, so they would agree with their MAG largely by construction.
 
 - title: Two strains of one species
+  at: maps
   state: {a: tnf, b: methylation, mark: "2.441", sel: "3.1230", color: cont}
   question: >-
     Ringed: MAG 2.441, highlighted: MAG 3.1230. GTDB places both in Hominiventricola filiformis. Colour shows

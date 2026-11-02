@@ -6,6 +6,7 @@
 #   width in kb (10, 20, 50); q = search text (product, gene symbol or Pfam domain); amr = resistance gene in the table.
 
 - title: How sure is a species name?
+  at: names
   state: {mag: "1.308", map: "1.308"}
   question: >-
     Open: Bacteroides caccae (MAG 1.308), also shown in modules 4, 6 and 8. Find it in the ANI and AF chart and read
@@ -17,6 +18,7 @@
     named from a protein cluster. Bacteroides is well studied, and its proteins find many relatives.
 
 - title: Close, but too little aligned
+  at: names
   state: {mag: "2.255"}
   question: >-
     Open MAG 2.255 (Muricoprocola sp.), one contig of 2.64 Mb. Its closest reference is more than 95% identical. Why
@@ -28,6 +30,7 @@
     show. 755 of its 2,428 CDS (31%) are hypothetical.
 
 - title: Close to many species
+  at: names
   state: {mag: "3.2807", map: "3.2807"}
   question: >-
     Open MAG 3.2807 (Collinsella sp.). Read the warning in its card, its closest reference and its placement
@@ -41,6 +44,7 @@
     hypothetical), so missing a species name does not mean its genes are unknown.
 
 - title: An archaeon in a bacterial annotation tool
+  at: genemap
   state: {mag: "c.14", map: "c.14", q: "MCR_alpha"}
   question: >-
     Open Methanocatella smithii (MAG c.14), the only archaeon, a circular 1.79 Mb genome. What share of its genes is
@@ -55,6 +59,7 @@
     ANI.
 
 - title: A placeholder species
+  at: names
   state: {mag: "c.100", map: "c.100"}
   question: >-
     Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome also shown in module 8. How sure is its name,
@@ -66,6 +71,7 @@
     of 45% hypothetical, those with a Latin name 24% (the chart's first rows).
 
 - title: A name from a distant relative
+  at: genemap
   state: {map: "c.32", mag: "c.32", pos: 244000, q: "flagellin"}
   question: >-
     Open Butyrivibrio_A crossota (MAG c.32), one circular contig, also in modules 5 and 8. The window shows a gene
@@ -77,6 +83,7 @@
     flagellin or whether it is made. Half of all cluster matches in the 421 MAGs are below 62.6% identity.
 
 - title: A resistance gene and its neighbours
+  at: genemap
   state: {mag: "1.717", map: "1.717", q: "Tet(W)"}
   question: >-
     Open Scatosoma sp900552625 (MAG 1.717), also in module 5. Where is its tetracycline resistance gene, how strong
@@ -90,6 +97,7 @@
     46 genes in 42 MAGs.
 
 - title: What module 6's flagged contigs carry
+  at: genemap
   state: {mag: "2.167", map: "2.167", ctg: "u6615594ctg", q: "Elongation factor G"}
   question: >-
     Open Dorea formicigenerans (MAG 2.167). Module 6 flags its two small contigs (178 and 175 kb) because their

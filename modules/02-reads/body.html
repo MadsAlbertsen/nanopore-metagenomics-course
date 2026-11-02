@@ -30,6 +30,7 @@
     <div class="rdpick" id="rdStartPick" role="list"></div>
     <div id="rdStart" class="scroll"></div>
     <p class="note" id="rdStartNote"></p>
+    <div class="exslot" data-at="start"></div>
   </section>
   <section class="panel">
     <h2>Mean quality along the read</h2>
@@ -56,6 +57,7 @@
     <div><h2>Length and quality together</h2><div id="rdHeat"></div><div class="legend"><span id="rdHeatUnit"></span><span class="ramp" id="rdRamp"></span><span>few → many (log)</span></div></div>
   </div>
   <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>kept</span><span><i class="sw" style="background:var(--v4)"></i>removed</span><span>· lines: the cut-offs</span></div>
+  <div class="exslot" data-at="filter"></div>
   <div class="scroll" id="rdTable"></div>
   <p class="note">Sampled: random reads of each sample's full read file. Full run: reads in the file, and reads and bases after the analysis's filter (mean Q 10, 1,000 bp) and after adapter trimming. Read N50: half of all bases are in reads at least this long.</p>
 </section>
@@ -80,4 +82,5 @@
     <div class="scroll rdjlist" id="rdJoinList"></div>
     <div><div id="rdJoin" class="scroll"></div><div id="rdJunction" class="scroll"></div><p class="note" id="rdJoinNote"></p></div>
   </div>
+  <div class="exslot" data-at="join"></div>
 </section>

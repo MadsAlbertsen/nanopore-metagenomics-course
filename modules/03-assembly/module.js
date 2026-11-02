@@ -470,7 +470,6 @@ function drawCircles() {
 }
 
 // ---------- state, examples, start
-const SECTIONS = { repeat: "secRepeat", steps: "secSteps", strains: "secStrains", graphs: "secReal", circles: "secCircles" };
 const clampInt = (v, lo, hi, d) => { const x = parseInt(v, 10); return Number.isFinite(x) ? Math.max(lo, Math.min(hi, x)) : d; };
 function applyState(s) {
   st.rl = clampInt(s.rl, 1, 30, DEF.rl); st.rep = clampInt(s.rep, 1, 10, DEF.rep); st.step = clampInt(s.step, 1, STEPS.length, DEF.step);
@@ -488,8 +487,6 @@ function drawAll() { drawRepeat(); drawSteps(); drawStrains(); drawGraph(); draw
 const examples = setupExamples($("asExamples"), (k) => {
   const s = EXAMPLES[k].state;
   applyState({ ...DEF, ...s }); drawAll(); writeHash();
-  const target = $(SECTIONS[s.go] || "secRepeat");
-  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 for (const id of ["rl", "rep"]) $(id).addEventListener("input", () => { st[id] = +$(id).value; drawRepeat(); writeHash(); });
 for (const id of ["cova", "covb"]) $(id).addEventListener("input", () => { st[id] = +$(id).value; drawStrains(); writeHash(); });

@@ -36,25 +36,47 @@ function writeHashParams(params) {
   try { history.replaceState(null, "", "#?" + p.toString()); } catch (e) {}
 }
 
-// Guided examples: EXAMPLES = [{title, question, answer, state}] from the module's examples.yaml.
+// Guided examples: EXAMPLES = [{title, question, answer, state, at}] from the module's examples.yaml.
 // host: element with .exlist and .exbody; open(k) applies example k (the module redraws itself).
+// An example with `at` shows its question in the body's <div class="exslot" data-at="..."> under the figure it uses;
+// each slot also lists its examples.
 function setupExamples(host, open) {
   if (!EXAMPLES.length) { host.hidden = true; return { draw() {} }; }
   host.hidden = false;
   const ui = { current: -1 };
-  ui.draw = () => {
-    host.querySelector(".exlist").innerHTML = EXAMPLES.map((e, k) => `<button role="listitem" data-ex="${k}" aria-current="${k === ui.current}">${k + 1}. ${esc(e.title)}</button>`).join("");
-    const e = EXAMPLES[ui.current], k = ui.current;
-    host.querySelector(".exbody").innerHTML = e
-      ? `<div class="ex"><h3>${k + 1}. ${esc(e.title)}</h3><p>${esc(e.question)}</p><details><summary>Show answer</summary><p>${esc(e.answer)}</p></details>
-        <div style="display:flex;flex-wrap:wrap;gap:6px 16px">${k > 0 ? `<button class="link" data-ex="${k - 1}">← Previous</button>` : ""}${k < EXAMPLES.length - 1 ? `<button class="link" data-ex="${k + 1}">Next example →</button>` : ""}<button class="link" data-ex="${k}">Reset this example</button></div></div>`
-      : `<p class="note">Each example sets up the page and asks a question; the answer is hidden until you open it. You can change anything afterwards.</p>`;
+  const chip = (k) => `<button role="listitem" data-ex="${k}" aria-current="${k === ui.current}">${k + 1}. ${esc(EXAMPLES[k].title)}</button>`;
+  const card = (k) => {
+    const e = EXAMPLES[k];
+    return `<div class="ex"><h3>Example ${k + 1}. ${esc(e.title)}</h3><p>${esc(e.question)}</p><details><summary>Show answer</summary><p>${esc(e.answer)}</p></details>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 16px">${k > 0 ? `<button class="link" data-ex="${k - 1}">← Previous</button>` : ""}${k < EXAMPLES.length - 1 ? `<button class="link" data-ex="${k + 1}">Next example →</button>` : ""}<button class="link" data-ex="${k}">Reset this example</button></div></div>`;
   };
-  host.addEventListener("click", (ev) => {
+  function onClick(ev) {
+    if (ev.target.closest("[data-go]")) { ui.reveal(); return; }
     const t = ev.target.closest("[data-ex]");
     if (!t) return;
-    ui.current = +t.dataset.ex; ui.draw(); open(ui.current);
-  });
+    ui.current = +t.dataset.ex; ui.draw(); open(ui.current); ui.reveal();
+  }
+  const slots = [...document.querySelectorAll(".exslot[data-at]")];
+  for (const s of slots) s.addEventListener("click", onClick);
+  ui.draw = () => {
+    host.querySelector(".exlist").innerHTML = EXAMPLES.map((e, k) => chip(k)).join("");
+    const e = EXAMPLES[ui.current], k = ui.current;
+    for (const s of slots) {
+      const here = EXAMPLES.map((x, j) => j).filter((j) => EXAMPLES[j].at === s.dataset.at);
+      const open = e?.at === s.dataset.at;
+      s.classList.toggle("open", open);
+      s.innerHTML = `<div class="exhere"><span>Guided examples on this figure:</span><div class="exlist" role="list">${here.map(chip).join("")}</div></div>${open ? card(k) : ""}`;
+    }
+    host.querySelector(".exbody").innerHTML = e && !e.at ? card(k)
+      : e ? `<p class="note">Example ${k + 1} is open under the figure it uses. <button class="link" data-go="1">Go to it ↓</button></p>`
+      : `<p class="note">Each example sets up the page and asks a question under the figure it uses; the answer is hidden until you open it. You can change anything afterwards.</p>`;
+  };
+  ui.reveal = () => {
+    const at = EXAMPLES[ui.current]?.at;
+    const target = at && document.querySelector(`.exslot[data-at="${at}"] .ex`);
+    if (target) target.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  };
+  host.addEventListener("click", onClick);
   ui.draw();
   return ui;
 }

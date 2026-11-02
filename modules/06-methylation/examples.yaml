@@ -7,6 +7,7 @@
 #   both, placed, all; plen = all, short, mid, long.
 
 - title: A clean fingerprint
+  at: fingerprint
   state: {mag: "1.308"}
   question: >-
     Open: Bacteroides caccae (MAG 1.308), 7 contigs at about 66x. Look at the fingerprint: do the contigs carry the
@@ -19,6 +20,7 @@
     is less methylated (a strain mixture gives partial values, for example) the data here does not show.
 
 - title: A contaminant contig
+  at: fingerprint
   state: {mag: "2.167"}
   question: >-
     Open: Dorea formicigenerans (MAG 2.167), high quality, one 2.86 Mb contig and two of about 175 kb. Compare the
@@ -33,6 +35,7 @@
     settled here.
 
 - title: One contig, two parts
+  at: windows
   state: {mag: "2.441", win: u3347900ctg}
   question: >-
     Open: MAG 2.441 (Hominiventricola filiformis) and the per-window table of contig u3347900ctg below the track. The
@@ -46,6 +49,7 @@
     question is a split, not moving the contig, and reads cannot settle it.
 
 - title: A placement the test gets right
+  at: placement
   state: {mag: "2.250", pset: control, pshow: both, contig: u12683734ctg}
   question: >-
     The list shows the known-answer test: binned contigs taken out of their MAG and placed as if unbinned. Open:
@@ -58,6 +62,7 @@
     sharing 2 or more motifs, with both checks passed, is the kind of placement the analysis trusts.
 
 - title: A wrong placement that depth catches
+  at: placement
   state: {mag: "2.569", pset: control, pshow: placed, contig: u14159146ctg}
   question: >-
     Open: u14159146ctg (1.54 Mb), binned in Hominicoprocola fusiformis (MAG 2.569). Methylation alone puts it in
@@ -72,6 +77,7 @@
     one distinct motif is counted, as in the table).
 
 - title: A circular contig with every kind of support
+  at: placement
   state: {mag: c.71, pset: circular, pshow: depth, contig: u24259230ctg}
   question: >-
     The list now shows circular contigs that binning left out, placed with depth support. Open: u24259230ctg (293 kb,
@@ -84,6 +90,7 @@
     about one copy per genome copy; what the element is (plasmid, phage or other) is not shown here.
 
 - title: Methylation fits, depth does not
+  at: placement
   state: {mag: "2.126", pset: circular, pshow: placed, contig: u4270247ctg}
   question: >-
     Open: u4270247ctg (43.5 kb, circular), placed by methylation alone. How many motifs does it share with its MAG,
@@ -97,6 +104,7 @@
     same motifs would give the same picture. Methylation fits; whether it belongs is not settled, so it is not trusted.
 
 - title: Only common motifs
+  at: placement
   state: {mag: "1.308", pset: unbinned, pshow: all, plen: short, contig: u30498981ctg}
   question: >-
     Open: u30498981ctg (11.4 kb), not in a MAG. Which motifs are methylated in it, and why is it not placed?

@@ -9,7 +9,8 @@ Each module is a folder modules/<nn>-<slug>/ with
   module.js     the page's script (uses shared/common.js; DATA and EXAMPLES are set before it runs)
   module.css    optional extra styles
   data.json     optional data, made by the example analysis (see the module's README)
-  examples.yaml optional guided examples: [{title, question, answer, state}]
+  examples.yaml optional guided examples: [{title, question, answer, state, at}]; at = name of a slot in
+                body.html, <div class="exslot" data-at="name"></div>, placed under the figure the example uses
   check.py      optional check(data, examples): raises ValueError if an example names something not in the data
 Planned modules only appear in the navigation and on the index. Also built: glossary.html (shared/glossary.yaml),
 teachers.html (shared/teachers_intro.html plus each module's teacher block: time, before, flow, discussion_points,
@@ -78,8 +79,10 @@ def load_examples(m: dict, data) -> list:
     path = m["dir"] / "examples.yaml"
     examples = yaml.safe_load(path.read_text()) if path.exists() else []
     for ex in examples:
-        if set(ex) != EXAMPLE_KEYS:
-            raise ValueError(f"{path}: '{ex.get('title')}' needs exactly {sorted(EXAMPLE_KEYS)}")
+        if set(ex) - {"at"} != EXAMPLE_KEYS:
+            raise ValueError(f"{path}: '{ex.get('title')}' needs exactly {sorted(EXAMPLE_KEYS)} (and optionally 'at')")
+        if "at" in ex and f'data-at="{ex["at"]}"' not in (m["dir"] / "body.html").read_text():
+            raise ValueError(f"{path}: '{ex['title']}' is placed at slot '{ex['at']}', which is not in body.html")
     check = m["dir"] / "check.py"
     if check.exists():
         spec = importlib.util.spec_from_file_location(f"check_{m['slug']}", check)

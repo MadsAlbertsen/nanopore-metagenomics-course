@@ -30,6 +30,7 @@
   <div class="legend" id="repLegend"></div>
   <p class="result" id="repOut" aria-live="polite"></p>
   <p class="note">Simulated: random read positions with a fixed seed, no sequencing errors, all reads the same length. Real reads vary in length, so a few long reads can span a repeat that most reads do not. Real assemblers also use other clues, such as depth (myloasm does, see below).</p>
+  <div class="exslot" data-at="repeat"></div>
 </section>
 
 <section class="panel" id="secSteps">
@@ -50,6 +51,7 @@
     </div>
   </div>
   <p class="note">Simulated: hand-placed reads without errors, so every overlap is exact. With real reads the overlaps must be found despite errors, which is where most of an assembler's work goes.</p>
+  <div class="exslot" data-at="steps"></div>
 </section>
 
 <section class="panel" id="secStrains">
@@ -70,6 +72,7 @@
   </div>
   <div class="legend" id="strLegend"></div>
   <p class="note">Simulated: one region of 30 kb, every read 5 kb, substitution errors only, single positions compared instead of myloasm's 21-letter words. As in the myloasm paper, a position counts as a variant when the two most common bases are each seen in reads from both DNA strands and the rarer one passes a binomial test against an error rate of 0.025. Not modelled: the paper's strand-bias test (Fisher's exact test; a pair is rejected at odds ratio above 1.5 and p below 0.005), myloasm's base-quality check at variant positions and its relaxed threshold when no exactly matching reads exist, both of which reduce the breaks caused by read errors; and its use of depth to clean the graph.</p>
+  <div class="exslot" data-at="strains"></div>
 </section>
 
 <section class="panel" id="secMyloasm">
@@ -138,6 +141,7 @@
       <div id="gInfo" aria-live="polite"></div>
     </div>
   </div>
+  <div class="exslot" data-at="real"></div>
   <div id="gPairs"></div>
   <div class="scroll"><table class="ct" id="gMags"></table></div>
   <p class="note">From myloasm's final contig graph (final_contig_graph.gfa; sequences not used) and mmlong2's contig and MAG tables. Positions come from a force layout (linked nodes pulled together), so distances mean nothing. Identity and aligned share: minimap2 (asm20) between the final contigs; depth over the days: correlation of the contigs' read depth per gigabase sequenced in each sample (log scale).</p>
@@ -151,6 +155,7 @@
   <div id="cSvg" class="figbox"></div>
   <div class="legend" id="cLegend"></div>
   <p class="note">Every primary contig with a loop in the graph: polished length and myloasm's depth, both on log scales.</p>
+  <div class="exslot" data-at="circles"></div>
 </section>
 
 <section class="panel" id="secSources">
