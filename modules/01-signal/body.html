@@ -60,6 +60,17 @@
   </section>
 </div>
 
+<section class="panel sgwhy">
+  <h2>Why two ways to cut the signal into bases?</h2>
+  <p>The current is one long wiggly line. To say anything about one base, we first have to decide which samples belong to it. The move table is Dorado's own answer, written while it basecalls: it comes with every read, but it can only place a boundary every 6 samples. Remora gives a second answer afterwards, for a sequence we already know (the genome the read aligns to): it moves each boundary until the current fits what ONT's model expects for that sequence. Its boundaries are finer, but they are fitted to the model. This matters for three reasons:</p>
+  <ul>
+    <li><b>Methylation is only visible on the right samples.</b> A methylated base shifts the current by a few pA (about 3 pA at GATC, section 3), less than the spread between single reads. Boundaries one base off compare the wrong stretch of current, and the small shift is lost or lands in the wrong place.</li>
+    <li><b>Fitting to a model makes the model look good.</b> On the move table's boundaries the current follows the model with a median r of 0.725 per read; on Remora's, 0.985. But Remora still reaches 0.750 against a model whose levels were shuffled into nonsense (where the move table gives 0.00), so much of that gain comes from the fitting itself. Whenever a method has been adjusted to what it is tested against, ask for a control like this.</li>
+    <li><b>Some bases have no clear edge in the signal.</b> In a run of one base the expected current hardly changes from base to base (2-6 pA in the run of Ts in stretch 2, against about 20 pA elsewhere), so neither method can tell exactly where one base ends and the next begins.</li>
+  </ul>
+  <p>You will not run Remora in this course: Dorado's methylation calls (module 6) come from models trained with it. The point to take away is that every base and every methylation call is an inference from a signal that several bases shape at once, and some places in a genome are harder to read than others.</p>
+</section>
+
 <section class="panel">
   <h2>3. Seeing methylation</h2>
   <p>Besides the bases, Dorado's modified-base models give, for every A and C of a read, the probability that it carries a methyl group (6mA on A; 5mC and 4mC on C), stored in the read's MM and ML tags (SAM tag specification, samtools hts-specs). Bacteria methylate short sequence motifs (module 6), so a bin's motifs show up as sequences whose A or C is called modified far more often than the rest. A crude search: per bin, every exact sequence of 4-6 bases, ranked by the share of calls at its A (or C) with probability 0.5 or more. The table shows three motifs read from that list, each methylated in one bin only; the list for any bin is below it. A dedicated tool (Nanomotif, module 6) also finds longer and two-part motifs, which this search misses.</p>
