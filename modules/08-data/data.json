@@ -5,10 +5,6 @@
    "name": "Samples and reads"
   },
   {
-   "id": "yours",
-   "name": "Your own libraries"
-  },
-  {
    "id": "assembly",
    "name": "Assembly and contigs"
   },
@@ -79,43 +75,6 @@
     "data/processed/course_data/reads/raw",
     "data/processed/course_data/reads/prepared/reads",
     "data/processed/course_data/reads/raw_vs_assembly.paf.gz"
-   ]
-  },
-  {
-   "topic": "yours",
-   "title": "Read QC of your own libraries",
-   "level": "ready",
-   "what": "For each of the 10 student libraries: reads, bases, read N50, quality, a read length by quality histogram and the bases per hour of the run (42.2 Gbp of pass reads in the ten libraries), with the check that each library holds the right sample and a comparison with our first run of the same DNA.",
-   "unit": "per library",
-   "questions": [
-    "How did our library compare with the other groups' and with the first run of the same DNA?",
-    "Was the yield or the read length set by the sample or by the library prep?"
-   ],
-   "module": null,
-   "files": [
-    "results/student_qc/read_summary.tsv",
-    "results/student_qc/length_quality_hist.tsv.gz",
-    "results/student_qc/time_yield.tsv",
-    "results/student_qc/out/libraries.tsv",
-    "results/student_qc/out/mixup.tsv",
-    "results/student_qc/out/vs_ours.tsv"
-   ]
-  },
-  {
-   "topic": "yours",
-   "title": "The community seen by your library",
-   "level": "ready",
-   "what": "50,000 random reads from each student library mapped to the co-assembly: reads and bases per contig, so each library gives its own MAG abundance profile for its day (barcode01 is day 1, DNA01, and so on).",
-   "unit": "per library and contig",
-   "questions": [
-    "Does a second library of the same DNA give the same MAG abundances, and which MAGs differ most?",
-    "How many reads are needed before rare MAGs show up?"
-   ],
-   "module": null,
-   "files": [
-    "results/student_qc/contig_counts.tsv.gz",
-    "results/student_qc/sampled.tsv",
-    "results/student_qc/out/libraries.tsv"
    ]
   },
   {
@@ -363,9 +322,6 @@
   "raw_sub": 30022,
   "prep_sub": 18070,
   "raw_sub_mapped": 27427,
-  "student_libs": 10,
-  "student_gbp": 42.209089711,
-  "student_sampled": 50000,
   "contigs": 20302,
   "asm_gbp": 1.866613951,
   "circular": 401,

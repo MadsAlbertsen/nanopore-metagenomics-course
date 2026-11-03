@@ -7,7 +7,7 @@ summary: >-
   is out of reach.
 status: draft
 takeaways:
-  - "A good project question names the data it needs: which MAGs, genes, days or libraries, and which table holds them."
+  - "A good project question names the data it needs: which MAGs, genes, days or contigs, and which table holds them."
   - "Most questions can be answered from tables that already exist; new statistics and figures from them take minutes."
   - "Questions that need all the reads again, or data never measured (RNA, metabolites, cell counts), are out of reach
     for the group reports."
