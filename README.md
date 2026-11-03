@@ -13,6 +13,7 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 | 5. MAG quality: how complete, how clean | draft |
 | 6. Methylation: misassemblies, contamination and placing contigs | draft |
 | 7. Annotation: what is in a genome, and how sure are we | draft |
+| 8. Your project: what data we have | draft |
 
 ## The data
 
