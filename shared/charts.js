@@ -117,6 +117,7 @@ function lineChart(host, o) {
       el("line", { x1: x(m.x), x2: x(m.x), y1: box.t, y2: box.b, class: "mark" }, svg);
       if (m.label) el("text", { x: x(m.x) + 4, y: box.t + 10, class: "note" }, svg).textContent = m.label;
     }
+    const ends = [];
     o.series.forEach((s, i) => {
       const color = s.color || catColor(i), dim = o.highlight && o.highlight !== s.name;
       const pts = o.x.map((xv, j) => [xv, s.values[j]]).filter(([, v]) => v !== null && v !== undefined && (!o.logY || v > 0));
@@ -125,9 +126,15 @@ function lineChart(host, o) {
       for (const [xv, v] of pts) el("circle", { cx: x(xv), cy: y(v), r: dim ? 2 : 3, style: `fill:${color}`, opacity: dim ? 0.35 : 1 }, svg);
       if (right > 16 && pts.length) {
         const [xl, vl] = pts[pts.length - 1];
-        el("text", { x: x(xl) + 8, y: y(vl) + 4, class: "dlab", style: `fill:${color}` }, svg).textContent = s.name.length > 16 ? s.name.slice(0, 15) + "…" : s.name;
+        ends.push({ x: x(xl) + 8, y: y(vl) + 4, color, name: s.name.length > 16 ? s.name.slice(0, 15) + "…" : s.name });
       }
     });
+    // end labels: keep at least 13 px apart (lines ending at nearly the same value), inside the plot height
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) ends[i].y = Math.max(ends[i].y, ends[i - 1].y + 13);
+    const over = ends.length ? ends[ends.length - 1].y - (box.b + 4) : 0;
+    if (over > 0) ends.forEach((e) => (e.y -= over));
+    for (const e of ends) el("text", { x: e.x, y: e.y, class: "dlab", style: `fill:${e.color}` }, svg).textContent = e.name;
     // hover: the nearest x shows every series' value there
     const hit = el("rect", { x: box.l, y: box.t, width: box.r - box.l, height: box.b - box.t, fill: "transparent" }, svg);
     const cross = el("line", { y1: box.t, y2: box.b, class: "cross", visibility: "hidden" }, svg);
