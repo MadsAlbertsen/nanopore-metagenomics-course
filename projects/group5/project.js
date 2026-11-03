@@ -37,15 +37,17 @@ const CZ = {
   mixed_other: { c: "var(--c5)", t: "Degrading: mixed or other substrate" },
 };
 const ROLE_C = {
+  named_enzyme: { c: "var(--v0)", t: "Part of a sugar-cleaving enzyme (by name only)" },
   gt: { c: "var(--c7)", t: "Builds or binds sugar chains (GT, or CBM only)" },
   transport: { c: "var(--c6)", t: "Sugar uptake (transporter part)" },
-  shunt: { c: "var(--ink)", t: "Bifid shunt and galactose use" },
+  shunt: { c: "var(--ink)", t: "Bifid shunt and sugar conversion" },
 };
-const roleColorKey = { gt: "gt", cbm: "gt", transport: "transport", shunt: "shunt", leloir: "shunt" };
+const roleColorKey = { gt: "gt", cbm: "gt", named_enzyme: "named_enzyme", transport: "transport", shunt: "shunt", conversion: "shunt" };
 const ROLE_LABEL = Object.fromEntries(MAP.roles.map((k, i) => [k, MAP.role_labels[i]]));
+const ROLE_SHORT = Object.fromEntries(MAP.roles.map((k, i) => [k, MAP.role_short[i]]));
 const CAT_LABEL = { starch: "Starch", fructan: "Fructan", plant_fibre: "Plant fibre", host_glycan: "Host glycan", mixed: "Mixed", other: "Other" };
 const EV_LABEL = { cluster: "named cluster", blast_rule: "BlastRules", pfam_only: "Pfam domain only", cluster_unnamed: "unnamed cluster", none: "no match", rna: "RNA gene", amr_protein: "AMR protein", amr_family: "AMR family", is_element: "IS name" };
-const DEFAULTS = { reads: true, rel: false, log: false, color: "carb", labels: true, q: "", role: "", group: D.groups[0].key, unit: "genes" };
+const DEFAULTS = { reads: false, rel: false, log: false, color: "carb", labels: true, q: "", role: "", group: D.groups[0].key, unit: "genes" };
 const st = { ...DEFAULTS };
 // Table 3 rows as objects; lookup of a gene's carbohydrate row by its position
 const CARB = D.carb.data.map((row) => Object.fromEntries(D.carb.columns.map((c, i) => [c, row[i]])));
@@ -64,14 +66,44 @@ function stats() {
 
 // --- Output 1: Figure 1
 function drawLine() {
-  const series = [{ name: short(FOCUS), values: FOCUS.share, color: "var(--c1)" }];
-  if (st.reads) series.push({ name: "reads (sample)", values: D.samples.map((s) => s.read_pct), color: "var(--c2)" });
+  // read share (few reads per day) as points with 95% intervals, not as a line; hidden on the log axis, where its
+  // zero days cannot be drawn. The chart kit draws lines, so its read line is hidden and the intervals are added here.
+  const reads = st.reads && !st.log;
+  const series = [{ name: "share of bases", values: FOCUS.share, color: "var(--c1)" }];
+  if (reads) series.push({ name: "share of reads", values: D.samples.map((s) => s.read_pct), color: "var(--c2)" });
   if (st.rel) D.mags.slice(1).forEach((m, i) => series.push({ name: short(m), values: m.share, color: i ? "var(--c4)" : "var(--c3)" }));
+  const hi = reads ? Math.max(...D.samples.map((s) => s.read_hi)) : null;
   lineChart($("g5Line"), {
     x: D.days, series, xLabel: "Day", xName: "Day",
-    yLabel: "Relative abundance (%)", unit: "%", logY: st.log, zero: !st.log,
+    yLabel: "Relative abundance (%)", unit: "%", logY: st.log, zero: !st.log, ...(reads ? { yRange: [0, Math.ceil(hi * 10) / 10] } : {}),
     bands: [{ from: 0.6, to: 5.5, label: "high carbohydrate" }], marks: [{ x: 5.5, label: "diet switch" }],
   });
+  if (reads) readIntervals();
+}
+function readIntervals() {
+  const svg = $("g5Line").querySelector("svg");
+  if (!svg) return;
+  const dots = (c) => [...svg.querySelectorAll("circle")].filter((e) => (e.getAttribute("style") || "").includes(c));
+  const base = dots("var(--c1)"), rd = dots("var(--c2)");
+  svg.querySelectorAll("path").forEach((p) => { if ((p.getAttribute("style") || "").includes("stroke:var(--c2)")) p.style.display = "none"; });
+  if (base.length !== D.days.length || rd.length !== D.days.length) return;
+  // y position of a value, from two base points with different values (linear axis)
+  const v = FOCUS.share, i0 = v.indexOf(Math.min(...v)), i1 = v.indexOf(Math.max(...v));
+  const y0 = +base[i0].getAttribute("cy"), y1 = +base[i1].getAttribute("cy"), k = (y1 - y0) / (v[i1] - v[i0]);
+  const y = (val) => y0 + (val - v[i0]) * k;
+  D.samples.forEach((s, j) => {
+    const x = +rd[j].getAttribute("cx") + 4;
+    rd[j].setAttribute("cx", x);
+    const ln = el("line", { x1: x, x2: x, y1: y(s.read_lo), y2: y(s.read_hi), style: "stroke:var(--c2)", "stroke-width": 1.5, opacity: 0.7 }, svg);
+    tipOn(ln, `<b>Day ${s.day}</b><br>share of reads ${s.read_pct}% (${s.mag_reads} of ${num(s.reads)} reads)<br>95% interval ${s.read_lo}-${s.read_hi}%`);
+  });
+}
+{
+  // the chart kit redraws on resize and colour-scheme change; add the intervals again after it
+  let t;
+  const again = () => { clearTimeout(t); t = setTimeout(() => { if (st.reads && !st.log) readIntervals(); }, 300); };
+  addEventListener("resize", again);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", again);
 }
 
 // --- Output 2: Tables 1 and 2
@@ -135,7 +167,10 @@ function mapLabels() {
     const r = geneRole(g);
     if (r === "degrading") out.push({ pos: (g[0] + g[1]) / 2, t: geneFam(g).split(" + ").find((f) => /^(GH|PL|CE)/.test(f)), g });
     else if (r === "shunt") out.push({ pos: (g[0] + g[1]) / 2, t: (geneProd(g).match(/(phosphoketolase|transaldolase|transketolase)/i) || [geneProd(g)])[0].toLowerCase(), g });
-    else if (r === "leloir") leloir.push(g);
+    else if (r === "conversion") {
+      const m = geneProd(g).match(/(xylose isomerase|arabinose isomerase)/i);
+      if (m) out.push({ pos: (g[0] + g[1]) / 2, t: m[0].toLowerCase(), g }); else leloir.push(g);
+    }
   }
   if (leloir.length) out.push({ pos: leloir.reduce((s, g) => s + (g[0] + g[1]) / 2, 0) / leloir.length, t: "galactose genes", g: leloir[0] });
   return out.sort((a, b) => a.pos - b.pos);
@@ -202,12 +237,14 @@ function drawMap() {
     }
     for (const [a, b] of MAP.crispr) {
       const t = ang((a + b) / 2), c = Math.cos(t), s = Math.sin(t);
-      const m = el("line", { x1: cx + (R - 34) * c, y1: cy + (R - 34) * s, x2: cx + (R - 44) * c, y2: cy + (R - 44) * s, style: "stroke:var(--c2)", "stroke-width": 2.5 }, svg);
+      const px = cx + (R - 40) * c, py = cy + (R - 40) * s;
+      const m = el("path", { d: `M${px},${py - 5}L${px + 4},${py}L${px},${py + 5}L${px - 4},${py}Z`, fill: "none", style: "stroke:var(--muted)", "stroke-width": 1.5 }, svg);
       tipOn(m, `<b>CRISPR array</b><br>position ${num(a)}-${num(b)}`);
     }
     for (const o of MAP.ori) {
       const t = ang(o), c = Math.cos(t), s = Math.sin(t);
-      const m = el("line", { x1: cx + (R - 34) * c, y1: cy + (R - 34) * s, x2: cx + (R - 50) * c, y2: cy + (R - 50) * s, style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
+      const px = cx + (R - 42) * c, py = cy + (R - 42) * s;
+      const m = el("path", { d: `M${px},${py - 6}L${px + 5.5},${py + 4}L${px - 5.5},${py + 4}Z`, fill: "none", style: "stroke:var(--muted)", "stroke-width": 1.5 }, svg);
       tipOn(m, `<b>Start of replication (oriC)</b><br>position ${num(o)}`);
     }
     const lines = [[short(FOCUS), "lab"], [`${FOCUS.id} · ${fmtBp(L)}`, ""], [`${num(N.cds)} protein-coding genes`, ""], [`${N.carb_total} carbohydrate genes`, ""]];
@@ -220,7 +257,8 @@ function drawLegend() {
   const items = st.color === "carb" ? [...Object.values(CZ), ...Object.values(ROLE_C)].map((v) => ({ name: v.t, color: v.c })).concat([{ name: "Other gene", color: "var(--v4)" }])
     : Object.entries(EV).filter(([k]) => MAP.genes.some((g) => MAP.evidence[g[5]] === k)).map(([, v]) => ({ name: v.t, color: v.c }));
   $("g5Legend").innerHTML = items.map((it) => `<span><i class="sw" style="background:${it.color}"></i>${esc(it.name)}</span>`).join("") +
-    `<span><i class="sw" style="background:var(--c2)"></i>CRISPR array (inner tick)</span>`;
+    `<span><svg width="12" height="12" style="vertical-align:-1px;margin-right:4px"><path d="M6,1L10,6L6,11L2,6Z" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/></svg>CRISPR array</span>` +
+    `<span><svg width="12" height="12" style="vertical-align:-1px;margin-right:4px"><path d="M6,1L11,10L1,10Z" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/></svg>Start of replication</span>`;
 }
 function drawHits(hits) {
   const box = $("g5Hits");
@@ -232,10 +270,10 @@ function drawHits(hits) {
 }
 function drawCarb() {
   $("g5Role").value = st.role;
-  const rows = CARB.filter((c) => !st.role || c.role === st.role).map((c) => ({ ...c, roleL: ROLE_LABEL[c.role], catL: CAT_LABEL[c.category] || "", evL: EV_LABEL[c.evidence] || c.evidence }));
+  const rows = CARB.filter((c) => !st.role || c.role === st.role).map((c) => ({ ...c, roleL: ROLE_SHORT[c.role], catL: CAT_LABEL[c.category] || "", evL: EV_LABEL[c.evidence] || c.evidence }));
   table($("g5Carb"), {
     columns: [
-      { key: "start", label: "Start (bp)", num: true, fmt: num }, { key: "strand", label: "Strand" }, { key: "gene", label: "Gene" },
+      { key: "start", label: "Start (bp)", num: true, fmt: num }, { key: "gene", label: "Gene" },
       { key: "product", label: "Product (Bakta)" }, { key: "roleL", label: "Role" }, { key: "family", label: "CAZy family" },
       { key: "catL", label: "Substrate category" }, { key: "substrates", label: "Substrates dbCAN lists for the family" },
       { key: "evL", label: "Evidence" }, { key: "identity", label: "Identity (%)", num: true, fmt: (v) => (v === null ? "" : String(v)) },
@@ -286,11 +324,11 @@ function drawAll() {
   drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups();
 }
 function write() {
-  writeHashParams({ reads: st.reads ? "" : 0, rel: st.rel ? 1 : "", log: st.log ? 1 : "", color: st.color !== DEFAULTS.color ? st.color : "", lab: st.labels ? "" : 0, q: st.q, role: st.role, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" });
+  writeHashParams({ reads: st.reads ? 1 : "", rel: st.rel ? 1 : "", log: st.log ? 1 : "", color: st.color !== DEFAULTS.color ? st.color : "", lab: st.labels ? "" : 0, q: st.q, role: st.role, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" });
 }
 const applyState = (s) => {
   Object.assign(st, DEFAULTS);
-  if (s.reads === "0") st.reads = false;
+  if (s.reads === "1") st.reads = true;
   if (s.rel === "1") st.rel = true;
   if (s.log === "1") st.log = true;
   if (s.color === "evidence") st.color = "evidence";

@@ -11,3 +11,5 @@
 .g5refs { margin: 0; padding-left: 22px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px }
 .g5refs a { color: var(--accent) }
 .pjctl label { max-width: 100%; min-width: 0 } .pjctl select { max-width: 100%; min-width: 0 }
+#g5Carb td:nth-child(3), #g5Carb td:nth-child(7) { white-space: normal; min-width: 170px }
+#g5Carb td:nth-child(7) { font-size: 12px }
