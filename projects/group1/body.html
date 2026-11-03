@@ -1,0 +1,94 @@
+<div class="intro">
+  <span class="kicker">Group 1 · draft report</span>
+  <h1>Does the gut community answer the diet switch with a delay?</h1>
+  <p class="note">One person, ten daily stool samples. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. This page describes what happened in this one person; it does not test or generalise.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group asked whether the gut community answers a change of diet straight away or with a delay, whether day 1 and day 10 are the most alike pair of days, and how much strain diversity the abundant MAGs carry.</p>
+  <p>Information from the data owner changes how day 1 should be read: both diet periods were vegetarian, the subject had eaten a similar high-calorie diet for about a week before day 1, and the days 6-10 diet was closer to the subject's normal diet. So the diet did not change at day 1, and no switch is expected there; the main change in the study is the switch at day 6.</p>
+  <p>This report therefore asks three narrower questions. (1) How different is every pair of days, and where does the day 1 vs day 10 pair rank? (2) On which day after the switch at day 6 does the community, and each MAG that changes most, move to its new level? (3) Which MAGs present on every day carry many variable positions, a sign of a strain mixture? Strain diversity per day is out of reach here (see the last section).</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>The MAG abundance on each day (<a href="binning.html">module 4</a>; card "MAG abundance on each day" in <a href="data.html">module 8</a>): one row per MAG and day, as the percent of the sample's bases that map to the MAG. The <span data-n="mags"></span> MAGs together hold <span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>% of each sample's bases; the rest is in contigs outside MAGs and is left out. A share of the DNA is not a cell count.</p>
+  <p>Variable positions per MAG (<a href="mag-quality.html">module 5</a>, "microdiversity"; card "Sequence variants within MAGs" in module 8): the share of a MAG's positions where the reads show a second base (at least 6 reads, the other base in at least 3 reads and 10% of them). The reads of all ten days are pooled, so this is one value per MAG, not one per day. Depth is the mean number of pooled reads covering a position (x).</p>
+  <p>The diet periods come from the sample sheet; the diet before day 1 from information from the data owner.</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p>Differences between days use the Bray-Curtis dissimilarity on the MAG shares: 0 means the same composition, 1 means no MAG in common. Each sample is first scaled so its MAG shares add up to one. For the timing, each day is compared with day 1, with the mean composition of days 2-5 and with the mean of days 8-10 (the end state), and each day with the day before.</p>
+  <p>For single MAGs, we took the <span data-n="nChange"></span> MAGs with a mean share of at least <span data-n="minPct"></span>% and a log2 change of at least 1 (up) or at most -1 (down) in the MAG table. That table adds <span data-n="pseudo"></span>% to both period means before the log2, so MAGs near zero do not give infinite changes; on the raw means the rule would give <span data-n="nRawChange"></span> MAGs. For each, the midpoint between its two period means splits "old level" from "new level"; the settled day is the first day from which the MAG stays on the new side up to day 10.</p>
+  <p>Core MAGs are the MAGs at <span data-n="minPct"></span>% of the bases or more on all ten days. Before the analysis we wrote down a rule (in the analysis script): a core MAG with variable positions at <span data-n="mixPct"></span>% of its positions or more is a likely strain mixture. We expected the change one to two days after the switch, day 1 vs day 10 not to be the most similar pair, and more variants in deeper MAGs.</p>
+  <p>Checks that the method works (positive controls): the Bray-Curtis values reproduce the table of the course's overview analysis for all <span data-n="pairs"></span> pairs; the mean within days 1-5 (<span data-n="within1"></span>), within days 6-10 (<span data-n="within2"></span>) and between the periods (<span data-n="between"></span>) are the known values; the count of changing MAGs (<span data-n="nDown"></span> down, <span data-n="nUp"></span> up) matches the earlier analysis; variable positions recomputed from the contig table match the MAG table.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. How different is each pair of days?</h3>
+  <div id="pjHeat"></div>
+  <p class="cap"><b>What it shows.</b> Bray-Curtis dissimilarity between the MAG compositions of every pair of days (0 = the same, 1 = nothing shared); brighter yellow is more different. The diagonal (a day with itself) is left empty. Days 1-6 form one block of similar days, days 8-10 a second one; day 7 is close to day 1, day 6 and day 8 alike. Days 8-10 differ from days 1-5 most. Day 1 vs day 10 is <span data-n="bc110"></span>, rank <span data-n="rank110"></span> of <span data-n="pairs"></span> pairs (1 = most similar). Hover over a cell for its value.</p>
+  <div class="exslot" data-at="heat"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 2. On which day does the community move?</h3>
+  <p class="note"><b>A.</b> Bray-Curtis dissimilarity of each day to day 1, to the mean of days 2-5 and to the mean of days 8-10.</p>
+  <div id="pjTiming"></div>
+  <p class="note"><b>B.</b> Bray-Curtis dissimilarity of each day to the day before.</p>
+  <div id="pjSteps"></div>
+  <p class="note"><b>C.</b> Share of the sample's bases on MAGs of each phylum (percent of all bases, including those outside MAGs).</p>
+  <div id="pjPhyla"></div>
+  <p class="cap"><b>What it shows.</b> The dashed line marks the switch between day 5 and day 6. In A, a day close to a reference has a low value; days 2-5 and 8-10 are part of their own reference mean, so their distance to it is lower by construction. Day 1 is as close to the mean of days 2-5 (<span data-n="early1"></span>) as day 6 is (<span data-n="early6"></span>): day 1 is not an outlier, as expected when the diet before day 1 was similar. The distance to the end state falls from <span data-n="late6"></span> on day 6 to <span data-n="late7"></span> on day 7, while the distance to day 1 jumps only on day 8 (<span data-n="d1to8"></span>). In B, the largest step (day <span data-n="bigStep"></span>) is inside the first period. In C, Bacteroidota are highest on days 6-7 (<span data-n="bactPeak"></span>%), then go down to <span data-n="bactDay10"></span>% by day 10.</p>
+  <div class="exslot" data-at="timing"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 3. When does each changing MAG reach its new level?</h3>
+  <label class="note">MAG <select id="pjMag" aria-label="MAG to show"></select></label>
+  <div id="pjMagLine"></div>
+  <p class="note">Number of changing MAGs by their settled day (the first day from which they stay on the new side of their midpoint).</p>
+  <div id="pjSettle"></div>
+  <p class="cap"><b>What it shows.</b> Top: the share of the chosen MAG on each day (percent of the sample's bases) and the midpoint between its mean on days 1-5 and on days 6-10 (flat line). Bottom: the <span data-n="nChange"></span> changing MAGs (log2 change of at least 1 either way, see Approach), by the day they settle at the new level, rising and falling MAGs apart. <span data-n="nSettleBefore6"></span> settles before the switch, on day <span data-n="settleBefore6Days"></span>; <span data-n="nSettle6"></span> settle on day 6, <span data-n="nSettle78"></span> on day 7 or 8 and <span data-n="nSettle9plus"></span> on day 9 or 10 (median day <span data-n="settleMedian"></span>). With five days per period, the period means include the days being judged, so one odd day can shift a settled day; the MAG that settles on day 5 is an example.</p>
+  <div class="exslot" data-at="movers"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 4. Variable positions in the MAGs</h3>
+  <label class="note">x axis <select id="pjX" aria-label="x axis"><option value="depth">Depth (pooled reads, x)</option><option value="share">Mean share over ten days (%)</option></select></label>
+  <div id="pjScatter"></div>
+  <p class="cap"><b>What it shows.</b> One point per MAG: variable positions as percent of the MAG's positions (log scale) against pooled depth or mean share (log scale). Orange: the <span data-n="nCore"></span> core MAGs, present at <span data-n="minPct"></span>% or more on all ten days. <span data-n="nVarZero"></span> MAGs without any variable position cannot be drawn on a log scale; the MAG table gives the values to three decimals, so the lowest points line up in rows. The median core MAG has <span data-n="coreMedianVar"></span>%; none reaches the <span data-n="mixPct"></span>% rule, and only <span data-n="nVarAbove05"></span> of all MAGs do. Deeper MAGs have fewer variable positions, not more (rank correlation <span data-n="rhoDepthAll"></span>).</p>
+  <div class="exslot" data-at="core"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Table 1. The core MAGs</h3>
+  <div id="pjTable"></div>
+  <p class="cap"><b>What it shows.</b> The <span data-n="nCore"></span> MAGs present at <span data-n="minPct"></span>% of the bases or more on all ten days: mean and lowest share (percent of the sample's bases), pooled depth, variable positions (percent of positions) and the log2 change from the days 1-5 mean to the days 6-10 mean (1 = doubled). Click a column to sort; type to filter.</p>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p>In this person, the community as a whole moved over days 7-8: day 6 still looks like days 1-5, day 7 lies between the two states, and from day 8 on the samples are clearly different (Figures 1 and 2). Many single MAGs shift on day 6 itself: <span data-n="nSettle6"></span> of <span data-n="nChange"></span> changing MAGs settle at their new level on day 6, and <span data-n="nNewDay6"></span> are on the new side on day 6. The step from day 5 to day 6 is no larger than the other day-to-day steps, and the largest step (day <span data-n="bigStep"></span>) comes before the switch. One person, one switch: the timing is described, not tested. A delay of the whole community could come from the time food takes through the gut, from the time the community takes to change, or both; these data cannot tell them apart.</p>
+  <p>Day 1 and day 10 are among the most different pairs. Given that the subject had eaten a similar high-calorie diet for about a week before day 1, day 1 is not a sample of the normal diet, so there was no reason to expect it to match day 10; the data agree.</p>
+  <p>The strongest result is the block structure of Figure 1, which rests on all MAGs at once. The weakest is the settled day of single MAGs, which can move with one unusual day. The variable positions do not point to any core MAG as a strain mixture. Two strains of one species may also end up as two separate MAGs (as may be the case for the two <i>Prevotella copri_B</i> MAGs, at <span data-n="copriVar"></span>%), and then each looks clean. Shares are of DNA, not cells.</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <ul>
+    <li><b>Strain diversity per day.</b> Whether strain diversity changes around the switch needs each day's reads mapped on their own and a per-sample strain tool (for example inStrain, which also gives popANI between days). That is a server job of some hours, not something for this laptop analysis. Which MAGs should it focus on?</li>
+    <li><b>Two strains or one genome?</b> The two <i>Prevotella copri_B</i> MAGs keep a fixed ratio over the ten days. Mapping both to one reference, or comparing their genes, could tell whether they are two strains or one genome split in two.</li>
+    <li><b>Day 4 and day 5.</b> The largest day-to-day step is inside the first diet period. Is this day-to-day variation of stool, or something in the samples? A second sample of the same day would show how large sampling noise is.</li>
+    <li><b>A longer series.</b> With one switch in one person the timing cannot be tested. More days after the switch, or a switch back, would show whether the new state is stable.</li>
+  </ul>
+</section>

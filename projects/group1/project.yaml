@@ -1,0 +1,21 @@
+number: 1
+slug: project-group1
+title: "Does the gut community answer the diet switch with a delay?"
+nav: "Group 1: timing and strains"
+question: >-
+  After the switch from a high-carbohydrate, high-calorie diet (days 1-5) to a low-carbohydrate, low-calorie diet
+  (days 6-10), on which day does the community change, and are day 1 and day 10 the most alike? And which of the MAGs
+  present on every day look like mixtures of strains?
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Shares are percent of a sample's bases on a MAG (a share of the DNA, not a cell count). Variable positions come from
+  the reads of all ten days pooled.
+takeaways:
+  - "The community as a whole moves over days 7-8, while many single MAGs shift on day 6 itself; one person and one switch, so this is described, not tested."
+  - "Day 1 and day 10 are among the most different pairs of days, not the most alike."
+  - "None of the MAGs present on every day stands out as a strain mixture by its share of variable positions; telling strains apart day by day needs each day's reads mapped on their own."
+discussion: >-
+  Many single MAGs shift on the first day of the new diet, the community as a whole a day or two later. Is that the
+  time food takes through the gut, the time a community takes to change, or day-to-day noise? What measurement could
+  tell these apart?
