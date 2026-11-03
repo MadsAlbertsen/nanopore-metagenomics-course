@@ -171,6 +171,11 @@ def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
     )
 
 
+def place_closing(body: str, block: str) -> str:
+    """Key findings where the body has <!--KEY-FINDINGS--> (reports: right after the Summary), else at the end."""
+    return body.replace("<!--KEY-FINDINGS-->", block, 1) if "<!--KEY-FINDINGS-->" in body else body + block
+
+
 def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
     """One group report: the module page template plus the shared chart kit (shared/charts.js, charts.css)."""
     d = p["dir"]
@@ -185,7 +190,7 @@ def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
             "TITLE": f"Group {p['number']}: {p['title']}",
             "NAV": nav(mods, "projects"),
             "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
-            "BODY": (d / "body.html").read_text() + closing(p, "Key findings"),
+            "BODY": place_closing((d / "body.html").read_text(), closing(p, "Key findings")),
             "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + (d / "project.js").read_text(),
             "DATA": script_json(data),
             "EXAMPLES": script_json(examples),
