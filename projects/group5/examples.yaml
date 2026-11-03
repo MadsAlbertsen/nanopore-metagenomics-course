@@ -1,0 +1,30 @@
+- title: "A fall, or day-to-day noise?"
+  at: line
+  question: "With B. angulatum emphasised, compare the mean of each diet period with the range of single days within each period. Is the fall larger than the spread within a period?"
+  answer: "The mean falls from {mean_high}% of the bases on days 1-5 to {mean_low}% on days 6-10 (log2 change {log2}, about half). But within days 1-5 alone the single days run from {high_min}% to {high_max}% ({high_fold}-fold), and within days 6-10 from {low_min}% to {low_max}%. The highest day is day {peak_day}, just before the switch, and day 6 is still {day6}%. Only days {low_days_below_high_list} are below every day of the first period. So the share is lower at the end, but the spread between days is larger than the change between the period means."
+  state: {highlight: "c.101", log: false}
+- title: "Do the relatives do the same?"
+  at: line
+  question: "Emphasise B. adolescentis (c.62) (the chart is on a log scale). Do the other two Bifidobacterium MAGs change in the same direction, and when do they peak?"
+  answer: "Both fall too, but less: B. adolescentis from {c62_mean_high}% to {c62_mean_low}% (log2 {c62_log2}) and B. longum from {c16_mean_high}% to {c16_mean_low}% (log2 {c16_log2}), against log2 {log2} for B. angulatum. B. adolescentis peaks on day {c62_peak_day} and B. longum on day {c16_peak_day}; B. angulatum peaks on day {peak_day}. All three peak on day 5 or 6, around the switch, and drop on day 7; B. adolescentis rises again on days 9-10."
+  state: {highlight: "c.62", log: true}
+- title: "Where are the carbohydrate enzymes?"
+  at: map
+  question: "Colour the gene map by CAZyme class. How many genes carry a CAZyme domain, how many of them break carbohydrates down, and which substrate has the most?"
+  answer: "{cazy_genes} of the genes carry a CAZyme domain: {deg_genes} degrading enzymes (glycoside hydrolases, lyases, esterases), {gt_genes} glycosyltransferases, which build sugar chains rather than break them down, and {cbm_only_genes} with only a carbohydrate-binding module. Starch has {cat_starch} degrading genes and plant fibre {cat_plant_fibre}; {cat_mixed} act on mixed substrates. Hover the coloured blocks to see where each one sits on the chromosome."
+  state: {color: "cazy"}
+- title: "Find the bile salt hydrolase/transferase"
+  at: map
+  question: "Search the map for 'bile salt'. Bakta names the gene \"Bile salt hydrolase/transferase\". Where is it, and how strong is the evidence for its name?"
+  answer: "One gene matches, at position {bsh_start} on the chromosome. Bakta named it from a protein cluster match at {bsh_id}% identity to the cluster's representative (Figure 4 shows that the other two Bifidobacterium MAGs carry one too). The name is a prediction from sequence, not a measured activity."
+  state: {q: "bile salt"}
+- title: "Starch enzymes against the community"
+  at: cazy
+  question: "Which family has the most genes in B. angulatum, and how does it compare with the median MAG and with B. adolescentis? Then switch to genes per 1,000 genes."
+  answer: "{top_family} (starch-degrading enzymes) with {top_family_genes} genes, against {top_family_median} in the median MAG and {top_family_c62} in B. adolescentis; {GH13_share}% of all MAGs carry the family. In all, B. angulatum has {deg_c101} degrading CAZyme genes, the median MAG {deg_median}. Per 1,000 genes that is {deg_per1000} against a median of {deg_per1000_median}: the genome is small, so these enzymes take up a larger part of it. B. longum has more plant-fibre enzymes (GH43: {GH43_c16} genes, against {GH43_c101} in B. angulatum)."
+  state: {unit: "genes"}
+- title: "A defence system"
+  at: genes
+  question: "Show the CRISPR-Cas genes of B. angulatum. How many are there, and do the other two MAGs have them?"
+  answer: "B. angulatum has {grp_crispr_c101} CRISPR-associated genes in one block (a type I-E system by their names), and the map shows {crispr_arrays} CRISPR arrays. B. adolescentis has {grp_crispr_c62} and B. longum {grp_crispr_c16} such genes. As general background, CRISPR arrays store short pieces (spacers) of phage and plasmid DNA the cell has met; these {grp_crispr_c101} Cas proteins match their clusters at {grp_crispr_idmin}-{grp_crispr_idmax}% identity."
+  state: {group: "crispr"}

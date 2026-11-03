@@ -1,0 +1,5 @@
+.g2two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; align-items: start }
+@media (max-width: 760px) { .g2two { grid-template-columns: 1fr } }
+.g2sum { font-size: 13px; margin: 8px 0 }
+#g2F1Tabs { margin-bottom: 8px }
+.fig .spctl { margin-bottom: 4px }
