@@ -5,6 +5,11 @@ its sections and their order.
 
 ## Report structure (version 2, 2026-11-03: research reports, not exercises)
 
+A group's own requested structure or outputs (from its draft) take precedence over this default (version 3,
+2026-11-03); keep the content standards below. An extra page per report (e.g. a separate methods document) is a
+`pages:` list in project.yaml (`slug`, `title`, `body`, optional `js`); it gets the report's data.json, CSS and
+chart kit, and is built and zipped but not listed on projects.html.
+
 The reports read like short research reports that the groups build on, not like course pages with questions for the
 reader. Sections, in this order (`<section class="panel">` each; figures as before):
 
