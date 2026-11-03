@@ -1,0 +1,40 @@
+- title: "Two phyla, two timings"
+  at: phyla
+  question: "Show the phylum shares. Do Bacteroidota and Cyanobacteriota change at the diet switch (between day 5 and day 6), or later?"
+  answer: "They differ. Bacteroidota jumps at the switch, from {bact_d5}% on day 5 to {bact_d6}% on day 6; days 6 and 7 ({bact_d6}% and {bact_d7}%) lie above every day of days 1-5 (at most {bact_high_max}%). It falls only from day 9, to {bact_d9}% and then {bact_d10}% on day 10. Cyanobacteriota (one MAG, Zag111) climbs late: {cyano_high}% in days 1-5, {cyano_d6}% on day 6 and {cyano_d7}% on day 7, then {cyano_d8}%, {cyano_d9}% and {cyano_d10}% on days 8-10."
+  state: {fig1: phyla}
+- title: "Did diversity change?"
+  at: phyla
+  question: "Switch to Diversity. Is the community more or less diverse in the low-carbohydrate period?"
+  answer: "Neither: the Shannon index is {shannon_high:2} in days 1-5 and {shannon_low:2} in days 6-10, about {eff_high} effective MAGs in both periods. MAGs replaced each other, but the evenness of the community stayed the same. Only binned bases are counted, and only MAGs with a mean of at least 0.1%; with all {mags} MAGs the index is {shannon_all_high:2} and {shannon_all_low:2}, again the same."
+  state: {fig1: diversity}
+- title: "The first day that looks different"
+  at: bc
+  question: "In the heatmap, read each low-carbohydrate day's Bray-Curtis to days 1-5. Which is the first day that is further from days 1-5 than those days are from each other?"
+  answer: "Day 7. Day 6 differs from days 1-5 by {bc6:2} on average, inside the range of days 1-5 among themselves (each at most {bc_first_max:2} from the other four). Day 7 is at {bc7:2}, and days 8, 9 and 10 at {bc8:2}, {bc9:2} and {bc10:2}. On the map, days 8-10 lie apart on axis 1, which holds {pc1}% of the variation."
+  state: {}
+- title: "A faller that drops a day late"
+  at: mag
+  question: "Agathobacter rectalis (c.40) is shown. Does it fall at the diet switch, and does a step or a straight line describe it better?"
+  answer: "It falls from {m:c.40:high}% in days 1-5 to {m:c.40:low}% in days 6-10 (log2 change {m:c.40:log2}). Its best split is {m:c.40:best} (R² {m:c.40:r2_best}), not the switch (R² {m:c.40:r2_switch}); a straight line gives {m:c.40:r2_line}. {m:c.40:sep} of the five low-carbohydrate days are below all five high-carbohydrate days: day 6 still looks like days 1-5."
+  state: {mag: c.40, big: true}
+- title: "The largest riser: step or trend?"
+  at: mag
+  question: "CAZU01 sp000432275 (c.50) rose most of all MAGs. Is its rise a step or a steady climb?"
+  answer: "Its share goes from {m:c.50:high}% to {m:c.50:low}% (log2 change {m:c.50:log2}). The best split is {m:c.50:best} with R² {m:c.50:r2_best}, but a straight line is almost as good ({m:c.50:r2_line}): the rise grows over the days rather than jumping once. With ten days, one late step and a steady trend look much alike."
+  state: {mag: c.50, big: true}
+- title: "Where do the breaks fall?"
+  at: mag
+  question: "Look at the bottom chart. Of the {big} MAGs that changed at least two-fold, how many change most exactly at the diet switch (5|6)?"
+  answer: "{best_at_switch} of {big} ({best_switch_up} risers, {best_switch_down} fallers). {best_67_78} have their best split one or two days later (6|7 or 7|8), {best_earlier} earlier. Chosen from nine splits, the best split always fits at least as well as the switch, so this shows where the change is largest, not that the switch played no part."
+  state: {big: true}
+- title: "Plant fibre: who pushes which way?"
+  at: cazy
+  question: "Choose Plant fibre. Several of the Bacillota that fell carry plant-fibre genes. Does the community's plant-fibre potential fall in days 6-10, and which MAG adds most to the change?"
+  answer: "It does not fall: {cz_plant_fibre_high:1} plant-fibre genes per 1,000 genes in days 1-5 and {cz_plant_fibre_low:1} in days 6-10 ({cz_plant_fibre_pct}%). The largest single contribution is {c:plant_fibre:0:name} ({c:plant_fibre:0:value} per 1,000 genes; its share changes by {c:plant_fibre:0:share_change} percentage points and it has {c:plant_fibre:0:rate} such genes per 1,000 of its own), while Phocaeicola and Bacteroides MAGs that rose push the value up. {pf_fallers_below} of the {down2} MAGs that fell carry fewer plant-fibre genes per gene than the community did in days 1-5, so losing them together even adds {pf_fallers:2} (the MAGs that rose add {pf_risers:2})."
+  state: {cat: plant_fibre}
+- title: "Host glycans"
+  at: cazy
+  question: "Choose Host glycan. How much does the potential to break down host glycans (such as mucus sugars) change, and which MAG adds most?"
+  answer: "It rises from {cz_host_glycan_high:1} to {cz_host_glycan_low:1} genes per 1,000 genes ({cz_host_glycan_pct}%), the largest relative change of the groups, though small in genes. The top contributor is {c:host_glycan:0:name} (+{c:host_glycan:0:value}), which gained {c:host_glycan:0:share_change} percentage points. This is potential in the DNA, not mucus breakdown measured."
+  state: {cat: host_glycan}

@@ -1,0 +1,92 @@
+<div class="intro">
+  <span class="kicker">Group 2 · draft</span>
+  <h1>Community and carbohydrate potential over the ten days</h1>
+  <p class="note">A first answer to group 2's question, worked out on the course data. Every number on this page is computed from the data by the course's analysis script; hover over a chart to read its values, and open the guided examples to check a result yourself.</p>
+  <div class="stats" id="g2Stats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group asked two things. First: how do the community's composition, its diversity and single MAGs change over the ten days and between the two diet periods (days 1-5 high carbohydrate and high calorie, days 6-10 low carbohydrate and low calorie), and is a MAG's shift a step at the diet switch or a gradual trend over the days? Second: does the community's potential to break down carbohydrates differ between the periods, and which MAGs account for the difference?</p>
+  <p>We answer both as descriptions of one person over ten days. The diet changed once, at the same time for everything, so diet and time cannot be told apart, and there are no repeats of the switch to test against. Both periods were vegetarian, and the days 6-10 diet was closer to the person's normal diet; the subject had eaten a similar high-calorie diet for about a week before day 1, so days 1-5 continue that diet and the switch at day 6 is the main change in the study, with no sample taken before the high-calorie diet began (information from the data owner). A gene in a genome is potential, not activity: this study measured DNA, not which genes were used. The group asked for a full manuscript; this page gives the analyses, short methods and the limits instead.</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>All from our own sequencing run of the ten samples (<a href="data.html">module 8, Project data</a>). The MAG abundance table has one row per MAG and one column per day: the percent of that day's sequenced bases that map to the MAG (<a href="binning.html">module 4</a>). It covers <span data-n="mags"></span> MAGs, all high or medium quality (<a href="mag-quality.html">module 5</a>); together they hold <span data-n="binned_min"></span>-<span data-n="binned_max"></span>% of each day's bases, the rest is not in a MAG. The taxonomy of each MAG (GTDB) gives the phylum.</p>
+  <p>For the second question we use the genes of every MAG and their CAZyme calls (carbohydrate-active enzymes; the same gene search and substrate groups as <a href="annotation.html">module 7</a>): per MAG, the number of degrading CAZyme genes (glycoside hydrolases, polysaccharide lyases and carbohydrate esterases) in each substrate group, and the MAG's total number of genes.</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p><b>Composition.</b> Phylum shares per day are the summed shares of the MAGs in each phylum. How different two days are is measured by the Bray-Curtis dissimilarity on all MAG shares, each day's shares scaled to sum 1 (so it compares shares of the binned bases; 0 = the same MAGs in the same proportions, 1 = nothing shared); a principal coordinates analysis (PCoA) draws the ten days as points so that distances on the map follow Bray-Curtis. Diversity is the Shannon index on the <span data-n="mags_considered"></span> MAGs with a mean share of at least 0.1% over the ten days, shown as its effective number of MAGs (the number of equally common MAGs that would give the same index).</p>
+  <p><b>Single MAGs.</b> The same <span data-n="mags_considered"></span> MAGs. The period change is log2 of the mean share in days 6-10 over the mean in days 1-5 (0.01% added to both, so absent MAGs stay finite); 1 is a doubling. For the break check we split the ten days at each of the nine places (day 1 | days 2-10, ..., days 1-9 | day 10) and ask how much of the MAG's day-to-day variation (on a log scale) two block means explain (R², 0 to 1); the split with the highest R² is the best split. A straight line over the ten days (a trend) is fitted the same way. Separation counts how many of the five low-carbohydrate days lie above all five high-carbohydrate days (for a MAG that rises) or below them (for one that falls).</p>
+  <p><b>CAZyme potential.</b> For each day: CAZyme genes per 1,000 genes of the binned community, each MAG weighted by its share of that day's bases (Σ share × CAZyme genes / Σ share × all genes × 1,000). What a MAG adds to the change between the periods is (its change in share) × (its CAZyme genes − the community's rate in days 1-5 × its genes), divided by the community's weighted gene count in days 6-10, times 1,000: a MAG pushes the value up if it gains share and carries more of these genes per gene than the community, or loses share and carries fewer. These contributions add up exactly to the change computed from the period-mean shares.</p>
+  <p><b>Expected and checked.</b> Written before the run: days 1-6 alike, change from day 7; many MAG shifts later than the switch; CAZyme genes a few tens per 1,000 genes, the period difference below about 20%. Positive controls, all passed: the recomputed phylum shares, Bray-Curtis values and the counts of two-fold MAGs equal the course's earlier tables; with one MAG at 100% the weighting gives that MAG's own rate (<i>Bacteroides cellulosilyticus</i>: <span data-n="ctrl_all"></span> CAZyme genes per 1,000 genes, as in module 7).</p>
+  <p><b>Tools.</b> MAGs and their taxonomy come from the course's mmlong2 run (taxonomy with GTDB-Tk 2.5.2; Chaumeil et al. 2022, Bioinformatics). Genes were predicted with Pyrodigal 3.7.1 (Larralde 2022, JOSS), and CAZymes found with the dbCAN HMMs (release db_v5-2-9_5-5-2026; substrate groups from dbCAN3, Zheng et al. 2023, Nucleic Acids Research) searched with pyhmmer 0.12.3 (Larralde and Zeller 2023, Bioinformatics), as in module 7. Everything else on this page is a few lines of Python on those tables.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. Phylum shares and diversity over the ten days</h3>
+  <div class="tabs" role="tablist" id="g2F1Tabs">
+    <button role="tab" data-v="phyla">Phylum shares</button>
+    <button role="tab" data-v="diversity">Diversity</button>
+  </div>
+  <div id="g2F1"></div>
+  <p class="cap"><b>What it shows.</b> <i>Phylum shares:</i> percent of each day's sequenced bases on the MAGs of each phylum (the five largest phyla, the rest pooled), plus the bases not in any MAG. <i>Diversity:</i> the effective number of MAGs per day (from the Shannon index on the <span data-n="mags_considered"></span> MAGs with a mean of at least 0.1%). The dashed line marks the diet switch between day 5 and day 6. Bacteroidota jumps at the switch (<span data-n="bact_d5"></span>% on day 5, <span data-n="bact_d6"></span>% on day 6) and is lowest on day 10 (<span data-n="bact_d10"></span>%); Cyanobacteriota rises from <span data-n="cyano_high"></span>% (mean of days 1-5) to <span data-n="cyano_d10"></span>% on day 10. The diversity hardly moves: <span data-n="eff_high"></span> effective MAGs in both periods.</p>
+  <div class="exslot" data-at="phyla"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 2. How different are the days?</h3>
+  <div class="g2two"><div id="g2Heat"></div><div id="g2Pcoa"></div></div>
+  <p class="cap"><b>What it shows.</b> Left: Bray-Curtis dissimilarity between every pair of days on all MAG shares, scaled to sum 1 per day (viridis: dark = alike, yellow = different). Right: the same distances as a map (PCoA); axis 1 holds <span data-n="pc1"></span>% of the variation, axis 2 <span data-n="pc2"></span>%. Days within the high-carbohydrate period differ by <span data-n="bc_within_high"></span> on average, days within the low-carbohydrate period by <span data-n="bc_within_low"></span>, and days of different periods by <span data-n="bc_between"></span>. Day 6 still sits with days 1-5; the community moves away from day 7 on.</p>
+  <div class="exslot" data-at="bc"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 3. One MAG over the ten days, and where its break falls</h3>
+  <div class="spctl"><label>MAG <select id="g2Mag" aria-label="MAG"></select></label><label class="check"><input type="checkbox" id="g2Big"> only the <span data-n="big"></span> MAGs that changed at least two-fold</label></div>
+  <p class="g2sum" id="g2MagSum" aria-live="polite"></p>
+  <div class="g2two"><div id="g2MagLine"></div><div id="g2Splits"></div></div>
+  <div id="g2SplitCounts"></div>
+  <p class="cap"><b>What it shows.</b> Top left: the chosen MAG's share of each day's bases (%). Top right: for each of the nine ways to split the ten days into an early and a late block, the share of the MAG's day-to-day variation (log scale) that the two block means explain (R²); the split at the diet switch (5|6) is orange, the best split dark blue. Bottom: for the <span data-n="big"></span> MAGs that changed at least two-fold between the periods, how many have their best split at each place. Only <span data-n="best_at_switch"></span> of them change most at the switch; <span data-n="best_67_78"></span> change most at 6|7 or 7|8.</p>
+  <div class="exslot" data-at="mag"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 4. Carbohydrate-degradation potential of the community per day</h3>
+  <div class="spctl"><label>Substrate group <select id="g2Cat" aria-label="Substrate group"></select></label></div>
+  <div class="g2two"><div id="g2CzLine"></div><div id="g2CzBar"></div></div>
+  <p class="cap"><b>What it shows.</b> Left: degrading CAZyme genes of the chosen substrate group per 1,000 genes of the binned community, each MAG weighted by its share of the day's bases. Right: the twelve MAGs that add most to the change between the periods (in genes per 1,000 genes; positive = pushes the value up in days 6-10, formula in Approach), coloured by phylum. All CAZyme genes together: <span data-n="cz_all_high" data-d="1"></span> per 1,000 genes in days 1-5 and <span data-n="cz_all_low" data-d="1"></span> in days 6-10 (means of the days), a change of <span data-n="cz_all_pct"></span>%. "All CAZyme genes" counts each gene once, so the substrate groups do not add up to it (a gene with domains in two groups counts in both).</p>
+  <div class="exslot" data-at="cazy"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Table 1. The <span data-n="mags_considered"></span> MAGs with a mean share of at least 0.1%</h3>
+  <div id="g2Table"></div>
+  <p class="cap"><b>What it shows.</b> One row per MAG: mean share per period (% of a day's bases), log2 change, best split, R² of a step at the switch and of a straight line, and separation (days of the low-carbohydrate period beyond all days of the high-carbohydrate period, of 5). "Fit" compares a step at the switch with a straight line; MAGs that changed less than two-fold are not classed. Click a column to sort, type to filter, click a row to show the MAG in Figure 3.</p>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p><b>Composition.</b> The community changed between the periods, but not at the switch: day 6 is as close to days 1-5 (<span data-n="bc6" data-d="2"></span> on average) as those days are to each other (at most <span data-n="bc_first_max" data-d="2"></span>), and days 8-10 are the most different (<span data-n="bc_late_min" data-d="2"></span>-<span data-n="bc_late_max" data-d="2"></span> from days 1-5). Diversity did not change (Shannon <span data-n="shannon_high" data-d="2"></span> and <span data-n="shannon_low" data-d="2"></span>). Of the <span data-n="mags_considered"></span> MAGs, <span data-n="down2"></span> fell and <span data-n="up2"></span> rose at least two-fold; all <span data-n="bacillota_down"></span> that fell are Bacillota.</p>
+  <p><b>Step or trend.</b> <span data-n="best_later"></span> of the <span data-n="big"></span> two-fold MAGs change most after the switch, <span data-n="best_at_switch"></span> at it and <span data-n="best_earlier"></span> before it. Compared without choosing the split, a step at the switch describes <span data-n="fit_step"></span> of them better than a straight line, a line <span data-n="fit_trend"></span>. <span data-n="sep5"></span> are completely separated (all five low-carbohydrate days beyond all five high-carbohydrate days). With ten days and one switch, a change one or two days late cannot be told from a trend that started anyway; the best split is chosen from nine, so it fits better by construction; and the 35 MAGs were selected by their change between the period means (the 5|6 split), which slightly favours a step at the switch.</p>
+  <p><b>CAZyme potential.</b> The community's CAZyme genes per 1,000 genes hardly differ between the periods (<span data-n="cz_all_pct"></span>% for all groups together; starch <span data-n="cz_starch_pct"></span>%, plant fibre <span data-n="cz_plant_fibre_pct"></span>%, host glycan <span data-n="cz_host_glycan_pct"></span>%). The changes come mostly from Bacteroidota trading places (two <i>Prevotella copri_B</i> MAGs down, <i>Phocaeicola</i> and <i>Bacteroides</i> up), not from the Bacillota that fell. This is potential: genes in genomes, weighted by DNA shares of the binned part of the community (about four fifths of the bases), not enzyme activity or cell numbers.</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <ul>
+    <li><b>A return towards the usual diet.</b> Days 6-10 were closer to the person's normal diet, after about two weeks of the high-calorie diet (one week before day 1 plus days 1-5; information from the data owner). Is the late change a community moving back towards its usual state? Without a sample from before the high-calorie diet this cannot be checked here; a sample from that time, or from a later normal week, would show it.</li>
+    <li><b>CAZyme families.</b> The substrate groups pool many families. The same weighting on single families (module 8's CAZyme table per family) could show whether, for example, starch-degrading GH13 or host-glycan GH33 families move more than their group.</li>
+    <li><b>The two <i>Prevotella copri_B</i> MAGs</b> drive much of the CAZyme change and keep a fixed ratio over the days: one genome split in two, or two strains? Their variant and coverage data (module 8) could tell.</li>
+    <li><b>The unbinned fifth.</b> About a fifth of the bases is not in any MAG; a read-based profile (for example, a taxonomic classifier on the reads) would show whether it changes the same way. Days 11 onwards or a second switch would be needed to separate a diet response from time.</li>
+  </ul>
+</section>
