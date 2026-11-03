@@ -102,9 +102,9 @@ function drawFig5() {
     columns: [{ key: "family", label: "Family" }, { key: "category", label: "Substrate group" },
       { key: "high", label: "Days 1-5 (per 1,000 genes)", num: true, fmt: (v) => v.toFixed(2) },
       { key: "low", label: "Days 6-10 (per 1,000 genes)", num: true, fmt: (v) => v.toFixed(2) },
-      { key: "log2", label: "Fold change", num: true, fmt: (v) => (2 ** v).toFixed(2) },
+      { key: "ratio", label: "Fold change (6-10 / 1-5)", num: true, fmt: (v) => v.toFixed(2) },
       { key: "top_mag", label: "MAG adding most" }, { key: "top_value", label: "Its contribution", num: true, fmt: (v) => v.toFixed(3) }],
-    rows: F, sortKey: "log2", maxRows: 20,
+    rows: F, sortKey: "ratio", maxRows: 20,
   });
 }
 
