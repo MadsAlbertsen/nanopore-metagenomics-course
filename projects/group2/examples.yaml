@@ -1,7 +1,7 @@
-- title: "Two phyla that move late"
+- title: "Two phyla, two timings"
   at: phyla
   question: "Show the phylum shares. Do Bacteroidota and Cyanobacteriota change at the diet switch (between day 5 and day 6), or later?"
-  answer: "Later. Bacteroidota is at its highest on days 6 and 7 ({bact_d6}% and {bact_d7}% of the bases, against a mean of {bact_high}% in days 1-5) and then falls to {bact_d10}% on day 10. Cyanobacteriota (one MAG, Zag111) climbs from {cyano_high}% in days 1-5 to {cyano_d10}% on day 10, mostly from day 8 on. Both changes start one to two days after the switch."
+  answer: "They differ. Bacteroidota jumps at the switch, from {bact_d5}% on day 5 to {bact_d6}% on day 6; days 6 and 7 ({bact_d6}% and {bact_d7}%) lie above every day of days 1-5 (at most {bact_high_max}%). It falls only from day 9, to {bact_d9}% and then {bact_d10}% on day 10. Cyanobacteriota (one MAG, Zag111) climbs late: {cyano_high}% in days 1-5, {cyano_d6}% on day 6 and {cyano_d7}% on day 7, then {cyano_d8}%, {cyano_d9}% and {cyano_d10}% on days 8-10."
   state: {fig1: phyla}
 - title: "Did diversity change?"
   at: phyla
