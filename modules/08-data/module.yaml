@@ -1,0 +1,32 @@
+number: 8
+slug: data
+title: "Your project: what data we have"
+nav: Project data
+summary: >-
+  The tables, sequences and results from this course that a group project can use, what each can answer, and what
+  is out of reach.
+status: draft
+takeaways:
+  - "A good project question names the data it needs: which MAGs, genes, days or libraries, and which table holds them."
+  - "Most questions can be answered from tables that already exist; new statistics and figures from them take minutes."
+  - "Questions that need all the reads again, or data never measured (RNA, metabolites, cell counts), are out of reach
+    for the group reports."
+  - "One person over ten days: the data can describe what happened in this gut, not what happens in guts in general."
+discussion: >-
+  Take your group's question and list, for each part of it, the table on this page that would answer it. Which part
+  has no table, and how would you change the question so that it has one?
+teacher:
+  time: About 20 minutes, before the groups write their project question.
+  before: The modules the groups want to build on; no new concepts.
+  flow:
+    - "5 min: the levels (ready, quick to compute, needs a server job, not measured) and the topic filter."
+    - "10 min: each group finds the tables behind a draft question and checks the level of each."
+    - "5 min: groups rephrase parts that rely on data at the server or 'not measured' level."
+  discussion_points:
+    - "A question about function ('which bacteria can break down starch?') maps to gene tables (Bakta, CAZymes); a
+      question about change maps to the abundance per day; combining them is where most projects sit."
+    - "'Do they use it?' needs expression data, which this study does not have: rephrase to 'which carry the genes'."
+  pitfalls:
+    - "The abundance is a share of the sequenced DNA, not a cell count: a MAG can rise in share because others fall."
+    - "Two diet periods of five days each in one person: differences are descriptive, not tests of the diet's effect."
+    - "The CAZyme and fermentation-gene tables exist for 17 MAGs only; other MAGs need the search to be run first."
