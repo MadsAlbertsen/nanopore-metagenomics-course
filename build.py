@@ -120,12 +120,12 @@ FOOTER = (
 )
 
 
-def closing(m: dict) -> str:
-    """Take-home points and an open question for discussion, at the end of a module page."""
+def closing(m: dict, heading: str = "Take-home points") -> str:
+    """Take-home points (project reports: key findings) and an open question for discussion, at the end of a page."""
     parts = []
     if m.get("takeaways"):
         items = "".join(f"<li>{esc(t)}</li>" for t in m["takeaways"])
-        parts.append(f"<div><h2>Take-home points</h2><ul>{items}</ul></div>")
+        parts.append(f"<div><h2>{heading}</h2><ul>{items}</ul></div>")
     if m.get("discussion"):
         parts.append(f"<div><h2>To discuss</h2><p>{esc(m['discussion'])}</p></div>")
     return f'<section class="panel closing">{"".join(parts)}</section>' if parts else ""
@@ -185,7 +185,7 @@ def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
             "TITLE": f"Group {p['number']}: {p['title']}",
             "NAV": nav(mods, "projects"),
             "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
-            "BODY": (d / "body.html").read_text() + closing(p),
+            "BODY": (d / "body.html").read_text() + closing(p, "Key findings"),
             "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + (d / "project.js").read_text(),
             "DATA": script_json(data),
             "EXAMPLES": script_json(examples),

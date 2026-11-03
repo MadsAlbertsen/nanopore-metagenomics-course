@@ -3,6 +3,30 @@
 One folder per group report: `projects/groupN/`. Copy `projects/example/` (the template, `publish: false`) and keep
 its sections and their order.
 
+## Report structure (version 2, 2026-11-03: research reports, not exercises)
+
+The reports read like short research reports that the groups build on, not like course pages with questions for the
+reader. Sections, in this order (`<section class="panel">` each; figures as before):
+
+1. **Summary**: 6-10 lines: question, approach, the main results with their numbers, the main interpretation.
+2. **Background**: why the question matters and what is known, with 3-6 references (verified to exist; each used for
+   a stated point). Includes the study design and the diet facts from the data owner.
+3. **Question and hypotheses**: the group's question as this report answers it, and the expected results.
+4. **Data and methods**: data, definitions (units), every analysis step and check, the tools with versions and
+   citations.
+5. **Results**: per figure: a short lead-in of what was done, the figure with its caption, then a paragraph of
+   **interpretation** (what the result likely means, alternative explanations, how it fits the literature; mark
+   interpretation as such: "this suggests", "one explanation is").
+6. **Discussion**: the results together against the hypotheses and the literature; what is solid, what is uncertain
+   and why (one person, ten days, gene potential vs activity, shares vs cell counts, binned fraction).
+7. **Limitations**: a short list.
+8. **Open questions and possible next analyses**: concrete angles the group could follow up, each with the data it
+   would need (on the Mac, a server job, or not measured).
+9. **References**: numbered list, with DOI or PMID.
+
+`takeaways` in project.yaml are shown at the end as "Key findings" (3-5 results with numbers). No `discussion` key, no
+guided examples (no examples.yaml) on report pages.
+
 ## Files
 
 | File | What | Who writes it |
@@ -52,6 +76,5 @@ lineChart($("g1Line"), { x: DATA.days, series: DATA.mags.map((m) => ({ name: m.n
 - Plain words; units and spaces stated (reads vs bases, per sample vs pooled, percent of a sample's bases, log vs
   linear). One person, ten days: describe, do not generalise.
 - Every figure: a numbered title, an interactive chart, a 3-5 line caption saying what it shows and its unit.
-- Guided examples: a question, the page state that answers it, a hidden answer; `state` must name only things in
-  `data.json`.
+- No guided examples on report pages (version 2); interactive controls on the figures stay.
 - Public repository: only derived data (no reads, no human sequence, no student names).
