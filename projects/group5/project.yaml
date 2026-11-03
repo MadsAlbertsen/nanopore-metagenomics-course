@@ -14,6 +14,6 @@ data_note: >-
 takeaways:
   - "The B. angulatum genome is one circular contig of 1.99 Mb (CheckM2 completeness 99.95%) with 1,564 protein-coding genes."
   - "It carries 39 carbohydrate-degrading enzyme genes (median MAG 38) in a smaller genome; GH13, a starch family, is the largest with 9 genes (39 of 421 MAGs have more)."
-  - "Its relatives carry more plant-fibre enzymes (20 and 23 genes against 12): this suggests a starch-centred niche for B. angulatum."
-  - "Its mean share fell from 0.128% of the bases on days 1-5 to 0.07% on days 6-10 (log2 -0.8), but single days ranged 0.05-0.294% within days 1-5 and the peak was on day 5, just before the switch."
+  - "A broad carbohydrate repertoire: more genes than the median MAG for plant fibre (12 against 3) and starch (11 against 5), but fewer plant-fibre genes than its two relatives (20 and 23)."
+  - "Its mean share fell from 0.128% of the bases on days 1-5 to 0.07% on days 6-10 (log2 -0.8), but it rose 5.9-fold within days 1-5 on an unchanged diet and peaked on day 5: the peak is not explained by the diet switch."
   - "Like its relatives, it carries a phosphoketolase and a gene named bile salt hydrolase/transferase; it also has 7 CRISPR-associated genes and 5 CRISPR arrays."
