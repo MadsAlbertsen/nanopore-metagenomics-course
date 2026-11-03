@@ -1,73 +1,92 @@
 <div class="intro">
   <span class="kicker">Group 1 · draft report</span>
-  <h1>Does the gut community answer the diet switch with a delay?</h1>
-  <p class="note">One person, ten daily stool samples. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. This page describes what happened in this one person; it does not test or generalise.</p>
+  <h1>How fast does the gut community follow a diet switch?</h1>
+  <p class="note">One person, ten daily stool samples. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. This report describes what happened in this one person; it does not test or generalise.</p>
   <div class="stats" id="pjStats"></div>
 </div>
 
 <section class="panel">
-  <h2>The question</h2>
-  <p>The group asked whether the gut community answers a change of diet straight away or with a delay, whether day 1 and day 10 are the most alike pair of days, and how much strain diversity the abundant MAGs carry.</p>
-  <p>Information from the data owner changes how day 1 should be read: both diet periods were vegetarian, the subject had eaten a similar high-calorie diet for about a week before day 1, and the days 6-10 diet was closer to the subject's normal diet. So the diet did not change at day 1, and no switch is expected there; the main change in the study is the switch at day 6.</p>
-  <p>This report therefore asks three narrower questions. (1) How different is every pair of days, and where does the day 1 vs day 10 pair rank? (2) On which day after the switch at day 6 does the community, and each MAG that changes most, move to its new level? (3) Which MAGs present on every day carry many variable positions, a sign of a strain mixture? Strain diversity per day is out of reach here (see the last section).</p>
-</section>
-
-<section class="panel" id="pjExamples" hidden>
-  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
-  <div class="exbody"></div>
+  <h2>Summary</h2>
+  <p>We asked when the gut community changed after the switch from a high-carbohydrate, high-calorie diet to a low-carbohydrate, low-calorie diet on day 6, which genomes changed, and whether the genomes present on every day look like mixtures of strains. We compared the genome (MAG) composition of every pair of days with the Bray-Curtis dissimilarity, followed the <span data-n="nChange"></span> MAGs that changed at least two-fold, and looked at the share of variable positions in each MAG.</p>
+  <p>Day 6 still resembled days 1-5, day 7 lay between the two states, and from day 8 on the samples were clearly different: the distance to day 1 stayed at or below <span data-n="maxDay1Early"></span> up to day 7 and was <span data-n="d1to8"></span> on day 8. Single MAGs were faster: <span data-n="nSettle6"></span> of <span data-n="nChange"></span> reached their new level on day 6 itself. Most falling MAGs were Lachnospiraceae (<span data-n="nDownLachno"></span> of <span data-n="nDown"></span>), and many rising ones Bacteroidaceae (<span data-n="nUpBacteroidaceae"></span> of <span data-n="nUp"></span>), a direction that matches published short-term diet studies. Day 1 and day 10 were among the most different pairs (rank <span data-n="rank110"></span> of <span data-n="pairs"></span>). None of the <span data-n="nCore"></span> ever-present MAGs stood out as a strain mixture.</p>
+  <p><i>Interpretation:</i> the pattern suggests a response within one to three days, with some genomes answering faster than the community as a whole. With one person and one switch this is a description, not a tested result.</p>
 </section>
 
 <section class="panel">
-  <h2>Data used</h2>
-  <p>The MAG abundance on each day (<a href="binning.html">module 4</a>; card "MAG abundance on each day" in <a href="data.html">module 8</a>): one row per MAG and day, as the percent of the sample's bases that map to the MAG. The <span data-n="mags"></span> MAGs together hold <span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>% of each sample's bases; the rest is in contigs outside MAGs and is left out. A share of the DNA is not a cell count.</p>
-  <p>Variable positions per MAG (<a href="mag-quality.html">module 5</a>, "microdiversity"; card "Sequence variants within MAGs" in module 8): the share of a MAG's positions where the reads show a second base (at least 6 reads, the other base in at least 3 reads and 10% of them). The reads of all ten days are pooled, so this is one value per MAG, not one per day. Depth is the mean number of pooled reads covering a position (x).</p>
-  <p>The diet periods come from the sample sheet; the diet before day 1 from information from the data owner.</p>
+  <h2>Background</h2>
+  <p>The gut community can follow a change of diet quickly. In a controlled feeding study of ten people, the community changed detectably within 24 hours of starting a high-fat/low-fiber or low-fat/high-fiber diet, while the broad community type (dominated by <i>Bacteroides</i> or by <i>Prevotella</i>) stayed the same during the 10-day study [1]. When people ate only animal or only plant products for a few days, the community changed rapidly; the animal-based diet raised <i>Bacteroides</i> and lowered Firmicutes that break down plant polysaccharides, such as <i>Roseburia</i> and <i>Eubacterium rectale</i> [2]. Daily sampling of 34 people over 17 days showed that the community depended on several days of diet history, and that responses differed between people [3].</p>
+  <p>A stool sample is not a snapshot of one day's food. How long food takes through the gut varies between people and is itself linked to the composition and metabolism of the community [4, 5]. So a delay between a diet switch and a change in stool could come from transit, from the time the community needs to change, or both.</p>
+  <p>Within one person, a species is often a population of closely related strains. Over months, resident strains are rarely replaced by distant ones; more often they gain a few changes [6]. Some species are known to be genetically diverse: <i>Prevotella copri</i>, for example, forms a complex of four clades that differ by more than 10% [7]. Variable positions in a MAG, where the reads show two bases, are one way to see such mixtures.</p>
+  <p>Study design: one person gave one stool sample per day for ten days. Days 1-5 were high-carbohydrate and high-calorie, days 6-10 low-carbohydrate and low-calorie. Information from the data owner: both diet periods were vegetarian, the subject had eaten a similar high-calorie diet for about a week before day 1, and the days 6-10 diet was closer to the subject's normal diet. So the diet did not change at day 1; the switch at day 6 is the main change in the study.</p>
 </section>
 
 <section class="panel">
-  <h2>Approach</h2>
-  <p>Differences between days use the Bray-Curtis dissimilarity on the MAG shares: 0 means the same composition, 1 means no MAG in common. Each sample is first scaled so its MAG shares add up to one. For the timing, each day is compared with day 1, with the mean composition of days 2-5 and with the mean of days 8-10 (the end state), and each day with the day before.</p>
-  <p>For single MAGs, we took the <span data-n="nChange"></span> MAGs with a mean share of at least <span data-n="minPct"></span>% and a log2 change of at least 1 (up) or at most -1 (down) in the MAG table. That table adds <span data-n="pseudo"></span>% to both period means before the log2, so MAGs near zero do not give infinite changes; on the raw means the rule would give <span data-n="nRawChange"></span> MAGs. For each, the midpoint between its two period means splits "old level" from "new level"; the settled day is the first day from which the MAG stays on the new side up to day 10.</p>
-  <p>Core MAGs are the MAGs at <span data-n="minPct"></span>% of the bases or more on all ten days. Before the analysis we wrote down a rule (in the analysis script): a core MAG with variable positions at <span data-n="mixPct"></span>% of its positions or more is a likely strain mixture. We expected the change one to two days after the switch, day 1 vs day 10 not to be the most similar pair, and more variants in deeper MAGs.</p>
-  <p>Checks that the method works (positive controls): the Bray-Curtis values reproduce the table of the course's overview analysis for all <span data-n="pairs"></span> pairs; the mean within days 1-5 (<span data-n="within1"></span>), within days 6-10 (<span data-n="within2"></span>) and between the periods (<span data-n="between"></span>) are the known values; the count of changing MAGs (<span data-n="nDown"></span> down, <span data-n="nUp"></span> up) matches the earlier analysis; variable positions recomputed from the contig table match the MAG table.</p>
+  <h2>Question and hypotheses</h2>
+  <p>The group asked whether the community answers a diet change straight away or with a delay, whether day 1 and day 10 are the most alike pair of days, and how much strain diversity the abundant genomes carry. This report answers three narrower questions that the data can address.</p>
+  <ul>
+    <li><b>Timing.</b> On which day after the switch at day 6 does the community, and each genome that changes most, move to its new level? Expected: days 1-6 alike, a change from day 7, days 8-10 most different, a delay of one to two days.</li>
+    <li><b>Day 1 vs day 10.</b> Expected: not the most similar pair, since days 8-10 differ most from days 1-5 and day 1 already follows a week of the high-calorie diet.</li>
+    <li><b>Strain mixtures.</b> Which genomes present on every day carry many variable positions? Expected: mostly below 1% of positions, a few higher in abundant genomes, and more variants found in deeper genomes.</li>
+  </ul>
+  <p>Strain diversity on each day, and whether it changes around the switch, needs each day's reads mapped on their own; that is out of reach here and listed under open questions.</p>
+</section>
+
+<section class="panel">
+  <h2>Data and methods</h2>
+  <p><b>Data.</b> The MAG abundance on each day (<a href="binning.html">module 4</a>; card "MAG abundance on each day" in <a href="data.html">module 8</a>): one value per MAG and day, the percent of the sample's bases that map to the MAG. The <span data-n="mags"></span> MAGs hold <span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>% of each sample's bases; the rest is in contigs outside MAGs and is left out. A share of the DNA is not a cell count: genome size and copy number shift it.</p>
+  <p><b>Assembly and MAGs.</b> All ten samples were assembled together and binned with mmlong2 <span data-n="v_mmlong2"></span> [8] (assembler myloasm <span data-n="v_myloasm"></span>, read mapping minimap2 <span data-n="v_minimap2"></span>, abundance CoverM <span data-n="v_coverm"></span>, taxonomy GTDB-Tk <span data-n="v_gtdbtk"></span>); modules 3-5 explain these steps.</p>
+  <p><b>Variable positions</b> (<a href="mag-quality.html">module 5</a>, "microdiversity"; card "Sequence variants within MAGs" in module 8): the share of a MAG's positions where Longshot <span data-n="v_longshot"></span> [9] called a single-base variant (at least 6 reads, the other base in at least 3 reads and 10% of them). Longshot was made for diploid genomes; with these filters a strain at less than 10% of a MAG's reads is not counted. The reads of all ten days are pooled: one value per MAG, not per day. Depth is the mean number of pooled reads per position (x).</p>
+  <p><b>Community differences.</b> Bray-Curtis dissimilarity on the MAG shares, each sample first scaled to sum to one (0 = same composition, 1 = no MAG in common). Each day was compared with every other day, with day 1, with the mean composition of days 2-5 and of days 8-10 (the end state), and with the day before.</p>
+  <p><b>Changing MAGs.</b> MAGs with a mean share of at least <span data-n="minPct"></span>% and a log2 change of at least 1 (up) or at most -1 (down) in the MAG table. That table adds <span data-n="pseudo"></span>% to both period means before the log2, so MAGs near zero do not give infinite changes; on the raw means the rule would give <span data-n="nRawChange"></span> MAGs. For each, the midpoint between its two period means splits old from new level; the settled day is the first day from which the MAG stays on the new side up to day 10.</p>
+  <p><b>Core MAGs</b> are present at <span data-n="minPct"></span>% of the bases or more on all ten days. A core MAG with variable positions at <span data-n="mixPct"></span>% of its positions or more would count as a likely strain mixture (a rule written in the analysis script before it was run).</p>
+  <p><b>Checks (positive controls).</b> The Bray-Curtis values reproduce the course's overview analysis for all <span data-n="pairs"></span> pairs; the mean within days 1-5 (<span data-n="within1"></span>), within days 6-10 (<span data-n="within2"></span>) and between periods (<span data-n="between"></span>) match the known values; the changing MAGs (<span data-n="nDown"></span> down, <span data-n="nUp"></span> up) match the earlier analysis; variable positions recomputed from the contig table match the MAG table; phylum shares match the overview analysis. An independent reviewer recomputed the numbers of the first version of this report.</p>
 </section>
 
 <h2 class="pjh">Results</h2>
+
 <section class="panel fig">
+  <p>We first compared every pair of days, to see whether the days fall into groups and where the day 1 vs day 10 pair ranks.</p>
   <h3>Figure 1. How different is each pair of days?</h3>
   <div id="pjHeat"></div>
-  <p class="cap"><b>What it shows.</b> Bray-Curtis dissimilarity between the MAG compositions of every pair of days (0 = the same, 1 = nothing shared); brighter yellow is more different. The diagonal (a day with itself) is left empty. Days 1-6 form one block of similar days, days 8-10 a second one; day 7 is close to day 1, day 6 and day 8 alike. Days 8-10 differ from days 1-5 most. Day 1 vs day 10 is <span data-n="bc110"></span>, rank <span data-n="rank110"></span> of <span data-n="pairs"></span> pairs (1 = most similar). Hover over a cell for its value.</p>
-  <div class="exslot" data-at="heat"></div>
+  <p class="cap"><b>What it shows.</b> Bray-Curtis dissimilarity between the MAG compositions of every pair of days (0 = the same, 1 = nothing shared); brighter yellow is more different. The diagonal (a day with itself) is left empty. Hover over a cell for its value.</p>
+  <p>Days 1-6 form one block of similar days and days 8-10 a second one; day 7 is close to day 1, day 6 and day 8 alike. The most similar pair is day <span data-n="closestA"></span> and day <span data-n="closestB"></span> (<span data-n="closestBc"></span>), the most different day <span data-n="farA"></span> and day <span data-n="farB"></span> (<span data-n="farBc"></span>). Day 1 vs day 10 is <span data-n="bc110"></span>, rank <span data-n="rank110"></span> of <span data-n="pairs"></span>. <i>Interpretation:</i> the two blocks follow the diet periods, shifted by one day: day 6, the first low-carbohydrate day, still belongs to the first block. Day 1 and day 10 are far apart, which fits the data owner's information that day 1 followed a week of the high-calorie diet; day 1 is not a sample of the normal diet, so no match with day 10 was expected. Whether day 10 is close to the subject's usual community cannot be checked, as there is no sample from before the study.</p>
 </section>
 
 <section class="panel fig">
+  <p>To find the day of the change, we followed each day's distance to three references and to the day before, and the phylum shares.</p>
   <h3>Figure 2. On which day does the community move?</h3>
   <p class="note"><b>A.</b> Bray-Curtis dissimilarity of each day to day 1, to the mean of days 2-5 and to the mean of days 8-10.</p>
   <div id="pjTiming"></div>
-  <p class="note"><b>B.</b> Bray-Curtis dissimilarity of each day to the day before.</p>
+  <p class="note"><b>B.</b> Bray-Curtis dissimilarity of each day to the day before (orange: the step into the new diet).</p>
   <div id="pjSteps"></div>
-  <p class="note"><b>C.</b> Share of the sample's bases on MAGs of each phylum (percent of all bases, including those outside MAGs).</p>
+  <p class="note"><b>C.</b> Share of the sample's bases on MAGs of each phylum (percent of all bases, log scale).</p>
   <div id="pjPhyla"></div>
-  <p class="cap"><b>What it shows.</b> The dashed line marks the switch between day 5 and day 6. In A, a day close to a reference has a low value; days 2-5 and 8-10 are part of their own reference mean, so their distance to it is lower by construction. Day 1 is as close to the mean of days 2-5 (<span data-n="early1"></span>) as day 6 is (<span data-n="early6"></span>): day 1 is not an outlier, as expected when the diet before day 1 was similar. The distance to the end state falls from <span data-n="late6"></span> on day 6 to <span data-n="late7"></span> on day 7, while the distance to day 1 jumps only on day 8 (<span data-n="d1to8"></span>). In B, the largest step (day <span data-n="bigStep"></span>) is inside the first period. In C, Bacteroidota are highest on days 6-7 (<span data-n="bactPeak"></span>%), then go down to <span data-n="bactDay10"></span>% by day 10.</p>
-  <div class="exslot" data-at="timing"></div>
+  <p class="cap"><b>What it shows.</b> The dashed line marks the switch between day 5 and day 6. In A, a low value means close to the reference; days 2-5 and 8-10 are part of their own reference mean, so their distance to it is lower by construction. Hover for the values of each day.</p>
+  <p>Day 1 is as close to the mean of days 2-5 (<span data-n="early1"></span>) as day 6 is (<span data-n="early6"></span>). The distance to the end state falls from <span data-n="late6"></span> on day 6 to <span data-n="late7"></span> on day 7, while the distance to day 1 jumps only on day 8 (<span data-n="d1to8"></span>). The step from day 5 to day 6 (<span data-n="step56"></span>) is no larger than the others; the largest step is day <span data-n="bigStep"></span> (<span data-n="bigStepBc"></span>), inside the first period. Bacteroidota are highest on days 6-7 (<span data-n="bactPeak"></span>%) and fall to <span data-n="bactDay10"></span>% by day 10. <i>Interpretation:</i> the community moves over two days, 7 and 8, not in one jump. A lag of about a day fits the time food needs through the gut [4, 5]; a further day fits a community that depends on several days of diet history [3]. The large step between day 4 and day 5 shows how much one day can differ from the next without a diet change, so a single day's distance should not be over-read.</p>
 </section>
 
 <section class="panel fig">
-  <h3>Figure 3. When does each changing MAG reach its new level?</h3>
+  <p>Next we looked at the single MAGs that changed most: which they are, and on which day each reached its new level.</p>
+  <h3>Figure 3. Which genomes change, and when?</h3>
+  <p class="note"><b>A.</b> log2 change from the days 1-5 mean to the days 6-10 mean for the <span data-n="nChange"></span> changing MAGs (1 = doubled, -1 = halved), coloured by family.</p>
+  <div id="pjChange"></div>
+  <div id="pjChangeLeg" class="chart"></div>
+  <p class="note"><b>B.</b> One MAG over the ten days, with the midpoint between its two period means.</p>
   <label class="note">MAG <select id="pjMag" aria-label="MAG to show"></select></label>
   <div id="pjMagLine"></div>
-  <p class="note">Number of changing MAGs by their settled day (the first day from which they stay on the new side of their midpoint).</p>
+  <p class="note"><b>C.</b> Number of changing MAGs by their settled day (the first day from which they stay on the new side of their midpoint).</p>
   <div id="pjSettle"></div>
-  <p class="cap"><b>What it shows.</b> Top: the share of the chosen MAG on each day (percent of the sample's bases) and the midpoint between its mean on days 1-5 and on days 6-10 (flat line). Bottom: the <span data-n="nChange"></span> changing MAGs (log2 change of at least 1 either way, see Approach), by the day they settle at the new level, rising and falling MAGs apart. <span data-n="nSettleBefore6"></span> settles before the switch, on day <span data-n="settleBefore6Days"></span>; <span data-n="nSettle6"></span> settle on day 6, <span data-n="nSettle78"></span> on day 7 or 8 and <span data-n="nSettle9plus"></span> on day 9 or 10 (median day <span data-n="settleMedian"></span>). With five days per period, the period means include the days being judged, so one odd day can shift a settled day; the MAG that settles on day 5 is an example.</p>
-  <div class="exslot" data-at="movers"></div>
+  <p class="cap"><b>What it shows.</b> A: one bar per MAG; hover for its name and family. B: the share of the chosen MAG (percent of the sample's bases) and its midpoint (flat line). C: rising and falling MAGs apart. With five days per period, the period means include the days being judged, so one odd day can shift a settled day.</p>
+  <p><span data-n="nDownLachno"></span> of the <span data-n="nDown"></span> falling MAGs are Lachnospiraceae (among them <i>Roseburia intestinalis</i>, <i>Agathobacter rectalis</i>, <i>Lachnospira</i>, <i>Blautia</i> and <i>Anaerostipes</i>), and <span data-n="nUpBacteroidaceae"></span> of the <span data-n="nUp"></span> rising MAGs are Bacteroidaceae (<i>Bacteroides</i> and <i>Phocaeicola</i>). <span data-n="nSettleBefore6"></span> MAG settles before the switch, on day <span data-n="settleBefore6Days"></span> (an example of the bias above), <span data-n="nSettle6"></span> on day 6, <span data-n="nSettle78"></span> on day 7 or 8 and <span data-n="nSettle9plus"></span> on day 9 or 10 (median day <span data-n="settleMedian"></span>). The most abundant rising MAG, <span data-n="exUp"></span>, and the most abundant falling one, <span data-n="exDown"></span>, both settle on day <span data-n="exUpSettle"></span>. The two <i>Prevotella copri_B</i> MAGs fall from <span data-n="copriDay6"></span>% on day 6 to <span data-n="copriDay10"></span>% on day 10, mostly from day 8 on, but stay just short of the two-fold rule over the period means (log2 <span data-n="copriLog2"></span>). <i>Interpretation:</i> the losers are typical fermenters of plant polysaccharides and the winners include <i>Bacteroides</i>, the same direction as in short-term diet studies where less plant polysaccharide reached the gut [2]. This suggests that less carbohydrate drives much of the change, but here carbohydrate and calories changed together and cannot be separated. That many MAGs settle on day 6 while the whole community moves on days 7-8 suggests that some genomes react within a day, and that the community total lags because large MAGs that change later (such as the <i>P. copri_B</i> pair) weigh heavily in Bray-Curtis.</p>
 </section>
 
 <section class="panel fig">
+  <p>Finally, we asked whether the MAGs present on every day carry many variable positions, as a mixture of strains would.</p>
   <h3>Figure 4. Variable positions in the MAGs</h3>
   <label class="note">x axis <select id="pjX" aria-label="x axis"><option value="depth">Depth (pooled reads, x)</option><option value="share">Mean share over ten days (%)</option></select></label>
   <div id="pjScatter"></div>
-  <p class="cap"><b>What it shows.</b> One point per MAG: variable positions as percent of the MAG's positions (log scale) against pooled depth or mean share (log scale). Orange: the <span data-n="nCore"></span> core MAGs, present at <span data-n="minPct"></span>% or more on all ten days. <span data-n="nVarZero"></span> MAGs without any variable position cannot be drawn on a log scale; the MAG table gives the values to three decimals, so the lowest points line up in rows. The median core MAG has <span data-n="coreMedianVar"></span>%; none reaches the <span data-n="mixPct"></span>% rule, and only <span data-n="nVarAbove05"></span> of all MAGs do. Deeper MAGs have fewer variable positions, not more (rank correlation <span data-n="rhoDepthAll"></span>).</p>
-  <div class="exslot" data-at="core"></div>
+  <p class="cap"><b>What it shows.</b> One point per MAG: variable positions as percent of the MAG's positions (log scale) against pooled depth or mean share (log scale). Orange: the <span data-n="nCore"></span> core MAGs, present at <span data-n="minPct"></span>% or more on all ten days. <span data-n="nVarZero"></span> MAGs without any variable position cannot be drawn on a log scale; the MAG table gives the values to three decimals, so the lowest points line up in rows.</p>
+  <p>The median core MAG has <span data-n="coreMedianVar"></span>% variable positions and the highest, <span data-n="topVarCore"></span>, <span data-n="coreMaxVar"></span>%; none reaches the <span data-n="mixPct"></span>% rule, and only <span data-n="nVarAbove05"></span> of all MAGs do. Deeper MAGs have fewer variable positions, not more: the median is <span data-n="varDepthLow"></span>% for MAGs at 10-50x and <span data-n="varDepthHigh"></span>% for MAGs at 300x or more (rank correlation <span data-n="rhoDepthAll"></span> over all MAGs). The two <i>P. copri_B</i> MAGs have <span data-n="copriVar"></span>%, and their shares keep a ratio of <span data-n="copriRatioMin"></span>-<span data-n="copriRatioMax"></span> on every day. <i>Interpretation:</i> one explanation for the falling trend is that variant calls in shallow MAGs include more read errors and more reads from related genomes mapped by mistake, which deep MAGs avoid. Another is that the assembler separated strains well in deep genomes, so that each strain became its own contig or MAG and looks clean. The fixed ratio of the <i>P. copri_B</i> pair fits either one genome split into two MAGs or two strains that rise and fall together; the known diversity within <i>P. copri</i> [7] makes the second possible. Low values do not show that there are no strain mixtures: a minor strain below 10% of the reads is not counted, and the method sees only differences at single positions.</p>
 </section>
 
 <section class="panel fig">
@@ -77,18 +96,47 @@
 </section>
 
 <section class="panel">
-  <h2>What this does and does not show</h2>
-  <p>In this person, the community as a whole moved over days 7-8: day 6 still looks like days 1-5, day 7 lies between the two states, and from day 8 on the samples are clearly different (Figures 1 and 2). Many single MAGs shift on day 6 itself: <span data-n="nSettle6"></span> of <span data-n="nChange"></span> changing MAGs settle at their new level on day 6, and <span data-n="nNewDay6"></span> are on the new side on day 6. The step from day 5 to day 6 is no larger than the other day-to-day steps, and the largest step (day <span data-n="bigStep"></span>) comes before the switch. One person, one switch: the timing is described, not tested. A delay of the whole community could come from the time food takes through the gut, from the time the community takes to change, or both; these data cannot tell them apart.</p>
-  <p>Day 1 and day 10 are among the most different pairs. Given that the subject had eaten a similar high-calorie diet for about a week before day 1, day 1 is not a sample of the normal diet, so there was no reason to expect it to match day 10; the data agree.</p>
-  <p>The strongest result is the block structure of Figure 1, which rests on all MAGs at once. The weakest is the settled day of single MAGs, which can move with one unusual day. The variable positions do not point to any core MAG as a strain mixture. Two strains of one species may also end up as two separate MAGs (as may be the case for the two <i>Prevotella copri_B</i> MAGs, at <span data-n="copriVar"></span>%), and then each looks clean. Shares are of DNA, not cells.</p>
+  <h2>Discussion</h2>
+  <p>The timing hypothesis holds in part. As expected, days 1-6 are alike and days 8-10 differ most, and the community as a whole moves over days 7-8. But many single genomes already reached their new level on day 6, the first day of the new diet, and the step into the new diet is not larger than ordinary day-to-day steps. <i>Interpretation:</i> a response within about a day for the fastest genomes fits the feeding studies, where the community changed within 24 hours or a few days [1, 2]. The slower movement of the whole community may reflect transit time [4, 5], large genomes that change late, or a community that depends on several days of diet history [3].</p>
+  <p>The direction of change, fewer Lachnospiraceae and more Bacteroidaceae on the low-carbohydrate diet, resembles what short-term studies report when less plant polysaccharide reaches the gut [2]. Here both diets were vegetarian, and carbohydrate and calories changed at once, so the cause cannot be narrowed down. The second hypothesis, that day 1 and day 10 are not the most alike, holds (rank <span data-n="rank110"></span> of <span data-n="pairs"></span>).</p>
+  <p>The strain hypothesis does not hold as stated: no core MAG has many variable positions, and depth goes with fewer, not more. This is the least certain result, because pooled variant calls mix method limits with biology. Strain change within a person over months is usually small [6], so few variable positions over ten days is plausible, but per-day data would be needed to say more.</p>
+  <p>What is solid: the block structure of Figure 1, which rests on all MAGs at once, and the families that change. What is uncertain: the exact settled day of single MAGs, which can move with one unusual day, and anything about strains.</p>
 </section>
 
 <section class="panel">
-  <h2>Next steps and questions for tomorrow</h2>
+  <h2>Limitations</h2>
   <ul>
-    <li><b>Strain diversity per day.</b> Whether strain diversity changes around the switch needs each day's reads mapped on their own and a per-sample strain tool (for example inStrain, which also gives popANI between days). That is a server job of some hours, not something for this laptop analysis. Which MAGs should it focus on?</li>
-    <li><b>Two strains or one genome?</b> The two <i>Prevotella copri_B</i> MAGs keep a fixed ratio over the ten days. Mapping both to one reference, or comparing their genes, could tell whether they are two strains or one genome split in two.</li>
-    <li><b>Day 4 and day 5.</b> The largest day-to-day step is inside the first diet period. Is this day-to-day variation of stool, or something in the samples? A second sample of the same day would show how large sampling noise is.</li>
-    <li><b>A longer series.</b> With one switch in one person the timing cannot be tested. More days after the switch, or a switch back, would show whether the new state is stable.</li>
+    <li>One person, one switch, one sample per day: the timing is described, not tested; responses differ between people [3].</li>
+    <li>Shares are of DNA, not cells, and only the binned part of each sample (<span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>% of the bases) is used.</li>
+    <li>Carbohydrate and calorie intake changed together; the diet before day 1 is known only from the data owner, and there is no sample from before the study.</li>
+    <li>Settled days use period means that include the days being judged.</li>
+    <li>Variable positions come from pooled reads and a caller made for diploid genomes; strains below 10% of a MAG's reads are not counted.</li>
   </ul>
+</section>
+
+<section class="panel">
+  <h2>Open questions and possible next analyses</h2>
+  <ul>
+    <li><b>Strain diversity per day.</b> Does strain diversity change around the switch? Map each day's reads on their own to the MAGs and run a per-sample strain tool (for example inStrain, which also compares days by population ANI). A server job of some hours.</li>
+    <li><b>The <i>P. copri_B</i> pair.</b> One genome or two strains? Compare the two MAGs' sequences and genes (on the Mac, from the MAG sequences in module 8), and check reads that span both (read mapping on the server).</li>
+    <li><b>Fast and slow genomes.</b> Do the MAGs that settle on day 6 share something, for example carbohydrate-active enzymes (module 7), that the slower ones lack? On the Mac, from the gene tables in module 8.</li>
+    <li><b>Day 4 to day 5.</b> Is the largest step sampling noise? Two samples from the same stool, or several from the same day, would show how large it is (not measured).</li>
+    <li><b>Transit time.</b> A transit-time marker such as the blue-dye method [5] in a new study would separate gut transit from community change (not measured).</li>
+    <li><b>The usual diet.</b> Days 6-10 were closer to the normal diet; samples from before the study or after day 10 would show whether day 10 is near the subject's usual community (not measured).</li>
+  </ul>
+</section>
+
+<section class="panel">
+  <h2>References</h2>
+  <ol class="refs">
+    <li>Wu GD, Chen J, Hoffmann C, et al. (2011) Linking long-term dietary patterns with gut microbial enterotypes. Science 334:105-108. <a href="https://doi.org/10.1126/science.1208344">doi:10.1126/science.1208344</a>, PMID 21885731.</li>
+    <li>David LA, Maurice CF, Carmody RN, et al. (2014) Diet rapidly and reproducibly alters the human gut microbiome. Nature 505:559-563. <a href="https://doi.org/10.1038/nature12820">doi:10.1038/nature12820</a>, PMID 24336217.</li>
+    <li>Johnson AJ, Vangay P, Al-Ghalith GA, et al. (2019) Daily sampling reveals personalized diet-microbiome associations in humans. Cell Host Microbe 25:789-802. <a href="https://doi.org/10.1016/j.chom.2019.05.005">doi:10.1016/j.chom.2019.05.005</a>, PMID 31194939.</li>
+    <li>Roager HM, Hansen LBS, Bahl MI, et al. (2016) Colonic transit time is related to bacterial metabolism and mucosal turnover in the gut. Nat Microbiol 1:16093. <a href="https://doi.org/10.1038/nmicrobiol.2016.93">doi:10.1038/nmicrobiol.2016.93</a>, PMID 27562254.</li>
+    <li>Asnicar F, Leeming ER, Dimidi E, et al. (2021) Blue poo: impact of gut transit time on the gut microbiome using a novel marker. Gut 70:1665-1674. <a href="https://doi.org/10.1136/gutjnl-2020-323877">doi:10.1136/gutjnl-2020-323877</a>, PMID 33722860.</li>
+    <li>Garud NR, Good BH, Hallatschek O, Pollard KS (2019) Evolutionary dynamics of bacteria in the gut microbiome within and across hosts. PLoS Biol 17:e3000102. <a href="https://doi.org/10.1371/journal.pbio.3000102">doi:10.1371/journal.pbio.3000102</a>, PMID 30673701.</li>
+    <li>Tett A, Huang KD, Asnicar F, et al. (2019) The Prevotella copri complex comprises four distinct clades underrepresented in Westernized populations. Cell Host Microbe 26:666-679. <a href="https://doi.org/10.1016/j.chom.2019.08.018">doi:10.1016/j.chom.2019.08.018</a>, PMID 31607556.</li>
+    <li>Sereika M, Mussig AJ, Jiang C, et al. (2025) Genome-resolved long-read sequencing expands known microbial diversity across terrestrial habitats. Nat Microbiol 10:2018-2030. <a href="https://doi.org/10.1038/s41564-025-02062-z">doi:10.1038/s41564-025-02062-z</a>, PMID 40707831.</li>
+    <li>Edge P, Bansal V (2019) Longshot enables accurate variant calling in diploid genomes from single-molecule long read sequencing. Nat Commun 10:4660. <a href="https://doi.org/10.1038/s41467-019-12493-y">doi:10.1038/s41467-019-12493-y</a>, PMID 31604920.</li>
+  </ol>
 </section>

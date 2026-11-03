@@ -73,20 +73,20 @@ function drawCore() {
   });
 }
 
-function drawAll() { drawHeat(); drawTiming(); drawMovers(); drawCore(); }
+const FAM = [["Lachnospiraceae", "var(--c1)"], ["Bacteroidaceae", "var(--c2)"], ["other families", "var(--c3)"]];
+const famColor = (f) => (FAM.find(([n]) => n === f) || FAM[2])[1];
+
+function drawChange() {
+  const rows = [...D.movers].sort((a, b) => b.log2 - a.log2);
+  barChart($("pjChange"), { labels: rows.map((m) => m.name), values: rows.map((m) => m.log2), horizontal: true,
+    colors: rows.map((m) => famColor(m.family)), yLabel: "log2 change, days 6-10 vs days 1-5", fmt: (v) => v.toFixed(1) });
+  chartLegend($("pjChangeLeg"), FAM.map(([name, color]) => ({ name, color })));
+}
+
+function drawAll() { drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCore(); }
 
 $("pjX").addEventListener("change", () => { st.xaxis = $("pjX").value; drawCore(); });
-const applyState = (s) => { if (s.mag) st.mag = s.mag; if (s.xaxis) st.xaxis = s.xaxis; };
-const examples = setupExamples($("pjExamples"), (k) => {
-  applyState(EXAMPLES[k].state);
-  drawAll();
-  writeHashParams({ ex: k + 1 });
-});
 fillNumbers();
 stats();
 magOptions();
-(function start() {
-  const ex = parseInt(readHashParams().ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState(EXAMPLES[ex - 1].state); }
-  drawAll();
-})();
+drawAll();
