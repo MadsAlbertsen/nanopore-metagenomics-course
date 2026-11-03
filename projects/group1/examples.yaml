@@ -1,0 +1,39 @@
+- title: Is day 1 closest to day 10?
+  at: heat
+  question: Hover over the cell for day 1 and day 10. Is this the most similar pair of days? Find the pair with the lowest
+    value, and count how many pairs are more similar than days 1 and 10.
+  answer: 'Days 1 and 10 have a Bray-Curtis value of 0.38: rank 40 of 45 pairs, where 1 is the most similar. The most similar
+    pair is day 2 and day 3 (0.15); the most different is day 2 and day 10 (0.45). Days 1 and 10 are among the most different
+    pairs, not the most alike. As the subject had eaten a similar high-calorie diet for about a week before day 1, day 1 is
+    not a sample of the normal diet, so a close match with day 10 was not expected.'
+  state:
+    view: heat
+- title: Where is the biggest step?
+  at: timing
+  question: 'In panel B, which step from one day to the next changes the community most? Is it the step into the new diet
+    (day 5 to 6)? Then use panel A: on which day does the community move away from day 1, and on which day does it come close
+    to the end state (mean of days 8-10)?'
+  answer: 'The largest step is day 4 to 5 (Bray-Curtis 0.28), inside the first diet period; the steps around the switch are
+    similar to the others: day 5 to 6 0.20, 6 to 7 0.21, 7 to 8 0.20. So the change is not one big jump. In panel A, the distance
+    to day 1 stays at or below 0.23 up to day 7 and jumps to 0.33 on day 8, while the distance to the end state drops from
+    0.31 on day 6 to 0.21 on day 7. Day 7 lies in between: the community moves over one to two days after the switch.'
+  state:
+    view: timing
+- title: Follow Acetatifactor intestinalis (c.33)
+  at: movers
+  question: Figure 3 now shows Acetatifactor intestinalis (c.33), the most abundant MAG that rises. On which day does it cross
+    the flat midpoint line between its two period means and stay above it?
+  answer: Its mean is 2.49% of the bases on days 1-5 and 6.05% on days 6-10 (midpoint 4.27%); it settles on day 7. For comparison,
+    Agathobacter rectalis (c.40), the most abundant MAG that falls, settles on day 7.
+  state:
+    mag: c.33
+- title: Strain mixtures among the core MAGs
+  at: core
+  question: Do any core MAGs (orange) reach 0.5% variable positions, the rule set before the analysis for a likely strain
+    mixture? Do the deepest MAGs have the most variable positions?
+  answer: 'None of the 61 core MAGs reaches 0.5%. The highest core MAG is Faecalibacterium duncaniae (s.62) with 0.127%; the
+    median core MAG has 0.005%. The deepest MAGs have the fewest: the median is 0.048% for MAGs at 10-50x and 0.002% for MAGs
+    above 300x (rank correlation with depth -0.41 over all 421 MAGs). More depth did not find more variants here.'
+  state:
+    view: core
+    xaxis: depth
