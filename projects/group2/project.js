@@ -9,18 +9,12 @@ const byMag = Object.fromEntries(D.mags.map((m) => [m.mag, m]));
 const catName = (c) => D.cazy.names[D.cazy.cats.indexOf(c)];
 const fmtR = (v) => v.toFixed(2);
 
-// numbers in the text: <span data-n="key" data-d="decimals">; in examples: {key}, {m:MAG:field}, {c:category:rank:field}
+// numbers in the text: <span data-n="key" data-d="decimals"> filled from DATA.numbers
 function numText(key, d) {
   const v = N[key];
   if (v === undefined) return "?";
   return d !== undefined ? Number(v).toFixed(+d) : String(v);
 }
-function fillText(s) {
-  return s.replace(/\{m:([^:}]+):([a-z0-9_]+)\}/g, (_, id, f) => (f === "best" ? SPLITS[byMag[id].best - 1] : f === "name" ? byMag[id].name : String(byMag[id][f])))
-    .replace(/\{c:([a-z_]+):(\d+):([a-z_]+)\}/g, (_, c, i, f) => String(D.cazy.top[c][+i][f]))
-    .replace(/\{([a-z0-9_]+)(?::(\d))?\}/g, (_, k, d) => numText(k, d));
-}
-for (const e of EXAMPLES) { e.question = fillText(e.question); e.answer = fillText(e.answer); }
 document.querySelectorAll("[data-n]").forEach((s) => { s.textContent = numText(s.dataset.n, s.dataset.d); });
 
 function stats() {
@@ -100,7 +94,21 @@ function drawTable() {
   });
 }
 
-function drawAll() { drawFig1(); drawFig2(); magOptions(); drawFig3(); catOptions(); drawFig4(); drawTable(); }
+function drawFig5() {
+  const F = D.families;
+  heatmap($("g2FamHeat"), { rows: F.map((f) => `${f.family} (${f.category.toLowerCase()})`), cols: D.days.map((d) => `Day ${d}`),
+    values: F.map((f) => f.days), label: "log2 of the day over the days 1-5 mean", diverging: true, format: (v) => (v === null ? "–" : v.toFixed(2)) });
+  table($("g2FamTable"), {
+    columns: [{ key: "family", label: "Family" }, { key: "category", label: "Substrate group" },
+      { key: "high", label: "Days 1-5 (per 1,000 genes)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "low", label: "Days 6-10 (per 1,000 genes)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "ratio", label: "Fold change (6-10 / 1-5)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "top_mag", label: "MAG adding most" }, { key: "top_value", label: "Its contribution", num: true, fmt: (v) => v.toFixed(3) }],
+    rows: F, sortKey: "ratio", maxRows: 20,
+  });
+}
+
+function drawAll() { drawFig1(); drawFig2(); magOptions(); drawFig3(); catOptions(); drawFig4(); drawFig5(); drawTable(); }
 
 $("g2F1Tabs").addEventListener("click", (ev) => { const b = ev.target.closest("button[data-v]"); if (b) { st.fig1 = b.dataset.v; drawFig1(); } });
 $("g2Mag").addEventListener("change", (ev) => { st.mag = ev.target.value; drawFig3(); });
@@ -114,20 +122,5 @@ $("g2Table").addEventListener("click", (ev) => {
   if (m) { st.mag = m.mag; if (st.big && Math.abs(m.log2) < 1) st.big = false; magOptions(); drawFig3(); $("g2Mag").scrollIntoView({ block: "center", behavior: "smooth" }); }
 });
 
-const applyState = (s) => {
-  st.fig1 = s.fig1 || "phyla";
-  st.mag = s.mag || D.default_mag;
-  st.cat = s.cat || "all";
-  st.big = !!s.big;
-};
-const examples = setupExamples($("pjExamples"), (k) => {
-  applyState(EXAMPLES[k].state);
-  drawAll();
-  writeHashParams({ ex: k + 1 });
-});
 stats();
-(function start() {
-  const ex = parseInt(readHashParams().ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState(EXAMPLES[ex - 1].state); }
-  drawAll();
-})();
+drawAll();

@@ -7,7 +7,9 @@ question: >-
   MAG's shift a step at the diet switch or a gradual trend, and does the community's potential to break down
   carbohydrates (CAZyme genes, weighted by each MAG's share) differ between the periods?
 status: draft
-discussion: >-
-  Most MAGs that changed two-fold changed most between day 6 and day 8, not at the diet switch between day 5 and
-  day 6. What could make a gut community answer a change in food one or two days late, and what would you need to
-  measure to tell a late answer to the diet from a change that would have happened anyway?
+takeaways:
+  - "The community changed between the periods (Bray-Curtis 0.31 between days of different periods, 0.21 and 0.24 within them), mostly from day 7 on; its diversity did not change (about 55 effective MAGs in both periods)."
+  - "35 of the 124 MAGs with a mean share of at least 0.1% changed at least two-fold (12 down, all Bacillota; 23 up). Only 9 of them changed most at the diet switch; 22 changed most one or two days later."
+  - "Bacteroidota rose at the switch (21.9% of the bases on day 5, 30.6% on day 6) and fell from day 9 to 18.2% on day 10; one Cyanobacteriota MAG (Zag111) climbed from 0.3% to 5.1%."
+  - "The community's CAZyme genes per 1,000 genes hardly changed (27.1 in days 1-5, 27.6 in days 6-10, 2%), and none of the 38 common CAZy families changed 1.5-fold."
+  - "Interpretation: the small shifts in carbohydrate potential follow Bacteroidota MAGs replacing each other (Prevotella copri_B down, Phocaeicola and Bacteroides up) more than the loss of the Bacillota that fell."
