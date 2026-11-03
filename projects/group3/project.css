@@ -1,0 +1,4 @@
+/* group 3: controls above a figure */
+.ctl { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted) }
+.ctl label { display: inline-flex; align-items: center; gap: 6px }
+.ctl label[hidden] { display: none }

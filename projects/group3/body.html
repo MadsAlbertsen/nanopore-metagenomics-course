@@ -1,0 +1,87 @@
+<div class="intro">
+  <span class="kicker">Group 3 · project report (draft)</span>
+  <h1>Butyrate genes across the two diet periods</h1>
+  <p class="note">Butyrate is a short fatty acid that gut bacteria make from fibre and that the cells of the colon use for energy. This report follows the genes for its last steps through the ten days: which genomes carry them, how much of the DNA those genomes make up on each day, and when a change shows.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group asked whether the high-carbohydrate and the low-carbohydrate diet change the abundance of genes for butyrate production, which genomes carry those genes, who those genomes are (as far down the taxonomy as possible), and from which day a change can be seen.</p>
+  <p>As answered here: the data are DNA, so "abundance of a gene" means the share of the sample's DNA that belongs to genomes (MAGs, metagenome-assembled genomes) carrying it. That is <b>gene potential</b>: a gene present is not a gene used, and no butyrate was measured. With one person and ten days the report describes the size and timing of changes; it does not test them. An answer is a count of genomes with the route, their share of the DNA per day, and the day the share leaves its range from the first diet period.</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>Three tables from <a href="data.html">module 8</a>. (1) The genes of all <span data-n="n_mags"></span> MAGs and their names from the Bakta annotation (<a href="annotation.html">module 7</a>); one row per gene. (2) The marker-gene search on the same genes (KOfam profiles); one row per gene hit. (3) The MAG table: GTDB names down to species, quality, and each MAG's share of each sample's bases (percent of the sample's sequenced bases that map to the MAG; <a href="binning.html">module 4</a>).</p>
+  <p>Days 1-5 were high-carbohydrate and high-calorie, days 6-10 low-carbohydrate and low-calorie; both periods were vegetarian, and the days 6-10 diet was closer to the subject's normal diet. The subject had eaten a similar high-calorie diet for about a week before day 1, so days 1-5 continue that diet and the switch at day 6 is the main change (information from the data owner). Only about <span data-n="binned_hi"></span>-<span data-n="binned_lo"></span>% of each sample's bases fall in MAGs (mean of days 1-5 and 6-10), so the rest of the community is not seen.</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p><b>Genes.</b> The acetyl-CoA pathway is the most common butyrate pathway in stool metagenomes (on average about 80% of the butyrate pathways found in the 15 stool samples studied by Vital et al. 2014). In it, two acetyl-CoA become butyryl-CoA, the last step of which is butyryl-CoA dehydrogenase (<b>bcd</b>), and then a final step releases butyrate, either by a CoA-transferase that swaps the CoA onto acetate (<b>but</b>) or by phosphate butyryltransferase plus butyrate kinase (<b>ptb</b>, <b>buk</b>) (Vital et al. 2014). A MAG counts as having a <b>complete route</b> when it carries bcd plus but, ptb or buk: the rule used in module 8. bcd, ptb, buk and the AtoD/AtoA-type transferases come from KOfam; but has no clean KOfam profile and is found by its Bakta name.</p>
+  <p><b>Positive control.</b> Module 8 ran the same search on <span data-n="pc_mags"></span> selected MAGs; this report's code gives the same gene counts and the same route call (<span data-n="pc_route"></span> with a route) for all of them. The script stops otherwise.</p>
+  <p><b>Steps.</b> Count the genes per MAG; group the route MAGs by the set of genes they carry; follow their share per day, alone and summed; place them on a map by gene set (PCoA) coloured by family; and find the day each series changes. <b>Expected</b> (written down before the numbers): the known producers Roseburia, Agathobacter, Anaerostipes and Lachnospira fall on days 6-10, so the summed share of route MAGs should fall, from about day 7.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. Which butyrate genes the MAGs carry</h3>
+  <div class="ctl"><label>Show <select id="g3View"><option value="genes">MAGs per gene</option><option value="sets">route MAGs per gene set</option></select></label></div>
+  <div id="g3Genes"></div>
+  <p class="cap"><b>What it shows.</b> "MAGs per gene": the number of MAGs (of <span data-n="n_mags"></span>) with at least one copy of each gene, among all MAGs and among the <span data-n="n_route"></span> with a complete route. "Route MAGs per gene set": how many route MAGs carry each combination of genes. The bcd profile also matches other short-chain acyl-CoA dehydrogenases, so bcd counts are an upper bound. Hover a bar for its count.</p>
+  <div class="exslot" data-at="genes"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 2. Route MAGs over the ten days</h3>
+  <div class="ctl"><label>Gene set <select id="g3Set"></select></label> <label>Colour <select id="g3Scale"><option value="share">share of the sample's bases (%)</option><option value="log2">log2 change from the mean of days 1-5</option></select></label></div>
+  <div id="g3Heat"></div>
+  <p class="cap"><b>What it shows.</b> One row per route MAG with a mean share of at least <span data-n="min_mean"></span>% of the sample's bases (<span data-n="n_route_main"></span> MAGs), grouped by gene set (shown after the name; all carry bcd) and sorted by mean share; GTDB species name (genus shortened) and MAG number. Colour: either the share of the sample's bases on that day (viridis, log scale, so small MAGs stay visible), or log2 of that day's share divided by the MAG's mean on days 1-5 (blue lower, orange higher; -1 is half, +1 is double). Pick a gene set to see only its MAGs.</p>
+  <div class="exslot" data-at="heat"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 3. Do MAGs with the same genes belong to the same family?</h3>
+  <div id="g3Pcoa"></div>
+  <div id="g3FamSet"></div>
+  <p class="cap"><b>What it shows.</b> Top: each route MAG placed by its butyrate gene set (PCoA on Jaccard distances of gene presence: axis 1 holds <span data-n="pc1"></span>%, axis 2 <span data-n="pc2"></span>% of the variation), coloured by GTDB family. MAGs with the same set share one spot; a small fixed jitter keeps them visible. Bottom: the same as counts, families (rows) by gene set (columns), number of MAGs (viridis).</p>
+  <div class="exslot" data-at="pcoa"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 4. When does the change show?</h3>
+  <div class="ctl"><label>Series <select id="g3Series"><option value="community">route MAGs summed, by final step</option><option value="per1000">genes per 1,000 genes of the community</option><option value="mag">one MAG</option></select></label> <label id="g3MagLab">MAG <select id="g3Mag"></select></label></div>
+  <div id="g3Line"></div>
+  <p class="note" id="g3Break"></p>
+  <h3>Table 2. Break check per route MAG</h3>
+  <div id="g3Table"></div>
+  <p class="cap"><b>What it shows.</b> Top: the chosen series over the ten days (dashed line: the diet switch). "Summed": all route MAGs, MAGs with but, and MAGs with only ptb/buk, in percent of the sample's bases. "Per 1,000 genes": each gene's copies per 1,000 genes of all MAGs, each MAG weighted by its share that day. Below: the break check for each series. The break is the split of the ten days into an early and a late block with the largest log2 change between the block means; "first day outside" is the first of days 6-10 below the lowest or above the highest of days 1-5. Table 2 lists both for the route MAGs; click a column to sort.</p>
+  <div class="exslot" data-at="line"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Table 1. All route MAGs</h3>
+  <div id="g3All"></div>
+  <p class="cap"><b>What it shows.</b> All <span data-n="n_route"></span> route MAGs with their GTDB names, quality, genes found (copies per MAG), mean share of the sample's bases in days 1-5 and 6-10 and the log2 change between them. The log2 change is the one in the course's shared MAG table: log2((mean of days 6-10 + <span data-n="pseudo"></span>) / (mean of days 1-5 + <span data-n="pseudo"></span>)), with means in percent of the bases; the small addition keeps MAGs that are absent in one period finite. The same values are used in Table 2 and the examples. "Etf" marks MAGs with an electron-transfer flavoprotein gene within three genes of bcd. Type a name to filter.</p>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p>The expected fall did not show. The <span data-n="n_route"></span> route MAGs held <span data-n="total_hi"></span>% of the sample's bases on days 1-5 and <span data-n="total_lo"></span>% on days 6-10 (mean per day), and no day of 6-10 lies outside the range of days 1-5. As a share of only the binned bases the totals are <span data-n="ofb_hi"></span>% and <span data-n="ofb_lo"></span>%. The known producers did fall, as expected: the <span data-n="n_known"></span> Roseburia, Agathobacter, Anaerostipes and Lachnospira route MAGs (GTDB's split genera such as Roseburia_D included) together went from <span data-n="known_hi"></span>% to <span data-n="known_lo"></span>%, much as Duncan et al. (2007) saw for Roseburia and Eubacterium rectale (now Agathobacter rectalis) on a low-carbohydrate diet. But MAGs with only the kinase route rose from <span data-n="pb_hi_pct"></span>% to <span data-n="pb_lo_pct"></span>%, led by Acetatifactor intestinalis, while MAGs with the CoA-transferase fell from <span data-n="but_hi_pct"></span>% to <span data-n="but_lo_pct"></span>%. "Kinase route" here means ptb and/or buk without but: <span data-n="n_pb_both"></span> of these MAGs carry both ptb and buk and went from <span data-n="pbboth_hi_pct"></span>% to <span data-n="pbboth_lo_pct"></span>%; the other <span data-n="n_buk_only"></span> carry buk without ptb and held <span data-n="bukonly_hi_pct"></span>% and <span data-n="bukonly_lo_pct"></span>%.</p>
+  <p>The strongest result is this split between the two final steps; it rests on gene calls that passed the positive control. It does not show butyrate output: a kinase-route genome may make less, more or no butyrate, and gene copies do not say how active a genome is. Shares are of the DNA, not cell counts, and the bases outside the MAGs are not seen. bcd is an upper bound (the profile also fits related enzymes); only <span data-n="n_etf_route"></span> of <span data-n="n_route"></span> route MAGs have the partner Etf gene next to bcd, which may reflect contig breaks as much as wrong calls. Days 6-10 also cut calories, so carbohydrate is not the only change.</p>
+  <p class="note">References: Vital M, Howe AC, Tiedje JM (2014) Revealing the bacterial butyrate synthesis pathways by analyzing (meta)genomic data. mBio 5:e00889-14, <a href="https://doi.org/10.1128/mBio.00889-14">doi:10.1128/mBio.00889-14</a> (the pathway and its final steps; the acetyl-CoA pathway is the most common in stool metagenomes). Duncan SH et al. (2007) Reduced dietary intake of carbohydrates by obese subjects results in decreased concentrations of butyrate and butyrate-producing bacteria in feces. Appl Environ Microbiol 73:1073-1078, <a href="https://doi.org/10.1128/AEM.02340-06">doi:10.1128/AEM.02340-06</a> (Roseburia / E. rectale and faecal butyrate fell with less carbohydrate; obese volunteers, high-protein diets, four weeks each).</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <p><b>Does the kinase-route rise mean more or less butyrate?</b> Only a measurement of butyrate in the stool, or RNA (which genes are read), would tell; neither is in this study.</p>
+  <p><b>Are all bcd calls real?</b> Look at the genes next to each bcd (Etf, crotonase, thiolase) in the MAG explorer, and check the route MAGs without an Etf neighbour.</p>
+  <p><b>Other routes.</b> Butyrate can also be made from amino acids such as lysine or glutamate (Vital et al. 2014); those genes were not searched. A second gene set would show whether the total changes when they are included.</p>
+  <p><b>Question for the group:</b> which genome would you follow in more detail, and what would you want to know about it?</p>
+</section>
