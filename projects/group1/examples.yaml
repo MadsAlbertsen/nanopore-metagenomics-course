@@ -16,7 +16,8 @@
   answer: 'The largest step is day 4 to 5 (Bray-Curtis 0.28), inside the first diet period; the steps around the switch are
     similar to the others: day 5 to 6 0.20, 6 to 7 0.21, 7 to 8 0.20. So the change is not one big jump. In panel A, the distance
     to day 1 stays at or below 0.23 up to day 7 and jumps to 0.33 on day 8, while the distance to the end state drops from
-    0.31 on day 6 to 0.21 on day 7. Day 7 lies in between: the community moves over one to two days after the switch.'
+    0.31 on day 6 to 0.21 on day 7. Day 7 lies in between: the community as a whole moves over days 7-8, while many single
+    MAGs shift on day 6 itself (Figure 3). One person, one switch: this is described, not tested.'
   state:
     view: timing
 - title: Follow Acetatifactor intestinalis (c.33)
