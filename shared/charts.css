@@ -18,3 +18,6 @@
 .fig .cap b { color: var(--ink) }
 .fig > h3 { font-size: 15px; margin: 0 }
 .pjh { margin: 22px 0 8px }
+/* text blocks in report panels: the panel gap alone spaces them (default p/ul margins doubled it); :where keeps
+   specificity low so project.css rules still win */
+.panel > :where(p, ul, ol) { margin: 0 }
