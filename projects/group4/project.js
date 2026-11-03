@@ -44,12 +44,18 @@ function drawCat() {
 
 function drawRed() {
   const order = ["Plant fibre", "Starch", "Fructan", "Host glycans", "Mixed", "Other", "Unmapped"];
+  const COLORS = { "Plant fibre": "var(--c1)", Starch: "var(--c2)", Fructan: "var(--c3)", "Host glycans": "var(--c4)",
+    Mixed: "var(--c5)", Other: "var(--faint)", Unmapped: "var(--c7)" };
   const pts = [...D.redundancy].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
   scatter($("pjRed"), {
-    points: pts.map((r) => ({ x: r.carriers, y: r.cv, label: r.family, group: r.category,
-      extra: `${r.carriers} common MAGs · ${r.mean} per 1,000 genes` })),
+    // no group key: the kit's legend would use its own colour order; our own legend below
+    points: pts.map((r) => ({ x: r.carriers, y: r.cv, label: r.family, color: COLORS[r.category],
+      extra: `${r.category} · ${r.mean} per 1,000 genes` })),
     xLabel: "Common MAGs carrying the family (log scale)", yLabel: "Day-to-day variation (CV, %)", logX: true,
   });
+  const host = $("pjRedLegend");
+  host.innerHTML = "";
+  chartLegend(host, order.filter((c) => pts.some((r) => r.category === c)).map((c) => ({ name: c, color: COLORS[c] })));
 }
 
 function drawSort() {
