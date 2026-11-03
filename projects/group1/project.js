@@ -1,4 +1,4 @@
-// Group 1 report: Bray-Curtis between days, timing of the change, changing MAGs, variable positions of core MAGs.
+// Group 1 report (by hypothesis): taxonomic profile and MAG heat map per day, Bray-Curtis between days, timing of the change, changing MAGs, variable positions of core MAGs.
 // Every number comes from DATA (data.json, np26 scripts/41_project_group1.py).
 const D = DATA, N = D.numbers;
 const st = { mag: null, xaxis: "depth" };
@@ -12,7 +12,7 @@ function fillNumbers() {
 }
 
 function stats() {
-  const items = [[D.days.length, "daily samples"], [N.mags, "MAGs"], [N.nChange, "MAGs that change at least two-fold"], [N.nCore, "core MAGs (all ten days)"]];
+  const items = [[D.days.length, "daily samples"], [N.mags, "MAGs"], [N.nChange, "MAGs that change at least two-fold"], [N.nCore, "core MAGs (all ten days)"], [N.vcfSampleCols, "sample column in the variant file (pooled)"]];
   $("pjStats").innerHTML = items.map(([n, t]) => `<div class="stat"><b>${n}</b><span>${esc(t)}</span></div>`).join("");
 }
 
@@ -39,8 +39,6 @@ function drawTiming() {
   });
   barChart($("pjSteps"), { labels: t.stepLabels.map((s) => "day " + s), values: t.steps, yLabel: "Bray-Curtis to the day before",
     colors: t.stepLabels.map((s) => (s === "5 to 6" ? "var(--c2)" : "var(--c1)")), fmt: (v) => v.toFixed(3), height: 240 });
-  lineChart($("pjPhyla"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%",
-    series: D.phyla.series, marks: SWITCH, logY: true });
 }
 
 function drawMovers() {
@@ -83,7 +81,35 @@ function drawChange() {
   chartLegend($("pjChangeLeg"), FAM.map(([name, color]) => ({ name, color })));
 }
 
-function drawAll() { drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCore(); }
+// Figures 1-2 (version 3): per-day taxonomic profile and MAG heat map, log10 colour scale
+const st2 = { tax: "family", heat: "top" };
+const lg = (v) => Math.log10(Math.max(v, N.heatFloor));
+const pct = (v) => (v === null ? "–" : 10 ** v <= N.heatFloor * 1.0001 ? `< ${N.heatFloor}%` : `${fmtNum(+(10 ** v).toPrecision(3))}%`);
+const shortName = (s) => (s.length > 30 ? s.replace(/^(\S)\S*\s/, "$1. ") : s);
+
+function drawTax() {
+  const rows = st2.tax === "family" ? D.families.rows : D.phylaHeat;
+  heatmap($("pjTax"), { rows: rows.map((r) => (r.phylum ? `${r.name} · ${r.phylum}` : r.name)),
+    cols: D.days.map((d) => "Day " + d), values: rows.map((r) => r.share.map(lg)), label: "Share of the bases",
+    format: pct, cell: 22, colLabelHeight: 50 });
+}
+
+function drawMagHeat() {
+  const rows = st2.heat === "top" ? D.heatTop : D.heatChange;
+  const labels = [], values = [];
+  let fam = null;
+  for (const r of rows) {
+    if (r.family !== fam) { fam = r.family; labels.push(`${fam || "unclassified"} (family)`); values.push(D.days.map(() => null)); }
+    labels.push(shortName(r.name));
+    values.push(r.share.map(lg));
+  }
+  heatmap($("pjMagHeat"), { rows: labels, cols: D.days.map((d) => "Day " + d), values, label: "Share of the bases",
+    format: pct, cell: 16, colLabelHeight: 50 });
+}
+
+function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCore(); }
+$("pjTaxLevel").addEventListener("change", () => { st2.tax = $("pjTaxLevel").value; drawTax(); });
+$("pjHeatSet").addEventListener("change", () => { st2.heat = $("pjHeatSet").value; drawMagHeat(); });
 
 $("pjX").addEventListener("change", () => { st.xaxis = $("pjX").value; drawCore(); });
 fillNumbers();
