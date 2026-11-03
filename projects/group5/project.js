@@ -9,8 +9,6 @@ const num = (v) => (typeof v === "number" ? v.toLocaleString("en-US") : String(v
 // derived numbers for the text (all from data.json)
 N.id = FOCUS.id;
 N.length_bp = fmtBp(N.length);
-// guided-example answers: {key} is replaced by DATA.numbers[key]
-for (const e of EXAMPLES) for (const k of ["question", "answer"]) e[k] = e[k].replace(/\{(\w+)\}/g, (m, key) => (key in N ? num(N[key]) : m));
 
 const EV = {
   cluster: { c: "var(--c1)", t: "Named protein cluster (UniRef50)" },
@@ -187,7 +185,7 @@ function drawAll() {
   $("g5Log").checked = st.log; $("g5Hl").value = st.highlight; $("g5Color").value = st.color; $("g5Q").value = st.q; $("g5Unit").value = st.unit;
   drawLine(); drawTable(); drawLegend(); drawMap(); drawCazy(); drawGroups();
 }
-function write() { writeHashParams({ ex: examples.current >= 0 ? examples.current + 1 : "", log: st.log ? "" : 0, hl: st.highlight !== DEFAULTS.highlight ? st.highlight : "", color: st.color !== DEFAULTS.color ? st.color : "", q: st.q, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" }); }
+function write() { writeHashParams({ log: st.log ? "" : 0, hl: st.highlight !== DEFAULTS.highlight ? st.highlight : "", color: st.color !== DEFAULTS.color ? st.color : "", q: st.q, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" }); }
 const applyState = (s) => {
   Object.assign(st, DEFAULTS);
   if (s.highlight && D.mags.some((m) => m.id === s.highlight)) st.highlight = s.highlight;
@@ -207,12 +205,10 @@ $("g5Q").addEventListener("input", (e) => { st.q = e.target.value; drawMap(); wr
 $("g5Unit").addEventListener("change", (e) => { st.unit = e.target.value; drawCazy(); write(); });
 $("g5Grp").addEventListener("change", (e) => { st.group = e.target.value; drawGroups(); write(); });
 
-const examples = setupExamples($("pjExamples"), (k) => { applyState(EXAMPLES[k].state); drawAll(); write(); });
 fillNumbers();
 stats();
 (function start() {
-  const p = readHashParams(), ex = parseInt(p.ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState(EXAMPLES[ex - 1].state); }
-  else applyState({ highlight: p.hl, ...(p.log === "0" ? { log: false } : {}), color: p.color, q: p.q, group: p.group, unit: p.unit });
+  const p = readHashParams();
+  applyState({ highlight: p.hl, ...(p.log === "0" ? { log: false } : {}), color: p.color, q: p.q, group: p.group, unit: p.unit });
   drawAll();
 })();

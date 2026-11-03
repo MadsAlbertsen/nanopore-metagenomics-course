@@ -6,3 +6,7 @@
 #g5Members { max-height: 360px; overflow-y: auto }
 #g5Heat { margin-top: 10px; overflow-x: auto }
 @media (max-width: 900px) { .g5mapgrid { grid-template-columns: minmax(0, 1fr) } }
+.interp { margin: 4px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); color: var(--ink); font-size: 13.5px; border-radius: 0 6px 6px 0 }
+.g5ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 13.5px; display: flex; flex-direction: column; gap: 4px }
+.g5refs { margin: 0; padding-left: 22px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px }
+.g5refs a { color: var(--accent) }
