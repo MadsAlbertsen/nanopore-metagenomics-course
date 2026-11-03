@@ -1,0 +1,92 @@
+<div class="intro">
+  <span class="kicker">Group 4 · draft report</span>
+  <h1>Diet periods: genes or species, and stability</h1>
+  <p class="note">One person gave a stool sample on each of ten days: days 1-5 on a high-carbohydrate, high-calorie diet and days 6-10 on a low-carbohydrate, low-calorie diet. This report asks whether the genes for breaking down carbohydrates tell the two periods apart, and whether the community is steadier in one of them.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group asked two things: can the diet be predicted from the community's gene potential, and can the diet the person is used to be read from how stable the community is, assuming a community changes less on a familiar diet.</p>
+  <p>With one person and one diet switch there is nothing to train a predictor on, so this report asks a narrower question: do the days of the two periods differ in their carbohydrate-degrading genes (CAZymes), enough that a simple rule sorts the ten days into the right period? And does the species mix sort them better or worse than the genes? For stability it compares how much the days differ within each period. An answer would be a count of correctly sorted days for genes and for species, and a within-period difference for each period.</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>Three tables from <a href="data.html">module 8</a>, all from the course's own sequencing run of the ten samples. First, the share of each day's bases on each of the <span data-n="n_mags"></span> MAGs (<a href="binning.html">module 4</a>): one row per MAG and day, in percent of the sample's bases. The MAGs together hold <span data-n="binned_min" data-d="0"></span>-<span data-n="binned_max" data-d="0"></span>% of each day's bases; the rest is not in any MAG and is left out.</p>
+  <p>Second and third, the CAZyme genes of every MAG (<a href="annotation.html">module 7</a>): genes per CAZy family per MAG, and degrading CAZyme genes (glycoside hydrolases GH, polysaccharide lyases PL, carbohydrate esterases CE) grouped by the substrate the family mostly acts on: plant fibre, starch, fructan or host glycans (the sugars of the gut's own mucus). Families with mixed or other substrates are not in the four groups. A gene in a MAG is potential, not activity.</p>
+  <p><b>About the diets</b> (information from the data owner): both periods were vegetarian; the days 6-10 diet was closer to the person's normal diet; and the subject had eaten a similar high-calorie diet for about a week before day 1. So by day 1 the community had already had about a week on the first diet, and days 6-10 are a return towards the usual diet.</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p><b>Community gene potential.</b> For each day, the genes of a group are counted in every MAG, weighted by the MAG's share of that day's bases, and divided by all genes of the MAGs weighted the same way: genes per 1,000 genes of the binned community. A MAG at 10% of the bases counts ten times more than one at 1%.</p>
+  <p><b>Sorting the days.</b> Each day has two profiles: its species mix (the MAG shares) and its gene profile (the weighted count of each of the <span data-n="n_families"></span> degrading CAZy families). One day at a time is left out; the other days of each period are averaged, and the left-out day goes to the period whose average it is closer to. Closeness is the Bray-Curtis dissimilarity (0 = identical profiles, 1 = nothing shared), after scaling each day to sum 1. A day sorted right counts one.</p>
+  <p><b>Stability.</b> Bray-Curtis between all pairs of days within a period, and between neighbouring days only. Because day 6 is the first day of the new diet, the second period is also shown as days 7-10.</p>
+  <p><b>Checks.</b> Before the numbers were seen, the expected result was written down: species sort most days right with day 6 likely wrong; genes differ less between days and sort fewer right. The positive control reproduces the published Bray-Curtis between the days (largest difference <span data-n="pc_bc_maxdiff" data-d="4"></span> at four decimals; within days 1-5 <span data-n="pc_bc_within1" data-d="2"></span>, within days 6-10 <span data-n="pc_bc_within2" data-d="2"></span>, between periods <span data-n="pc_bc_between" data-d="2"></span>, as in module 4's analysis), and the sorting rule puts two made-up, clearly different periods <span data-n="pc_synthetic_correct"></span> of 10 right. A second distance (Hellinger) gives the same sorting.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. Carbohydrate gene potential of the community, day by day</h3>
+  <div class="tabs" role="tablist" id="catView">
+    <button role="tab" data-v="abs" aria-selected="true">Genes per 1,000 genes</button>
+    <button role="tab" data-v="rel" aria-selected="false">Relative to days 1-5 (%)</button>
+  </div>
+  <div id="pjCat"></div>
+  <p class="cap"><b>What it shows.</b> One line per substrate group: degrading CAZyme genes per 1,000 genes of the MAGs, each MAG weighted by its share of that day's bases. The dashed line marks the diet switch between day 5 and day 6. "Relative to days 1-5" shows each day as a percent of the group's mean over days 1-5 (100 = no change), so the small fructan line can be compared with the others. Plant fibre <span data-n="cat_plant_fibre_first" data-d="1"></span> → <span data-n="cat_plant_fibre_second" data-d="1"></span>, starch <span data-n="cat_starch_first" data-d="1"></span> → <span data-n="cat_starch_second" data-d="1"></span>, fructan <span data-n="cat_fructan_first" data-d="2"></span> → <span data-n="cat_fructan_second" data-d="2"></span>, host glycans <span data-n="cat_host_glycan_first" data-d="1"></span> → <span data-n="cat_host_glycan_second" data-d="1"></span> per 1,000 genes (mean of days 1-5 → mean of days 6-10).</p>
+  <div class="exslot" data-at="cat"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 2. Sorting each day into a period: species mix or genes</h3>
+  <div class="tabs" role="tablist" id="sortView">
+    <button role="tab" data-v="taxa" aria-selected="true">Species mix (MAG shares)</button>
+    <button role="tab" data-v="functions" aria-selected="false">Genes (CAZy families)</button>
+  </div>
+  <div id="pjSort"></div>
+  <div id="pjSortTable"></div>
+  <p class="cap"><b>What it shows.</b> For each left-out day: its Bray-Curtis to the other period's average minus its Bray-Curtis to its own period's average. Above zero (blue) the day is closer to its own period and is sorted right; below zero (orange) it is sorted into the wrong period. The table lists both distances. The species mix sorts <span data-n="taxa_correct"></span> of 10 days right (wrong: day <span data-n="taxa_wrong"></span>), the genes <span data-n="func_correct"></span> of 10 (wrong: days <span data-n="func_wrong"></span>). The bars of the two profiles are on different scales: gene profiles differ much less between days.</p>
+  <div class="exslot" data-at="sort"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 3. How different the days are: within and between periods</h3>
+  <div class="tabs" role="tablist" id="stabView">
+    <button role="tab" data-v="taxa" aria-selected="true">Species mix (MAG shares)</button>
+    <button role="tab" data-v="functions" aria-selected="false">Genes (CAZy families)</button>
+  </div>
+  <div id="pjHeat"></div>
+  <div id="pjStab"></div>
+  <p class="cap"><b>What it shows.</b> Top: Bray-Curtis between every pair of days (0 = identical; viridis, dark = similar, yellow = different), for the profile chosen above; the colour range is set per profile and the diagonal (a day with itself) is left grey. Bottom: the mean Bray-Curtis over all pairs of days within a period, and over neighbouring days only (day 1 vs 2, 2 vs 3 and so on), for days 1-5, days 6-10 and days 7-10 (the second period without the switch day). A lower bar means the days are more alike.</p>
+  <div class="exslot" data-at="stab"></div>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 4. CAZy families that changed most between the periods</h3>
+  <div id="pjFam"></div>
+  <div id="pjFamTable"></div>
+  <p class="cap"><b>What it shows.</b> The <span data-n="n_families_listed"></span> degrading CAZy families with at least <span data-n="min_family"></span> genes per 1,000 genes in one of the periods, sorted by their change: log2 of the mean of days 6-10 over the mean of days 1-5 (1 = twice as many, -1 = half; orange up, blue down). The table adds the means, whether the days of the two periods overlap, and the MAG that contributes most of the family's weighted genes in the period where it is higher. Families in which the day values of the two periods do not overlap at all: <span data-n="n_families_apart"></span>.</p>
+  <div class="exslot" data-at="fam"></div>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p>The two diet periods differ, and the species mix shows it a little more clearly than the CAZyme genes: <span data-n="taxa_correct"></span> against <span data-n="func_correct"></span> of 10 days sorted right, and between-period Bray-Curtis <span data-n="taxa_ratio" data-d="2"></span> times the within-period mean for species against <span data-n="functions_ratio" data-d="2"></span> times for genes. Day 6, the first day of the new diet, sorts with days 1-5 in both, which fits a community that takes more than a day to respond (in Figure 3 the species mix changes from day 7).</p>
+  <p>The gene potential moves less than the species mix, likely because many MAGs carry the same families, so when one MAG drops, others with similar genes keep the community's total similar. The biggest change in the four groups is host glycans, <span data-n="cat_host_glycan_pct" data-d="0" data-sign="1"></span>% (mean of days 6-10 against days 1-5), then fructan <span data-n="cat_fructan_pct" data-d="0" data-sign="1"></span>% and starch <span data-n="cat_starch_pct" data-d="0" data-sign="1"></span>%. These are genes present in the MAGs, not genes used: whether the bacteria broke down more mucus in days 6-10 cannot be read from DNA.</p>
+  <p>On stability: days 6-10 differ more from each other (all pairs <span data-n="second_taxa_all_mean" data-d="2"></span> against <span data-n="first_taxa_all_mean" data-d="2"></span> for days 1-5), but neighbouring days differ about as much in both periods (<span data-n="second_taxa_cons_mean" data-d="2"></span> against <span data-n="first_taxa_cons_mean" data-d="2"></span>). Without the switch day, days 7-10 give <span data-n="late_taxa_all_mean" data-d="2"></span>, close to days 1-5. So the second period looks like a steady drift away from the first, not a jumpier community.</p>
+  <p>We now know the answer to the group's second question: days 6-10 were closer to the person's usual diet (information from the data owner). The group's idea predicts a steadier community there; instead the days of the second period differ more. But this cannot be a test of the idea: the community had already had about a week on the high-calorie diet before day 1, so steadier days 1-5 fit "a week of adapting already done", and more different days 6-10 fit "the community changing after the switch". Both readings follow from the timing, not from which diet is habitual. This is a description of one person's ten days.</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <p><b>Separating timing from habit.</b> Days 6-10 were a return towards the usual diet, after the week before day 1 and days 1-5 on the high-calorie diet. To tell "a familiar diet gives a steadier community" from "a community needs time after any switch", one would need samples from before the first diet started, or a longer series after the return; which would you choose?</p>
+  <p><b>Rarer families.</b> Figure 4 lists only common families (at least <span data-n="min_family"></span> per 1,000 genes). Rare families such as specialised fructan or mucin enzymes may change more; their numbers are small, so each would need a look at the MAGs that carry them (module 7).</p>
+  <p><b>Beyond CAZymes.</b> The same sorting could be run on other gene sets (for example the KOfam marker genes in module 8), or on the share of reads that are not in any MAG.</p>
+  <p><b>More days or people.</b> Telling a slow drift from a less stable community needs a longer series after the switch, a switch back, or more people; which of these would answer the group's second question best?</p>
+</section>

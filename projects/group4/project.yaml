@@ -1,0 +1,20 @@
+number: 4
+slug: project-group4
+title: "Diet periods: genes or species, and stability"
+nav: "Group 4: diet and stability"
+question: >-
+  Does the community's potential to break down carbohydrates tell the two diet periods apart, and does it do so
+  better or worse than the species mix itself? And does the community change less from day to day in one of the two
+  periods?
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person, sequenced on one PromethION flow cell (Oxford Nanopore, Rapid
+  Barcoding Kit, R10.4.1), analysed with mmlong2: the MAGs, their shares of each day's bases and their CAZyme genes
+  (module 8). Every number on this page is computed from that analysis by np26 scripts/44_project_group4.py.
+takeaways:
+  - "The species mix sorts the days into their diet periods slightly better than the CAZyme gene profile; the first day of the new diet looks like the old diet in both."
+  - "The community's carbohydrate gene potential changes little between the periods; host glycan genes change most."
+  - "Days 6-10 differ more from each other than days 1-5, but neighbouring days differ about as much in both periods: the second period drifts rather than wobbles. Days 6-10 were the diet closer to the usual one, but the timing (about a week on the first diet before day 1) explains the pattern just as well: a description, not a test."
+discussion: >-
+  If a community is steadier on a diet it is used to, what would you expect to see right after a switch and a week
+  later, and how many days (or people) would you need to tell that apart from a slow drift?
