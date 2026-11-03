@@ -33,6 +33,8 @@ SHARED = ROOT / "shared"
 STATUSES = {"ready", "draft", "planned"}
 EXAMPLE_KEYS = {"title", "question", "answer", "state"}
 ZIP_NAME = "nanopore-metagenomics-course.zip"
+PROJECTS = ROOT / "projects"
+PROJECT_KEYS = {"number", "slug", "title", "nav", "question", "status"}
 
 
 def read_modules() -> list[dict]:
@@ -44,6 +46,23 @@ def read_modules() -> list[dict]:
         m["dir"] = d
         mods.append(m)
     return mods
+
+
+def read_projects(unpublished: bool = False) -> list[dict]:
+    """Group project reports: projects/<id>/project.yaml (+ body.html, project.js, data.json, optional project.css,
+    examples.yaml). publish: false (the template) builds only when unpublished=True (tests) and is never listed."""
+    out = []
+    dirs = sorted(p for p in PROJECTS.iterdir() if (p / "project.yaml").exists()) if PROJECTS.exists() else []
+    for d in dirs:
+        p = yaml.safe_load((d / "project.yaml").read_text())
+        if missing := PROJECT_KEYS - set(p):
+            raise ValueError(f"{d.name}: project.yaml needs {sorted(missing)}")
+        if p["status"] not in {"ready", "draft"}:
+            raise ValueError(f"{d.name}: status must be ready or draft")
+        p["dir"] = d
+        if p.get("publish", True) or unpublished:
+            out.append(p)
+    return sorted(out, key=lambda p: (p["number"], p["slug"]))
 
 
 def script_json(value) -> str:
@@ -68,6 +87,8 @@ def nav(mods: list[dict], current: str | None) -> str:
         else:
             cur = ' aria-current="page"' if m["slug"] == current else ""
             items.append(f'<a href="{m["slug"]}.html"{cur}>{label}</a>')
+    cur = ' aria-current="page"' if current == "projects" else ""
+    items.append(f'<a href="projects.html"{cur}>Projects</a>')
     cur = ' aria-current="page"' if current == "glossary" else ""
     items.append(f'<a class="gloss" href="glossary.html"{cur}>Glossary</a>')
     cur = ' aria-current="page"' if current == "teachers" else ""
@@ -146,6 +167,67 @@ def build_module(m: dict, mods: list[dict], page: str, base: dict) -> str:
             "DATA": script_json(data),
             "EXAMPLES": script_json(examples),
             "FOOTER": footer(m["nav"], m.get("data_note", FOOTER)),
+        },
+    )
+
+
+def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
+    """One group report: the module page template plus the shared chart kit (shared/charts.js, charts.css)."""
+    d = p["dir"]
+    data_path = d / "data.json"
+    data = json.loads(data_path.read_text()) if data_path.exists() else None
+    examples = load_examples(p, data)
+    own_css = (d / "project.css").read_text() if (d / "project.css").exists() else ""
+    return fill(
+        page,
+        {
+            **base,
+            "TITLE": f"Group {p['number']}: {p['title']}",
+            "NAV": nav(mods, "projects"),
+            "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
+            "BODY": (d / "body.html").read_text() + closing(p),
+            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + (d / "project.js").read_text(),
+            "DATA": script_json(data),
+            "EXAMPLES": script_json(examples),
+            "FOOTER": footer(p["nav"], p.get("data_note", FOOTER)),
+        },
+    )
+
+
+PROJECTS_INTRO = (
+    '<section class="intro"><span class="kicker">Group projects</span><h1>Projects: the students\' own questions</h1>'
+    "<p>Each group of students asked its own question about the same ten stool samples. The reports below answer them "
+    "with the data from this course, as listed in module 8, worked out on the course's analysis computer. Like the "
+    "modules, every report is interactive: hover over a chart for its numbers, and open the guided examples. A draft "
+    "is still being checked; the groups' feedback can lead to changes and new questions.</p></section>"
+)
+
+
+def build_projects_index(projs: list[dict], mods: list[dict], page: str, base: dict) -> str:
+    cards = []
+    for p in projs:
+        status = " · draft" if p["status"] == "draft" else ""
+        cards.append(
+            f'<li class="panel"><span class="kicker">Group {p["number"]}{status}</span>'
+            f'<h3><a href="{p["slug"]}.html">{esc(p["title"])}</a></h3><p>{esc(p["question"])}</p></li>'
+        )
+    listing = (
+        f'<ol class="modules">{"".join(cards)}</ol>'
+        if cards
+        else '<p class="panel note">The group reports will appear here once they are written.</p>'
+    )
+    return fill(
+        page,
+        {
+            **base,
+            "TITLE": "Projects: nanopore metagenomics course",
+            "NAV": nav(mods, "projects"),
+            "MODULE_CSS": (ROOT / "shared" / "index.css").read_text(),
+            "BODY": PROJECTS_INTRO + listing,
+            "MODULE_JS": "",
+            "DATA": "null",
+            "EXAMPLES": "[]",
+            "FOOTER": footer("Projects"),
         },
     )
 
@@ -251,8 +333,10 @@ def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-def build(out: Path) -> list[Path]:
+def build(out: Path, unpublished: bool = False) -> list[Path]:
+    """Write the site; unpublished=True also builds projects marked publish: false (for the tests)."""
     mods = read_modules()
+    projs = read_projects(unpublished)
     page = (SHARED / "page.html").read_text()
     base = {
         "BASE_CSS": (SHARED / "base.css").read_text(),
@@ -264,6 +348,13 @@ def build(out: Path) -> list[Path]:
     written[0].write_text(build_index(mods, page, base))
     written[1].write_text(build_glossary(mods, page, base))
     written[2].write_text(build_teachers(mods, page, base))
+    written.append(out / "projects.html")
+    written[-1].write_text(build_projects_index([p for p in projs if p.get("publish", True)], mods, page, base))
+    for p in projs:
+        path = out / f"{p['slug']}.html"
+        path.write_text(build_project(p, mods, page, base))
+        if p.get("publish", True):
+            written.append(path)
     for m in mods:
         if m["status"] == "planned":
             continue

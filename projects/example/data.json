@@ -1,0 +1,23 @@
+{
+ "template": "Placeholder numbers for the report template; group data.json files are written by np26 scripts/4N_project_groupN.py.",
+ "days": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+ "series": [
+  {"name": "MAG A", "values": [2.1, 2.4, 2.2, 2.6, 2.5, 1.9, 1.2, 0.9, 0.8, 0.7]},
+  {"name": "MAG B", "values": [0.5, 0.6, 0.4, 0.5, 0.7, 0.9, 1.4, 1.8, 2.0, 2.2]},
+  {"name": "MAG C", "values": [1.0, 1.1, 0.9, 1.0, 1.2, 1.1, 1.0, 1.1, 0.9, 1.0]}
+ ],
+ "bars": {"labels": ["Rise", "Fall", "Stable"], "groups": [{"name": "Days 1-5", "values": [12, 30, 18]}, {"name": "Days 6-10", "values": [25, 14, 17]}]},
+ "points": [
+  {"x": 0.4, "y": 12, "label": "MAG A", "group": "Falls"},
+  {"x": 1.2, "y": 30, "label": "MAG B", "group": "Rises"},
+  {"x": 2.5, "y": 8, "label": "MAG C", "group": "Stable"},
+  {"x": 0.8, "y": 20, "label": "MAG D", "group": "Rises"},
+  {"x": 3.1, "y": 15, "label": "MAG E", "group": "Falls"}
+ ],
+ "heat": {"rows": ["MAG A", "MAG B", "MAG C"], "cols": ["GH13", "GH32", "PL1", "CE8"], "values": [[-1.2, 0.3, 0.0, 0.8], [1.5, -0.4, 0.6, null], [0.1, 0.0, -0.2, 0.3]]},
+ "table": [
+  {"mag": "MAG A", "genus": "Genus 1", "mean": 1.8, "change": -1.5},
+  {"mag": "MAG B", "genus": "Genus 2", "mean": 1.1, "change": 1.6},
+  {"mag": "MAG C", "genus": "Genus 3", "mean": 1.0, "change": 0.0}
+ ]
+}

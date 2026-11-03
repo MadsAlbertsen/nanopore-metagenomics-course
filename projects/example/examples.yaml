@@ -1,0 +1,10 @@
+- title: "Follow one line"
+  at: line
+  question: "Template example: a question the reader answers from Figure 1 with one series highlighted."
+  answer: "Template answer, with the numbers from data.json and the reasoning."
+  state: {highlight: "MAG B"}
+- title: "Find a point"
+  at: scatter
+  question: "Template example: a question about one point in Figure 3."
+  answer: "Template answer."
+  state: {highlight: "MAG C"}
