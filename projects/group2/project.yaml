@@ -1,15 +1,16 @@
 number: 2
 slug: project-group2
-title: "Community and carbohydrate potential over the ten days"
+title: "Gut genomes shifted after a diet switch while carbohydrate-degradation potential stayed nearly constant"
 nav: "Group 2: community over time"
 question: >-
-  How do the community, its diversity and single MAGs change over the ten days and between the two diet periods, is a
-  MAG's shift a step at the diet switch or a gradual trend, and does the community's potential to break down
-  carbohydrates (CAZyme genes, weighted by each MAG's share) differ between the periods?
+  A research manuscript, as the group asked: how do the community, its diversity and single MAGs change over the ten
+  days and between the two diet periods, is a MAG's shift a step at the diet switch or a gradual trend, and does the
+  community's potential to break down carbohydrates (CAZyme genes, weighted by each MAG's share) differ between the
+  periods? With effect sizes, day-resampling intervals, sensitivity analyses, supplementary tables to download and a
+  separate document on the methods' rationale and limitations.
 status: draft
-takeaways:
-  - "The community changed between the periods (Bray-Curtis 0.31 between days of different periods, 0.21 and 0.24 within them), mostly from day 7 on; its diversity did not change (about 55 effective MAGs in both periods)."
-  - "35 of the 124 MAGs with a mean share of at least 0.1% changed at least two-fold (12 down, all Bacillota; 23 up). Only 9 of them changed most at the diet switch; 22 changed most one or two days later."
-  - "Bacteroidota rose at the switch (21.9% of the bases on day 5, 30.6% on day 6) and fell from day 9 to 18.2% on day 10; one Cyanobacteriota MAG (Zag111) climbed from 0.3% to 5.1%."
-  - "The community's CAZyme genes per 1,000 genes hardly changed (27.1 in days 1-5, 27.6 in days 6-10, 2%), and none of the 38 common CAZy families changed 1.5-fold."
-  - "Interpretation: the small shifts in carbohydrate potential follow Bacteroidota MAGs replacing each other (Prevotella copri_B down, Phocaeicola and Bacteroides up) more than the loss of the Bacillota that fell."
+pages:
+  - slug: project-group2-methods
+    title: "Methodological rationale and limitations"
+    body: methods.html
+    js: methods.js
