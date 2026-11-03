@@ -19,7 +19,6 @@ function stats() {
     [fmt(c.mags), "MAGs"],
     [(c.bakta_cds / 1e6).toFixed(2) + " M", "protein-coding genes"],
     [fmt(c.motifs), "methylation motifs"],
-    [fmt(c.student_libs), "student libraries"],
   ];
   $("dtStats").innerHTML = items.map(([n, l]) => `<div class="stat"><b>${n}</b><span>${esc(l)}</span></div>`).join("");
 }
