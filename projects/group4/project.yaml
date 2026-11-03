@@ -4,17 +4,15 @@ title: "Diet periods: genes or species, and stability"
 nav: "Group 4: diet and stability"
 question: >-
   Does the community's potential to break down carbohydrates tell the two diet periods apart, and does it do so
-  better or worse than the species mix itself? And does the community change less from day to day in one of the two
-  periods?
+  better or worse than the species mix itself? And is the community steadier in one of the two periods?
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person, sequenced on one PromethION flow cell (Oxford Nanopore, Rapid
-  Barcoding Kit, R10.4.1), analysed with mmlong2: the MAGs, their shares of each day's bases and their CAZyme genes
+  Barcoding Kit, R10.4.1), analysed with mmlong2: the MAGs, their shares of each day's DNA and their CAZyme genes
   (module 8). Every number on this page is computed from that analysis by np26 scripts/44_project_group4.py.
 takeaways:
-  - "The species mix and the CAZyme gene profile sort the days into their diet periods about equally well (they differ by one borderline day); the first day of the new diet looks like the old diet in both."
-  - "The community's carbohydrate gene potential changes little between the periods; host glycan genes change most."
-  - "Days 6-10 differ more from each other than days 1-5, but neighbouring days differ about as much in both periods: the second period drifts rather than wobbles. Days 6-10 were the diet closer to the usual one, but the timing (about a week on the first diet before day 1) explains the pattern just as well: a description, not a test."
-discussion: >-
-  If a community is steadier on a diet it is used to, what would you expect to see right after a switch and a week
-  later, and how many days (or people) would you need to tell that apart from a slow drift?
+  - "Leave-one-out sorting puts {taxa_correct} of 10 days in the right diet period by species mix and {func_correct} by CAZyme genes; the one-day difference is a borderline day (day 4), and day 6, the first day of the new diet, still looks like days 1-5 in both."
+  - "The carbohydrate gene potential barely moves: from {cat_starch_pct|0|+}% (starch) to {cat_host_glycan_pct|0|+}% (host glycans) between the period means, in genes per 1,000 genes of the binned community."
+  - "The median CAZy family varies {fam_cv_median|0}% from day to day against {mag_cv_median|0}% for the median common MAG, and families carried by more MAGs vary less (Spearman {red_spearman|2}): a sign of functional redundancy."
+  - "Days 6-10 differ more from each other than days 1-5 (Bray-Curtis {second_taxa_all_mean|2} against {first_taxa_all_mean|2}), but neighbouring days differ about equally ({second_taxa_cons_mean|2} against {first_taxa_cons_mean|2}): the species mix mostly moves further away from days 1-5 after the switch."
+  - "Days 6-10 were closer to the usual diet, but the week on a similar high-calorie diet before day 1 could explain the stability pattern equally well; one person and one switch: a description, not a test."
