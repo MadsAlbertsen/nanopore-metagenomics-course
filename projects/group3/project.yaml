@@ -1,0 +1,21 @@
+number: 3
+slug: project-group3
+title: "Butyrate genes across the two diet periods"
+nav: "Group 3: butyrate genes"
+question: >-
+  Do the genes for butyrate production change in abundance between the high-carbohydrate days and the
+  low-carbohydrate days, which genomes carry them, and from which day does a change show? Many of the
+  genomes carry a complete butyrate route. Their total share of the DNA stays level, because genomes with one type of
+  final step fall while genomes with the other type rise.
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person, sequenced on one PromethION flow cell and analysed with mmlong2.
+  Genes were searched in every genome with the course's own method (module 8 data); diet periods and diet history are
+  information from the data owner. Every number on this page comes from np26 scripts/43_project_group3.py.
+takeaways:
+  - "Gene potential, not activity: the genomes with a complete butyrate route hold a similar share of the DNA on both diets."
+  - "The two final steps move apart: genomes with the CoA-transferase fall on the low-carbohydrate days, genomes with only the kinase route rise."
+  - "One person, ten days: the sizes and timing describe this subject only; they are not a statistical test."
+discussion: >-
+  If genomes with the kinase route replace genomes with the CoA-transferase route, would this gut make the same amount
+  of butyrate? What measurement would tell?
