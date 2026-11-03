@@ -1,14 +1,21 @@
 // Group 5: Bifidobacterium angulatum (MAG c.101). DATA from np26 scripts/45_project_group5.py:
 // numbers (every number in the text), days / diet, mags (the three Bifidobacterium MAGs: share per day, period means),
-// map (c.101's genes: [start, stop, strand, symbol, product, evidence, identity %, CAZy families, CAZy class];
-// lookups products, symbols, families, classes, evidence; crispr arrays; ori), categories + cat_counts (degrading
-// CAZyme genes per substrate category), families (genes per family), groups + members (named-gene groups).
+// samples (Table 1: one row per sample, base share, day-to-day step, read-sample counts), period_stats (Table 2),
+// carb (Table 3: carbohydrate genes of c.101), map (c.101's genes: [start, stop, strand, symbol, product, evidence,
+// identity %, CAZy families, CAZy class, carbohydrate role]; lookups products, symbols, families, classes, roles,
+// evidence; crispr arrays; ori), categories + cat_counts (degrading CAZyme genes per substrate category), families
+// (genes per family), groups + members (named-gene groups).
 const D = DATA, N = D.numbers, MAP = D.map, FOCUS = D.mags[0];
 const short = (m) => m.name.replace(/^Bifidobacterium /, "B. ").replace(/ \(.*\)$/, "");
 const num = (v) => (typeof v === "number" ? v.toLocaleString("en-US") : String(v));
 // derived numbers for the text (all from data.json)
 N.id = FOCUS.id;
 N.length_bp = fmtBp(N.length);
+N.step_max_from = N.step_max_day - 1;
+{
+  const r = D.samples.map((s) => s.reads).sort((a, b) => a - b);
+  N.rd_one_read = +(100 / ((r[4] + r[5]) / 2)).toFixed(3); // one read as % of the median sample
+}
 
 const EV = {
   cluster: { c: "var(--c1)", t: "Named protein cluster (UniRef50)" },
@@ -21,19 +28,28 @@ const EV = {
   none: { c: "var(--faint)", t: "Hypothetical, no match" },
   rna: { c: "var(--v2)", t: "tRNA or rRNA gene" },
 };
+// carbohydrate colouring: degrading enzymes by substrate category, the other roles by role
 const CZ = {
   starch: { c: "var(--c1)", t: "Degrading: starch" },
   fructan: { c: "var(--c2)", t: "Degrading: fructan" },
   plant_fibre: { c: "var(--c3)", t: "Degrading: plant fibre" },
   host_glycan: { c: "var(--c4)", t: "Degrading: host glycan" },
   mixed_other: { c: "var(--c5)", t: "Degrading: mixed or other substrate" },
-  gt: { c: "var(--c7)", t: "Glycosyltransferase (builds sugar chains)" },
-  cbm: { c: "var(--c6)", t: "Carbohydrate-binding module only" },
 };
+const ROLE_C = {
+  gt: { c: "var(--c7)", t: "Builds or binds sugar chains (GT, or CBM only)" },
+  transport: { c: "var(--c6)", t: "Sugar uptake (transporter part)" },
+  shunt: { c: "var(--ink)", t: "Bifid shunt and galactose use" },
+};
+const roleColorKey = { gt: "gt", cbm: "gt", transport: "transport", shunt: "shunt", leloir: "shunt" };
+const ROLE_LABEL = Object.fromEntries(MAP.roles.map((k, i) => [k, MAP.role_labels[i]]));
 const CAT_LABEL = { starch: "Starch", fructan: "Fructan", plant_fibre: "Plant fibre", host_glycan: "Host glycan", mixed: "Mixed", other: "Other" };
 const EV_LABEL = { cluster: "named cluster", blast_rule: "BlastRules", pfam_only: "Pfam domain only", cluster_unnamed: "unnamed cluster", none: "no match", rna: "RNA gene", amr_protein: "AMR protein", amr_family: "AMR family", is_element: "IS name" };
-const DEFAULTS = { highlight: FOCUS.id, log: true, color: "evidence", q: "", group: D.groups[0].key, unit: "genes" };
+const DEFAULTS = { reads: true, rel: false, log: false, color: "carb", labels: true, q: "", role: "", group: D.groups[0].key, unit: "genes" };
 const st = { ...DEFAULTS };
+// Table 3 rows as objects; lookup of a gene's carbohydrate row by its position
+const CARB = D.carb.data.map((row) => Object.fromEntries(D.carb.columns.map((c, i) => [c, row[i]])));
+const CARB_AT = new Map(CARB.map((c) => [c.start + ":" + c.stop, c]));
 
 function fillNumbers() {
   document.querySelectorAll("[data-n]").forEach((e) => {
@@ -42,38 +58,63 @@ function fillNumbers() {
   });
 }
 function stats() {
-  const items = [[N.size_mb + " Mb", "one circular contig"], [num(N.cds), "protein-coding genes"], [N.mean_all + "%", "mean share of the bases"], [N.log2, "log2 change, days 6-10 vs 1-5"], [N.deg_c101, "carbohydrate-degrading enzyme genes"]];
+  const items = [[N.size_mb + " Mb", "one circular contig"], [num(N.cds), "protein-coding genes"], [N.carb_total, "carbohydrate genes (Table 3)"], [N.mean_all + "%", "mean share of the bases"], [N.log2, "log2 change, days 6-10 vs 1-5"]];
   $("pjStats").innerHTML = items.map(([n, t]) => `<div class="stat"><b>${esc(String(n))}</b><span>${esc(t)}</span></div>`).join("");
 }
 
-// --- Figure 1 and Table 1
+// --- Output 1: Figure 1
 function drawLine() {
+  const series = [{ name: short(FOCUS), values: FOCUS.share, color: "var(--c1)" }];
+  if (st.reads) series.push({ name: "reads (sample)", values: D.samples.map((s) => s.read_pct), color: "var(--c2)" });
+  if (st.rel) D.mags.slice(1).forEach((m, i) => series.push({ name: short(m), values: m.share, color: i ? "var(--c4)" : "var(--c3)" }));
   lineChart($("g5Line"), {
-    x: D.days, series: D.mags.map((m) => ({ name: short(m), values: m.share })), xLabel: "Day", xName: "Day",
-    yLabel: "Share of the day's bases (%)", unit: "%", logY: st.log, zero: !st.log,
+    x: D.days, series, xLabel: "Day", xName: "Day",
+    yLabel: "Relative abundance (%)", unit: "%", logY: st.log, zero: !st.log,
     bands: [{ from: 0.6, to: 5.5, label: "high carbohydrate" }], marks: [{ x: 5.5, label: "diet switch" }],
-    highlight: short(D.mags.find((m) => m.id === st.highlight) || FOCUS),
   });
 }
+
+// --- Output 2: Tables 1 and 2
+const f3 = (v) => (v === null || v === undefined ? "" : v.toFixed(3));
 function drawTable() {
-  const rows = D.days.map((d, i) => ({ day: String(d), diet: D.diet[i] === "high_carb" ? "high carbohydrate" : "low carbohydrate", ...Object.fromEntries(D.mags.map((m) => [m.id, m.share[i]])) }));
-  rows.push({ day: "mean 1-5", diet: "", ...Object.fromEntries(D.mags.map((m) => [m.id, m.mean_high])) });
-  rows.push({ day: "mean 6-10", diet: "", ...Object.fromEntries(D.mags.map((m) => [m.id, m.mean_low])) });
-  rows.push({ day: "log2 change", diet: "", ...Object.fromEntries(D.mags.map((m) => [m.id, m.log2])) });
+  const rows = D.samples.map((s) => ({ ...s, period: s.diet === "high_carb" ? "high carbohydrate" : "low carbohydrate", ci: `${f3(s.read_lo)}-${f3(s.read_hi)}` }));
   table($("g5Table"), {
-    columns: [{ key: "day", label: "Day" }, { key: "diet", label: "Diet" }, ...D.mags.map((m) => ({ key: m.id, label: `${short(m)} (${m.id})`, num: true, fmt: (v, row) => (v === undefined ? "" : v.toFixed(row.day === "log2 change" ? 2 : 3)) }))],
+    columns: [
+      { key: "sample", label: "Sample" }, { key: "day", label: "Day", num: true, fmt: String }, { key: "period", label: "Diet period" },
+      { key: "share", label: "Share of bases (%)", num: true, fmt: f3 },
+      { key: "step", label: "Change from day before (log2)", num: true, fmt: (v) => (v === null ? "" : (v > 0 ? "+" : "") + v.toFixed(2)) },
+      { key: "mag_reads", label: "Reads on the MAG", num: true, fmt: String }, { key: "reads", label: "Filtered reads", num: true, fmt: num },
+      { key: "read_pct", label: "Share of reads (%)", num: true, fmt: f3 }, { key: "ci", label: "95% interval (%)" },
+    ],
+    rows, sortable: false,
+  });
+}
+function drawStats() {
+  const P = D.period_stats, lab = { high: "Days 1-5 (high carbohydrate)", low: "Days 6-10 (low carbohydrate)", all: "All ten days" };
+  const rows = ["high", "low", "all"].map((k) => ({ period: lab[k], ...P[k], range: `${f3(P[k].min)} (day ${P[k].min_day}) - ${f3(P[k].max)} (day ${P[k].max_day})` }));
+  table($("g5Stats"), {
+    columns: [
+      { key: "period", label: "Period" }, { key: "mean", label: "Mean (%)", num: true, fmt: f3 }, { key: "median", label: "Median (%)", num: true, fmt: f3 },
+      { key: "sd", label: "SD (%)", num: true, fmt: f3 }, { key: "cv", label: "CV (%)", num: true, fmt: String },
+      { key: "range", label: "Lowest - highest (%)" }, { key: "fold", label: "Highest / lowest", num: true, fmt: String },
+      { key: "step_mean", label: "Mean day-to-day change (|log2|)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "step_max", label: "Largest day-to-day change (|log2|)", num: true, fmt: (v) => v.toFixed(2) },
+    ],
     rows, sortable: false,
   });
 }
 
-// --- Figure 2: circular gene map
+// --- Output 3: Figure 2 (circular gene map) and Table 3
 const geneName = (g) => (g[3] >= 0 ? MAP.symbols[g[3]] : "");
 const geneProd = (g) => MAP.products[g[4]];
 const geneFam = (g) => (g[7] >= 0 ? MAP.families[g[7]] : "");
+const geneRole = (g) => (g[9] >= 0 ? MAP.roles[g[9]] : "");
 const matches = (g, q) => { q = q.toLowerCase(); return [geneName(g), geneProd(g), geneFam(g)].some((t) => t.toLowerCase().includes(q)); };
 function geneColor(g) {
-  if (st.color === "cazy") return g[8] >= 0 ? CZ[MAP.classes[g[8]]].c : "var(--v4)";
-  return EV[MAP.evidence[g[5]]].c;
+  if (st.color === "evidence") return EV[MAP.evidence[g[5]]].c;
+  const r = geneRole(g);
+  if (r === "degrading") return CZ[MAP.classes[g[8]]].c;
+  return r ? ROLE_C[roleColorKey[r]].c : "var(--v4)";
 }
 function arc(cx, cy, r0, r1, a0, a1) {
   const p = (r, a) => `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`;
@@ -81,22 +122,56 @@ function arc(cx, cy, r0, r1, a0, a1) {
   return `M${p(r1, a0)}A${r1},${r1} 0 ${large} 1 ${p(r1, a1)}L${p(r0, a1)}A${r0},${r0} 0 ${large} 0 ${p(r0, a0)}Z`;
 }
 function geneTip(g) {
-  const ev = MAP.evidence[g[5]];
-  return `<b>${esc(geneName(g) || "–")}</b> ${esc(geneProd(g))}<br>position ${num(g[0])}-${num(g[1])} (${g[2] > 0 ? "forward" : "reverse"} strand)<br>evidence: ${esc(EV[ev].t)}${g[6] !== null ? ` · identity ${g[6]}%` : ""}${g[7] >= 0 ? `<br>CAZy family: ${esc(geneFam(g))} (${esc(CZ[MAP.classes[g[8]]].t)})` : ""}`;
+  const ev = MAP.evidence[g[5]], c = CARB_AT.get(g[0] + ":" + g[1]);
+  return `<b>${esc(geneName(g) || "–")}</b> ${esc(geneProd(g))}<br>position ${num(g[0])}-${num(g[1])} (${g[2] > 0 ? "forward" : "reverse"} strand)<br>evidence: ${esc(EV[ev].t)}${g[6] !== null ? ` · identity ${g[6]}%` : ""}` +
+    (c ? `<br>role: ${esc(ROLE_LABEL[c.role])}` : "") + (g[7] >= 0 ? `<br>CAZy family: ${esc(geneFam(g))}` : "") +
+    (c && c.category ? ` (${esc(CAT_LABEL[c.category] || c.category)})` : "") + (c && c.substrates ? `<br>dbCAN-listed substrates: ${esc(c.substrates)}` : "");
+}
+// map labels: degrading enzymes by their (first degrading) CAZy family, bifid-shunt genes by enzyme, the Leloir genes
+// as one group label at their middle
+function mapLabels() {
+  const out = [], leloir = [];
+  for (const g of MAP.genes) {
+    const r = geneRole(g);
+    if (r === "degrading") out.push({ pos: (g[0] + g[1]) / 2, t: geneFam(g).split(" + ").find((f) => /^(GH|PL|CE)/.test(f)), g });
+    else if (r === "shunt") out.push({ pos: (g[0] + g[1]) / 2, t: (geneProd(g).match(/(phosphoketolase|transaldolase|transketolase)/i) || [geneProd(g)])[0].toLowerCase(), g });
+    else if (r === "leloir") leloir.push(g);
+  }
+  if (leloir.length) out.push({ pos: leloir.reduce((s, g) => s + (g[0] + g[1]) / 2, 0) / leloir.length, t: "galactose genes", g: leloir[0] });
+  return out.sort((a, b) => a.pos - b.pos);
+}
+function spread(angles, gap) {
+  // keep labels at least `gap` radians apart: push forward, then centre each pushed run on its genes
+  const a = [...angles];
+  for (let i = 1; i < a.length; i++) a[i] = Math.max(a[i], a[i - 1] + gap);
+  let i = 0;
+  while (i < a.length) {
+    let j = i;
+    while (j + 1 < a.length && a[j + 1] - a[j] <= gap + 1e-9) j++;
+    let shift = 0;
+    for (let k = i; k <= j; k++) shift += a[k] - angles[k];
+    shift /= j - i + 1;
+    for (let k = i; k <= j; k++) a[k] -= shift;
+    i = j + 1;
+  }
+  for (let k = 1; k < a.length; k++) a[k] = Math.max(a[k], a[k - 1] + gap);
+  return a;
 }
 function drawMap() {
   const host = $("g5Map");
   mountChart(host, () => {
     const W = Math.min(560, Math.max(300, host.clientWidth || 560)), H = W;
+    const lab = st.labels && W >= 420;
     host.innerHTML = "";
-    const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Circular gene map" }, host);
-    const cx = W / 2, cy = H / 2, R = W / 2 - 34, L = MAP.length;
+    const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Circular gene map", style: "overflow:visible" }, host);
+    const cx = W / 2, cy = H / 2, R = W / 2 - (lab ? 82 : 34), L = MAP.length;
     const ang = (pos) => (pos / L) * 2 * Math.PI - Math.PI / 2;
-    // scale ticks every 250 kb
+    // scale ticks every 250 kb (labels outside, or inside when gene labels take the outside)
     for (let p = 0; p < L; p += 250000) {
       const a = ang(p), c = Math.cos(a), s = Math.sin(a);
       el("line", { x1: cx + (R + 2) * c, y1: cy + (R + 2) * s, x2: cx + (R + 6) * c, y2: cy + (R + 6) * s, class: "base" }, svg);
-      if (p % 500000 === 0) el("text", { x: cx + (R + 22) * c, y: cy + (R + 22) * s + 4, "text-anchor": "middle" }, svg).textContent = (p / 1e6).toFixed(1) + " Mb";
+      const rl = lab ? R - 62 : R + 22;
+      if (p % 500000 === 0) el("text", { x: cx + rl * c, y: cy + rl * s + 4, "text-anchor": "middle" }, svg).textContent = (p / 1e6).toFixed(1) + " Mb";
     }
     el("circle", { cx, cy, r: R - 15, fill: "none", class: "base" }, svg);
     const q = st.q.trim(), hits = [];
@@ -108,9 +183,21 @@ function drawMap() {
       tipOn(p, () => geneTip(g));
       if (q && !dim) hits.push(g);
     }
+    if (lab) {
+      const labs = mapLabels(), rT = R + 14;
+      const pos = spread(labs.map((l) => ang(l.pos)), 10 / rT);
+      labs.forEach((l, i) => {
+        const a0 = ang(l.pos), a = pos[i];
+        el("path", { d: `M${cx + (R + 2) * Math.cos(a0)},${cy + (R + 2) * Math.sin(a0)}L${cx + (R + 7) * Math.cos(a0)},${cy + (R + 7) * Math.sin(a0)}L${cx + (rT - 2) * Math.cos(a)},${cy + (rT - 2) * Math.sin(a)}`, fill: "none", style: `stroke:${st.color === "evidence" ? "var(--faint)" : geneColor(l.g)}`, "stroke-width": 1 }, svg);
+        const left = Math.cos(a) < 0, deg = (a * 180) / Math.PI + (left ? 180 : 0);
+        const t = el("text", { x: cx + rT * Math.cos(a), y: cy + rT * Math.sin(a), "text-anchor": left ? "end" : "start", "dominant-baseline": "middle", transform: `rotate(${deg.toFixed(1)} ${(cx + rT * Math.cos(a)).toFixed(1)} ${(cy + rT * Math.sin(a)).toFixed(1)})`, style: "font-size:9px;fill:var(--ink)" }, svg);
+        t.textContent = l.t;
+        tipOn(t, () => geneTip(l.g));
+      });
+    }
     for (const g of hits) {
       const a = ang((g[0] + g[1]) / 2), c = Math.cos(a), s = Math.sin(a);
-      const m = el("line", { x1: cx + (R + 3) * c, y1: cy + (R + 3) * s, x2: cx + (R + 13) * c, y2: cy + (R + 13) * s, style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
+      const m = el("line", { x1: cx + (R - 32) * c, y1: cy + (R - 32) * s, x2: cx + (R - 40) * c, y2: cy + (R - 40) * s, style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
       tipOn(m, () => geneTip(g));
     }
     for (const [a, b] of MAP.crispr) {
@@ -123,14 +210,14 @@ function drawMap() {
       const m = el("line", { x1: cx + (R - 34) * c, y1: cy + (R - 34) * s, x2: cx + (R - 50) * c, y2: cy + (R - 50) * s, style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
       tipOn(m, `<b>Start of replication (oriC)</b><br>position ${num(o)}`);
     }
-    const lines = [[short(FOCUS), "lab"], [`${FOCUS.id} · ${fmtBp(L)}`, ""], [`${num(N.cds)} protein-coding genes`, ""], [`${N.gc}% GC`, ""]];
+    const lines = [[short(FOCUS), "lab"], [`${FOCUS.id} · ${fmtBp(L)}`, ""], [`${num(N.cds)} protein-coding genes`, ""], [`${N.carb_total} carbohydrate genes`, ""]];
     lines.forEach(([t, c], i) => { el("text", { x: cx, y: cy - 22 + i * 17, "text-anchor": "middle", class: c }, svg).textContent = t; });
-    $("g5Count").textContent = q ? `${hits.length} gene${hits.length === 1 ? "" : "s"} match` : "";
+    $("g5Count").textContent = q ? `${hits.length} gene${hits.length === 1 ? "" : "s"} match` : st.labels && !lab ? "labels need a wider screen (see Table 3)" : "";
     drawHits(hits);
   });
 }
 function drawLegend() {
-  const items = st.color === "cazy" ? Object.values(CZ).map((v) => ({ name: v.t, color: v.c })).concat([{ name: "Not a CAZyme", color: "var(--v4)" }])
+  const items = st.color === "carb" ? [...Object.values(CZ), ...Object.values(ROLE_C)].map((v) => ({ name: v.t, color: v.c })).concat([{ name: "Other gene", color: "var(--v4)" }])
     : Object.entries(EV).filter(([k]) => MAP.genes.some((g) => MAP.evidence[g[5]] === k)).map(([, v]) => ({ name: v.t, color: v.c }));
   $("g5Legend").innerHTML = items.map((it) => `<span><i class="sw" style="background:${it.color}"></i>${esc(it.name)}</span>`).join("") +
     `<span><i class="sw" style="background:var(--c2)"></i>CRISPR array (inner tick)</span>`;
@@ -138,11 +225,23 @@ function drawLegend() {
 function drawHits(hits) {
   const box = $("g5Hits");
   if (!st.q.trim()) {
-    const cz = MAP.genes.filter((g) => g[7] >= 0);
-    box.innerHTML = `<p class="note">${cz.length} genes carry a CAZyme domain. Type a name above (for example <code>bile</code>, <code>GH13</code> or <code>Cas</code>) to list and mark matching genes.</p>`;
+    box.innerHTML = `<p class="note">Type a name above (for example <code>amylase</code>, <code>GH13</code> or <code>transporter</code>) to list and mark matching genes; Table 3 below lists every carbohydrate gene.</p>`;
     return;
   }
   box.innerHTML = hits.length ? `<div class="scroll g5list"><table class="ct"><thead><tr><th class="r">Start</th><th>Gene</th><th>Product</th><th>CAZy</th><th>Evidence</th><th class="r">Identity</th></tr></thead><tbody>${hits.map((g) => `<tr><td class="r">${num(g[0])}</td><td class="mono">${esc(geneName(g))}</td><td>${esc(geneProd(g))}</td><td class="mono">${esc(geneFam(g))}</td><td>${esc(EV_LABEL[MAP.evidence[g[5]]])}</td><td class="r">${g[6] !== null ? g[6] + "%" : ""}</td></tr>`).join("")}</tbody></table></div>` : `<p class="note">No gene matches.</p>`;
+}
+function drawCarb() {
+  $("g5Role").value = st.role;
+  const rows = CARB.filter((c) => !st.role || c.role === st.role).map((c) => ({ ...c, roleL: ROLE_LABEL[c.role], catL: CAT_LABEL[c.category] || "", evL: EV_LABEL[c.evidence] || c.evidence }));
+  table($("g5Carb"), {
+    columns: [
+      { key: "start", label: "Start (bp)", num: true, fmt: num }, { key: "strand", label: "Strand" }, { key: "gene", label: "Gene" },
+      { key: "product", label: "Product (Bakta)" }, { key: "roleL", label: "Role" }, { key: "family", label: "CAZy family" },
+      { key: "catL", label: "Substrate category" }, { key: "substrates", label: "Substrates dbCAN lists for the family" },
+      { key: "evL", label: "Evidence" }, { key: "identity", label: "Identity (%)", num: true, fmt: (v) => (v === null ? "" : String(v)) },
+    ],
+    rows, sortKey: "start", sortDesc: false, filter: true, filterPlaceholder: "filter, e.g. GH13 or sucrose", maxRows: 25,
+  });
 }
 
 // --- Figure 3
@@ -182,26 +281,36 @@ function drawGroups() {
 }
 
 function drawAll() {
-  $("g5Log").checked = st.log; $("g5Hl").value = st.highlight; $("g5Color").value = st.color; $("g5Q").value = st.q; $("g5Unit").value = st.unit;
-  drawLine(); drawTable(); drawLegend(); drawMap(); drawCazy(); drawGroups();
+  $("g5Reads").checked = st.reads; $("g5Rel").checked = st.rel; $("g5Log").checked = st.log;
+  $("g5Color").value = st.color; $("g5Lab").checked = st.labels; $("g5Q").value = st.q; $("g5Unit").value = st.unit;
+  drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups();
 }
-function write() { writeHashParams({ log: st.log ? "" : 0, hl: st.highlight !== DEFAULTS.highlight ? st.highlight : "", color: st.color !== DEFAULTS.color ? st.color : "", q: st.q, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" }); }
+function write() {
+  writeHashParams({ reads: st.reads ? "" : 0, rel: st.rel ? 1 : "", log: st.log ? 1 : "", color: st.color !== DEFAULTS.color ? st.color : "", lab: st.labels ? "" : 0, q: st.q, role: st.role, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" });
+}
 const applyState = (s) => {
   Object.assign(st, DEFAULTS);
-  if (s.highlight && D.mags.some((m) => m.id === s.highlight)) st.highlight = s.highlight;
-  if ("log" in s) st.log = !!s.log;
-  if (s.color === "cazy") st.color = "cazy";
+  if (s.reads === "0") st.reads = false;
+  if (s.rel === "1") st.rel = true;
+  if (s.log === "1") st.log = true;
+  if (s.color === "evidence") st.color = "evidence";
+  if (s.lab === "0") st.labels = false;
   st.q = s.q || "";
+  if (s.role && MAP.roles.includes(s.role)) st.role = s.role;
   if (s.group && D.members[s.group]) st.group = s.group;
   if (s.unit === "per1000") st.unit = "per1000";
 };
 
-$("g5Hl").innerHTML = D.mags.map((m) => `<option value="${m.id}">${esc(short(m))} (${m.id})</option>`).join("");
 $("g5Grp").innerHTML = D.groups.map((g) => `<option value="${g.key}">${esc(g.label)}</option>`).join("");
+$("g5Role").innerHTML = `<option value="">all ${CARB.length} carbohydrate genes</option>` +
+  MAP.roles.map((k) => `<option value="${k}">${esc(ROLE_LABEL[k])} (${CARB.filter((c) => c.role === k).length})</option>`).join("");
+$("g5Reads").addEventListener("change", (e) => { st.reads = e.target.checked; drawLine(); write(); });
+$("g5Rel").addEventListener("change", (e) => { st.rel = e.target.checked; drawLine(); write(); });
 $("g5Log").addEventListener("change", (e) => { st.log = e.target.checked; drawLine(); write(); });
-$("g5Hl").addEventListener("change", (e) => { st.highlight = e.target.value; drawLine(); write(); });
 $("g5Color").addEventListener("change", (e) => { st.color = e.target.value; drawLegend(); drawMap(); write(); });
+$("g5Lab").addEventListener("change", (e) => { st.labels = e.target.checked; drawMap(); write(); });
 $("g5Q").addEventListener("input", (e) => { st.q = e.target.value; drawMap(); write(); });
+$("g5Role").addEventListener("change", (e) => { st.role = e.target.value; drawCarb(); write(); });
 $("g5Unit").addEventListener("change", (e) => { st.unit = e.target.value; drawCazy(); write(); });
 $("g5Grp").addEventListener("change", (e) => { st.group = e.target.value; drawGroups(); write(); });
 
@@ -209,6 +318,6 @@ fillNumbers();
 stats();
 (function start() {
   const p = readHashParams();
-  applyState({ highlight: p.hl, ...(p.log === "0" ? { log: false } : {}), color: p.color, q: p.q, group: p.group, unit: p.unit });
+  applyState(p);
   drawAll();
 })();
