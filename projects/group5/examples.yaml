@@ -11,11 +11,11 @@
 - title: "Where are the carbohydrate enzymes?"
   at: map
   question: "Colour the gene map by CAZyme class. How many genes carry a CAZyme domain, how many of them break carbohydrates down, and which substrate has the most?"
-  answer: "{cazy_genes} of the genes carry a CAZyme domain: {deg_genes} degrading enzymes (glycoside hydrolases, lyases, esterases) and {gt_genes} glycosyltransferases, which build sugar chains rather than break them down. Starch has {cat_starch} degrading genes and plant fibre {cat_plant_fibre}; {cat_mixed} act on mixed substrates. Hover the coloured blocks to see where each one sits on the chromosome."
+  answer: "{cazy_genes} of the genes carry a CAZyme domain: {deg_genes} degrading enzymes (glycoside hydrolases, lyases, esterases), {gt_genes} glycosyltransferases, which build sugar chains rather than break them down, and {cbm_only_genes} with only a carbohydrate-binding module. Starch has {cat_starch} degrading genes and plant fibre {cat_plant_fibre}; {cat_mixed} act on mixed substrates. Hover the coloured blocks to see where each one sits on the chromosome."
   state: {color: "cazy"}
-- title: "Find the bile salt hydrolase"
+- title: "Find the bile salt hydrolase/transferase"
   at: map
-  question: "Search the map for 'bile salt'. Where is the gene, and how strong is the evidence for its name?"
+  question: "Search the map for 'bile salt'. Bakta names the gene \"Bile salt hydrolase/transferase\". Where is it, and how strong is the evidence for its name?"
   answer: "One gene matches, at position {bsh_start} on the chromosome. Bakta named it from a protein cluster match at {bsh_id}% identity to the cluster's representative (Figure 4 shows that the other two Bifidobacterium MAGs carry one too). The name is a prediction from sequence, not a measured activity."
   state: {q: "bile salt"}
 - title: "Starch enzymes against the community"
@@ -26,5 +26,5 @@
 - title: "A defence system"
   at: genes
   question: "Show the CRISPR-Cas genes of B. angulatum. How many are there, and do the other two MAGs have them?"
-  answer: "B. angulatum has {grp_crispr_c101} CRISPR-associated genes in one block (a type I-E system by their names), and the map shows {crispr_arrays} CRISPR arrays. B. adolescentis has {grp_crispr_c62} and B. longum {grp_crispr_c16} such genes. CRISPR arrays store pieces of phage DNA the cell has met; their identity to known clusters runs from {grp_crispr_idmin}% to {grp_crispr_idmax}%."
+  answer: "B. angulatum has {grp_crispr_c101} CRISPR-associated genes in one block (a type I-E system by their names), and the map shows {crispr_arrays} CRISPR arrays. B. adolescentis has {grp_crispr_c62} and B. longum {grp_crispr_c16} such genes. As general background, CRISPR arrays store short pieces (spacers) of phage and plasmid DNA the cell has met; these {grp_crispr_c101} Cas proteins match their clusters at {grp_crispr_idmin}-{grp_crispr_idmax}% identity."
   state: {group: "crispr"}

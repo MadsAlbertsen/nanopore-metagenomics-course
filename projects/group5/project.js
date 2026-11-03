@@ -63,7 +63,7 @@ function drawTable() {
   rows.push({ day: "mean 6-10", diet: "", ...Object.fromEntries(D.mags.map((m) => [m.id, m.mean_low])) });
   rows.push({ day: "log2 change", diet: "", ...Object.fromEntries(D.mags.map((m) => [m.id, m.log2])) });
   table($("g5Table"), {
-    columns: [{ key: "day", label: "Day" }, { key: "diet", label: "Diet" }, ...D.mags.map((m) => ({ key: m.id, label: `${short(m)} (${m.id})`, num: true, fmt: (v) => (v === undefined ? "" : v.toFixed(3)) }))],
+    columns: [{ key: "day", label: "Day" }, { key: "diet", label: "Diet" }, ...D.mags.map((m) => ({ key: m.id, label: `${short(m)} (${m.id})`, num: true, fmt: (v, row) => (v === undefined ? "" : v.toFixed(row.day === "log2 change" ? 2 : 3)) }))],
     rows, sortable: false,
   });
 }
