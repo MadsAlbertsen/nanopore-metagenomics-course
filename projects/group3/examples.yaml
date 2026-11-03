@@ -23,9 +23,11 @@
     Which gene set is the most common among the route MAGs, and how many route MAGs reach butyrate only through the
     kinase route (ptb/buk, without but)?
   answer: >-
-    "{top_set}" in {top_set_n} of {n_route} route MAGs. {n_type_pb} route MAGs have only ptb and/or buk, and
-    {n_type_but} have but (some of them also buk). So the CoA-transferase is the more common final step here, as
-    Vital et al. (2014) found for the acetyl-CoA pathway in stool.
+    "{top_set}" in {top_set_n} of {n_route} route MAGs. {n_type_pb} route MAGs have the kinase route without but
+    ({n_pb_both} with both ptb and buk, {n_buk_only} with buk alone), and {n_type_but} have but (some of them also
+    buk). So the CoA-transferase is the more common final step here, as in the stool metagenomes of Vital et al.
+    (2014), where but made up a median 77% and buk 22% of the final-step genes of the acetyl-CoA pathway (counted
+    there as gene reads, not genomes).
 
 - title: The CoA-transferase MAGs fall
   at: heat
