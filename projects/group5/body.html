@@ -1,0 +1,78 @@
+<div class="intro">
+  <span class="kicker">Group 5 · draft</span>
+  <h1><i>Bifidobacterium angulatum</i>: its genes and its share over ten days</h1>
+  <p>This report looks at one genome from the stool samples: the MAG of <i>Bifidobacterium angulatum</i> (MAG <span data-n="id"></span>). It asks what the genome can do, carbohydrate-active enzymes in particular, and how its share of the DNA changes from the high-carbohydrate days (1-5) to the low-carbohydrate days (6-10). The other two <i>Bifidobacterium</i> MAGs of the study are shown next to it for comparison.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group asked which functions <i>B. angulatum</i> has in this gut, and predicted that its share falls when the diet switches to low carbohydrate. This report answers two narrower questions that the data can show. First: which genes does the genome carry, and which of them break down carbohydrates (glycoside hydrolases and related enzymes, grouped by the sugar they act on)? A gene in the genome says what the organism could do; it does not show that the gene is used. Second: what share of each day's DNA comes from this genome, on each of the ten days? The group spoke of reads classified as <i>B. angulatum</i>; here the share is the part of each day's bases that maps to the MAG, which is how the analysis measured abundance. Reads were not classified one by one. An answer would be the ten daily shares with the diet switch marked, and the genome's carbohydrate enzymes next to those of its two relatives.</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>All data come from the course's own sequencing run of the ten daily samples (<a href="data.html">module 8</a> lists every file). The share per day is the percent of a sample's bases that map to the MAG, one value per MAG and day (<a href="binning.html">module 4</a>). The genome itself is one circular contig of <span data-n="length_bp"></span> (<span data-n="gc"></span>% GC), rated high quality by CheckM2 (completeness <span data-n="completeness"></span>%, contamination <span data-n="contamination"></span>%; <a href="mag-quality.html">module 5</a>). Its genes and their names come from Bakta, one row per gene (<a href="annotation.html#?mag=c.101">module 7</a>). Carbohydrate-active enzymes (CAZymes) come from a search of every MAG's predicted proteins with the dbCAN protein models; each enzyme family has a substrate category from dbCAN's family table (starch, fructan, plant fibre, host glycan, mixed or other). The community comparison uses all <span data-n="n_mags"></span> MAGs. Diet: both periods were vegetarian; days 1-5 high carbohydrate and high calorie, days 6-10 low carbohydrate and low calorie, closer to the subject's normal diet. The subject had eaten a similar high-calorie diet for about a week before day 1, so the switch at day 6 is the main change (information from the data owner).</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p>Step 1: the ten daily shares of the three <i>Bifidobacterium</i> MAGs, the mean of each diet period (five days each), the change between the periods as log2 of the ratio of the means (with 0.01% added to both means, as in the other reports), and the lowest and highest day within each period. Step 2: a map of every gene on the circular chromosome, coloured by the evidence for its name or by CAZyme class. Step 3: CAZyme genes that break down carbohydrates (glycoside hydrolases, polysaccharide lyases and carbohydrate esterases), counted per substrate category and per family, against the median MAG. Step 4: a few groups of named genes found by searching Bakta's gene names. Written down before the numbers: a share near 0.13% on days 1-5 and 0.07% on days 6-10, and many starch and plant-sugar enzymes (families GH13, GH43, GH42, GH2). Checks: the daily shares equal the study's abundance table, the gene count (<span data-n="cds"></span>) and evidence counts equal Bakta's summary and module 7, and the CAZyme counts equal the shared project tables. The script stops if one check fails.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. Share of the DNA on each of the ten days</h3>
+  <div class="pjctl"><label class="check"><input type="checkbox" id="g5Log"> log scale</label>
+    <label>Emphasise <select id="g5Hl" aria-label="Emphasise one MAG"></select></label></div>
+  <div id="g5Line"></div>
+  <p class="cap"><b>What it shows.</b> Percent of each day's sequenced bases that map to each <i>Bifidobacterium</i> MAG (one sample per day). The shaded part is the high-carbohydrate period (days 1-5); the dashed line marks the switch. <i>B. angulatum</i> had a mean of <span data-n="mean_high"></span>% on days 1-5 and <span data-n="mean_low"></span>% on days 6-10 (log2 change <span data-n="log2"></span>), but its single days ranged from <span data-n="high_min"></span>% to <span data-n="high_max"></span>% within the first period alone. Hover to read the values of a day. The chart opens on a log scale (each step on the axis is a ten-fold change), which shows the small values; untick it for the linear scale.</p>
+  <div class="exslot" data-at="line"></div>
+</section>
+<section class="panel fig">
+  <h3>Table 1. The ten daily shares and the period means</h3>
+  <div id="g5Table"></div>
+  <p class="cap"><b>What it shows.</b> One row per day: the diet period and the share of the day's bases (%) on each MAG. The last rows are the mean of each period and the log2 change between them (with 0.01% added to both means).</p>
+</section>
+<section class="panel fig">
+  <h3>Figure 2. Gene map of the circular chromosome</h3>
+  <div class="pjctl">
+    <label>Colour <select id="g5Color" aria-label="Colour genes by"><option value="evidence">evidence for the name</option><option value="cazy">CAZyme class</option></select></label>
+    <label>Find <input type="search" id="g5Q" placeholder="gene name or product" aria-label="Find genes by name" style="width:220px"></label>
+    <span class="count" id="g5Count" aria-live="polite"></span>
+  </div>
+  <div class="g5mapgrid"><div id="g5Map"></div><div><div class="legend g5leg" id="g5Legend"></div><div class="g5hits" id="g5Hits"></div></div></div>
+  <p class="cap"><b>What it shows.</b> Each block is one gene, at its position on the <span data-n="length_bp"></span> chromosome (outer ring: genes on the forward strand; inner ring: reverse strand). Colour by evidence: how Bakta named the gene (a named protein cluster, a protein domain only, or no match). Colour by CAZyme class: carbohydrate-active enzymes by substrate category, glycosyltransferases (which build sugar chains) and genes with a carbohydrate-binding part only; other genes grey. Ticks inside mark the <span data-n="crispr_arrays"></span> CRISPR arrays and the start of replication. Type a name to mark matching genes outside the ring; hover a gene for its name, product and evidence.</p>
+  <div class="exslot" data-at="map"></div>
+</section>
+<section class="panel fig">
+  <h3>Figure 3. Carbohydrate-degrading enzymes, compared</h3>
+  <div class="pjctl"><label>Count <select id="g5Unit" aria-label="Count as"><option value="genes">genes per MAG</option><option value="per1000">genes per 1,000 genes</option></select></label></div>
+  <div id="g5Bar"></div>
+  <div id="g5Heat"></div>
+  <p class="cap"><b>What it shows.</b> Top: genes for carbohydrate-degrading enzymes (glycoside hydrolases, polysaccharide lyases and carbohydrate esterases) per substrate category in each <i>Bifidobacterium</i> MAG and in the median of all <span data-n="n_mags"></span> MAGs; "per 1,000 genes" corrects for genome size. Bottom: genes per enzyme family (columns) for the families any of the three MAGs carries (viridis: dark few, yellow many); hover for the family's substrate category and the share of all MAGs that carry it. A gene with domains of two families counts in both.</p>
+  <div class="exslot" data-at="cazy"></div>
+</section>
+<section class="panel fig">
+  <h3>Figure 4. Other named genes</h3>
+  <div id="g5Groups"></div>
+  <div class="pjctl"><label>Show the genes of <i>B. angulatum</i> in <select id="g5Grp" aria-label="Gene group"></select></label></div>
+  <div id="g5Members"></div>
+  <p class="cap"><b>What it shows.</b> Top: genes per MAG whose Bakta name matches a search for each group (genes, not functions: a group's genes may belong to one system or to several). Bottom: the matching genes of <i>B. angulatum</i>, with their position, the evidence for the name and the identity to the representative protein of the matched cluster (a match needs 50% or more). A name carried over at 50-70% identity is a likely function, not a measured one.</p>
+  <div class="exslot" data-at="genes"></div>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p>The genome is essentially complete: one circular contig with <span data-n="cds"></span> genes, <span data-n="hyp_pct"></span>% of them without a name. It carries <span data-n="deg_c101"></span> carbohydrate-degrading enzyme genes, as many as the median MAG (<span data-n="deg_median"></span>) in a smaller genome (<span data-n="pyro_genes"></span> genes in the enzyme search, median MAG <span data-n="genes_median"></span>); the largest family is <span data-n="top_family"></span> (starch, <span data-n="top_family_genes"></span> genes), and a phosphoketolase (cluster identity <span data-n="shunt_id"></span>%; in textbooks the key enzyme of the "bifid shunt", the sugar pathway of bifidobacteria) and a "Bile salt hydrolase/transferase" (Bakta's name, cluster identity <span data-n="bsh_id"></span>%) are there, as in the other two <i>Bifidobacterium</i> MAGs. The share fell between the periods (mean <span data-n="mean_high"></span>% to <span data-n="mean_low"></span>%), as the group predicted, but the highest single day (<span data-n="peak"></span>% on day <span data-n="peak_day"></span>) is right before the switch and the day after it is still high (<span data-n="day6"></span>%); only days <span data-n="low_days_below_high_list"></span> are below every day of the first period. This is one person over ten days, one sample per day: it describes this gut, it does not test a diet effect. The share is a share of DNA, not a count of cells, and at about <span data-n="per_million"></span> bases per million it is a small part of the community. Genes are predicted from sequence: present, not shown to be used.</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <p>1. Both diet periods were vegetarian, and the subject had eaten a similar high-calorie diet for about a week before day 1, so the switch at day 6 is the main change; the low-carbohydrate diet of days 6-10 was closer to the subject's normal diet (information from the data owner). Days 1-5 are therefore not a starting point but the end of a week on that diet. Which foods were eaten (for example milk products) is not recorded; would that help the question? 2. Which sugars could <i>B. angulatum</i> take up? The sugar transporters in Figure 4 could be matched to the enzymes next to them on the map (gene neighbourhoods), using the gene positions already in this report. 3. Is the peak on days 5-6 a response to the diet or day-to-day noise? A second person or more days would be needed to tell; with these data, the other two <i>Bifidobacterium</i> MAGs, which peak on day <span data-n="c62_peak_day"></span> (<i>B. adolescentis</i>) and day <span data-n="c16_peak_day"></span> (<i>B. longum</i>), are the only comparison. 4. Are the genes used? That needs RNA (gene expression), which this study did not measure.</p>
+</section>

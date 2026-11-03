@@ -1,0 +1,20 @@
+number: 5
+slug: project-group5
+title: "Bifidobacterium angulatum: its genes and its share over ten days"
+nav: "Group 5: B. angulatum"
+question: >-
+  What can the genome of Bifidobacterium angulatum in this gut do, carbohydrate-active enzymes in particular, and does
+  its share of the DNA fall after the switch from high- to low-carbohydrate food? One complete genome, compared with
+  the two other Bifidobacterium genomes of the study.
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person, sequenced on one PromethION flow cell (Oxford Nanopore, Rapid
+  Barcoding Kit, R10.4.1), analysed with mmlong2, Bakta and the dbCAN protein models. Every number on this page comes
+  from np26 scripts/45_project_group5.py; diet details are information from the data owner.
+takeaways:
+  - "The B. angulatum genome is one circular contig, essentially complete, with starch, plant-fibre and fructan enzymes like those of the other two Bifidobacterium genomes (Figure 3)."
+  - "Its mean share fell from the high- to the low-carbohydrate days, as predicted, but single days varied more within a period than the means differ between periods (Figure 1)."
+  - "One person, ten days, one sample per day: this describes one gut; it does not test a diet effect. Genes are present, not shown to be used."
+discussion: >-
+  The share peaks on days 5 and 6, around the switch, and falls from day 7. Would more people, more days or a
+  different measurement (cell counts, RNA) be needed to tie that to the diet?

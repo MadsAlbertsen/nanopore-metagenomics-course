@@ -1,0 +1,8 @@
+.pjctl { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 13px }
+.g5mapgrid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 18px; align-items: start }
+.g5leg { flex-direction: column; align-items: flex-start }
+.g5list { max-height: 420px; overflow-y: auto }
+.g5hits code { font-family: var(--mono); font-size: 11.5px; background: var(--accent-soft); color: var(--ink); padding: 1px 5px; border-radius: 4px }
+#g5Members { max-height: 360px; overflow-y: auto }
+#g5Heat { margin-top: 10px; overflow-x: auto }
+@media (max-width: 900px) { .g5mapgrid { grid-template-columns: minmax(0, 1fr) } }
