@@ -14,6 +14,6 @@ data_note: >-
 takeaways:
   - "Day 1 and day 10 are among the most different pairs of days (Bray-Curtis 0.38, rank 40 of 45); the subject had eaten a similar high-calorie diet for about a week before day 1, so day 1 is not a baseline of the normal diet."
   - "The community as a whole moved over days 7-8: its distance to day 1 stayed at or below 0.23 up to day 7 and was 0.33 on day 8, while 12 of 35 changing MAGs had already reached their new level on day 6."
-  - "On the low-carbohydrate days, 9 of the 12 falling MAGs were Lachnospiraceae (Roseburia, Agathobacter, Blautia and relatives) and 8 of the 23 rising MAGs were Bacteroidaceae (Bacteroides, Phocaeicola)."
+  - "Among the 35 changing MAGs, 9 of the 12 falling ones were Lachnospiraceae (Roseburia, Agathobacter, Blautia and relatives) and 8 of the 23 rising ones Bacteroides or Phocaeicola; the family totals barely changed (Lachnospiraceae 30.8 to 30.2%, Bacteroidaceae 19.5 to 18.1% of the bases, days 1-5 to days 6-10)."
   - "None of the 61 MAGs present on every day stands out as a strain mixture: their median share of variable positions is 0.005% and the highest 0.13%; deeper MAGs had fewer variable positions (rank correlation -0.41)."
   - "One person, one switch, one sample per day: the timing is described, not tested."

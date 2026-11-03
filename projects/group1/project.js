@@ -73,7 +73,7 @@ function drawCore() {
   });
 }
 
-const FAM = [["Lachnospiraceae", "var(--c1)"], ["Bacteroidaceae", "var(--c2)"], ["other families", "var(--c3)"]];
+const FAM = [["Lachnospiraceae", "var(--c3)"], ["Bacteroidaceae", "var(--c4)"], ["other families", "var(--c5)"]];
 const famColor = (f) => (FAM.find(([n]) => n === f) || FAM[2])[1];
 
 function drawChange() {
