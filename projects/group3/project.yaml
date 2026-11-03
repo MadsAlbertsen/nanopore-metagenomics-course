@@ -4,18 +4,18 @@ title: "Butyrate genes across the two diet periods"
 nav: "Group 3: butyrate genes"
 question: >-
   Do the genes for butyrate production change in abundance between the high-carbohydrate days and the
-  low-carbohydrate days, which genomes carry them, and from which day does a change show? Many of the
-  genomes carry a complete butyrate route. Their total share of the DNA stays level, because genomes with one type of
-  final step fall while genomes with the other type rise.
+  low-carbohydrate days, which genomes carry them, and from which day does a change show? The genomes with a complete
+  butyrate route keep a level share of the DNA, because genomes with one type of final step fall while a few genomes
+  with the other type rise.
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person, sequenced on one PromethION flow cell and analysed with mmlong2.
   Genes were searched in every genome with the course's own method (module 8 data); diet periods and diet history are
   information from the data owner. Every number on this page comes from np26 scripts/43_project_group3.py.
+# {key} placeholders are filled from data.json numbers by project.js
 takeaways:
-  - "Gene potential, not activity: the genomes with a complete butyrate route hold a similar share of the DNA on both diets."
-  - "The two final steps move apart: genomes with the CoA-transferase fall on the low-carbohydrate days, genomes with only the kinase route rise."
-  - "One person, ten days: the sizes and timing describe this subject only; they are not a statistical test."
-discussion: >-
-  If genomes with the kinase route replace genomes with the CoA-transferase route, would this gut make the same amount
-  of butyrate? What measurement would tell?
+  - "{n_route} of {n_mags} MAGs carry a complete butyrate route (bcd plus but, ptb or buk); together they held {total_hi}% of the sample's bases on days 1-5 and {total_lo}% on days 6-10, so the expected fall did not show."
+  - "The two final steps moved apart from day 7: MAGs with the CoA-transferase (but) fell from {but_hi_pct}% to {but_lo_pct}%, MAGs with ptb and buk rose from {pbboth_hi_pct}% to {pbboth_lo_pct}%."
+  - "Both moves rest on few genomes: Agathobacter, Roseburia and Anaerostipes account for {but_known_pp} percentage points of the but group's fall, and three Lachnospiraceae (led by Acetatifactor intestinalis) for +{pb_top3_pp} points of the kinase group's rise."
+  - "The gene set does not follow the family: {lachno_but} Lachnospiraceae MAGs carry bcd + but and {lachno_pb} bcd + ptb + buk; of the {n_copro} Coprococcus MAGs, {n_copro_pb} have ptb + buk and {n_copro_but} have but ({n_copro_but_buk} of them also buk)."
+  - "Gene potential in one person over ten days: whether butyrate production changed cannot be said from these data."

@@ -1,16 +1,15 @@
 // Group 3: butyrate genes across the two diet periods. DATA from np26 scripts/43_project_group3.py.
 const D = DATA, N = D.numbers;
-const st = { view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, hl: null };
+const st = { view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag" };
 const byId = Object.fromEntries(D.mags.map((m) => [m.id, m]));
 const mains = D.mags.filter((m) => m.main);
 const SPLIT = "diet switch";
 
-// numbers in the text and in example answers: {key} from DATA.numbers, {mag:ID:field} from a MAG's row
-function fillText(s) {
-  return s.replace(/\{mag:([^:}]+):([a-z0-9_]+)\}/gi, (_, id, f) => String(byId[id][f])).replace(/\{([a-z0-9_]+)\}/gi, (_, k) => String(N[k]));
-}
+// numbers in the text: <span data-n="key"> and {key} in the key findings (project.yaml), from DATA.numbers
+const fillText = (s) => s.replace(/\{([a-z0-9_]+)\}/gi, (_, k) => String(N[k]));
 document.querySelectorAll("[data-n]").forEach((e) => { e.textContent = String(N[e.dataset.n]); });
-for (const ex of EXAMPLES) { ex.question = fillText(ex.question); ex.answer = fillText(ex.answer); }
+document.querySelectorAll(".closing li").forEach((e) => { e.textContent = fillText(e.textContent); });
+const KIN = { but: ["but", "var(--c1)"], ptb_buk: ["ptb + buk", "var(--c2)"], buk_only: ["buk without ptb", "var(--c3)"] };
 
 function stats() {
   const items = [[N.n_mags, "MAGs searched"], [N.n_route, "with a complete butyrate route"], [N.n_route_main, `route MAGs with a mean ≥ ${N.min_mean}%`], [`${N.total_hi} → ${N.total_lo}%`, "route MAGs' share of the bases, days 1-5 → 6-10"]];
@@ -68,7 +67,7 @@ function drawPcoa() {
   const fams = D.pcoa.families;
   const pts = D.pcoa.ids.map((id, i) => {
     const m = byId[id];
-    return { x: D.pcoa.x[i], y: D.pcoa.y[i], label: m.name, group: m.fam, color: catColor(fams.indexOf(m.fam)), size: st.hl === id ? 8 : 4.5, extra: `${m.family} · ${m.set}` };
+    return { x: D.pcoa.x[i], y: D.pcoa.y[i], label: m.name, group: m.fam, color: catColor(fams.indexOf(m.fam)), size: 4.5, extra: `${m.family} · ${m.set}` };
   });
   scatter($("g3Pcoa"), { points: pts, xLabel: `PCoA axis 1 (${N.pc1}%)`, yLabel: `PCoA axis 2 (${N.pc2}%)`, height: 320 });
   // legend in the fixed family order (scatter's own legend follows first appearance)
@@ -107,6 +106,21 @@ function drawLine() {
   }
 }
 
+// Figure 5: change in percentage points per MAG (largest 16) or per genus and final step
+function drawBars() {
+  let rows;
+  if (st.contrib === "mag") {
+    rows = [...D.mags].sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 16).sort((a, b) => b.pp - a.pp)
+      .map((m) => ({ label: m.name, v: m.pp, kin: m.kin }));
+  } else {
+    rows = Object.entries(D.groups).flatMap(([kin, gs]) => gs.filter((g) => Math.abs(g.pp) >= 0.05).map((g) => ({ label: `${g.genus} (${g.n}) · ${KIN[kin][0]}`, v: g.pp, kin })))
+      .sort((a, b) => b.v - a.v);
+  }
+  barChart($("g3Bars"), { labels: rows.map((r) => r.label), values: rows.map((r) => r.v), colors: rows.map((r) => KIN[r.kin][1]), horizontal: true,
+    yLabel: "Change, days 6-10 minus days 1-5 (percentage points of the bases)", unit: "percentage points" });
+  chartLegend($("g3Bars"), Object.values(KIN).map(([name, color]) => ({ name, color })));
+}
+
 function drawTables() {
   table($("g3Table"), {
     columns: [{ key: "name", label: "MAG" }, { key: "set", label: "Gene set" }, { key: "mean", label: "Mean share (%)", num: true },
@@ -124,25 +138,15 @@ function drawTables() {
   });
 }
 
-function drawAll() { setControls(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); }
+function drawAll() { setControls(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); }
 
 $("g3View").addEventListener("change", (e) => { st.view = e.target.value; drawGenes(); });
 $("g3Set").addEventListener("change", (e) => { st.hset = e.target.value; drawHeat(); });
 $("g3Scale").addEventListener("change", (e) => { st.hscale = e.target.value; drawHeat(); });
 $("g3Series").addEventListener("change", (e) => { st.series = e.target.value; $("g3MagLab").hidden = st.series !== "mag"; drawLine(); });
 $("g3Mag").addEventListener("change", (e) => { st.mag = e.target.value; drawLine(); });
+$("g3Contrib").addEventListener("change", (e) => { st.contrib = e.target.value; drawBars(); });
 
-const DEFAULT = { ...st };
-const applyState = (s) => { Object.assign(st, DEFAULT, s); };
-const examples = setupExamples($("pjExamples"), (k) => {
-  applyState(EXAMPLES[k].state);
-  drawAll();
-  writeHashParams({ ex: k + 1 });
-});
 stats();
 drawTables();
-(function start() {
-  const ex = parseInt(readHashParams().ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState(EXAMPLES[ex - 1].state); }
-  drawAll();
-})();
+drawAll();
