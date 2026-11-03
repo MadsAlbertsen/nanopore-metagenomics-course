@@ -24,7 +24,8 @@ reader. Sections, in this order (`<section class="panel">` each; figures as befo
    would need (on the Mac, a server job, or not measured).
 9. **References**: numbered list, with DOI or PMID.
 
-`takeaways` in project.yaml are shown at the end as "Key findings" (3-5 results with numbers). No `discussion` key, no
+`takeaways` in project.yaml are shown as "Key findings" (3-5 results with numbers) where body.html has
+`<!--KEY-FINDINGS-->` (put it right after the Summary section), else at the end of the page. No `discussion` key, no
 guided examples (no examples.yaml) on report pages.
 
 ## Files
