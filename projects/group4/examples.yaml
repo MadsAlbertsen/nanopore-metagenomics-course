@@ -1,6 +1,6 @@
 - title: "Which substrate group moves most?"
   at: cat
-  question: "Switch to 'Relative to days 1-5'. Which of the four substrate groups ends up furthest from its days 1-5 level, and by how much does its mean over days 6-10 differ?"
+  question: "Switch to 'Relative to days 1-5'. Which of the four substrate groups has the mean over days 6-10 that differs most from its mean over days 1-5, and by how much?"
   answer: "Host glycans: {cat_host_glycan_first|1} genes per 1,000 genes on average in days 1-5 and {cat_host_glycan_second|1} in days 6-10, a change of {cat_host_glycan_pct|0|+}%. Fructan changes by {cat_fructan_pct|0|+}%, starch by {cat_starch_pct|0|+}% and plant fibre by {cat_plant_fibre_pct|0|+}%. All four stay within a narrow band, likely because many MAGs carry these families: the community's potential changes much less than its species mix."
   state: {cat: rel, highlight: "Host glycans"}
 - title: "The day that sorts wrong"
@@ -11,7 +11,7 @@
 - title: "Genes instead of species"
   at: sort
   question: "Switch to the genes. How many days are sorted right now, and which ones go wrong? Compare the size of the bars with the species mix."
-  answer: "{func_correct} of 10 are right; days {func_wrong} go wrong, the same day 6 plus day 4, which was already the closest call with species. The bars are several times shorter (for example day 8: {func_margin_8|3} against {taxa_margin_8|3} with species): the gene profiles of all days are much more alike. A second distance (Hellinger) gives the same {hel_func_correct} of 10, wrong days {hel_func_wrong}."
+  answer: "{func_correct} of 10 are right; days {func_wrong} go wrong, the same day 6 plus day 4, which was already the closest call with species. Day 4's margin is close to zero in both profiles, so the one-day difference between species and genes is not a real difference. The bars are several times shorter (for example day 8: {func_margin_8|3} against {taxa_margin_8|3} with species): the gene profiles of all days are much more alike. A second distance (Hellinger) gives the same {hel_func_correct} of 10, wrong days {hel_func_wrong}."
   state: {sort: functions}
 - title: "Is days 6-10 less stable?"
   at: stab

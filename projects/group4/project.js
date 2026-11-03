@@ -45,10 +45,10 @@ function drawCat() {
 function drawSort() {
   tabs("sortView", "sort");
   const rows = D.loo[st.sort];
-  const c1 = "var(--c1)", c2 = "var(--c2)";
+  // grey = sorted right, purple = sorted wrong (not blue / orange: those mean down / up in Figure 4)
   barChart($("pjSort"), {
-    labels: rows.map((r) => `Day ${r.day}`), values: rows.map((r) => r.margin),
-    colors: rows.map((r) => (r.correct ? c1 : c2)),
+    labels: rows.map((r) => `Day ${r.day}${r.correct ? "" : " ✗"}`), values: rows.map((r) => r.margin),
+    colors: rows.map((r) => (r.correct ? "var(--faint)" : "var(--c7)")),
     yLabel: `Margin (Bray-Curtis, ${PROFILE[st.sort]})`,
     fmt: (v) => v.toFixed(3),
   });

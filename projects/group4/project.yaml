@@ -12,7 +12,7 @@ data_note: >-
   Barcoding Kit, R10.4.1), analysed with mmlong2: the MAGs, their shares of each day's bases and their CAZyme genes
   (module 8). Every number on this page is computed from that analysis by np26 scripts/44_project_group4.py.
 takeaways:
-  - "The species mix sorts the days into their diet periods slightly better than the CAZyme gene profile; the first day of the new diet looks like the old diet in both."
+  - "The species mix and the CAZyme gene profile sort the days into their diet periods about equally well (they differ by one borderline day); the first day of the new diet looks like the old diet in both."
   - "The community's carbohydrate gene potential changes little between the periods; host glycan genes change most."
   - "Days 6-10 differ more from each other than days 1-5, but neighbouring days differ about as much in both periods: the second period drifts rather than wobbles. Days 6-10 were the diet closer to the usual one, but the timing (about a week on the first diet before day 1) explains the pattern just as well: a description, not a test."
 discussion: >-
