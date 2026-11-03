@@ -12,9 +12,8 @@ data_note: >-
   Barcoding Kit, R10.4.1), analysed with mmlong2, Bakta and the dbCAN protein models. Every number on this page comes
   from np26 scripts/45_project_group5.py; diet details are information from the data owner.
 takeaways:
-  - "The B. angulatum genome is one circular contig, essentially complete, with starch, plant-fibre and fructan enzymes like those of the other two Bifidobacterium genomes (Figure 3)."
-  - "Its mean share fell from the high- to the low-carbohydrate days, as predicted, but single days varied more within a period than the means differ between periods (Figure 1)."
-  - "One person, ten days, one sample per day: this describes one gut; it does not test a diet effect. Genes are present, not shown to be used."
-discussion: >-
-  The share peaks on days 5 and 6, around the switch, and falls from day 7. Would more people, more days or a
-  different measurement (cell counts, RNA) be needed to tie that to the diet?
+  - "The B. angulatum genome is one circular contig of 1.99 Mb (CheckM2 completeness 99.95%) with 1,564 protein-coding genes."
+  - "It carries 39 carbohydrate-degrading enzyme genes (median MAG 38) in a smaller genome; GH13, a starch family, is the largest with 9 genes (39 of 421 MAGs have more)."
+  - "Its relatives carry more plant-fibre enzymes (20 and 23 genes against 12): this suggests a starch-centred niche for B. angulatum."
+  - "Its mean share fell from 0.128% of the bases on days 1-5 to 0.07% on days 6-10 (log2 -0.8), but single days ranged 0.05-0.294% within days 1-5 and the peak was on day 5, just before the switch."
+  - "Like its relatives, it carries a phosphoketolase and a gene named bile salt hydrolase/transferase; it also has 7 CRISPR-associated genes and 5 CRISPR arrays."
