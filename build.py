@@ -186,27 +186,36 @@ def place_closing(body: str, block: str) -> str:
     return body.replace("<!--KEY-FINDINGS-->", block, 1) if "<!--KEY-FINDINGS-->" in body else body + block
 
 
-def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
-    """One group report: the module page template plus the shared chart kit (shared/charts.js, charts.css)."""
+def project_page(p: dict, mods: list[dict], page: str, base: dict, title: str, body: str, js: str, nav_title: str,
+                 examples: list | None = None) -> str:
+    """A page of a group report: the module page template with the report's data.json and project.css plus the
+    shared chart kit (shared/charts.js, charts.css)."""
     d = p["dir"]
     data_path = d / "data.json"
-    data = json.loads(data_path.read_text()) if data_path.exists() else None
-    examples = load_examples(p, data)
     own_css = (d / "project.css").read_text() if (d / "project.css").exists() else ""
     return fill(
         page,
         {
             **base,
-            "TITLE": f"Group {p['number']}: {p['title']}",
+            "TITLE": f"Group {p['number']}: {title}",
             "NAV": nav(mods, "projects"),
             "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
-            "BODY": place_closing((d / "body.html").read_text(), closing(p, "Key findings")),
-            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + (d / "project.js").read_text(),
-            "DATA": script_json(data),
-            "EXAMPLES": script_json(examples),
-            "FOOTER": footer(p["nav"], p.get("data_note", FOOTER)),
+            "BODY": body,
+            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + js,
+            "DATA": script_json(json.loads(data_path.read_text()) if data_path.exists() else None),
+            "EXAMPLES": script_json(examples or []),
+            "FOOTER": footer(nav_title, p.get("data_note", FOOTER)),
         },
     )
+
+
+def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
+    """One group report (body.html, project.js; key findings placed by place_closing)."""
+    d = p["dir"]
+    data_path = d / "data.json"
+    examples = load_examples(p, json.loads(data_path.read_text()) if data_path.exists() else None)
+    body = place_closing((d / "body.html").read_text(), closing(p, "Key findings"))
+    return project_page(p, mods, page, base, p["title"], body, (d / "project.js").read_text(), p["nav"], examples)
 
 
 PROJECTS_INTRO = (
@@ -222,23 +231,8 @@ def build_project_page(p: dict, x: dict, mods: list[dict], page: str, base: dict
     """An extra page of a group report (project.yaml pages entry x): its own body and optional script, with the
     report's data.json, project.css and the chart kit."""
     d = p["dir"]
-    data_path = d / "data.json"
-    own_css = (d / "project.css").read_text() if (d / "project.css").exists() else ""
-    own_js = (d / x["js"]).read_text() if x.get("js") else ""
-    return fill(
-        page,
-        {
-            **base,
-            "TITLE": f"Group {p['number']}: {x['title']}",
-            "NAV": nav(mods, "projects"),
-            "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
-            "BODY": (d / x["body"]).read_text(),
-            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + own_js,
-            "DATA": script_json(json.loads(data_path.read_text()) if data_path.exists() else None),
-            "EXAMPLES": "[]",
-            "FOOTER": footer(f"{p['nav']}: {x['title']}", p.get("data_note", FOOTER)),
-        },
-    )
+    js = (d / x["js"]).read_text() if x.get("js") else ""
+    return project_page(p, mods, page, base, x["title"], (d / x["body"]).read_text(), js, f"{p['nav']}: {x['title']}")
 
 
 def build_projects_index(projs: list[dict], mods: list[dict], page: str, base: dict) -> str:

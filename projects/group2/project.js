@@ -27,7 +27,7 @@ function delim(cols, rows, sep) {
   return [cols.map((c) => q(c.label)).join(sep), ...rows.map((r) => cols.map((c) => q(c.get ? c.get(r) : r[c.key])).join(sep))].join("\n") + "\n";
 }
 function saveText(name, text, type) {
-  const url = URL.createObjectURL(new Blob([text], { type }));
+  const url = URL.createObjectURL(new Blob([text], { type: type + ";charset=utf-8" }));
   const a = document.createElement("a");
   a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
@@ -41,7 +41,7 @@ function dlLinks(host, sets, label = "Source data") {
     const b = ev.target.closest("button[data-f]");
     if (!b) return;
     const s = sets[+b.dataset.i], tsv = b.dataset.f === "tsv";
-    saveText(`group2_${s.file}.${tsv ? "tsv" : "csv"}`, delim(s.cols, s.rows, tsv ? "\t" : ","), tsv ? "text/tab-separated-values" : "text/csv");
+    saveText(`group2_${s.file}.${tsv ? "tsv" : "csv"}`, "\ufeff" + delim(s.cols, s.rows, tsv ? "\t" : ","), tsv ? "text/tab-separated-values" : "text/csv");
   });
 }
 const dayCols = (get) => D.days.map((d, j) => ({ label: `day ${d}`, get: (r) => get(r, j) }));
@@ -67,7 +67,7 @@ function drawFig2() {
 }
 
 function magOptions() {
-  const list = D.mags.filter((m) => !st.big || Math.abs(m.log2) >= 1);
+  const list = D.mags.filter((m) => !st.big || m.big);
   if (!list.some((m) => m.mag === st.mag)) st.mag = list[0].mag;
   $("g2Mag").innerHTML = list.map((m) => `<option value="${esc(m.mag)}"${m.mag === st.mag ? " selected" : ""}>${esc(m.name)} · ${m.mean.toFixed(2)}%</option>`).join("");
   $("g2Big").checked = st.big;
@@ -92,7 +92,7 @@ function drawFig3() {
 // Fig. 4a: forest plot of the two-fold MAGs (chart kit primitives: mountChart, newSvg, scale, axes, el, tipOn)
 function forest(host) {
   return mountChart(host, () => {
-    const rows = D.mags.filter((m) => Math.abs(m.log2) >= 1).sort((a, b) => a.log2 - b.log2);
+    const rows = D.mags.filter((m) => m.big).sort((a, b) => a.log2 - b.log2);
     const clr = st.forest === "clr";
     const val = (m) => (clr ? m.clr : m.log2);
     const rowH = 15, top = 10, bottom = 44;
@@ -181,7 +181,7 @@ const SOURCES = {
     cols: [{ label: "MAG", key: "mag" }, { label: "name", key: "name" }, ...SPLITS.map((s, k) => ({ label: `R2 split ${s}`, get: (r) => r.splits[k] })), { label: "R2 line", key: "r2_line" }, { label: "best split", get: (r) => SPLITS[r.best - 1] }] },
   { file: "fig3c_split_counts", title: "c", rows: SPLITS.map((s, k) => ({ s, k })),
     cols: [{ label: "split", key: "s" }, { label: "MAGs rising >= 2-fold", get: (r) => D.split_counts.rise[r.k] }, { label: "MAGs falling >= 2-fold", get: (r) => D.split_counts.fall[r.k] }] }],
-  fig4: [{ file: "fig4a_effect_sizes", title: "a", rows: D.mags.filter((m) => Math.abs(m.log2) >= 1),
+  fig4: [{ file: "fig4a_effect_sizes", title: "a", rows: D.mags.filter((m) => m.big),
     cols: [{ label: "MAG", key: "mag" }, { label: "name", key: "name" }, { label: "phylum", key: "phylum" }, { label: "log2 change", key: "log2" },
       { label: "interval 5%", key: "lo" }, { label: "interval 95%", key: "hi" }, { label: "CLR change (log2 units)", key: "clr" }, { label: "two-fold in all leave-one-day-out runs", key: "stays" }] },
   { file: "fig4b_cutoff_grid", title: "b", rows: D.sens,
@@ -215,7 +215,7 @@ const SUPP = [
       { key: "contamination", label: "Contamination (%)", num: true, fmt: f(2) }, { key: "size_mb", label: "Size (Mbp)", num: true, fmt: f(2) },
       { key: "high", label: "Days 1-5 (%)", num: true, fmt: f(3) }, { key: "low", label: "Days 6-10 (%)", num: true, fmt: f(3) },
       { key: "log2", label: "log2 change", num: true, fmt: f(2) }, { key: "lo", label: "Interval 5%", num: true, fmt: f(2) }, { key: "hi", label: "Interval 95%", num: true, fmt: f(2) },
-      { key: "clr", label: "CLR change", num: true, fmt: f(2) }, { key: "stays", label: "Two-fold in all leave-one-out runs", fmt: (v, r) => (Math.abs(r.log2) < 1 ? "–" : v ? "yes" : "no") },
+      { key: "clr", label: "CLR change", num: true, fmt: f(2) }, { key: "stays", label: "Two-fold in all leave-one-out runs", fmt: (v, r) => (!r.big ? "–" : v ? "yes" : "no") },
       { key: "best", label: "Best split", num: true, fmt: (v) => SPLITS[v - 1] },
       { key: "r2_switch", label: "R² step at 5|6", num: true, fmt: fmtR }, { key: "r2_line", label: "R² line", num: true, fmt: fmtR },
       { key: "sep", label: "Separation (of 5)", num: true, fmt: String }, { key: "fit", label: "Fit" }], sortKey: "log2", filter: true },
@@ -284,7 +284,7 @@ $("g2Table").addEventListener("click", (ev) => {
   if (!tr) return;
   const name = tr.querySelector("td")?.textContent;
   const m = D.mags.find((x) => x.name === name);
-  if (m) { st.mag = m.mag; if (st.big && Math.abs(m.log2) < 1) st.big = false; magOptions(); drawFig3(); $("g2Mag").scrollIntoView({ block: "center", behavior: "smooth" }); }
+  if (m) { st.mag = m.mag; if (st.big && !m.big) st.big = false; magOptions(); drawFig3(); $("g2Mag").scrollIntoView({ block: "center", behavior: "smooth" }); }
 });
 
 drawAll();

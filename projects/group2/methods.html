@@ -85,7 +85,7 @@
   <table class="g2rat">
     <tr><th>Why</th><td>A simple, transparent way to show how much each contrast depends on the particular days sampled, as the group asked for uncertainty with every effect size.</td></tr>
     <tr><th>Assumes</th><td>Days within a period are exchangeable.</td></tr>
-    <tr><th>Pitfalls</th><td>They are not (autocorrelation, trends), so the intervals are descriptive: they are too narrow when neighbouring days are alike, and a trend inside a period widens them; with five days there are few distinct resamples; intervals are not adjusted for the number of contrasts.</td></tr>
+    <tr><th>Pitfalls</th><td>The intervals are too narrow, for three reasons: a percentile bootstrap of a five-day mean is too narrow even for independent days (its spread is about √(4/5) of the true standard error); each period has only 126 distinct resamples; and neighbouring days are autocorrelated, so they carry less independent information than five days would. A trend inside a period widens them. They are not adjusted for the number of contrasts. And for MAGs selected because they changed a lot, an interval that excludes zero is close to built in: "<span data-n="boot_excl0"></span> of <span data-n="big"></span> exclude zero" shows mainly that no single day carries the change, not that the change is certain.</td></tr>
     <tr><th>Alternatives</th><td>Moving-block bootstrap (blocks of two or three days leave almost no distinct resamples in five days); permuting the position of the switch (only nine splits, so the switch can at best rank first of nine); Bayesian models with autocorrelation (too few days for the extra parameters).</td></tr>
   </table>
 </section>
@@ -114,7 +114,7 @@
   <h3>3.10 MAG quality</h3>
   <table class="g2rat">
     <tr><th>Why</th><td>Medium-quality MAGs can be incomplete or contaminated, which distorts both abundance and gene content; repeating the analysis with the <span data-n="hq_n"></span> high-quality MAGs only shows which results depend on the <span data-n="mq_n"></span> medium-quality ones.</td></tr>
-    <tr><th>Assumes</th><td>CheckM2 estimates are right [13]; the quality classes follow the MIMAG thresholds [14].</td></tr>
+    <tr><th>Assumes</th><td>CheckM2 estimates are right [9]; the quality classes follow the MIMAG thresholds [10].</td></tr>
     <tr><th>Pitfalls</th><td>Dropping MAGs changes the community being described; a key MAG can be medium quality for reasons other than completeness (missing rRNA genes). Here the plant-fibre result changed (<span data-n="cz_plant_fibre_pct"></span>% with all MAGs, <span data-n="hq_cz_plant_fibre"></span>% with HQ only) because both <i>P. copri_B</i> MAGs are medium quality.</td></tr>
     <tr><th>Alternatives</th><td>Weighting by completeness; correcting gene counts for completeness; manual refinement of the key MAGs.</td></tr>
   </table>
@@ -133,7 +133,7 @@
 <section class="panel">
   <h3>3.12 CAZyme annotation and substrate groups</h3>
   <table class="g2rat">
-    <tr><th>Why</th><td>The dbCAN HMMs are a standard way to find CAZyme families in predicted proteins, and dbCAN3's substrate information groups families by what they degrade [10]; searching every MAG with the same models keeps the community comparable.</td></tr>
+    <tr><th>Why</th><td>The dbCAN HMMs are a standard way to find CAZyme families in predicted proteins, and dbCAN3's substrate information groups families by what they degrade [14]; searching every MAG with the same models keeps the community comparable.</td></tr>
     <tr><th>Assumes</th><td>An HMM hit means a functional enzyme of that family; a family's substrate group describes its typical substrate.</td></tr>
     <tr><th>Pitfalls</th><td>One tool, no consensus of several; some families are weak (GH109: many hits are not glycoside hydrolases); families act on several substrates; incomplete MAGs miss genes; gene presence is potential, not activity.</td></tr>
     <tr><th>Alternatives</th><td>dbCAN's consensus of HMM, DIAMOND and subfamily searches; polysaccharide utilisation loci for Bacteroidota [5]; metatranscriptomics or metaproteomics for activity (not measured).</td></tr>
@@ -165,7 +165,7 @@
   <table class="g2rat">
     <tr><th>Why</th><td>Checks whether single enzyme families change behind stable substrate groups.</td></tr>
     <tr><th>Assumes</th><td>Families with at least <span data-n="fam_min" data-d="1"></span> genes per 1,000 genes are measured well enough.</td></tr>
-    <tr><th>Pitfalls</th><td>Added after the main analysis; its cut-off was lowered after seeing the data; with <span data-n="fam_kept"></span> families, the largest changes are partly chance.</td></tr>
+    <tr><th>Pitfalls</th><td>Added after the main analysis; its cut-off was lowered after seeing the data; with <span data-n="fam_kept"></span> families, the largest changes are partly chance. Its heatmap uses a diverging blue-grey-orange scale rather than viridis because it shows signed changes around zero (log2 relative to days 1-5).</td></tr>
     <tr><th>Alternatives</th><td>Subfamilies; utilisation loci; activity data.</td></tr>
   </table>
 </section>
@@ -202,7 +202,7 @@
   <h2>7. Reproducibility</h2>
   <p><b>Code.</b> One analysis script, scripts/42_project_group2.py of the course's analysis code, reads the input tables (section 2), runs every analysis, checks its positive controls (it stops if one fails) and writes the result tables and the data file behind the manuscript. It needs Python with pandas and numpy and runs in seconds on a laptop; the resampling uses a fixed seed, so a rerun gives the same numbers. The code is available from the course teacher; the expected results and their outcomes are written in the script's header.</p>
   <p><b>Processed data and figure source data.</b> Every figure in the manuscript has a source-data download (CSV or TSV) under its legend, and the ten supplementary tables can be downloaded in the same formats. They hold derived data only (shares, distances, gene counts per MAG), no reads.</p>
-  <p><b>Upstream steps.</b> Read filtering, assembly, binning, quality and taxonomy (mmlong2 [12], CheckM2 [13], GTDB-Tk) and the gene and CAZyme search are documented in the course modules (<a href="data.html">module 8</a>, <a href="binning.html">module 4</a>, <a href="mag-quality.html">module 5</a>, <a href="annotation.html">module 7</a>).</p>
+  <p><b>Upstream steps.</b> Read filtering, assembly, binning, quality and taxonomy (mmlong2 [8], CheckM2 [9], GTDB-Tk) and the gene and CAZyme search are documented in the course modules (<a href="data.html">module 8</a>, <a href="binning.html">module 4</a>, <a href="mag-quality.html">module 5</a>, <a href="annotation.html">module 7</a>).</p>
 </section>
 
 <section class="panel refs">
@@ -211,9 +211,9 @@
   <ol>
     <li value="5">Grondin JM, Tamura K, Déjean G, Abbott DW, Brumer H. Polysaccharide utilization loci: fueling microbial communities. J Bacteriol 2017;199:e00860-16. doi:<a href="https://doi.org/10.1128/JB.00860-16">10.1128/JB.00860-16</a>, PMID 28138099.</li>
     <li value="7">Gloor GB, Macklaim JM, Pawlowsky-Glahn V, Egozcue JJ. Microbiome datasets are compositional: and this is not optional. Front Microbiol 2017;8:2224. doi:<a href="https://doi.org/10.3389/fmicb.2017.02224">10.3389/fmicb.2017.02224</a>, PMID 29187837.</li>
-    <li value="10">Zheng J, Ge Q, Yan Y, Zhang X, Huang L, Yin Y. dbCAN3: automated carbohydrate-active enzyme and substrate annotation. Nucleic Acids Res 2023;51:W115-W121. doi:<a href="https://doi.org/10.1093/nar/gkad328">10.1093/nar/gkad328</a>, PMID 37125649.</li>
-    <li value="12">Sereika M, Mussig AJ, Jiang C, et al. Genome-resolved long-read sequencing expands known microbial diversity across terrestrial habitats. Nat Microbiol 2025;10:2018-2030. doi:<a href="https://doi.org/10.1038/s41564-025-02062-z">10.1038/s41564-025-02062-z</a>, PMID 40707831.</li>
-    <li value="13">Chklovski A, Parks DH, Woodcroft BJ, Tyson GW. CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nat Methods 2023;20:1203-1212. doi:<a href="https://doi.org/10.1038/s41592-023-01940-w">10.1038/s41592-023-01940-w</a>, PMID 37500759.</li>
-    <li value="14">Bowers RM, Kyrpides NC, Stepanauskas R, et al. Minimum information about a single amplified genome (MISAG) and a metagenome-assembled genome (MIMAG) of bacteria and archaea. Nat Biotechnol 2017;35:725-731. doi:<a href="https://doi.org/10.1038/nbt.3893">10.1038/nbt.3893</a>, PMID 28787424.</li>
+    <li value="8">Sereika M, Mussig AJ, Jiang C, et al. Genome-resolved long-read sequencing expands known microbial diversity across terrestrial habitats. Nat Microbiol 2025;10:2018-2030. doi:<a href="https://doi.org/10.1038/s41564-025-02062-z">10.1038/s41564-025-02062-z</a>, PMID 40707831.</li>
+    <li value="9">Chklovski A, Parks DH, Woodcroft BJ, Tyson GW. CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nat Methods 2023;20:1203-1212. doi:<a href="https://doi.org/10.1038/s41592-023-01940-w">10.1038/s41592-023-01940-w</a>, PMID 37500759.</li>
+    <li value="10">Bowers RM, Kyrpides NC, Stepanauskas R, et al. Minimum information about a single amplified genome (MISAG) and a metagenome-assembled genome (MIMAG) of bacteria and archaea. Nat Biotechnol 2017;35:725-731. doi:<a href="https://doi.org/10.1038/nbt.3893">10.1038/nbt.3893</a>, PMID 28787424.</li>
+    <li value="14">Zheng J, Ge Q, Yan Y, Zhang X, Huang L, Yin Y. dbCAN3: automated carbohydrate-active enzyme and substrate annotation. Nucleic Acids Res 2023;51:W115-W121. doi:<a href="https://doi.org/10.1093/nar/gkad328">10.1093/nar/gkad328</a>, PMID 37125649.</li>
   </ol>
 </section>
