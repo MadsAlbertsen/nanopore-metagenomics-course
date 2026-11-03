@@ -1,0 +1,15 @@
+number: 0
+slug: project-example
+title: "Example report (template)"
+nav: Example report
+question: >-
+  A template for the group reports: every chart type on placeholder numbers. Not published.
+status: draft
+publish: false
+data_note: >-
+  Template only: every number on this page is a placeholder, not data from the course.
+takeaways:
+  - "Take-home point 1: one sentence, a number from data.json, with its unit."
+  - "Take-home point 2: what the data cannot show."
+discussion: >-
+  An open question for tomorrow's feedback session.

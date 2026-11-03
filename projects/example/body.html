@@ -1,0 +1,65 @@
+<div class="intro">
+  <span class="kicker">Group 0 · template</span>
+  <h1>Example report (template)</h1>
+  <p class="note">Template for the group reports. Every number on this page is a placeholder. Copy this folder to projects/groupN/, keep the sections and their order, and let the np26 script write data.json.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>The question</h2>
+  <p>The group's question in one or two sentences, in the group's own words where possible. Then the question as this report answers it, narrowed to what the data can show, and why it was narrowed (for example: "which MAGs use starch" becomes "which MAGs carry starch-degrading enzymes", because the study measured DNA, not activity). End with what an answer would look like: the figure or comparison that would show it.</p>
+</section>
+
+<section class="panel" id="pjExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<section class="panel">
+  <h2>Data used</h2>
+  <p>Each data set the report uses, with a link to its card in <a href="data.html">module 8</a> and to the module that explains it: for example the MAG abundance on each day (<a href="binning.html">module 4</a>) and the genes of every MAG (<a href="annotation.html">module 7</a>). Say what one row is (per MAG and day, per gene), and the unit of every number (percent of a sample's bases, genes per MAG).</p>
+</section>
+
+<section class="panel">
+  <h2>Approach</h2>
+  <p>The steps in plain words, in the order they were done, with the choices that matter (a cut-off, which MAGs were included and why). Write down the expected result before the numbers, and the check that the method works (a positive control: a case where the answer is known). Name the tools only where it helps a reader find out more.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+<section class="panel fig">
+  <h3>Figure 1. A line over the ten days</h3>
+  <div id="pjLine"></div>
+  <p class="cap"><b>What it shows.</b> 3-5 lines: what each line is, the unit, the dashed line between day 5 and day 6 (the diet switch), and what to look for. Hover to read the values of each day.</p>
+  <div class="exslot" data-at="line"></div>
+</section>
+<section class="panel fig">
+  <h3>Figure 2. Bars per group of MAGs</h3>
+  <div id="pjBar"></div>
+  <p class="cap"><b>What it shows.</b> The caption names the groups, the unit and the number of MAGs behind each bar.</p>
+</section>
+<section class="panel fig">
+  <h3>Figure 3. Scatter of two measures</h3>
+  <div id="pjScatter"></div>
+  <p class="cap"><b>What it shows.</b> One point per MAG; the axes and units; what a point far from the others means.</p>
+  <div class="exslot" data-at="scatter"></div>
+</section>
+<section class="panel fig">
+  <h3>Figure 4. Heatmap of change</h3>
+  <div id="pjHeat"></div>
+  <p class="cap"><b>What it shows.</b> Rows, columns and the colour scale (diverging: blue below, grey at zero, orange above).</p>
+</section>
+<section class="panel fig">
+  <h3>Table 1. The numbers behind the figures</h3>
+  <div id="pjTable"></div>
+  <p class="cap"><b>What it shows.</b> Click a column to sort; type to filter.</p>
+</section>
+
+<section class="panel">
+  <h2>What this does and does not show</h2>
+  <p>What the results support, in plain words and with numbers, and where they stop: one person over ten days, shares of DNA rather than cell counts, genes present rather than genes used, MAGs that are not complete. Say which result is the strongest and which could change with more data.</p>
+</section>
+
+<section class="panel">
+  <h2>Next steps and questions for tomorrow</h2>
+  <p>Two or three follow-up questions this report raises, and for each one the data that could answer it (from module 8, or a new measurement). These are the starting points for the group's feedback.</p>
+</section>

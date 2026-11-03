@@ -44,7 +44,7 @@ setTimeout(probe, 1500);
 @pytest.fixture(scope="module")
 def site():
     out = Path(tempfile.mkdtemp(prefix="course-site-"))
-    build.build(out)
+    build.build(out, unpublished=True)
     for page in out.glob("*.html"):
         html = page.read_text()
         page.write_text(html.replace("<head>", "<head>" + PROBE, 1))
@@ -68,9 +68,9 @@ def load(page: Path, fragment: str = "") -> dict:
 def cases() -> list[tuple[str, str, int | None]]:
     out = [("index", "index.html", None), ("glossary", "glossary.html", None)]
     out.append(("teachers", "teachers.html", None))
-    for m in build.read_modules():
-        if m["status"] == "planned":
-            continue
+    out.append(("projects", "projects.html", None))
+    pages = [m for m in build.read_modules() if m["status"] != "planned"] + build.read_projects(unpublished=True)
+    for m in pages:
         out.append((m["slug"], f"{m['slug']}.html", None))
         path = m["dir"] / "examples.yaml"
         n = len(build.yaml.safe_load(path.read_text())) if path.exists() else 0

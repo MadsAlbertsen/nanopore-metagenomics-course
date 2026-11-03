@@ -14,6 +14,7 @@ def test_every_page_builds(tmp_path):
     pages = build.build(tmp_path)
     mods = build.read_modules()
     built = {f"{m['slug']}.html" for m in mods if m["status"] != "planned"}
+    built |= {"projects.html"} | {f"{p['slug']}.html" for p in build.read_projects()}
     assert {p.name for p in pages} == {"index.html", "glossary.html", "teachers.html", build.ZIP_NAME} | built
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
         assert set(z.namelist()) == {"index.html", "glossary.html", "teachers.html"} | built
@@ -23,6 +24,17 @@ def test_every_page_builds(tmp_path):
         html = p.read_text()
         assert "{{" not in html, f"{p.name}: placeholder left"
         assert html.count("<script>") == html.count("</script>"), f"{p.name}: </script> inside data"
+
+
+def test_unpublished_projects_stay_out(tmp_path):
+    hidden = {p["slug"] for p in build.read_projects(unpublished=True) if not p.get("publish", True)}
+    assert "project-example" in hidden
+    names = {p.name for p in build.build(tmp_path)}
+    assert not names & {f"{s}.html" for s in hidden}
+    assert not any(f'href="{s}.html"' in (tmp_path / "projects.html").read_text() for s in hidden)
+    assert {f"{s}.html" for s in hidden} <= {p.name for p in build.build(tmp_path / "all", unpublished=True)} | {
+        q.name for q in (tmp_path / "all").glob("*.html")
+    }
 
 
 def test_data_survives_a_script_element(tmp_path):
