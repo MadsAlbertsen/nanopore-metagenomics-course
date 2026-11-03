@@ -186,8 +186,17 @@ def place_closing(body: str, block: str) -> str:
     return body.replace("<!--KEY-FINDINGS-->", block, 1) if "<!--KEY-FINDINGS-->" in body else body + block
 
 
-def project_page(p: dict, mods: list[dict], page: str, base: dict, title: str, body: str, js: str, nav_title: str,
-                 examples: list | None = None) -> str:
+def project_page(
+    p: dict,
+    mods: list[dict],
+    page: str,
+    base: dict,
+    title: str,
+    body: str,
+    js: str,
+    nav_title: str,
+    examples: list | None = None,
+) -> str:
     """A page of a group report: the module page template with the report's data.json and project.css plus the
     shared chart kit (shared/charts.js, charts.css)."""
     d = p["dir"]
