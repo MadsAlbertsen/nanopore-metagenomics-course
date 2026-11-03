@@ -43,7 +43,7 @@ function drawGeneHeat() {
   };
   const label = { per1000: "copies per 1,000 genes (log scale)", carrier: "share of the bases in MAGs with the gene (%)", log2: "log2 change from days 1-5" }[st.gview];
   heatmap($("g3GeneHeat"), { rows: order.map((i) => `${G.genes[i]} · ${G.steps[i].replace(" final step", "").replace(" step", "")}`), cols: D.days.map((d) => (innerWidth < 600 ? String(d) : `day ${d}`)), values: vals,
-    label, diverging: st.gview === "log2", format: fmt, cell: 26 });
+    label, diverging: st.gview === "log2", format: fmt, cell: innerWidth < 600 ? 26 : 44 });
 }
 
 function drawGenes() {
@@ -79,7 +79,7 @@ function drawHeat() {
   };
   const pct = (v) => { const p = 10 ** v; return p >= 1 ? p.toFixed(2) + "%" : p.toPrecision(2) + "%"; };
   heatmap($("g3Heat"), {
-    rows: rows.map((m) => (st.hset === "all" ? rowLabel(m) : m.name)), cols: D.days.map((d) => `day ${d}`), values: vals,
+    rows: rows.map((m) => (st.hset === "all" ? rowLabel(m) : m.name)), cols: D.days.map((d) => (innerWidth < 600 ? String(d) : `day ${d}`)), values: vals,
     label: st.hscale === "share" ? "share of the sample's bases (log scale)" : "log2 change from days 1-5", diverging: st.hscale === "log2",
     format: (v) => (v === null || v === undefined ? "–" : st.hscale === "share" ? pct(v) : v.toFixed(2)), cell: 18,
   });
@@ -166,7 +166,7 @@ function drawTables() {
   table($("g3All"), {
     columns: [{ key: "name", label: "MAG" }, { key: "family", label: "Family" }, { key: "quality", label: "Quality" },
       ...g.map((k, i) => ({ key: k, label: k, num: true, fmt: (v, r) => String(r.genes[i]) })),
-      { key: "etf", label: "Etf", fmt: (v) => (v ? "yes" : "") }, { key: "hi", label: "Days 1-5 (%)", num: true }, { key: "lo", label: "Days 6-10 (%)", num: true },
+      { key: "etf", label: "Etf", fmt: (v) => (v ? "yes" : "no") }, { key: "hi", label: "Days 1-5 (%)", num: true }, { key: "lo", label: "Days 6-10 (%)", num: true },
       { key: "log2", label: "log2 change", num: true }],
     rows: D.mags.map((m) => ({ ...m, ...Object.fromEntries(g.map((k, i) => [k, m.genes[i]])) })), filter: true, sortKey: "hi", maxRows: 15,
   });

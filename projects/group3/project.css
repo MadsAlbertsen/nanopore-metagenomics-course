@@ -3,3 +3,4 @@
 .ctl label { display: inline-flex; align-items: center; gap: 6px }
 .ctl label[hidden] { display: none }
 .g3sub { font-size: 16px; margin: 14px 0 4px }
+#g3GeneHeat { max-width: 720px; margin: 0 auto; width: 100% }
