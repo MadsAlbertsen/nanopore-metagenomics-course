@@ -37,6 +37,7 @@ function drawTiming() {
     x: D.days, xLabel: "Day", xName: "Day", yLabel: "Bray-Curtis dissimilarity", zero: true, marks: SWITCH,
     series: [{ name: "to day 1", values: t.toDay1 }, { name: "to days 2-5", values: t.toEarly }, { name: "to days 8-10", values: t.toLate }],
   });
+  spreadEndLabels($("pjTiming"));
   barChart($("pjSteps"), { labels: t.stepLabels.map((s) => "day " + s), values: t.steps, yLabel: "Bray-Curtis to the day before",
     colors: t.stepLabels.map((s) => (s === "5 to 6" ? "var(--c2)" : "var(--c1)")), fmt: (v) => v.toFixed(3), height: 240 });
 }
@@ -52,7 +53,7 @@ function drawMovers() {
   const keep = s.labels.map((l, i) => i).filter((i) => i >= 4 || s.up[i] + s.down[i] > 0).filter((i) => s.labels[i] !== "not settled" || s.up[i] + s.down[i] > 0);
   barChart($("pjSettle"), { labels: keep.map((i) => (s.labels[i] === "not settled" ? "not settled" : "day " + s.labels[i])),
     groups: [{ name: "rising MAGs", values: keep.map((i) => s.up[i]) }, { name: "falling MAGs", values: keep.map((i) => s.down[i]) }],
-    yLabel: "Number of MAGs", unit: "MAGs", height: 240 });
+    yLabel: "Number of MAGs", unit: "MAGs", height: 240, fmt: (v) => (Number.isInteger(v) ? String(v) : "") });
 }
 
 function drawCore() {
@@ -85,7 +86,26 @@ function drawChange() {
 const st2 = { tax: "family", heat: "top" };
 const lg = (v) => Math.log10(Math.max(v, N.heatFloor));
 const pct = (v) => (v === null ? "–" : 10 ** v <= N.heatFloor * 1.0001 ? `< ${N.heatFloor}%` : `${fmtNum(+(10 ** v).toPrecision(3))}%`);
-const shortName = (s) => (s.length > 30 ? s.replace(/^(\S)\S*\s/, "$1. ") : s);
+// long labels: a placeholder species (sp000...) keeps its genus and loses the accession; a Latin epithet keeps the
+// epithet and the genus is cut to its first letter
+const shortName = (s) => {
+  if (s.length <= 34) return s;
+  const [genus, epithet, ...rest] = s.split(" ");
+  return /^sp\d/.test(epithet) ? [genus, "sp.", ...rest].join(" ") : [genus[0] + ".", epithet, ...rest].join(" ");
+};
+
+// Figure 4A: end labels of lines that end close together are drawn at least 17 px apart (the kit keeps 13 px)
+function spreadEndLabels(host, gap = 17) {
+  const fix = () => {
+    const labs = [...host.querySelectorAll("text.dlab")].sort((a, b) => +a.getAttribute("y") - +b.getAttribute("y"));
+    for (let i = 1; i < labs.length; i++) {
+      const prev = +labs[i - 1].getAttribute("y"), y = +labs[i].getAttribute("y");
+      if (y - prev < gap) labs[i].setAttribute("y", prev + gap);
+    }
+  };
+  fix();
+  if (!host._spread) { host._spread = new MutationObserver(fix); host._spread.observe(host, { childList: true }); }
+}
 
 function drawTax() {
   const rows = st2.tax === "family" ? D.families.rows : D.phylaHeat;
