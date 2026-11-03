@@ -1,8 +1,8 @@
 // Group 4: diet periods from CAZyme gene potential vs MAG composition, and stability. DATA from data.json
-// (np26 scripts/44_project_group4.py); numbers in the text and in example answers come from DATA.numbers.
+// (np26 scripts/44_project_group4.py); numbers in the text and in the key findings come from DATA.numbers.
 const D = DATA;
 const N = D.numbers;
-const st = { cat: "abs", sort: "taxa", stab: "taxa", highlight: null, day: null };
+const st = { cat: "abs", sort: "taxa", stab: "taxa" };
 const PROFILE = { taxa: "species mix", functions: "genes" };
 
 // a number from DATA.numbers: d = decimals, sign = show + for positive values
@@ -14,9 +14,9 @@ function num(key, d, sign) {
   return sign && v > 0 ? "+" + s : s;
 }
 for (const e of document.querySelectorAll("[data-n]")) e.textContent = num(e.dataset.n, e.dataset.d, e.dataset.sign);
-// example answers and questions: {key} or {key|decimals} or {key|decimals|+}
+// key findings (project.yaml takeaways): {key} or {key|decimals} or {key|decimals|+}
 const fillText = (t) => t.replace(/\{(\w+)(?:\|(\d))?(\|\+)?\}/g, (m, k, d, s) => num(k, d, !!s));
-for (const e of EXAMPLES) { e.question = fillText(e.question); e.answer = fillText(e.answer); }
+for (const e of document.querySelectorAll(".closing li")) e.textContent = fillText(e.textContent);
 
 function stats() {
   const items = [[N.n_mags, "MAGs, weighted by their share of each day"], [N.n_families, "degrading CAZy families"],
@@ -38,14 +38,24 @@ function drawCat() {
   lineChart($("pjCat"), {
     x: D.days, series, xLabel: "Day", xName: "Day", unit: rel ? "%" : "per 1,000 genes",
     yLabel: rel ? "Percent of the days 1-5 mean (%)" : "Genes per 1,000 genes of the MAGs",
-    marks: [{ x: 5.5, label: "diet switch" }], highlight: st.highlight, zero: !rel,
+    marks: [{ x: 5.5, label: "diet switch" }], zero: !rel,
+  });
+}
+
+function drawRed() {
+  const order = ["Plant fibre", "Starch", "Fructan", "Host glycans", "Mixed", "Other", "Unmapped"];
+  const pts = [...D.redundancy].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
+  scatter($("pjRed"), {
+    points: pts.map((r) => ({ x: r.carriers, y: r.cv, label: r.family, group: r.category,
+      extra: `${r.carriers} common MAGs · ${r.mean} per 1,000 genes` })),
+    xLabel: "Common MAGs carrying the family (log scale)", yLabel: "Day-to-day variation (CV, %)", logX: true,
   });
 }
 
 function drawSort() {
   tabs("sortView", "sort");
   const rows = D.loo[st.sort];
-  // grey = sorted right, purple = sorted wrong (not blue / orange: those mean down / up in Figure 4)
+  // grey = sorted right, purple = sorted wrong (not blue / orange: those mean down / up in Figure 5)
   barChart($("pjSort"), {
     labels: rows.map((r) => `Day ${r.day}${r.correct ? "" : " ✗"}`), values: rows.map((r) => r.margin),
     colors: rows.map((r) => (r.correct ? "var(--faint)" : "var(--c7)")),
@@ -63,6 +73,10 @@ function drawSort() {
 
 function drawStab() {
   tabs("stabView", "stab");
+  lineChart($("pjDrift"), {
+    x: D.days, series: [{ name: "To days 1-5", values: D.to_first[st.stab] }], xLabel: "Day", xName: "Day",
+    yLabel: `To days 1-5 (Bray-Curtis, ${PROFILE[st.stab]})`, marks: [{ x: 5.5, label: "diet switch" }], zero: true, height: 240,
+  });
   const names = D.days.map((d) => `Day ${d}`);
   heatmap($("pjHeat"), { rows: names, cols: names, values: D.bc[st.stab].map((r, i) => r.map((v, j) => (i === j ? null : v))), label: `Bray-Curtis (${PROFILE[st.stab]})`, format: (v) => (v === null ? "–" : v.toFixed(3)) });
   const s = D.stability[st.stab];
@@ -92,7 +106,7 @@ function drawFam() {
   });
 }
 
-function drawAll() { drawCat(); drawSort(); drawStab(); drawFam(); }
+function drawAll() { drawCat(); drawRed(); drawSort(); drawStab(); drawFam(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab]]) {
   $(id).addEventListener("click", (ev) => {
@@ -103,17 +117,5 @@ for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort",
   });
 }
 
-const applyState = (s) => {
-  st.cat = s.cat || "abs"; st.sort = s.sort || "taxa"; st.stab = s.stab || "taxa"; st.highlight = s.highlight || null;
-};
-const examples = setupExamples($("pjExamples"), (k) => {
-  applyState(EXAMPLES[k].state);
-  drawAll();
-  writeHashParams({ ex: k + 1 });
-});
 stats();
-(function start() {
-  const ex = parseInt(readHashParams().ex, 10);
-  if (ex >= 1 && ex <= EXAMPLES.length) { examples.current = ex - 1; examples.draw(); applyState(EXAMPLES[ex - 1].state); }
-  drawAll();
-})();
+drawAll();
