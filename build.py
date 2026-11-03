@@ -12,6 +12,10 @@ Each module is a folder modules/<nn>-<slug>/ with
   examples.yaml optional guided examples: [{title, question, answer, state, at}]; at = name of a slot in
                 body.html, <div class="exslot" data-at="name"></div>, placed under the figure the example uses
   check.py      optional check(data, examples): raises ValueError if an example names something not in the data
+Group reports (projects/<id>/project.yaml) may list extra pages that belong to the report, e.g. a methods document:
+  pages: [{slug, title, body, js?}]  slug starts with the report's slug plus "-"; body (and the optional js) are file
+  names in the report folder; the page gets the report's data.json, project.css and the chart kit, is linked from the
+  report (not listed on projects.html) and is built and zipped with it.
 Planned modules only appear in the navigation and on the index. Also built: glossary.html (shared/glossary.yaml),
 teachers.html (shared/teachers_intro.html plus each module's teacher block: time, before, flow, discussion_points,
 pitfalls), the index with the analysis in numbers (shared/overview.json, made by np26 scripts/23_course_overview.py)
@@ -35,6 +39,7 @@ EXAMPLE_KEYS = {"title", "question", "answer", "state"}
 ZIP_NAME = "nanopore-metagenomics-course.zip"
 PROJECTS = ROOT / "projects"
 PROJECT_KEYS = {"number", "slug", "title", "nav", "question", "status"}
+PAGE_KEYS = {"slug", "title", "body"}
 
 
 def read_modules() -> list[dict]:
@@ -60,6 +65,11 @@ def read_projects(unpublished: bool = False) -> list[dict]:
         if p["status"] not in {"ready", "draft"}:
             raise ValueError(f"{d.name}: status must be ready or draft")
         p["dir"] = d
+        for x in p.get("pages", []):
+            if missing := PAGE_KEYS - set(x):
+                raise ValueError(f"{d.name}: each entry of pages needs {sorted(PAGE_KEYS)}, missing {sorted(missing)}")
+            if not x["slug"].startswith(p["slug"] + "-"):
+                raise ValueError(f"{d.name}: page slug {x['slug']!r} must start with {p['slug'] + '-'!r}")
         if p.get("publish", True) or unpublished:
             out.append(p)
     return sorted(out, key=lambda p: (p["number"], p["slug"]))
@@ -176,27 +186,45 @@ def place_closing(body: str, block: str) -> str:
     return body.replace("<!--KEY-FINDINGS-->", block, 1) if "<!--KEY-FINDINGS-->" in body else body + block
 
 
-def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
-    """One group report: the module page template plus the shared chart kit (shared/charts.js, charts.css)."""
+def project_page(
+    p: dict,
+    mods: list[dict],
+    page: str,
+    base: dict,
+    title: str,
+    body: str,
+    js: str,
+    nav_title: str,
+    examples: list | None = None,
+) -> str:
+    """A page of a group report: the module page template with the report's data.json and project.css plus the
+    shared chart kit (shared/charts.js, charts.css)."""
     d = p["dir"]
     data_path = d / "data.json"
-    data = json.loads(data_path.read_text()) if data_path.exists() else None
-    examples = load_examples(p, data)
     own_css = (d / "project.css").read_text() if (d / "project.css").exists() else ""
     return fill(
         page,
         {
             **base,
-            "TITLE": f"Group {p['number']}: {p['title']}",
+            "TITLE": f"Group {p['number']}: {title}",
             "NAV": nav(mods, "projects"),
             "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
-            "BODY": place_closing((d / "body.html").read_text(), closing(p, "Key findings")),
-            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + (d / "project.js").read_text(),
-            "DATA": script_json(data),
-            "EXAMPLES": script_json(examples),
-            "FOOTER": footer(p["nav"], p.get("data_note", FOOTER)),
+            "BODY": body,
+            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + js,
+            "DATA": script_json(json.loads(data_path.read_text()) if data_path.exists() else None),
+            "EXAMPLES": script_json(examples or []),
+            "FOOTER": footer(nav_title, p.get("data_note", FOOTER)),
         },
     )
+
+
+def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
+    """One group report (body.html, project.js; key findings placed by place_closing)."""
+    d = p["dir"]
+    data_path = d / "data.json"
+    examples = load_examples(p, json.loads(data_path.read_text()) if data_path.exists() else None)
+    body = place_closing((d / "body.html").read_text(), closing(p, "Key findings"))
+    return project_page(p, mods, page, base, p["title"], body, (d / "project.js").read_text(), p["nav"], examples)
 
 
 PROJECTS_INTRO = (
@@ -206,6 +234,14 @@ PROJECTS_INTRO = (
     "modules, every report is interactive: hover over a chart for its numbers, and open the guided examples. A draft "
     "is still being checked; the groups' feedback can lead to changes and new questions.</p></section>"
 )
+
+
+def build_project_page(p: dict, x: dict, mods: list[dict], page: str, base: dict) -> str:
+    """An extra page of a group report (project.yaml pages entry x): its own body and optional script, with the
+    report's data.json, project.css and the chart kit."""
+    d = p["dir"]
+    js = (d / x["js"]).read_text() if x.get("js") else ""
+    return project_page(p, mods, page, base, x["title"], (d / x["body"]).read_text(), js, f"{p['nav']}: {x['title']}")
 
 
 def build_projects_index(projs: list[dict], mods: list[dict], page: str, base: dict) -> str:
@@ -360,6 +396,11 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
         path.write_text(build_project(p, mods, page, base))
         if p.get("publish", True):
             written.append(path)
+        for x in p.get("pages", []):
+            extra = out / f"{x['slug']}.html"
+            extra.write_text(build_project_page(p, x, mods, page, base))
+            if p.get("publish", True):
+                written.append(extra)
     for m in mods:
         if m["status"] == "planned":
             continue

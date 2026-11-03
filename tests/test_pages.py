@@ -75,6 +75,7 @@ def cases() -> list[tuple[str, str, int | None]]:
         path = m["dir"] / "examples.yaml"
         n = len(build.yaml.safe_load(path.read_text())) if path.exists() else 0
         out += [(f"{m['slug']} example {k}", f"{m['slug']}.html", k) for k in range(1, n + 1)]
+        out += [(x["slug"], f"{x['slug']}.html", None) for x in m.get("pages", [])]
     return out
 
 

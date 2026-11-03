@@ -391,7 +391,16 @@
     2.0249,
     2.2428,
     0.2994
-   ]
+   ],
+   "lo": -2.08,
+   "hi": -0.24,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.64,
+   "completeness": 88.7,
+   "contamination": 0.17,
+   "size_mb": 3.4
   },
   {
    "mag": "c.31",
@@ -431,7 +440,16 @@
     6.5348,
     4.4797,
     6.0606
-   ]
+   ],
+   "lo": -0.21,
+   "hi": 0.95,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.33,
+   "completeness": 97.8,
+   "contamination": 0.83,
+   "size_mb": 2.65
   },
   {
    "mag": "c.33",
@@ -471,7 +489,16 @@
     7.4308,
     6.2752,
     6.4433
-   ]
+   ],
+   "lo": 0.96,
+   "hi": 1.55,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.14,
+   "completeness": 100.0,
+   "contamination": 0.14,
+   "size_mb": 3.78
   },
   {
    "mag": "c.32",
@@ -511,7 +538,16 @@
     7.1555,
     3.9132,
     4.7105
-   ]
+   ],
+   "lo": 0.05,
+   "hi": 0.69,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.23,
+   "completeness": 100.0,
+   "contamination": 0.34,
+   "size_mb": 2.4
   },
   {
    "mag": "3.5197",
@@ -551,7 +587,16 @@
     1.42,
     1.5793,
     0.2065
-   ]
+   ],
+   "lo": -2.06,
+   "hi": -0.24,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.62,
+   "completeness": 74.4,
+   "contamination": 4.11,
+   "size_mb": 2.69
   },
   {
    "mag": "c.36",
@@ -591,7 +636,16 @@
     2.5315,
     2.0962,
     1.6945
-   ]
+   ],
+   "lo": -0.38,
+   "hi": 0.3,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.12,
+   "completeness": 99.9,
+   "contamination": 0.36,
+   "size_mb": 3.34
   },
   {
    "mag": "c.35",
@@ -631,7 +685,16 @@
     0.9762,
     2.0107,
     1.4912
-   ]
+   ],
+   "lo": -1.01,
+   "hi": -0.24,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.75,
+   "completeness": 99.8,
+   "contamination": 0.15,
+   "size_mb": 3.43
   },
   {
    "mag": "c.38",
@@ -671,7 +734,16 @@
     1.4241,
     2.1223,
     1.6257
-   ]
+   ],
+   "lo": -0.31,
+   "hi": 0.51,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.04,
+   "completeness": 100.0,
+   "contamination": 0.37,
+   "size_mb": 3.45
   },
   {
    "mag": "3.265",
@@ -711,7 +783,16 @@
     3.4845,
     2.476,
     2.0389
-   ]
+   ],
+   "lo": 0.55,
+   "hi": 2.03,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.22,
+   "completeness": 72.0,
+   "contamination": 5.37,
+   "size_mb": 3.68
   },
   {
    "mag": "2.62",
@@ -751,7 +832,16 @@
     1.6708,
     0.8969,
     0.5489
-   ]
+   ],
+   "lo": -0.53,
+   "hi": 0.57,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.16,
+   "completeness": 69.0,
+   "contamination": 1.28,
+   "size_mb": 2.69
   },
   {
    "mag": "3.543",
@@ -791,7 +881,16 @@
     2.3855,
     1.5918,
     1.2326
-   ]
+   ],
+   "lo": 0.25,
+   "hi": 1.29,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.69,
+   "completeness": 60.0,
+   "contamination": 5.49,
+   "size_mb": 2.83
   },
   {
    "mag": "c.42",
@@ -831,7 +930,16 @@
     0.7352,
     0.7111,
     0.6639
-   ]
+   ],
+   "lo": -1.23,
+   "hi": -0.15,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.85,
+   "completeness": 100.0,
+   "contamination": 0.69,
+   "size_mb": 4.06
   },
   {
    "mag": "c.40",
@@ -871,7 +979,16 @@
     0.2079,
     0.4287,
     0.31
-   ]
+   ],
+   "lo": -2.83,
+   "hi": -0.93,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -2.25,
+   "completeness": 100.0,
+   "contamination": 0.31,
+   "size_mb": 2.86
   },
   {
    "mag": "c.37",
@@ -911,7 +1028,16 @@
     1.5178,
     2.7751,
     2.2037
-   ]
+   ],
+   "lo": 0.41,
+   "hi": 2.17,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.36,
+   "completeness": 100.0,
+   "contamination": 0.88,
+   "size_mb": 3.21
   },
   {
    "mag": "s.297",
@@ -951,7 +1077,16 @@
     0.8774,
     0.4533,
     0.9094
-   ]
+   ],
+   "lo": -1.8,
+   "hi": 0.59,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.68,
+   "completeness": 99.8,
+   "contamination": 0.29,
+   "size_mb": 3.53
   },
   {
    "mag": "c.34",
@@ -991,7 +1126,16 @@
     1.2528,
     3.3337,
     5.1056
-   ]
+   ],
+   "lo": 1.44,
+   "hi": 3.63,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 2.02,
+   "completeness": 100.0,
+   "contamination": 0.26,
+   "size_mb": 1.91
   },
   {
    "mag": "c.43",
@@ -1031,7 +1175,16 @@
     1.3391,
     1.3675,
     2.0578
-   ]
+   ],
+   "lo": -0.01,
+   "hi": 1.39,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.6,
+   "completeness": 97.4,
+   "contamination": 1.85,
+   "size_mb": 3.63
   },
   {
    "mag": "c.41",
@@ -1071,7 +1224,16 @@
     1.0542,
     0.8155,
     0.6349
-   ]
+   ],
+   "lo": -0.31,
+   "hi": 0.17,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.18,
+   "completeness": 100.0,
+   "contamination": 0.02,
+   "size_mb": 2.34
   },
   {
    "mag": "1.355",
@@ -1111,7 +1273,16 @@
     0.6959,
     0.9132,
     0.8891
-   ]
+   ],
+   "lo": -0.39,
+   "hi": 0.14,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.21,
+   "completeness": 99.9,
+   "contamination": 0.47,
+   "size_mb": 4.2
   },
   {
    "mag": "c.39",
@@ -1151,7 +1322,16 @@
     1.243,
     0.711,
     0.9677
-   ]
+   ],
+   "lo": 0.56,
+   "hi": 1.41,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.89,
+   "completeness": 96.0,
+   "contamination": 0.0,
+   "size_mb": 1.62
   },
   {
    "mag": "c.54",
@@ -1191,7 +1371,16 @@
     0.6141,
     1.0665,
     1.2956
-   ]
+   ],
+   "lo": -0.15,
+   "hi": 0.95,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.2,
+   "completeness": 100.0,
+   "contamination": 0.0,
+   "size_mb": 3.88
   },
   {
    "mag": "c.49",
@@ -1231,7 +1420,16 @@
     0.2743,
     0.5862,
     0.448
-   ]
+   ],
+   "lo": -0.92,
+   "hi": -0.11,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.63,
+   "completeness": 100.0,
+   "contamination": 0.77,
+   "size_mb": 2.9
   },
   {
    "mag": "c.52",
@@ -1271,7 +1469,16 @@
     0.5435,
     0.6481,
     0.8859
-   ]
+   ],
+   "lo": -0.26,
+   "hi": 0.25,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.16,
+   "completeness": 100.0,
+   "contamination": 2.87,
+   "size_mb": 3.86
   },
   {
    "mag": "c.45",
@@ -1311,7 +1518,16 @@
     0.6335,
     0.602,
     0.7094
-   ]
+   ],
+   "lo": -0.96,
+   "hi": 0.57,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.21,
+   "completeness": 98.0,
+   "contamination": 0.38,
+   "size_mb": 2.74
   },
   {
    "mag": "c.44",
@@ -1351,7 +1567,16 @@
     0.7226,
     0.6134,
     0.631
-   ]
+   ],
+   "lo": -0.62,
+   "hi": 0.26,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.28,
+   "completeness": 99.8,
+   "contamination": 0.88,
+   "size_mb": 2.23
   },
   {
    "mag": "2.209",
@@ -1391,7 +1616,16 @@
     0.261,
     0.3384,
     0.3892
-   ]
+   ],
+   "lo": -1.31,
+   "hi": -0.32,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.87,
+   "completeness": 80.8,
+   "contamination": 0.0,
+   "size_mb": 2.82
   },
   {
    "mag": "s.63",
@@ -1431,7 +1665,16 @@
     0.3799,
     0.5585,
     0.6396
-   ]
+   ],
+   "lo": -0.59,
+   "hi": 0.3,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.2,
+   "completeness": 100.0,
+   "contamination": 0.12,
+   "size_mb": 2.95
   },
   {
    "mag": "c.66",
@@ -1471,7 +1714,16 @@
     1.199,
     0.7177,
     0.6543
-   ]
+   ],
+   "lo": 1.08,
+   "hi": 1.86,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.32,
+   "completeness": 100.0,
+   "contamination": 0.22,
+   "size_mb": 5.28
   },
   {
    "mag": "c.61",
@@ -1511,7 +1763,16 @@
     0.1467,
     0.2912,
     0.2441
-   ]
+   ],
+   "lo": -1.84,
+   "hi": -0.96,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -1.59,
+   "completeness": 100.0,
+   "contamination": 0.68,
+   "size_mb": 3.28
   },
   {
    "mag": "1.376",
@@ -1551,7 +1812,16 @@
     0.5258,
     0.361,
     0.3584
-   ]
+   ],
+   "lo": -0.81,
+   "hi": -0.11,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.57,
+   "completeness": 99.9,
+   "contamination": 2.85,
+   "size_mb": 4.75
   },
   {
    "mag": "s.171",
@@ -1591,7 +1861,16 @@
     1.1322,
     0.7768,
     0.644
-   ]
+   ],
+   "lo": 1.49,
+   "hi": 2.7,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 2.04,
+   "completeness": 96.3,
+   "contamination": 0.73,
+   "size_mb": 2.02
   },
   {
    "mag": "c.55",
@@ -1631,7 +1910,16 @@
     0.9513,
     0.911,
     1.1158
-   ]
+   ],
+   "lo": 1.18,
+   "hi": 2.54,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.75,
+   "completeness": 95.9,
+   "contamination": 1.82,
+   "size_mb": 3.49
   },
   {
    "mag": "1.334",
@@ -1671,7 +1959,16 @@
     0.9474,
     0.6232,
     0.6529
-   ]
+   ],
+   "lo": 0.61,
+   "hi": 1.34,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 0.83,
+   "completeness": 99.9,
+   "contamination": 1.05,
+   "size_mb": 4.86
   },
   {
    "mag": "c.60",
@@ -1711,7 +2008,16 @@
     0.6642,
     1.0244,
     0.2423
-   ]
+   ],
+   "lo": -0.03,
+   "hi": 1.5,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.57,
+   "completeness": 100.0,
+   "contamination": 3.94,
+   "size_mb": 3.26
   },
   {
    "mag": "1.415",
@@ -1751,7 +2057,16 @@
     0.4277,
     0.63,
     0.4049
-   ]
+   ],
+   "lo": -0.33,
+   "hi": 0.2,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.18,
+   "completeness": 100.0,
+   "contamination": 1.55,
+   "size_mb": 3.74
   },
   {
    "mag": "c.58",
@@ -1791,7 +2106,16 @@
     0.1451,
     0.3163,
     0.3002
-   ]
+   ],
+   "lo": -1.6,
+   "hi": -0.71,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -1.28,
+   "completeness": 98.7,
+   "contamination": 0.68,
+   "size_mb": 2.53
   },
   {
    "mag": "c.56",
@@ -1831,7 +2155,16 @@
     0.5226,
     1.1525,
     1.0806
-   ]
+   ],
+   "lo": 0.25,
+   "hi": 1.84,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 0.71,
+   "completeness": 100.0,
+   "contamination": 0.12,
+   "size_mb": 2.98
   },
   {
    "mag": "1.363",
@@ -1871,7 +2204,16 @@
     0.922,
     0.52,
     0.6369
-   ]
+   ],
+   "lo": 1.25,
+   "hi": 2.02,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.53,
+   "completeness": 100.0,
+   "contamination": 0.68,
+   "size_mb": 5.56
   },
   {
    "mag": "c.65",
@@ -1911,7 +2253,16 @@
     0.1851,
     0.2374,
     0.1929
-   ]
+   ],
+   "lo": -1.59,
+   "hi": -0.41,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": -1.05,
+   "completeness": 100.0,
+   "contamination": 1.02,
+   "size_mb": 2.6
   },
   {
    "mag": "c.47",
@@ -1951,7 +2302,16 @@
     0.2938,
     0.4307,
     0.4108
-   ]
+   ],
+   "lo": -0.41,
+   "hi": -0.12,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.37,
+   "completeness": 99.2,
+   "contamination": 0.11,
+   "size_mb": 1.96
   },
   {
    "mag": "c.75",
@@ -1991,7 +2351,16 @@
     0.274,
     0.615,
     0.0514
-   ]
+   ],
+   "lo": -1.46,
+   "hi": -0.15,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.13,
+   "completeness": 100.0,
+   "contamination": 0.82,
+   "size_mb": 3.84
   },
   {
    "mag": "c.57",
@@ -2031,7 +2400,16 @@
     0.7156,
     0.3955,
     0.3313
-   ]
+   ],
+   "lo": -0.27,
+   "hi": 0.83,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.18,
+   "completeness": 93.4,
+   "contamination": 0.47,
+   "size_mb": 2.76
   },
   {
    "mag": "1.263",
@@ -2071,7 +2449,16 @@
     0.2817,
     0.1809,
     0.1986
-   ]
+   ],
+   "lo": -0.5,
+   "hi": 0.78,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.03,
+   "completeness": 99.9,
+   "contamination": 0.41,
+   "size_mb": 6.87
   },
   {
    "mag": "c.59",
@@ -2111,7 +2498,16 @@
     0.6783,
     0.5117,
     0.5296
-   ]
+   ],
+   "lo": 0.57,
+   "hi": 1.97,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.23,
+   "completeness": 97.3,
+   "contamination": 1.11,
+   "size_mb": 2.8
   },
   {
    "mag": "s.13",
@@ -2151,7 +2547,16 @@
     0.6282,
     0.3649,
     0.5875
-   ]
+   ],
+   "lo": -0.25,
+   "hi": 1.41,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.53,
+   "completeness": 98.0,
+   "contamination": 0.9,
+   "size_mb": 1.78
   },
   {
    "mag": "1.57",
@@ -2191,7 +2596,16 @@
     0.4334,
     0.4385,
     0.3838
-   ]
+   ],
+   "lo": 0.26,
+   "hi": 0.99,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.58,
+   "completeness": 93.3,
+   "contamination": 1.36,
+   "size_mb": 2.82
   },
   {
    "mag": "c.53",
@@ -2231,7 +2645,16 @@
     0.3629,
     0.3971,
     0.4024
-   ]
+   ],
+   "lo": -0.41,
+   "hi": 1.4,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.79,
+   "completeness": 97.6,
+   "contamination": 0.26,
+   "size_mb": 2.34
   },
   {
    "mag": "1.2306",
@@ -2271,7 +2694,16 @@
     0.3741,
     0.2468,
     0.2209
-   ]
+   ],
+   "lo": -0.46,
+   "hi": 0.3,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.17,
+   "completeness": 99.8,
+   "contamination": 0.51,
+   "size_mb": 4.31
   },
   {
    "mag": "c.63",
@@ -2311,7 +2743,16 @@
     0.1137,
     0.3599,
     0.4789
-   ]
+   ],
+   "lo": -1.11,
+   "hi": 0.23,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.55,
+   "completeness": 100.0,
+   "contamination": 1.0,
+   "size_mb": 2.89
   },
   {
    "mag": "1.406",
@@ -2351,7 +2792,16 @@
     0.0732,
     0.1344,
     0.1233
-   ]
+   ],
+   "lo": -2.56,
+   "hi": -1.56,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -2.11,
+   "completeness": 100.0,
+   "contamination": 3.35,
+   "size_mb": 4.62
   },
   {
    "mag": "s.18",
@@ -2391,7 +2841,16 @@
     0.2314,
     0.1367,
     0.0842
-   ]
+   ],
+   "lo": -1.57,
+   "hi": -0.35,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.07,
+   "completeness": 100.0,
+   "contamination": 0.69,
+   "size_mb": 2.53
   },
   {
    "mag": "1.319",
@@ -2431,7 +2890,16 @@
     0.3162,
     0.4982,
     0.4203
-   ]
+   ],
+   "lo": -0.36,
+   "hi": 0.57,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.02,
+   "completeness": 99.7,
+   "contamination": 0.67,
+   "size_mb": 2.94
   },
   {
    "mag": "c.62",
@@ -2471,7 +2939,16 @@
     0.0975,
     0.2261,
     0.2741
-   ]
+   ],
+   "lo": -1.4,
+   "hi": 0.75,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.38,
+   "completeness": 100.0,
+   "contamination": 0.86,
+   "size_mb": 2.31
   },
   {
    "mag": "c.50",
@@ -2511,7 +2988,16 @@
     0.1703,
     0.5374,
     2.0818
-   ]
+   ],
+   "lo": 1.87,
+   "hi": 5.43,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 2.89,
+   "completeness": 100.0,
+   "contamination": 0.21,
+   "size_mb": 2.01
   },
   {
    "mag": "c.76",
@@ -2551,7 +3037,16 @@
     0.0274,
     0.0291,
     0.0298
-   ]
+   ],
+   "lo": -3.67,
+   "hi": -1.41,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -2.94,
+   "completeness": 99.7,
+   "contamination": 0.39,
+   "size_mb": 3.13
   },
   {
    "mag": "2.200",
@@ -2591,7 +3086,16 @@
     0.2731,
     0.3987,
     0.4037
-   ]
+   ],
+   "lo": -0.04,
+   "hi": 0.57,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.15,
+   "completeness": 83.2,
+   "contamination": 0.07,
+   "size_mb": 3.29
   },
   {
    "mag": "2.276",
@@ -2631,7 +3135,16 @@
     0.2771,
     0.2615,
     0.1689
-   ]
+   ],
+   "lo": -0.44,
+   "hi": 0.27,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.19,
+   "completeness": 100.0,
+   "contamination": 1.44,
+   "size_mb": 3.55
   },
   {
    "mag": "c.77",
@@ -2671,7 +3184,16 @@
     0.2198,
     0.2575,
     0.2147
-   ]
+   ],
+   "lo": -0.53,
+   "hi": 0.28,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.2,
+   "completeness": 99.0,
+   "contamination": 0.47,
+   "size_mb": 3.28
   },
   {
    "mag": "1.490",
@@ -2711,7 +3233,16 @@
     0.3218,
     0.1951,
     0.1929
-   ]
+   ],
+   "lo": -0.21,
+   "hi": 0.51,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.03,
+   "completeness": 99.8,
+   "contamination": 0.27,
+   "size_mb": 4.45
   },
   {
    "mag": "1.3417",
@@ -2751,7 +3282,16 @@
     0.4824,
     0.415,
     0.3332
-   ]
+   ],
+   "lo": 0.72,
+   "hi": 1.61,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.07,
+   "completeness": 100.0,
+   "contamination": 4.14,
+   "size_mb": 5.29
   },
   {
    "mag": "s.289",
@@ -2791,7 +3331,16 @@
     0.3094,
     0.1948,
     0.2858
-   ]
+   ],
+   "lo": -0.69,
+   "hi": 0.33,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.23,
+   "completeness": 96.5,
+   "contamination": 0.32,
+   "size_mb": 1.65
   },
   {
    "mag": "c.73",
@@ -2831,7 +3380,16 @@
     0.3203,
     0.2869,
     0.2751
-   ]
+   ],
+   "lo": 0.21,
+   "hi": 0.69,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.35,
+   "completeness": 99.9,
+   "contamination": 0.35,
+   "size_mb": 2.63
   },
   {
    "mag": "c.71",
@@ -2871,7 +3429,16 @@
     0.1017,
     0.5671,
     1.1275
-   ]
+   ],
+   "lo": -0.63,
+   "hi": 2.42,
+   "excl0": false,
+   "stays": false,
+   "big": true,
+   "clr": 0.42,
+   "completeness": 99.9,
+   "contamination": 0.13,
+   "size_mb": 2.88
   },
   {
    "mag": "c.68",
@@ -2911,7 +3478,16 @@
     0.2108,
     0.3228,
     0.252
-   ]
+   ],
+   "lo": 0.73,
+   "hi": 1.87,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.2,
+   "completeness": 83.8,
+   "contamination": 0.01,
+   "size_mb": 2.36
   },
   {
    "mag": "1.329",
@@ -2951,7 +3527,16 @@
     0.154,
     0.1749,
     0.1163
-   ]
+   ],
+   "lo": -0.96,
+   "hi": 0.12,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.51,
+   "completeness": 100.0,
+   "contamination": 0.94,
+   "size_mb": 2.84
   },
   {
    "mag": "1.222",
@@ -2991,7 +3576,16 @@
     0.1348,
     0.4672,
     0.7243
-   ]
+   ],
+   "lo": -0.29,
+   "hi": 1.62,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.41,
+   "completeness": 100.0,
+   "contamination": 1.58,
+   "size_mb": 3.52
   },
   {
    "mag": "c.83",
@@ -3031,7 +3625,16 @@
     0.063,
     0.3984,
     0.1538
-   ]
+   ],
+   "lo": -1.69,
+   "hi": -0.16,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.18,
+   "completeness": 99.7,
+   "contamination": 2.34,
+   "size_mb": 2.91
   },
   {
    "mag": "2.379",
@@ -3071,7 +3674,16 @@
     0.2358,
     0.2633,
     0.2403
-   ]
+   ],
+   "lo": -0.15,
+   "hi": 0.18,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.08,
+   "completeness": 100.0,
+   "contamination": 4.51,
+   "size_mb": 3.32
   },
   {
    "mag": "c.64",
@@ -3111,7 +3723,16 @@
     0.337,
     0.2402,
     0.2314
-   ]
+   ],
+   "lo": 0.25,
+   "hi": 1.39,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.83,
+   "completeness": 97.6,
+   "contamination": 0.06,
+   "size_mb": 2.05
   },
   {
    "mag": "2.114",
@@ -3151,7 +3772,16 @@
     0.1256,
     0.1879,
     0.1222
-   ]
+   ],
+   "lo": -0.94,
+   "hi": -0.41,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.81,
+   "completeness": 99.6,
+   "contamination": 1.12,
+   "size_mb": 3.17
   },
   {
    "mag": "s.62",
@@ -3191,7 +3821,16 @@
     0.1291,
     0.1852,
     0.1337
-   ]
+   ],
+   "lo": -0.74,
+   "hi": -0.21,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.61,
+   "completeness": 99.9,
+   "contamination": 0.39,
+   "size_mb": 2.95
   },
   {
    "mag": "s.152",
@@ -3231,7 +3870,16 @@
     0.2361,
     0.1964,
     0.2549
-   ]
+   ],
+   "lo": -0.36,
+   "hi": 0.92,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.27,
+   "completeness": 97.8,
+   "contamination": 2.0,
+   "size_mb": 3.24
   },
   {
    "mag": "1.64",
@@ -3271,7 +3919,16 @@
     0.1836,
     0.1656,
     0.2188
-   ]
+   ],
+   "lo": -0.27,
+   "hi": 0.5,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.03,
+   "completeness": 99.5,
+   "contamination": 0.4,
+   "size_mb": 4.55
   },
   {
    "mag": "c.81",
@@ -3311,7 +3968,16 @@
     0.0754,
     0.079,
     0.1037
-   ]
+   ],
+   "lo": -1.91,
+   "hi": -0.24,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": -1.09,
+   "completeness": 97.7,
+   "contamination": 1.58,
+   "size_mb": 2.96
   },
   {
    "mag": "2.179",
@@ -3351,7 +4017,16 @@
     0.2229,
     0.2313,
     0.3152
-   ]
+   ],
+   "lo": -0.04,
+   "hi": 0.72,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.21,
+   "completeness": 83.8,
+   "contamination": 6.83,
+   "size_mb": 2.72
   },
   {
    "mag": "s.44",
@@ -3391,7 +4066,16 @@
     0.0943,
     0.2215,
     0.1623
-   ]
+   ],
+   "lo": -0.54,
+   "hi": 0.5,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.08,
+   "completeness": 100.0,
+   "contamination": 0.57,
+   "size_mb": 3.4
   },
   {
    "mag": "c.91",
@@ -3431,7 +4115,16 @@
     0.25,
     0.1825,
     0.1586
-   ]
+   ],
+   "lo": 0.13,
+   "hi": 0.71,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.33,
+   "completeness": 97.8,
+   "contamination": 0.02,
+   "size_mb": 3.47
   },
   {
    "mag": "2.500",
@@ -3471,7 +4164,16 @@
     0.0616,
     0.0767,
     0.0719
-   ]
+   ],
+   "lo": -1.79,
+   "hi": -0.78,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -1.38,
+   "completeness": 100.0,
+   "contamination": 7.2,
+   "size_mb": 3.77
   },
   {
    "mag": "1.372",
@@ -3511,7 +4213,16 @@
     0.2656,
     0.4327,
     0.2698
-   ]
+   ],
+   "lo": 0.03,
+   "hi": 1.39,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.43,
+   "completeness": 99.9,
+   "contamination": 0.01,
+   "size_mb": 2.98
   },
   {
    "mag": "s.25",
@@ -3551,7 +4262,16 @@
     0.1417,
     0.1296,
     0.1021
-   ]
+   ],
+   "lo": -0.91,
+   "hi": -0.49,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.81,
+   "completeness": 100.0,
+   "contamination": 1.52,
+   "size_mb": 3.21
   },
   {
    "mag": "1.308",
@@ -3591,7 +4311,16 @@
     0.3139,
     0.2764,
     0.2626
-   ]
+   ],
+   "lo": 0.89,
+   "hi": 1.66,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.18,
+   "completeness": 98.5,
+   "contamination": 1.83,
+   "size_mb": 5.14
   },
   {
    "mag": "c.95",
@@ -3631,7 +4360,16 @@
     0.0449,
     0.2723,
     0.1955
-   ]
+   ],
+   "lo": -1.31,
+   "hi": 0.3,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.72,
+   "completeness": 99.6,
+   "contamination": 1.55,
+   "size_mb": 3.2
   },
   {
    "mag": "3.4694",
@@ -3671,7 +4409,16 @@
     0.2937,
     0.2278,
     0.2719
-   ]
+   ],
+   "lo": 1.01,
+   "hi": 1.81,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.31,
+   "completeness": 78.7,
+   "contamination": 1.49,
+   "size_mb": 3.76
   },
   {
    "mag": "1.356",
@@ -3711,7 +4458,16 @@
     0.0128,
     0.0582,
     0.0819
-   ]
+   ],
+   "lo": -2.82,
+   "hi": -1.14,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -2.16,
+   "completeness": 95.5,
+   "contamination": 0.36,
+   "size_mb": 2.49
   },
   {
    "mag": "1.91",
@@ -3751,7 +4507,16 @@
     0.1642,
     0.2829,
     0.2297
-   ]
+   ],
+   "lo": 0.18,
+   "hi": 1.29,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.72,
+   "completeness": 98.8,
+   "contamination": 0.33,
+   "size_mb": 2.7
   },
   {
    "mag": "s.112",
@@ -3791,7 +4556,16 @@
     0.1171,
     0.122,
     0.1551
-   ]
+   ],
+   "lo": -0.88,
+   "hi": 0.43,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.2,
+   "completeness": 99.8,
+   "contamination": 0.05,
+   "size_mb": 3.12
   },
   {
    "mag": "s.14",
@@ -3831,7 +4605,16 @@
     0.0741,
     0.0718,
     0.0482
-   ]
+   ],
+   "lo": -1.98,
+   "hi": -1.12,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -1.62,
+   "completeness": 98.7,
+   "contamination": 0.32,
+   "size_mb": 3.6
   },
   {
    "mag": "c.51",
@@ -3871,7 +4654,16 @@
     0.3135,
     0.3254,
     0.3075
-   ]
+   ],
+   "lo": 1.63,
+   "hi": 2.53,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 2.01,
+   "completeness": 93.7,
+   "contamination": 0.0,
+   "size_mb": 1.04
   },
   {
    "mag": "s.16",
@@ -3911,7 +4703,16 @@
     0.1666,
     0.1437,
     0.081
-   ]
+   ],
+   "lo": -0.43,
+   "hi": 0.24,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.22,
+   "completeness": 99.9,
+   "contamination": 1.66,
+   "size_mb": 4.43
   },
   {
    "mag": "3.2807",
@@ -3951,7 +4752,16 @@
     0.1075,
     0.1546,
     0.132
-   ]
+   ],
+   "lo": -0.48,
+   "hi": 0.08,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.33,
+   "completeness": 85.7,
+   "contamination": 7.8,
+   "size_mb": 2.21
   },
   {
    "mag": "c.78",
@@ -3991,7 +4801,16 @@
     0.226,
     0.1435,
     0.083
-   ]
+   ],
+   "lo": -0.43,
+   "hi": 0.56,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.0,
+   "completeness": 93.0,
+   "contamination": 0.08,
+   "size_mb": 2.24
   },
   {
    "mag": "2.324",
@@ -4031,7 +4850,16 @@
     0.0521,
     0.1264,
     0.1597
-   ]
+   ],
+   "lo": -1.42,
+   "hi": -0.47,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -1.09,
+   "completeness": 100.0,
+   "contamination": 3.62,
+   "size_mb": 2.83
   },
   {
    "mag": "1.345",
@@ -4071,7 +4899,16 @@
     0.3377,
     0.219,
     0.4321
-   ]
+   ],
+   "lo": 0.88,
+   "hi": 2.27,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.32,
+   "completeness": 99.6,
+   "contamination": 0.05,
+   "size_mb": 2.63
   },
   {
    "mag": "c.108",
@@ -4111,7 +4948,16 @@
     0.1626,
     0.1054,
     0.1052
-   ]
+   ],
+   "lo": -0.57,
+   "hi": 0.15,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.29,
+   "completeness": 100.0,
+   "contamination": 0.7,
+   "size_mb": 4.43
   },
   {
    "mag": "2.34",
@@ -4151,7 +4997,16 @@
     0.1441,
     0.1918,
     0.1572
-   ]
+   ],
+   "lo": -0.13,
+   "hi": 0.33,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.01,
+   "completeness": 100.0,
+   "contamination": 0.09,
+   "size_mb": 3.37
   },
   {
    "mag": "1.438",
@@ -4191,7 +5046,16 @@
     0.1251,
     0.1747,
     0.154
-   ]
+   ],
+   "lo": -0.24,
+   "hi": 0.07,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.21,
+   "completeness": 100.0,
+   "contamination": 1.04,
+   "size_mb": 3.76
   },
   {
    "mag": "c.79",
@@ -4231,7 +5095,16 @@
     0.2289,
     0.1734,
     0.1122
-   ]
+   ],
+   "lo": 0.15,
+   "hi": 1.1,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.56,
+   "completeness": 100.0,
+   "contamination": 0.01,
+   "size_mb": 1.88
   },
   {
    "mag": "c.119",
@@ -4271,7 +5144,16 @@
     0.1513,
     0.2289,
     0.3823
-   ]
+   ],
+   "lo": 1.48,
+   "hi": 2.36,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": 1.79,
+   "completeness": 99.9,
+   "contamination": 0.53,
+   "size_mb": 6.97
   },
   {
    "mag": "2.143",
@@ -4311,7 +5193,16 @@
     0.1528,
     0.1298,
     0.1372
-   ]
+   ],
+   "lo": -0.32,
+   "hi": 0.39,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.04,
+   "completeness": 100.0,
+   "contamination": 6.7,
+   "size_mb": 4.13
   },
   {
    "mag": "3.1761",
@@ -4351,7 +5242,16 @@
     0.0467,
     0.1076,
     0.1084
-   ]
+   ],
+   "lo": -1.49,
+   "hi": -0.61,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": -1.17,
+   "completeness": 68.7,
+   "contamination": 0.97,
+   "size_mb": 1.99
   },
   {
    "mag": "c.106",
@@ -4391,7 +5291,16 @@
     0.115,
     0.2378,
     0.2824
-   ]
+   ],
+   "lo": -0.23,
+   "hi": 0.99,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.18,
+   "completeness": 100.0,
+   "contamination": 0.13,
+   "size_mb": 3.7
   },
   {
    "mag": "s.65",
@@ -4431,7 +5340,16 @@
     0.0907,
     0.1472,
     0.1686
-   ]
+   ],
+   "lo": -0.11,
+   "hi": 0.34,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.0,
+   "completeness": 99.8,
+   "contamination": 0.88,
+   "size_mb": 3.54
   },
   {
    "mag": "c.102",
@@ -4471,7 +5389,16 @@
     0.068,
     0.0479,
     0.0231
-   ]
+   ],
+   "lo": -1.56,
+   "hi": 0.11,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.96,
+   "completeness": 99.7,
+   "contamination": 0.66,
+   "size_mb": 2.95
   },
   {
    "mag": "2.214",
@@ -4511,7 +5438,16 @@
     0.1272,
     0.1689,
     0.2491
-   ]
+   ],
+   "lo": -0.26,
+   "hi": 0.73,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.06,
+   "completeness": 75.3,
+   "contamination": 1.02,
+   "size_mb": 2.7
   },
   {
    "mag": "c.74",
@@ -4551,7 +5487,16 @@
     0.1109,
     0.1076,
     0.1537
-   ]
+   ],
+   "lo": -0.07,
+   "hi": 0.65,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.18,
+   "completeness": 91.8,
+   "contamination": 0.24,
+   "size_mb": 1.18
   },
   {
    "mag": "2.157",
@@ -4591,7 +5536,16 @@
     0.0653,
     0.1367,
     0.1004
-   ]
+   ],
+   "lo": -0.89,
+   "hi": -0.13,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.6,
+   "completeness": 88.7,
+   "contamination": 6.49,
+   "size_mb": 3.13
   },
   {
    "mag": "c.96",
@@ -4631,7 +5585,16 @@
     0.0547,
     0.1486,
     0.1375
-   ]
+   ],
+   "lo": -0.65,
+   "hi": 0.37,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.29,
+   "completeness": 100.0,
+   "contamination": 0.93,
+   "size_mb": 2.26
   },
   {
    "mag": "2.84",
@@ -4671,7 +5634,16 @@
     0.167,
     0.203,
     0.2179
-   ]
+   ],
+   "lo": 0.46,
+   "hi": 1.16,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.69,
+   "completeness": 91.3,
+   "contamination": 2.93,
+   "size_mb": 3.47
   },
   {
    "mag": "1.814",
@@ -4711,7 +5683,16 @@
     0.0381,
     0.0727,
     0.0528
-   ]
+   ],
+   "lo": -1.7,
+   "hi": -1.09,
+   "excl0": true,
+   "stays": true,
+   "big": true,
+   "clr": -1.53,
+   "completeness": 100.0,
+   "contamination": 1.61,
+   "size_mb": 3.63
   },
   {
    "mag": "c.84",
@@ -4751,7 +5732,16 @@
     0.3168,
     0.1133,
     0.2377
-   ]
+   ],
+   "lo": 0.93,
+   "hi": 2.49,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 1.62,
+   "completeness": 97.3,
+   "contamination": 2.5,
+   "size_mb": 2.13
   },
   {
    "mag": "c.112",
@@ -4791,7 +5781,16 @@
     0.0961,
     0.0885,
     0.0583
-   ]
+   ],
+   "lo": -0.58,
+   "hi": 0.83,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.03,
+   "completeness": 99.7,
+   "contamination": 0.06,
+   "size_mb": 3.98
   },
   {
    "mag": "c.89",
@@ -4831,7 +5830,16 @@
     0.1433,
     0.1121,
     0.0909
-   ]
+   ],
+   "lo": -0.9,
+   "hi": 0.96,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": 0.27,
+   "completeness": 100.0,
+   "contamination": 1.07,
+   "size_mb": 2.23
   },
   {
    "mag": "3.339",
@@ -4871,7 +5879,16 @@
     0.1938,
     0.1139,
     0.1231
-   ]
+   ],
+   "lo": 0.59,
+   "hi": 1.43,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 0.9,
+   "completeness": 64.7,
+   "contamination": 0.89,
+   "size_mb": 2.85
   },
   {
    "mag": "c.88",
@@ -4911,7 +5928,16 @@
     0.0805,
     0.0655,
     0.0734
-   ]
+   ],
+   "lo": -0.97,
+   "hi": 0.25,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.38,
+   "completeness": 93.6,
+   "contamination": 0.25,
+   "size_mb": 2.3
   },
   {
    "mag": "2.670",
@@ -4951,7 +5977,16 @@
     0.0805,
     0.1522,
     0.1041
-   ]
+   ],
+   "lo": -0.54,
+   "hi": 0.05,
+   "excl0": false,
+   "stays": false,
+   "big": false,
+   "clr": -0.4,
+   "completeness": 99.1,
+   "contamination": 4.02,
+   "size_mb": 2.9
   },
   {
    "mag": "2.120",
@@ -4991,7 +6026,16 @@
     0.1971,
     0.0954,
     0.0834
-   ]
+   ],
+   "lo": 0.25,
+   "hi": 1.3,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.66,
+   "completeness": 55.1,
+   "contamination": 1.32,
+   "size_mb": 2.55
   },
   {
    "mag": "1.391",
@@ -5031,7 +6075,16 @@
     0.1158,
     0.0424,
     0.0457
-   ]
+   ],
+   "lo": -1.68,
+   "hi": -0.21,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.94,
+   "completeness": 98.2,
+   "contamination": 1.07,
+   "size_mb": 3.34
   },
   {
    "mag": "1.953",
@@ -5071,7 +6124,16 @@
     0.1254,
     0.1436,
     0.1051
-   ]
+   ],
+   "lo": 0.19,
+   "hi": 0.83,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.43,
+   "completeness": 90.7,
+   "contamination": 0.52,
+   "size_mb": 4.14
   },
   {
    "mag": "s.76",
@@ -5111,7 +6173,16 @@
     0.1676,
     0.1075,
     0.0999
-   ]
+   ],
+   "lo": 0.32,
+   "hi": 0.92,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.51,
+   "completeness": 100.0,
+   "contamination": 0.3,
+   "size_mb": 6.35
   },
   {
    "mag": "1.416",
@@ -5151,7 +6222,16 @@
     0.1486,
     0.1026,
     0.1345
-   ]
+   ],
+   "lo": 0.17,
+   "hi": 1.06,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.56,
+   "completeness": 99.6,
+   "contamination": 1.65,
+   "size_mb": 5.34
   },
   {
    "mag": "s.198",
@@ -5191,7 +6271,16 @@
     0.2186,
     0.1417,
     0.1303
-   ]
+   ],
+   "lo": 0.68,
+   "hi": 1.6,
+   "excl0": true,
+   "stays": false,
+   "big": true,
+   "clr": 1.04,
+   "completeness": 98.1,
+   "contamination": 1.01,
+   "size_mb": 2.19
   },
   {
    "mag": "1.161",
@@ -5231,7 +6320,16 @@
     0.1492,
     0.0988,
     0.0711
-   ]
+   ],
+   "lo": 0.03,
+   "hi": 0.78,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": 0.31,
+   "completeness": 96.4,
+   "contamination": 2.19,
+   "size_mb": 2.75
   },
   {
    "mag": "2.383",
@@ -5271,7 +6369,16 @@
     0.0571,
     0.0649,
     0.0519
-   ]
+   ],
+   "lo": -0.97,
+   "hi": -0.3,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.76,
+   "completeness": 84.2,
+   "contamination": 0.18,
+   "size_mb": 4.12
   },
   {
    "mag": "3.2676",
@@ -5311,7 +6418,16 @@
     0.0848,
     0.1091,
     0.087
-   ]
+   ],
+   "lo": -0.44,
+   "hi": -0.08,
+   "excl0": true,
+   "stays": false,
+   "big": false,
+   "clr": -0.38,
+   "completeness": 99.7,
+   "contamination": 2.6,
+   "size_mb": 3.12
   }
  ],
  "default_mag": "c.50",
@@ -6137,12 +7253,12 @@
   {
    "family": "GH1",
    "category": "Mixed substrates",
-   "high": 0.281,
-   "low": 0.218,
-   "log2": -0.307,
-   "ratio": 0.775,
+   "high": 0.2813,
+   "low": 0.2179,
+   "log2": -0.3065,
+   "ratio": 0.7746,
    "top_mag": "Catenibacterium mitsuokai (c.65)",
-   "top_value": -0.028,
+   "top_value": -0.0278,
    "top_phylum": "Bacillota",
    "days": [
     -0.101,
@@ -6161,11 +7277,11 @@
    "family": "GH73",
    "category": "Mixed substrates",
    "high": 0.353,
-   "low": 0.282,
-   "log2": -0.28,
-   "ratio": 0.798,
+   "low": 0.2818,
+   "log2": -0.2805,
+   "ratio": 0.7983,
    "top_mag": "Prevotella copri_B (2.359)",
-   "top_value": -0.028,
+   "top_value": -0.0275,
    "top_phylum": "Bacteroidota",
    "days": [
     -0.04,
@@ -6183,12 +7299,12 @@
   {
    "family": "GH10",
    "category": "Plant fibre",
-   "high": 0.224,
-   "low": 0.177,
-   "log2": -0.275,
-   "ratio": 0.788,
+   "high": 0.2241,
+   "low": 0.1765,
+   "log2": -0.2751,
+   "ratio": 0.7877,
    "top_mag": "Prevotella copri_B (2.359)",
-   "top_value": -0.019,
+   "top_value": -0.0188,
    "top_phylum": "Bacteroidota",
    "days": [
     0.048,
@@ -6206,12 +7322,12 @@
   {
    "family": "GH5",
    "category": "Plant fibre",
-   "high": 0.587,
-   "low": 0.488,
-   "log2": -0.244,
-   "ratio": 0.831,
+   "high": 0.5866,
+   "low": 0.4876,
+   "log2": -0.2438,
+   "ratio": 0.8312,
    "top_mag": "Prevotella copri_B (2.359)",
-   "top_value": -0.06,
+   "top_value": -0.0601,
    "top_phylum": "Bacteroidota",
    "days": [
     -0.099,
@@ -6229,12 +7345,12 @@
   {
    "family": "GH16",
    "category": "Mixed substrates",
-   "high": 0.231,
-   "low": 0.196,
+   "high": 0.2309,
+   "low": 0.1964,
    "log2": -0.189,
-   "ratio": 0.851,
+   "ratio": 0.8507,
    "top_mag": "Prevotella copri_B (2.359)",
-   "top_value": -0.019,
+   "top_value": -0.0185,
    "top_phylum": "Bacteroidota",
    "days": [
     0.013,
@@ -6252,12 +7368,12 @@
   {
    "family": "GH32",
    "category": "Fructan",
-   "high": 0.457,
+   "high": 0.4566,
    "low": 0.395,
-   "log2": -0.187,
-   "ratio": 0.865,
+   "log2": -0.1869,
+   "ratio": 0.8652,
    "top_mag": "Prevotella copri_B (3.5197)",
-   "top_value": -0.01,
+   "top_value": -0.0097,
    "top_phylum": "Bacteroidota",
    "days": [
     -0.052,
@@ -6275,12 +7391,12 @@
   {
    "family": "GH51",
    "category": "Plant fibre",
-   "high": 0.442,
-   "low": 0.387,
-   "log2": -0.171,
-   "ratio": 0.876,
+   "high": 0.4423,
+   "low": 0.3874,
+   "log2": -0.1708,
+   "ratio": 0.8757,
    "top_mag": "Prevotella copri_B (2.359)",
-   "top_value": -0.024,
+   "top_value": -0.0238,
    "top_phylum": "Bacteroidota",
    "days": [
     -0.022,
@@ -6298,12 +7414,12 @@
   {
    "family": "GH36",
    "category": "Mixed substrates",
-   "high": 0.529,
-   "low": 0.473,
-   "log2": -0.148,
+   "high": 0.5294,
+   "low": 0.4728,
+   "log2": -0.1484,
    "ratio": 0.893,
    "top_mag": "Agathobacter faecis (c.35)",
-   "top_value": -0.009,
+   "top_value": -0.0094,
    "top_phylum": "Bacillota",
    "days": [
     -0.049,
@@ -6321,10 +7437,10 @@
   {
    "family": "GH127",
    "category": "Mixed substrates",
-   "high": 0.318,
+   "high": 0.3177,
    "low": 0.284,
-   "log2": -0.139,
-   "ratio": 0.894,
+   "log2": -0.1389,
+   "ratio": 0.8937,
    "top_mag": "Prevotella copri_B (2.359)",
    "top_value": -0.029,
    "top_phylum": "Bacteroidota",
@@ -6344,12 +7460,12 @@
   {
    "family": "GH13",
    "category": "Starch",
-   "high": 2.669,
-   "low": 2.423,
-   "log2": -0.137,
-   "ratio": 0.908,
+   "high": 2.6693,
+   "low": 2.4226,
+   "log2": -0.1372,
+   "ratio": 0.9076,
    "top_mag": "CAG-411 sp000437275 (s.297)",
-   "top_value": -0.039,
+   "top_value": -0.0386,
    "top_phylum": "Bacillota",
    "days": [
     -0.071,
@@ -6367,12 +7483,12 @@
   {
    "family": "GH23",
    "category": "Other substrates",
-   "high": 0.333,
-   "low": 0.378,
-   "log2": 0.16,
-   "ratio": 1.135,
+   "high": 0.3333,
+   "low": 0.3782,
+   "log2": 0.1599,
+   "ratio": 1.1348,
    "top_mag": "Zag111 sp002102825 (c.34)",
-   "top_value": 0.019,
+   "top_value": 0.0192,
    "top_phylum": "Cyanobacteriota",
    "days": [
     0.029,
@@ -6390,10 +7506,10 @@
   {
    "family": "CE8",
    "category": "Plant fibre",
-   "high": 0.208,
-   "low": 0.238,
-   "log2": 0.162,
-   "ratio": 1.147,
+   "high": 0.2078,
+   "low": 0.2384,
+   "log2": 0.1618,
+   "ratio": 1.1472,
    "top_mag": "Acetatifactor intestinalis (c.33)",
    "top_value": 0.02,
    "top_phylum": "Bacillota",
@@ -6414,11 +7530,11 @@
    "family": "CE9",
    "category": "Other substrates",
    "high": 0.249,
-   "low": 0.286,
-   "log2": 0.17,
-   "ratio": 1.15,
+   "low": 0.2863,
+   "log2": 0.1696,
+   "ratio": 1.1498,
    "top_mag": "Acetatifactor intestinalis (c.33)",
-   "top_value": 0.018,
+   "top_value": 0.0178,
    "top_phylum": "Bacillota",
    "days": [
     0.06,
@@ -6436,12 +7552,12 @@
   {
    "family": "GH29",
    "category": "Host glycan",
-   "high": 0.421,
-   "low": 0.481,
-   "log2": 0.174,
-   "ratio": 1.144,
+   "high": 0.4208,
+   "low": 0.4812,
+   "log2": 0.1741,
+   "ratio": 1.1435,
    "top_mag": "Acetatifactor intestinalis (c.33)",
-   "top_value": -0.023,
+   "top_value": -0.0233,
    "top_phylum": "Bacillota",
    "days": [
     0.112,
@@ -6459,12 +7575,12 @@
   {
    "family": "GH20",
    "category": "Host glycan",
-   "high": 0.502,
-   "low": 0.577,
-   "log2": 0.185,
-   "ratio": 1.151,
+   "high": 0.5016,
+   "low": 0.5773,
+   "log2": 0.1854,
+   "ratio": 1.1508,
    "top_mag": "Phocaeicola vulgatus (3.543)",
-   "top_value": 0.03,
+   "top_value": 0.0302,
    "top_phylum": "Bacteroidota",
    "days": [
     0.136,
@@ -6482,12 +7598,12 @@
   {
    "family": "GH105",
    "category": "Plant fibre",
-   "high": 0.329,
-   "low": 0.388,
-   "log2": 0.207,
-   "ratio": 1.177,
+   "high": 0.3294,
+   "low": 0.3878,
+   "log2": 0.2066,
+   "ratio": 1.1773,
    "top_mag": "Phocaeicola vulgatus (3.265)",
-   "top_value": 0.029,
+   "top_value": 0.0287,
    "top_phylum": "Bacteroidota",
    "days": [
     0.193,
@@ -6505,12 +7621,12 @@
   {
    "family": "CE20",
    "category": "Plant fibre",
-   "high": 0.22,
-   "low": 0.266,
-   "log2": 0.227,
-   "ratio": 1.209,
+   "high": 0.2199,
+   "low": 0.2658,
+   "log2": 0.2268,
+   "ratio": 1.2089,
    "top_mag": "Phocaeicola vulgatus (3.265)",
-   "top_value": 0.013,
+   "top_value": 0.0134,
    "top_phylum": "Bacteroidota",
    "days": [
     0.133,
@@ -6528,12 +7644,12 @@
   {
    "family": "GH92",
    "category": "Host glycan",
-   "high": 0.547,
-   "low": 0.651,
-   "log2": 0.23,
-   "ratio": 1.188,
+   "high": 0.5475,
+   "low": 0.6507,
+   "log2": 0.2298,
+   "ratio": 1.1885,
    "top_mag": "Phocaeicola vulgatus (3.265)",
-   "top_value": 0.036,
+   "top_value": 0.0363,
    "top_phylum": "Bacteroidota",
    "days": [
     0.129,
@@ -6551,12 +7667,12 @@
   {
    "family": "GH109",
    "category": "Host glycan",
-   "high": 0.227,
-   "low": 0.303,
-   "log2": 0.347,
-   "ratio": 1.332,
+   "high": 0.2274,
+   "low": 0.3028,
+   "log2": 0.3471,
+   "ratio": 1.3319,
    "top_mag": "Phocaeicola vulgatus (3.265)",
-   "top_value": 0.025,
+   "top_value": 0.0247,
    "top_phylum": "Bacteroidota",
    "days": [
     0.159,
@@ -6574,12 +7690,12 @@
   {
    "family": "GH106",
    "category": "Plant fibre",
-   "high": 0.207,
-   "low": 0.285,
-   "log2": 0.381,
-   "ratio": 1.375,
+   "high": 0.2071,
+   "low": 0.2846,
+   "log2": 0.3805,
+   "ratio": 1.3747,
    "top_mag": "Cryptobacteroides sp000431015 (c.31)",
-   "top_value": 0.018,
+   "top_value": 0.0179,
    "top_phylum": "Bacteroidota",
    "days": [
     0.039,
@@ -6593,6 +7709,1593 @@
     0.274,
     0.418
    ]
+  }
+ ],
+ "phyla_tab": [
+  {
+   "name": "Bacillota",
+   "high": 47.92,
+   "low": 50.03,
+   "diff": 2.1,
+   "lo": -0.89,
+   "hi": 4.97
+  },
+  {
+   "name": "Bacteroidota",
+   "high": 25.93,
+   "low": 25.85,
+   "diff": -0.08,
+   "lo": -4.28,
+   "hi": 4.04
+  },
+  {
+   "name": "Actinomycetota",
+   "high": 1.46,
+   "low": 1.43,
+   "diff": -0.03,
+   "lo": -0.41,
+   "hi": 0.33
+  },
+  {
+   "name": "Cyanobacteriota",
+   "high": 0.29,
+   "low": 2.11,
+   "diff": 1.82,
+   "lo": 0.5,
+   "hi": 3.3
+  },
+  {
+   "name": "Pseudomonadota",
+   "high": 0.52,
+   "low": 1.79,
+   "diff": 1.27,
+   "lo": 0.78,
+   "hi": 1.84
+  },
+  {
+   "name": "Other phyla",
+   "high": 0.35,
+   "low": 0.69,
+   "diff": 0.35,
+   "lo": 0.23,
+   "hi": 0.46
+  },
+  {
+   "name": "Not in a MAG",
+   "high": 23.52,
+   "low": 18.1,
+   "diff": -5.43,
+   "lo": -6.63,
+   "hi": -4.31
+  }
+ ],
+ "cz_tab": [
+  {
+   "cat": "starch",
+   "name": "Starch",
+   "high": 4.05,
+   "low": 3.78,
+   "pct": -6.5,
+   "lo": -11.7,
+   "hi": -1.1,
+   "lodo_min": -8.8,
+   "lodo_max": -4.2,
+   "hq": -3.4
+  },
+  {
+   "cat": "fructan",
+   "name": "Fructan",
+   "high": 0.47,
+   "low": 0.41,
+   "pct": -13.0,
+   "lo": -19.8,
+   "hi": -5.8,
+   "lodo_min": -15.8,
+   "lodo_max": -10.8,
+   "hq": -10.0
+  },
+  {
+   "cat": "plant_fibre",
+   "name": "Plant fibre",
+   "high": 8.05,
+   "low": 8.26,
+   "pct": 2.6,
+   "lo": -7.1,
+   "hi": 13.3,
+   "lodo_min": -1.5,
+   "lodo_max": 6.6,
+   "hq": 15.8
+  },
+  {
+   "cat": "host_glycan",
+   "name": "Host glycan",
+   "high": 2.89,
+   "low": 3.44,
+   "pct": 19.0,
+   "lo": 7.8,
+   "hi": 32.1,
+   "lodo_min": 13.6,
+   "lodo_max": 22.0,
+   "hq": 17.6
+  },
+  {
+   "cat": "mixed",
+   "name": "Mixed substrates",
+   "high": 9.37,
+   "low": 9.31,
+   "pct": -0.7,
+   "lo": -3.8,
+   "hi": 2.7,
+   "lodo_min": -1.9,
+   "lodo_max": 0.6,
+   "hq": 1.2
+  },
+  {
+   "cat": "other",
+   "name": "Other substrates",
+   "high": 2.19,
+   "low": 2.36,
+   "pct": 7.9,
+   "lo": 4.5,
+   "hi": 11.6,
+   "lodo_min": 6.1,
+   "lodo_max": 9.6,
+   "hq": 10.4
+  },
+  {
+   "cat": "all",
+   "name": "All CAZyme genes",
+   "high": 27.07,
+   "low": 27.61,
+   "pct": 2.0,
+   "lo": -2.9,
+   "hi": 7.0,
+   "lodo_min": 0.1,
+   "lodo_max": 4.0,
+   "hq": 6.3
+  }
+ ],
+ "ph_contrib": {
+  "cats": [
+   "starch",
+   "fructan",
+   "plant_fibre",
+   "host_glycan",
+   "mixed",
+   "other",
+   "all"
+  ],
+  "names": [
+   "Starch",
+   "Fructan",
+   "Plant fibre",
+   "Host glycan",
+   "Mixed substrates",
+   "Other substrates",
+   "All CAZyme genes"
+  ],
+  "rows": [
+   {
+    "phylum": "Bacillota",
+    "values": [
+     -0.128,
+     -0.025,
+     0.153,
+     0.0,
+     -0.147,
+     0.066,
+     -0.08
+    ]
+   },
+   {
+    "phylum": "Bacteroidota",
+    "values": [
+     -0.099,
+     -0.021,
+     0.265,
+     0.613,
+     0.327,
+     0.055,
+     1.131
+    ]
+   },
+   {
+    "phylum": "Actinomycetota",
+    "values": [
+     -0.012,
+     -0.001,
+     -0.012,
+     -0.001,
+     -0.01,
+     -0.001,
+     -0.037
+    ]
+   },
+   {
+    "phylum": "Cyanobacteriota",
+    "values": [
+     0.003,
+     -0.007,
+     -0.122,
+     -0.036,
+     -0.134,
+     0.023,
+     -0.272
+    ]
+   },
+   {
+    "phylum": "Pseudomonadota",
+    "values": [
+     -0.027,
+     -0.005,
+     -0.081,
+     -0.032,
+     -0.096,
+     0.028,
+     -0.212
+    ]
+   },
+   {
+    "phylum": "Other phyla",
+    "values": [
+     -0.004,
+     -0.001,
+     0.017,
+     0.01,
+     0.001,
+     0.003,
+     0.024
+    ]
+   }
+  ]
+ },
+ "fam_all": [
+  {
+   "family": "GH1",
+   "category": "Mixed substrates",
+   "high": 0.2813,
+   "low": 0.2179,
+   "ratio": 0.7746,
+   "top_mag": "Catenibacterium mitsuokai (c.65)",
+   "top_value": -0.0278,
+   "lo": 0.6801,
+   "hi": 0.8775
+  },
+  {
+   "family": "GH73",
+   "category": "Mixed substrates",
+   "high": 0.353,
+   "low": 0.2818,
+   "ratio": 0.7983,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0275,
+   "lo": 0.6734,
+   "hi": 0.9335
+  },
+  {
+   "family": "GH10",
+   "category": "Plant fibre",
+   "high": 0.2241,
+   "low": 0.1765,
+   "ratio": 0.7877,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0188,
+   "lo": 0.6648,
+   "hi": 0.9196
+  },
+  {
+   "family": "GH5",
+   "category": "Plant fibre",
+   "high": 0.5866,
+   "low": 0.4876,
+   "ratio": 0.8312,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0601,
+   "lo": 0.6988,
+   "hi": 0.9667
+  },
+  {
+   "family": "GH16",
+   "category": "Mixed substrates",
+   "high": 0.2309,
+   "low": 0.1964,
+   "ratio": 0.8507,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0185,
+   "lo": 0.7308,
+   "hi": 0.9732
+  },
+  {
+   "family": "GH32",
+   "category": "Fructan",
+   "high": 0.4566,
+   "low": 0.395,
+   "ratio": 0.8652,
+   "top_mag": "Prevotella copri_B (3.5197)",
+   "top_value": -0.0097,
+   "lo": 0.7965,
+   "hi": 0.9381
+  },
+  {
+   "family": "GH51",
+   "category": "Plant fibre",
+   "high": 0.4423,
+   "low": 0.3874,
+   "ratio": 0.8757,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0238,
+   "lo": 0.7845,
+   "hi": 0.9744
+  },
+  {
+   "family": "GH36",
+   "category": "Mixed substrates",
+   "high": 0.5294,
+   "low": 0.4728,
+   "ratio": 0.893,
+   "top_mag": "Agathobacter faecis (c.35)",
+   "top_value": -0.0094,
+   "lo": 0.8481,
+   "hi": 0.9441
+  },
+  {
+   "family": "GH127",
+   "category": "Mixed substrates",
+   "high": 0.3177,
+   "low": 0.284,
+   "ratio": 0.8937,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.029,
+   "lo": 0.7931,
+   "hi": 0.9981
+  },
+  {
+   "family": "GH13",
+   "category": "Starch",
+   "high": 2.6693,
+   "low": 2.4226,
+   "ratio": 0.9076,
+   "top_mag": "CAG-411 sp000437275 (s.297)",
+   "top_value": -0.0386,
+   "lo": 0.8392,
+   "hi": 0.9757
+  },
+  {
+   "family": "GH94",
+   "category": "Mixed substrates",
+   "high": 0.3205,
+   "low": 0.2872,
+   "ratio": 0.8961,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": 0.0138,
+   "lo": 0.8247,
+   "hi": 0.9694
+  },
+  {
+   "family": "GH31",
+   "category": "Mixed substrates",
+   "high": 0.5533,
+   "low": 0.4996,
+   "ratio": 0.9028,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": -0.0307,
+   "lo": 0.8539,
+   "hi": 0.9536
+  },
+  {
+   "family": "GH179",
+   "category": "Mixed substrates",
+   "high": 0.309,
+   "low": 0.2811,
+   "ratio": 0.9098,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": -0.0171,
+   "lo": 0.8505,
+   "hi": 0.9706
+  },
+  {
+   "family": "GH43",
+   "category": "Plant fibre",
+   "high": 1.6724,
+   "low": 1.5513,
+   "ratio": 0.9276,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.1274,
+   "lo": 0.7983,
+   "hi": 1.0663
+  },
+  {
+   "family": "GH25",
+   "category": "Other substrates",
+   "high": 0.5815,
+   "low": 0.5442,
+   "ratio": 0.9359,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.032,
+   "lo": 0.8739,
+   "hi": 0.9978
+  },
+  {
+   "family": "CE1",
+   "category": "Mixed substrates",
+   "high": 0.6965,
+   "low": 0.6691,
+   "ratio": 0.9606,
+   "top_mag": "Prevotella copri_B (3.5197)",
+   "top_value": -0.0239,
+   "lo": 0.9041,
+   "hi": 1.0165
+  },
+  {
+   "family": "GH77",
+   "category": "Starch",
+   "high": 0.4766,
+   "low": 0.4646,
+   "ratio": 0.9748,
+   "top_mag": "Zag111 sp002102825 (c.34)",
+   "top_value": 0.009,
+   "lo": 0.9416,
+   "hi": 1.0076
+  },
+  {
+   "family": "GH97",
+   "category": "Starch",
+   "high": 0.5073,
+   "low": 0.4985,
+   "ratio": 0.9827,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0493,
+   "lo": 0.8221,
+   "hi": 1.1499
+  },
+  {
+   "family": "GH3",
+   "category": "Mixed substrates",
+   "high": 1.5123,
+   "low": 1.494,
+   "ratio": 0.9879,
+   "top_mag": "UBA11524 sp000437595 (c.43)",
+   "top_value": 0.046,
+   "lo": 0.9524,
+   "hi": 1.0265
+  },
+  {
+   "family": "CE4",
+   "category": "Mixed substrates",
+   "high": 1.1083,
+   "low": 1.116,
+   "ratio": 1.007,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": 0.0332,
+   "lo": 0.9767,
+   "hi": 1.0374
+  },
+  {
+   "family": "GH53",
+   "category": "Plant fibre",
+   "high": 0.2841,
+   "low": 0.2871,
+   "ratio": 1.0103,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": 0.0474,
+   "lo": 0.9658,
+   "hi": 1.0549
+  },
+  {
+   "family": "GH130",
+   "category": "Plant fibre",
+   "high": 0.323,
+   "low": 0.329,
+   "ratio": 1.0186,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0147,
+   "lo": 0.9261,
+   "hi": 1.1233
+  },
+  {
+   "family": "GH95",
+   "category": "Mixed substrates",
+   "high": 0.2742,
+   "low": 0.2796,
+   "ratio": 1.0198,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": -0.0167,
+   "lo": 0.9021,
+   "hi": 1.1459
+  },
+  {
+   "family": "GH18",
+   "category": "Mixed substrates",
+   "high": 0.2031,
+   "low": 0.2164,
+   "ratio": 1.0656,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": 0.0085,
+   "lo": 1.0154,
+   "hi": 1.117
+  },
+  {
+   "family": "GH188",
+   "category": "Other substrates",
+   "high": 0.3873,
+   "low": 0.4116,
+   "ratio": 1.0628,
+   "top_mag": "Prevotella copri_B (2.359)",
+   "top_value": 0.0163,
+   "lo": 0.9625,
+   "hi": 1.1653
+  },
+  {
+   "family": "GH78",
+   "category": "Mixed substrates",
+   "high": 0.5356,
+   "low": 0.5914,
+   "ratio": 1.1041,
+   "top_mag": "Cryptobacteroides sp000431015 (c.31)",
+   "top_value": 0.0344,
+   "lo": 0.9841,
+   "hi": 1.2386
+  },
+  {
+   "family": "GH2",
+   "category": "Mixed substrates",
+   "high": 1.7643,
+   "low": 1.9527,
+   "ratio": 1.1068,
+   "top_mag": "Phocaeicola vulgatus (3.265)",
+   "top_value": 0.0549,
+   "lo": 1.0377,
+   "hi": 1.186
+  },
+  {
+   "family": "GH28",
+   "category": "Plant fibre",
+   "high": 0.6109,
+   "low": 0.6879,
+   "ratio": 1.126,
+   "top_mag": "Phocaeicola dorei (c.66)",
+   "top_value": 0.0333,
+   "lo": 0.9861,
+   "hi": 1.2869
+  },
+  {
+   "family": "GH23",
+   "category": "Other substrates",
+   "high": 0.3333,
+   "low": 0.3782,
+   "ratio": 1.1348,
+   "top_mag": "Zag111 sp002102825 (c.34)",
+   "top_value": 0.0192,
+   "lo": 1.0755,
+   "hi": 1.2039
+  },
+  {
+   "family": "CE8",
+   "category": "Plant fibre",
+   "high": 0.2078,
+   "low": 0.2384,
+   "ratio": 1.1472,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": 0.02,
+   "lo": 1.0056,
+   "hi": 1.3177
+  },
+  {
+   "family": "CE9",
+   "category": "Other substrates",
+   "high": 0.249,
+   "low": 0.2863,
+   "ratio": 1.1498,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": 0.0178,
+   "lo": 1.0792,
+   "hi": 1.2104
+  },
+  {
+   "family": "GH29",
+   "category": "Host glycan",
+   "high": 0.4208,
+   "low": 0.4812,
+   "ratio": 1.1435,
+   "top_mag": "Acetatifactor intestinalis (c.33)",
+   "top_value": -0.0233,
+   "lo": 1.0494,
+   "hi": 1.2553
+  },
+  {
+   "family": "GH20",
+   "category": "Host glycan",
+   "high": 0.5016,
+   "low": 0.5773,
+   "ratio": 1.1508,
+   "top_mag": "Phocaeicola vulgatus (3.543)",
+   "top_value": 0.0302,
+   "lo": 1.0281,
+   "hi": 1.289
+  },
+  {
+   "family": "GH105",
+   "category": "Plant fibre",
+   "high": 0.3294,
+   "low": 0.3878,
+   "ratio": 1.1773,
+   "top_mag": "Phocaeicola vulgatus (3.265)",
+   "top_value": 0.0287,
+   "lo": 1.0206,
+   "hi": 1.368
+  },
+  {
+   "family": "CE20",
+   "category": "Plant fibre",
+   "high": 0.2199,
+   "low": 0.2658,
+   "ratio": 1.2089,
+   "top_mag": "Phocaeicola vulgatus (3.265)",
+   "top_value": 0.0134,
+   "lo": 1.0757,
+   "hi": 1.3588
+  },
+  {
+   "family": "GH92",
+   "category": "Host glycan",
+   "high": 0.5475,
+   "low": 0.6507,
+   "ratio": 1.1885,
+   "top_mag": "Phocaeicola vulgatus (3.265)",
+   "top_value": 0.0363,
+   "lo": 1.042,
+   "hi": 1.3529
+  },
+  {
+   "family": "GH109",
+   "category": "Host glycan",
+   "high": 0.2274,
+   "low": 0.3028,
+   "ratio": 1.3319,
+   "top_mag": "Phocaeicola vulgatus (3.265)",
+   "top_value": 0.0247,
+   "lo": 1.1817,
+   "hi": 1.514
+  },
+  {
+   "family": "GH106",
+   "category": "Plant fibre",
+   "high": 0.2071,
+   "low": 0.2846,
+   "ratio": 1.3747,
+   "top_mag": "Cryptobacteroides sp000431015 (c.31)",
+   "top_value": 0.0179,
+   "lo": 1.1413,
+   "hi": 1.6844
+  }
+ ],
+ "sens": [
+  {
+   "min_mean": 0.05,
+   "fold": 1.5,
+   "pseudo": 0.001,
+   "mags": 191,
+   "down": 41,
+   "up": 52,
+   "at_switch": 27,
+   "later": 53,
+   "earlier": 13
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 2.0,
+   "pseudo": 0.001,
+   "mags": 191,
+   "down": 16,
+   "up": 32,
+   "at_switch": 13,
+   "later": 28,
+   "earlier": 7
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 3.0,
+   "pseudo": 0.001,
+   "mags": 191,
+   "down": 6,
+   "up": 12,
+   "at_switch": 6,
+   "later": 10,
+   "earlier": 2
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 4.0,
+   "pseudo": 0.001,
+   "mags": 191,
+   "down": 4,
+   "up": 6,
+   "at_switch": 5,
+   "later": 5,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 1.5,
+   "pseudo": 0.001,
+   "mags": 124,
+   "down": 26,
+   "up": 37,
+   "at_switch": 19,
+   "later": 38,
+   "earlier": 6
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 2.0,
+   "pseudo": 0.001,
+   "mags": 124,
+   "down": 13,
+   "up": 23,
+   "at_switch": 9,
+   "later": 23,
+   "earlier": 4
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 3.0,
+   "pseudo": 0.001,
+   "mags": 124,
+   "down": 5,
+   "up": 9,
+   "at_switch": 5,
+   "later": 8,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 4.0,
+   "pseudo": 0.001,
+   "mags": 124,
+   "down": 3,
+   "up": 5,
+   "at_switch": 4,
+   "later": 4,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 1.5,
+   "pseudo": 0.001,
+   "mags": 64,
+   "down": 14,
+   "up": 20,
+   "at_switch": 4,
+   "later": 27,
+   "earlier": 3
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 2.0,
+   "pseudo": 0.001,
+   "mags": 64,
+   "down": 6,
+   "up": 15,
+   "at_switch": 3,
+   "later": 16,
+   "earlier": 2
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 3.0,
+   "pseudo": 0.001,
+   "mags": 64,
+   "down": 3,
+   "up": 5,
+   "at_switch": 3,
+   "later": 5,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 4.0,
+   "pseudo": 0.001,
+   "mags": 64,
+   "down": 2,
+   "up": 3,
+   "at_switch": 2,
+   "later": 3,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 1.5,
+   "pseudo": 0.001,
+   "mags": 29,
+   "down": 8,
+   "up": 8,
+   "at_switch": 1,
+   "later": 14,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 2.0,
+   "pseudo": 0.001,
+   "mags": 29,
+   "down": 2,
+   "up": 5,
+   "at_switch": 0,
+   "later": 6,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 3.0,
+   "pseudo": 0.001,
+   "mags": 29,
+   "down": 1,
+   "up": 1,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 4.0,
+   "pseudo": 0.001,
+   "mags": 29,
+   "down": 0,
+   "up": 1,
+   "at_switch": 0,
+   "later": 1,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 1.5,
+   "pseudo": 0.01,
+   "mags": 191,
+   "down": 39,
+   "up": 51,
+   "at_switch": 29,
+   "later": 48,
+   "earlier": 13
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 2.0,
+   "pseudo": 0.01,
+   "mags": 191,
+   "down": 13,
+   "up": 31,
+   "at_switch": 13,
+   "later": 25,
+   "earlier": 6
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 3.0,
+   "pseudo": 0.01,
+   "mags": 191,
+   "down": 6,
+   "up": 10,
+   "at_switch": 7,
+   "later": 8,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 4.0,
+   "pseudo": 0.01,
+   "mags": 191,
+   "down": 3,
+   "up": 4,
+   "at_switch": 4,
+   "later": 3,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 1.5,
+   "pseudo": 0.01,
+   "mags": 124,
+   "down": 25,
+   "up": 37,
+   "at_switch": 19,
+   "later": 36,
+   "earlier": 7
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 2.0,
+   "pseudo": 0.01,
+   "mags": 124,
+   "down": 12,
+   "up": 23,
+   "at_switch": 9,
+   "later": 23,
+   "earlier": 3
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 3.0,
+   "pseudo": 0.01,
+   "mags": 124,
+   "down": 5,
+   "up": 9,
+   "at_switch": 5,
+   "later": 8,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 4.0,
+   "pseudo": 0.01,
+   "mags": 124,
+   "down": 2,
+   "up": 4,
+   "at_switch": 3,
+   "later": 3,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 1.5,
+   "pseudo": 0.01,
+   "mags": 64,
+   "down": 13,
+   "up": 20,
+   "at_switch": 4,
+   "later": 25,
+   "earlier": 4
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 2.0,
+   "pseudo": 0.01,
+   "mags": 64,
+   "down": 6,
+   "up": 15,
+   "at_switch": 3,
+   "later": 16,
+   "earlier": 2
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 3.0,
+   "pseudo": 0.01,
+   "mags": 64,
+   "down": 3,
+   "up": 5,
+   "at_switch": 3,
+   "later": 5,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 4.0,
+   "pseudo": 0.01,
+   "mags": 64,
+   "down": 2,
+   "up": 3,
+   "at_switch": 2,
+   "later": 3,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 1.5,
+   "pseudo": 0.01,
+   "mags": 29,
+   "down": 7,
+   "up": 8,
+   "at_switch": 1,
+   "later": 13,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 2.0,
+   "pseudo": 0.01,
+   "mags": 29,
+   "down": 2,
+   "up": 5,
+   "at_switch": 0,
+   "later": 6,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 3.0,
+   "pseudo": 0.01,
+   "mags": 29,
+   "down": 1,
+   "up": 1,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 4.0,
+   "pseudo": 0.01,
+   "mags": 29,
+   "down": 0,
+   "up": 1,
+   "at_switch": 0,
+   "later": 1,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 1.5,
+   "pseudo": 0.1,
+   "mags": 191,
+   "down": 20,
+   "up": 30,
+   "at_switch": 13,
+   "later": 31,
+   "earlier": 6
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 2.0,
+   "pseudo": 0.1,
+   "mags": 191,
+   "down": 5,
+   "up": 13,
+   "at_switch": 5,
+   "later": 12,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 3.0,
+   "pseudo": 0.1,
+   "mags": 191,
+   "down": 2,
+   "up": 3,
+   "at_switch": 1,
+   "later": 4,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.05,
+   "fold": 4.0,
+   "pseudo": 0.1,
+   "mags": 191,
+   "down": 0,
+   "up": 2,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 1.5,
+   "pseudo": 0.1,
+   "mags": 124,
+   "down": 19,
+   "up": 27,
+   "at_switch": 11,
+   "later": 30,
+   "earlier": 5
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 2.0,
+   "pseudo": 0.1,
+   "mags": 124,
+   "down": 5,
+   "up": 13,
+   "at_switch": 5,
+   "later": 12,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 3.0,
+   "pseudo": 0.1,
+   "mags": 124,
+   "down": 2,
+   "up": 3,
+   "at_switch": 1,
+   "later": 4,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.1,
+   "fold": 4.0,
+   "pseudo": 0.1,
+   "mags": 124,
+   "down": 0,
+   "up": 2,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 1.5,
+   "pseudo": 0.1,
+   "mags": 64,
+   "down": 11,
+   "up": 19,
+   "at_switch": 4,
+   "later": 23,
+   "earlier": 3
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 2.0,
+   "pseudo": 0.1,
+   "mags": 64,
+   "down": 4,
+   "up": 10,
+   "at_switch": 3,
+   "later": 10,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 3.0,
+   "pseudo": 0.1,
+   "mags": 64,
+   "down": 2,
+   "up": 3,
+   "at_switch": 1,
+   "later": 4,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.25,
+   "fold": 4.0,
+   "pseudo": 0.1,
+   "mags": 64,
+   "down": 0,
+   "up": 2,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 1.5,
+   "pseudo": 0.1,
+   "mags": 29,
+   "down": 6,
+   "up": 8,
+   "at_switch": 1,
+   "later": 12,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 2.0,
+   "pseudo": 0.1,
+   "mags": 29,
+   "down": 2,
+   "up": 5,
+   "at_switch": 0,
+   "later": 6,
+   "earlier": 1
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 3.0,
+   "pseudo": 0.1,
+   "mags": 29,
+   "down": 1,
+   "up": 1,
+   "at_switch": 0,
+   "later": 2,
+   "earlier": 0
+  },
+  {
+   "min_mean": 0.5,
+   "fold": 4.0,
+   "pseudo": 0.1,
+   "mags": 29,
+   "down": 0,
+   "up": 1,
+   "at_switch": 0,
+   "later": 1,
+   "earlier": 0
+  }
+ ],
+ "lodo": [
+  {
+   "day": 1,
+   "bc_w1": 0.217,
+   "bc_w2": 0.244,
+   "bc_b": 0.317,
+   "mags": 124,
+   "down": 14,
+   "up": 27,
+   "kept_of_big": 35,
+   "cz_starch": -7.256,
+   "cz_fructan": -13.762,
+   "cz_plant_fibre": 3.862,
+   "cz_host_glycan": 22.042,
+   "cz_mixed": -0.3,
+   "cz_other": 7.722,
+   "cz_unmapped": 5.892,
+   "cz_all": 2.6
+  },
+  {
+   "day": 2,
+   "bc_w1": 0.21,
+   "bc_w2": 0.244,
+   "bc_b": 0.298,
+   "mags": 127,
+   "down": 11,
+   "up": 20,
+   "kept_of_big": 30,
+   "cz_starch": -6.19,
+   "cz_fructan": -10.803,
+   "cz_plant_fibre": 5.134,
+   "cz_host_glycan": 18.178,
+   "cz_mixed": 0.069,
+   "cz_other": 7.409,
+   "cz_unmapped": 4.793,
+   "cz_all": 2.951
+  },
+  {
+   "day": 3,
+   "bc_w1": 0.235,
+   "bc_w2": 0.244,
+   "bc_b": 0.314,
+   "mags": 123,
+   "down": 11,
+   "up": 23,
+   "kept_of_big": 34,
+   "cz_starch": -6.953,
+   "cz_fructan": -12.293,
+   "cz_plant_fibre": 4.135,
+   "cz_host_glycan": 20.848,
+   "cz_mixed": -0.193,
+   "cz_other": 8.526,
+   "cz_unmapped": 4.274,
+   "cz_all": 2.735
+  },
+  {
+   "day": 4,
+   "bc_w1": 0.186,
+   "bc_w2": 0.244,
+   "bc_b": 0.317,
+   "mags": 121,
+   "down": 14,
+   "up": 25,
+   "kept_of_big": 34,
+   "cz_starch": -7.917,
+   "cz_fructan": -15.845,
+   "cz_plant_fibre": 0.124,
+   "cz_host_glycan": 20.958,
+   "cz_mixed": -1.025,
+   "cz_other": 9.63,
+   "cz_unmapped": 5.592,
+   "cz_all": 1.12
+  },
+  {
+   "day": 5,
+   "bc_w1": 0.199,
+   "bc_w2": 0.244,
+   "bc_b": 0.299,
+   "mags": 123,
+   "down": 13,
+   "up": 21,
+   "kept_of_big": 32,
+   "cz_starch": -4.241,
+   "cz_fructan": -12.14,
+   "cz_plant_fibre": 0.13,
+   "cz_host_glycan": 13.557,
+   "cz_mixed": -1.868,
+   "cz_other": 6.134,
+   "cz_unmapped": 7.726,
+   "cz_all": 0.582
+  },
+  {
+   "day": 6,
+   "bc_w1": 0.209,
+   "bc_w2": 0.213,
+   "bc_b": 0.338,
+   "mags": 124,
+   "down": 16,
+   "up": 27,
+   "kept_of_big": 35,
+   "cz_starch": -8.846,
+   "cz_fructan": -14.648,
+   "cz_plant_fibre": 1.301,
+   "cz_host_glycan": 20.25,
+   "cz_mixed": -1.332,
+   "cz_other": 8.416,
+   "cz_unmapped": 7.564,
+   "cz_all": 1.187
+  },
+  {
+   "day": 7,
+   "bc_w1": 0.209,
+   "bc_w2": 0.255,
+   "bc_b": 0.321,
+   "mags": 121,
+   "down": 15,
+   "up": 24,
+   "kept_of_big": 33,
+   "cz_starch": -6.727,
+   "cz_fructan": -14.534,
+   "cz_plant_fibre": -1.511,
+   "cz_host_glycan": 16.557,
+   "cz_mixed": -1.827,
+   "cz_other": 7.825,
+   "cz_unmapped": 6.142,
+   "cz_all": 0.062
+  },
+  {
+   "day": 8,
+   "bc_w1": 0.209,
+   "bc_w2": 0.252,
+   "bc_b": 0.294,
+   "mags": 122,
+   "down": 10,
+   "up": 20,
+   "kept_of_big": 28,
+   "cz_starch": -6.109,
+   "cz_fructan": -11.241,
+   "cz_plant_fibre": 2.288,
+   "cz_host_glycan": 14.557,
+   "cz_mixed": -0.8,
+   "cz_other": 7.426,
+   "cz_unmapped": 5.327,
+   "cz_all": 1.431
+  },
+  {
+   "day": 9,
+   "bc_w1": 0.209,
+   "bc_w2": 0.265,
+   "bc_b": 0.305,
+   "mags": 124,
+   "down": 15,
+   "up": 22,
+   "kept_of_big": 33,
+   "cz_starch": -5.576,
+   "cz_fructan": -13.682,
+   "cz_plant_fibre": 4.523,
+   "cz_host_glycan": 21.83,
+   "cz_mixed": 0.058,
+   "cz_other": 8.184,
+   "cz_unmapped": 4.781,
+   "cz_all": 3.224
+  },
+  {
+   "day": 10,
+   "bc_w1": 0.209,
+   "bc_w2": 0.236,
+   "bc_b": 0.286,
+   "mags": 124,
+   "down": 12,
+   "up": 18,
+   "kept_of_big": 29,
+   "cz_starch": -5.385,
+   "cz_fructan": -10.908,
+   "cz_plant_fibre": 6.563,
+   "cz_host_glycan": 21.987,
+   "cz_mixed": 0.558,
+   "cz_other": 7.506,
+   "cz_unmapped": 4.396,
+   "cz_all": 4.039
+  }
+ ],
+ "quality": [
+  {
+   "setting": "HQ and MQ (all MAGs)",
+   "mags": 421,
+   "followed": 124,
+   "down": 12,
+   "up": 23,
+   "bc_w1": 0.209,
+   "bc_w2": 0.244,
+   "bc_b": 0.309,
+   "cz_all": 1.989,
+   "cz_starch": -6.528,
+   "cz_fructan": -13.003,
+   "cz_plant_fibre": 2.633,
+   "cz_host_glycan": 19.036
+  },
+  {
+   "setting": "HQ only",
+   "mags": 257,
+   "followed": 105,
+   "down": 10,
+   "up": 19,
+   "bc_w1": 0.21,
+   "bc_w2": 0.226,
+   "bc_b": 0.298,
+   "cz_all": 6.287,
+   "cz_starch": -3.448,
+   "cz_fructan": -10.023,
+   "cz_plant_fibre": 15.784,
+   "cz_host_glycan": 17.599
+  }
+ ],
+ "depth": [
+  {
+   "day": 1,
+   "sample": "DNA01",
+   "reads": 3335598,
+   "gbp": 13.71,
+   "n50": 5480,
+   "binned": 77.7,
+   "axis1": -0.088,
+   "mags_present": 342
+  },
+  {
+   "day": 2,
+   "sample": "DNA02",
+   "reads": 383289,
+   "gbp": 1.67,
+   "n50": 5912,
+   "binned": 74.1,
+   "axis1": -0.19,
+   "mags_present": 322
+  },
+  {
+   "day": 3,
+   "sample": "DNA03",
+   "reads": 2606175,
+   "gbp": 11.22,
+   "n50": 5767,
+   "binned": 76.0,
+   "axis1": -0.118,
+   "mags_present": 339
+  },
+  {
+   "day": 4,
+   "sample": "DNA04",
+   "reads": 6536431,
+   "gbp": 25.62,
+   "n50": 5264,
+   "binned": 77.0,
+   "axis1": -0.015,
+   "mags_present": 357
+  },
+  {
+   "day": 5,
+   "sample": "DNA05",
+   "reads": 2254403,
+   "gbp": 9.82,
+   "n50": 5866,
+   "binned": 77.6,
+   "axis1": -0.178,
+   "mags_present": 336
+  },
+  {
+   "day": 6,
+   "sample": "DNA06",
+   "reads": 5031440,
+   "gbp": 22.99,
+   "n50": 6337,
+   "binned": 80.6,
+   "axis1": -0.071,
+   "mags_present": 342
+  },
+  {
+   "day": 7,
+   "sample": "DNA07",
+   "reads": 3839373,
+   "gbp": 17.86,
+   "n50": 6376,
+   "binned": 81.9,
+   "axis1": 0.052,
+   "mags_present": 348
+  },
+  {
+   "day": 8,
+   "sample": "DNA08",
+   "reads": 4076896,
+   "gbp": 25.26,
+   "n50": 9040,
+   "binned": 83.4,
+   "axis1": 0.204,
+   "mags_present": 353
+  },
+  {
+   "day": 9,
+   "sample": "DNA09",
+   "reads": 3948376,
+   "gbp": 14.64,
+   "n50": 4851,
+   "binned": 81.6,
+   "axis1": 0.162,
+   "mags_present": 350
+  },
+  {
+   "day": 10,
+   "sample": "DNA10",
+   "reads": 5994032,
+   "gbp": 23.67,
+   "n50": 5263,
+   "binned": 82.0,
+   "axis1": 0.242,
+   "mags_present": 355
+  }
+ ],
+ "axis1": {
+  "values": [
+   -0.0881,
+   -0.1895,
+   -0.1184,
+   -0.0153,
+   -0.1781,
+   -0.0707,
+   0.052,
+   0.2041,
+   0.1618,
+   0.2421
+  ],
+  "splits": [
+   0.039,
+   0.215,
+   0.334,
+   0.315,
+   0.621,
+   0.811,
+   0.787,
+   0.456,
+   0.291
+  ],
+  "line": 0.732
+ },
+ "inventory": [
+  {
+   "file": "config/samples.tsv",
+   "what": "sample, day and diet period",
+   "rows": 10
+  },
+  {
+   "file": "results/projects/mag_master.tsv",
+   "what": "one row per MAG: taxonomy (GTDB), quality (CheckM2), size, share per day",
+   "rows": 421
+  },
+  {
+   "file": "results/mmlong2/overview/phylum_abundance.tsv",
+   "what": "phylum shares per day (control)",
+   "rows": 7
+  },
+  {
+   "file": "results/mmlong2/overview/bray_curtis.tsv",
+   "what": "Bray-Curtis between days (control)",
+   "rows": 10
+  },
+  {
+   "file": "results/mmlong2/overview/numbers.tsv",
+   "what": "summary numbers of the overview (control)",
+   "rows": 26
+  },
+  {
+   "file": "results/projects/cazy_category_by_mag.tsv",
+   "what": "degrading CAZyme genes per substrate group, all genes, per MAG",
+   "rows": 421
+  },
+  {
+   "file": "results/projects/cazy_family_by_mag.tsv",
+   "what": "genes per CAZy family per MAG",
+   "rows": 9672
+  },
+  {
+   "file": "results/metabolism_all/cazy_domains.tsv",
+   "what": "CAZyme domain hits per gene (all MAGs)",
+   "rows": 36355
+  },
+  {
+   "file": "results/metabolism/family_categories.tsv",
+   "what": "CAZy family to substrate group (dbCAN3)",
+   "rows": 242
+  },
+  {
+   "file": "results/metabolism/mag_metabolism.tsv",
+   "what": "module 7 gene search of 17 MAGs (control)",
+   "rows": 17
+  },
+  {
+   "file": "results/mmlong2_input_trim/read_stats.tsv",
+   "what": "reads and bases per sample after filtering and trimming",
+   "rows": 10
   }
  ],
  "numbers": {
@@ -6711,8 +9414,8 @@
   "fam_up": 0,
   "fam_down": 0,
   "fam_n_shown": 20,
-  "fam_max_up": 1.37,
-  "fam_max_down": 0.77,
+  "fam_max_up": 1.3747,
+  "fam_max_down": 0.7746,
   "fam_first_min": 0.5,
   "fam_min": 0.2,
   "fam_pseudo": 0.05,
@@ -6730,6 +9433,133 @@
   "cz_all_min": 25.4,
   "cz_all_max": 29.7,
   "ctrl_all": 94,
-  "ctrl_pf": 43
+  "ctrl_pf": 43,
+  "boot_reps": 2000,
+  "boot_excl0": 34,
+  "boot_sep5_excl0": 15,
+  "cz_starch_lo": -12,
+  "cz_fructan_lo": -20,
+  "cz_plant_fibre_lo": -7,
+  "cz_host_glycan_lo": 8,
+  "cz_mixed_lo": -4,
+  "cz_other_lo": 4,
+  "cz_unmapped_lo": 1,
+  "cz_all_lo": -3,
+  "cz_starch_hi": -1,
+  "cz_fructan_hi": -6,
+  "cz_plant_fibre_hi": 13,
+  "cz_host_glycan_hi": 32,
+  "cz_mixed_hi": 3,
+  "cz_other_hi": 12,
+  "cz_unmapped_hi": 10,
+  "cz_all_hi": 7,
+  "eff_d": 0.7,
+  "eff_lo": -3.4,
+  "eff_hi": 4.9,
+  "lodo_bc_b_min": 0.29,
+  "lodo_bc_w_max": 0.27,
+  "lodo_big_min": 30,
+  "lodo_big_max": 43,
+  "lodo_stay": 25,
+  "lodo_cz_starch_min": -9,
+  "lodo_cz_starch_max": -4,
+  "lodo_cz_fructan_min": -16,
+  "lodo_cz_fructan_max": -11,
+  "lodo_cz_plant_fibre_min": -2,
+  "lodo_cz_plant_fibre_max": 7,
+  "lodo_cz_host_glycan_min": 14,
+  "lodo_cz_host_glycan_max": 22,
+  "lodo_cz_mixed_min": -2,
+  "lodo_cz_mixed_max": 1,
+  "lodo_cz_other_min": 6,
+  "lodo_cz_other_max": 10,
+  "lodo_cz_unmapped_min": 4,
+  "lodo_cz_unmapped_max": 8,
+  "lodo_cz_all_min": 0,
+  "lodo_cz_all_max": 4,
+  "lodo_cz_all_min1": 0.1,
+  "lodo_cz_all_max1": 4.0,
+  "s_p001": 36,
+  "s_p01": 35,
+  "s_p1": 18,
+  "s_f15": 62,
+  "s_f3": 14,
+  "s_f4": 6,
+  "s_m005": 44,
+  "s_m025": 21,
+  "s_m05": 7,
+  "s_cells": 48,
+  "s_cells10": 26,
+  "s_half": 25,
+  "s_riser_more": 44,
+  "clr_rho": 0.98,
+  "clr_n": 37,
+  "ait_w1": 6.2,
+  "ait_w2": 7.4,
+  "ait_b": 9.5,
+  "ait_pc1": 55,
+  "ait_best": "6|7",
+  "hq_n": 257,
+  "mq_n": 164,
+  "hq_followed": 105,
+  "hq_down": 10,
+  "hq_up": 19,
+  "hq_big": 29,
+  "hq_bc_w1": 0.21,
+  "hq_bc_w2": 0.23,
+  "hq_bc_b": 0.3,
+  "hq_cz_all": 6,
+  "hq_cz_starch": -3,
+  "hq_cz_fructan": -10,
+  "hq_cz_plant_fibre": 16,
+  "hq_cz_host_glycan": 18,
+  "rho_compl": 0.06,
+  "copri1_compl": 89,
+  "copri2_compl": 74,
+  "copri_q": "MQ",
+  "pf_mq_sum": -0.27,
+  "pf_hq_sum": 0.49,
+  "gbp_min": 1.7,
+  "gbp_max": 25.6,
+  "gbp_high": 12.4,
+  "gbp_low": 20.9,
+  "rho_depth_ax1": 0.79,
+  "rho_depth_binned": 0.6,
+  "d5_n": 29,
+  "d5_bc_w1": 0.2,
+  "d5_bc_w2": 0.25,
+  "d5_bc_b": 0.3,
+  "d5_rho": 0.99,
+  "rho_within1": 1.0,
+  "rho_within2": 0.5,
+  "ph_bacillota_all": -0.08,
+  "ph_bacillota_plant_fibre": 0.15,
+  "ph_bacillota_host_glycan": 0.0,
+  "ph_bacillota_starch": -0.13,
+  "ph_bacillota_fructan": -0.02,
+  "ph_bacteroidota_all": 1.13,
+  "ph_bacteroidota_plant_fibre": 0.27,
+  "ph_bacteroidota_host_glycan": 0.61,
+  "ph_bacteroidota_starch": -0.1,
+  "ph_bacteroidota_fructan": -0.02,
+  "ph_actinomycetota_all": -0.04,
+  "ph_actinomycetota_plant_fibre": -0.01,
+  "ph_actinomycetota_host_glycan": -0.0,
+  "ph_actinomycetota_starch": -0.01,
+  "ph_actinomycetota_fructan": -0.0,
+  "ph_cyanobacteriota_all": -0.27,
+  "ph_cyanobacteriota_plant_fibre": -0.12,
+  "ph_cyanobacteriota_host_glycan": -0.04,
+  "ph_cyanobacteriota_starch": 0.0,
+  "ph_cyanobacteriota_fructan": -0.01,
+  "ph_pseudomonadota_all": -0.21,
+  "ph_pseudomonadota_plant_fibre": -0.08,
+  "ph_pseudomonadota_host_glycan": -0.03,
+  "ph_pseudomonadota_starch": -0.03,
+  "ph_pseudomonadota_fructan": -0.01,
+  "ax_best": "6|7",
+  "ax_r2_best": 0.81,
+  "ax_r2_switch": 0.62,
+  "ax_r2_line": 0.73
  }
 }
