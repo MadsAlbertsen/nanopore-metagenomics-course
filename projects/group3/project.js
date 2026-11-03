@@ -1,6 +1,6 @@
 // Group 3: butyrate genes across the two diet periods. DATA from np26 scripts/43_project_group3.py.
 const D = DATA, N = D.numbers;
-const st = { view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag" };
+const st = { gview: "per1000", view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag" };
 const byId = Object.fromEntries(D.mags.map((m) => [m.id, m]));
 const mains = D.mags.filter((m) => m.main);
 const SPLIT = "diet switch";
@@ -20,8 +20,30 @@ function setControls() {
   const sets = D.sets.filter((s) => s.main > 0);
   $("g3Set").innerHTML = `<option value="all">all gene sets (${mains.length} MAGs)</option>` + sets.map((s) => `<option value="${esc(s.set)}">${esc(s.set)} (${s.main})</option>`).join("");
   $("g3Mag").innerHTML = [...mains].sort((a, b) => b.mean - a.mean).map((m) => `<option value="${esc(m.id)}">${esc(m.name)}</option>`).join("");
-  $("g3View").value = st.view; $("g3Set").value = st.hset; $("g3Scale").value = st.hscale; $("g3Series").value = st.series; $("g3Mag").value = st.mag;
+  $("g3GView").value = st.gview; $("g3View").value = st.view; $("g3Set").value = st.hset; $("g3Scale").value = st.hscale; $("g3Series").value = st.series; $("g3Mag").value = st.mag;
   $("g3MagLab").hidden = st.series !== "mag";
+}
+
+// Figure 1: genes x days, grouped by step (dehydrogenase, CoA-transferase, kinase)
+function drawGeneHeat() {
+  const G = D.gene_heat, order = ["bcd", "but", "atoD", "atoA", "ptb", "buk"].map((g) => G.genes.indexOf(g));
+  const src = st.gview === "carrier" ? G.carrier : G.per1000;
+  const vals = order.map((i) => {
+    const row = src[i];
+    if (st.gview === "per1000") return row.map((v) => (v > 0 ? Math.log10(v) : null));
+    if (st.gview === "carrier") return row;
+    const base = row.slice(0, 5).reduce((a, b) => a + b, 0) / 5;
+    return row.map((v) => (v > 0 && base > 0 ? Math.log2(v / base) : null));
+  });
+  const fmt = (v) => {
+    if (v === null || v === undefined) return "–";
+    if (st.gview === "per1000") return `${(10 ** v).toPrecision(2)} per 1,000 genes`;
+    if (st.gview === "carrier") return `${v.toFixed(1)}%`;
+    return v.toFixed(2);
+  };
+  const label = { per1000: "copies per 1,000 genes (log scale)", carrier: "share of the bases in MAGs with the gene (%)", log2: "log2 change from days 1-5" }[st.gview];
+  heatmap($("g3GeneHeat"), { rows: order.map((i) => `${G.genes[i]} · ${G.steps[i].replace(" final step", "").replace(" step", "")}`), cols: D.days.map((d) => (innerWidth < 600 ? String(d) : `day ${d}`)), values: vals,
+    label, diverging: st.gview === "log2", format: fmt, cell: innerWidth < 600 ? 26 : 44 });
 }
 
 function drawGenes() {
@@ -57,7 +79,7 @@ function drawHeat() {
   };
   const pct = (v) => { const p = 10 ** v; return p >= 1 ? p.toFixed(2) + "%" : p.toPrecision(2) + "%"; };
   heatmap($("g3Heat"), {
-    rows: rows.map((m) => (st.hset === "all" ? rowLabel(m) : m.name)), cols: D.days.map((d) => `day ${d}`), values: vals,
+    rows: rows.map((m) => (st.hset === "all" ? rowLabel(m) : m.name)), cols: D.days.map((d) => (innerWidth < 600 ? String(d) : `day ${d}`)), values: vals,
     label: st.hscale === "share" ? "share of the sample's bases (log scale)" : "log2 change from days 1-5", diverging: st.hscale === "log2",
     format: (v) => (v === null || v === undefined ? "–" : st.hscale === "share" ? pct(v) : v.toFixed(2)), cell: 18,
   });
@@ -117,7 +139,7 @@ function drawBars() {
       .sort((a, b) => b.v - a.v);
   }
   barChart($("g3Bars"), { labels: rows.map((r) => r.label), values: rows.map((r) => r.v), colors: rows.map((r) => KIN[r.kin][1]), horizontal: true,
-    yLabel: "Change, days 6-10 minus days 1-5 (percentage points of the bases)", unit: "percentage points" });
+    yLabel: "Days 6-10 minus days 1-5 (percentage points)", unit: "percentage points" });
   chartLegend($("g3Bars"), Object.values(KIN).map(([name, color]) => ({ name, color })));
 }
 
@@ -128,18 +150,31 @@ function drawTables() {
       { key: "first", label: "First day outside", num: true, fmt: (v, r) => (v ? `${v} (${r.first_dir})` : "none") }],
     rows: mains, filter: true, sortKey: "mean", maxRows: 12,
   });
+  const R = D.ranks, rk = { phylum: "Phylum", class: "Class", order: "Order", family: "Family", genus: "Genus", species: "Species" };
+  table($("g3Tax"), {
+    columns: [{ key: "id", label: "MAG" }, ...R.map((k) => ({ key: k, label: rk[k] })), { key: "deepest", label: "Deepest rank" }, { key: "set", label: "Gene set" }],
+    rows: D.mags.map((m) => ({ ...m, ...Object.fromEntries(R.map((k, i) => [k, m.lineage[i] || "–"])) })), filter: true, sortKey: "family", maxRows: 15,
+  });
+  const n2 = (v) => (v === null || v === undefined ? "–" : v.toFixed(2));
+  table($("g3Duncan"), {
+    columns: [{ key: "group", label: "Duncan et al. group" }, { key: "lit", label: "399 → 24 g/day" }, { key: "lit_log2", label: "log2", num: true, fmt: n2 },
+      { key: "ours", label: "Our MAGs" }, { key: "hi", label: "Days 1-5 (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(1)) },
+      { key: "lo", label: "Days 6-10 (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(1)) }, { key: "log2", label: "log2", num: true, fmt: n2 }],
+    rows: D.duncan, sortable: false,
+  });
   const g = D.genes;
   table($("g3All"), {
     columns: [{ key: "name", label: "MAG" }, { key: "family", label: "Family" }, { key: "quality", label: "Quality" },
       ...g.map((k, i) => ({ key: k, label: k, num: true, fmt: (v, r) => String(r.genes[i]) })),
-      { key: "etf", label: "Etf", fmt: (v) => (v ? "yes" : "") }, { key: "hi", label: "Days 1-5 (%)", num: true }, { key: "lo", label: "Days 6-10 (%)", num: true },
+      { key: "etf", label: "Etf", fmt: (v) => (v ? "yes" : "no") }, { key: "hi", label: "Days 1-5 (%)", num: true }, { key: "lo", label: "Days 6-10 (%)", num: true },
       { key: "log2", label: "log2 change", num: true }],
     rows: D.mags.map((m) => ({ ...m, ...Object.fromEntries(g.map((k, i) => [k, m.genes[i]])) })), filter: true, sortKey: "hi", maxRows: 15,
   });
 }
 
-function drawAll() { setControls(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); }
+function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); }
 
+$("g3GView").addEventListener("change", (e) => { st.gview = e.target.value; drawGeneHeat(); });
 $("g3View").addEventListener("change", (e) => { st.view = e.target.value; drawGenes(); });
 $("g3Set").addEventListener("change", (e) => { st.hset = e.target.value; drawHeat(); });
 $("g3Scale").addEventListener("change", (e) => { st.hscale = e.target.value; drawHeat(); });
