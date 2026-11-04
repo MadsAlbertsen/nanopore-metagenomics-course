@@ -1,0 +1,12 @@
+number: 3
+slug: article-group3-r1
+title: "Genome-resolved butyrate gene potential over ten days in one person: the CoA-transferase route fell, and the producer genomes compensated no more than random genome sets"
+nav: "Group 3 article, revision 1"
+question: "Revision 1 asks, genome by genome and day by day, whether the butyrate-producing genomes of one gut compensated for each other around a diet change, with the kinase route defined by gene neighbourhood."
+status: draft
+revision_of: 3
+revision_label: "Revision 1 (rewritten by Claude after peer review, 4 Nov 2026)"
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Diet facts: information from the data owner. Revision 1 was written by Claude from the group's article, report and
+  peer review; the new analyses are np26 scripts/43c_group3_revision1.py.
