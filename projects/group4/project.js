@@ -133,7 +133,7 @@ function drawPcoa() {
     const [x0, x1] = extent(P.pts.map((p) => p.x), { pad: 0.12 }), [y0, y1] = extent(P.pts.map((p) => p.y), { pad: 0.12 });
     const x = scale(x0, x1, box.l, box.r), y = scale(y0, y1, box.b, box.t);
     axes(svg, x, y, box, { xLabel: `PCoA axis 1 (${N2(0)}% of the variation)`, yLabel: `Axis 2 (${N2(1)}%)`, xTicks: x.ticks(6), yTicks: y.ticks(5), xFmt: (v) => v.toFixed(2), yFmt: (v) => v.toFixed(2) });
-    const col = (p) => (p.period === "Days 1-5" ? "#3d7fb5" : "#35b779");
+    const col = (p) => (p.period === "Days 1-5" ? "var(--c1)" : "var(--c3)");
     for (let i = 1; i < P.pts.length; i++) {
       const a = P.pts[i - 1], b = P.pts[i];
       el("line", { x1: x(a.x), y1: y(a.y), x2: x(b.x), y2: y(b.y), style: `stroke:${col(b)}`, "stroke-width": 1.6, opacity: 0.6 }, svg);
@@ -143,7 +143,7 @@ function drawPcoa() {
       tipOn(c, `<b>Day ${p.day}</b><br>${esc(p.period)}`);
       el("text", { x: x(p.x) + 7, y: y(p.y) - 6, class: "dlab" }, svg).textContent = String(p.day);
     }
-    chartLegend(host, [{ name: "Days 1-5", color: "#3d7fb5" }, { name: "Days 6-10", color: "#35b779" }]);
+    chartLegend(host, [{ name: "Days 1-5", color: "var(--c1)" }, { name: "Days 6-10", color: "var(--c3)" }]);
   });
 }
 
