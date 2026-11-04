@@ -145,7 +145,17 @@ function drawCazy() {
     yLabel: "Median genes per 1,000 genes", fmt: (v) => v.toFixed(1), horizontal: true });
 }
 
-function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCazy(); drawCore(); }
+// Table 1 (Q6): robustness of each changing MAG under leave-one-day-out reruns
+function drawRobust() {
+  table($("pjRobust"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "dir", label: "Direction" }, { key: "log2", label: "log2 change", num: true },
+      { key: "kept", label: "Changing in reruns (of 10)", num: true, fmt: (v) => String(v) }, { key: "settled", label: "Settled day", num: true, fmt: (v) => (v === null ? "not settled" : String(v)) },
+      { key: "range", label: "Settled day in reruns" }, { key: "step", label: "Largest step days 1-5 (log2)", num: true }],
+    rows: D.robust, filter: true, sortKey: "kept", maxRows: 35,
+  });
+}
+
+function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCazy(); drawRobust(); drawCore(); }
 $("pjTaxLevel").addEventListener("change", () => { st2.tax = $("pjTaxLevel").value; drawTax(); });
 $("pjHeatSet").addEventListener("change", () => { st2.heat = $("pjHeatSet").value; drawMagHeat(); });
 
