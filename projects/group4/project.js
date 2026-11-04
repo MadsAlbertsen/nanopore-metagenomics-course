@@ -2,7 +2,7 @@
 // (np26 scripts/44_project_group4.py); numbers in the text and in the key findings come from DATA.numbers.
 const D = DATA;
 const N = D.numbers;
-const st = { cat: "abs", sort: "taxa", stab: "taxa" };
+const st = { cat: "abs", sort: "taxa", stab: "taxa", drv: "sp" };
 const PROFILE = { taxa: "species mix", functions: "genes", products: "all named genes", markers: "marker genes" };
 
 // a number from DATA.numbers: d = decimals, sign = show + for positive values
@@ -144,9 +144,96 @@ function drawFam() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); }
+function drawDrv() {
+  tabs("drvView", "drv");
+  const k = st.drv, R = D.drivers;
+  const top = [...R.mags].sort((a, b) => Math.abs(b[k]) - Math.abs(a[k])).slice(0, 15);
+  // orange = the MAG's share rose, blue = it fell (as in Figure 6)
+  barChart($("pjDrv"), {
+    labels: top.map((r) => r.name), values: top.map((r) => r[k]), horizontal: true,
+    colors: top.map((r) => (r.dir > 0 ? "var(--c2)" : "var(--c1)")),
+    yLabel: k === "sp" ? "Part of the species-mix change (%)" : "Part of the gene-profile change (%)", unit: "%",
+    fmt: (v) => v.toFixed(1),
+  });
+  const lg = $("pjDrvLegend");
+  lg.innerHTML = "";
+  chartLegend(lg, [{ name: "Share rose", color: "var(--c2)" }, { name: "Share fell", color: "var(--c1)" }]);
+  table($("pjDrvFam"), {
+    columns: [{ key: "family", label: "Family" }, { key: "phylum", label: "Phylum" },
+      { key: "sp", label: "Species mix (%)", num: true, fmt: (v) => (Math.abs(v) < 0.05 ? "0.0" : v.toFixed(1)) },
+      { key: "gp", label: "Gene profile (%)", num: true, fmt: (v) => (Math.abs(v) < 0.05 ? "0.0" : v.toFixed(1)) }],
+    rows: R.families, sortKey: k, sortDesc: true, maxRows: 10,
+  });
+  table($("pjDrvCat"), {
+    columns: [{ key: "name", label: "Substrate group" },
+      { key: "d", label: "Change (per 1,000 genes)", num: true, fmt: (v) => (v > 0 ? "+" : "") + v.toFixed(3) },
+      { key: "top", label: "Largest MAG parts (per 1,000 genes)",
+        fmt: (v) => v.map((t) => `${t.name} ${t.c > 0 ? "+" : ""}${t.c.toFixed(3)}`).join("; ") }],
+    rows: R.cats, sortable: false,
+  });
+}
 
-for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab]]) {
+function drawStrain() {
+  // orange = rose, blue = fell at least two-fold (as in Figure 6); grey = the rest
+  const col = (r) => (r.log2 >= 1 ? "var(--c2)" : r.log2 <= -1 ? "var(--c1)" : "var(--faint)");
+  scatter($("pjStrain"), {
+    points: D.strains.map((r) => ({ x: r.var, y: r.cv, label: r.name, color: col(r),
+      extra: `${r.phylum} · variant sites ${r.var}% · change log2 ${r.log2} · depth ${r.depth}x` })),
+    logX: true, xLabel: "Variant sites (% of the MAG's positions, log scale)", yLabel: "Day-to-day variation (CV, %)",
+  });
+  const lg = $("pjStrainLegend");
+  lg.innerHTML = "";
+  chartLegend(lg, [{ name: "Rose >= 2-fold", color: "var(--c2)" }, { name: "Fell >= 2-fold", color: "var(--c1)" },
+    { name: "Less than 2-fold", color: "var(--faint)" }]);
+  const NAME = { low: "Least variable third", middle: "Middle third", high: "Most variable third" };
+  table($("pjThirds"), {
+    columns: [{ key: "third", label: "MAGs", fmt: (v) => NAME[v] },
+      { key: "n", label: "n", num: true, fmt: (v) => String(v) },
+      { key: "var_lo", label: "Variant sites (%)", num: true, fmt: (v, r) => `${v.toFixed(4)}-${r.var_hi.toFixed(4)}` },
+      { key: "cv", label: "Median CV (%)", num: true, fmt: (v) => v.toFixed(0) },
+      { key: "abslog2", label: "Median |log2 change|", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "depth", label: "Median depth (x)", num: true, fmt: (v) => v.toFixed(0) },
+      { key: "up", label: "Rose >= 2-fold", num: true, fmt: (v) => String(v) },
+      { key: "down", label: "Fell >= 2-fold", num: true, fmt: (v) => String(v) }],
+    rows: D.thirds, sortable: false,
+  });
+  const dash = (d) => (v) => (v === null ? "–" : v.toFixed(d));
+  table($("pjStrainTable"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "phylum", label: "Phylum" },
+      { key: "var", label: "Variant sites (%)", num: true, fmt: (v) => v.toFixed(4) },
+      { key: "maf", label: "Minor allele fraction", num: true, fmt: dash(2) },
+      { key: "sh", label: "CheckM strain het.", num: true, fmt: dash(0) },
+      { key: "depth", label: "Depth (x)", num: true, fmt: (v) => v.toFixed(0) },
+      { key: "share", label: "Mean share (%)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "cv", label: "CV (%)", num: true, fmt: (v) => v.toFixed(0) },
+      { key: "log2", label: "log2 change", num: true, fmt: (v) => v.toFixed(2) }],
+    rows: D.strains, filter: true, sortKey: "var", sortDesc: true, maxRows: 12,
+  });
+}
+
+// not blue / orange (down / up elsewhere on the page)
+const FCOL = { close: "var(--c3)", distant: "var(--c4)", domain: "var(--c5)", none: "var(--c7)", noncoding: "var(--faint)", unbinned: "var(--ink)" };
+function drawFunc() {
+  const F = D.fshare;
+  lineChart($("pjFunc"), {
+    x: D.days, series: F.classes.map((c) => ({ name: c.name, values: c.values, color: FCOL[c.key] })), xLabel: "Day", xName: "Day",
+    yLabel: "Share of the day's DNA (%)", unit: "%", marks: [{ x: 5.5, label: "diet switch" }], zero: true,
+  });
+  const dna = Object.fromEntries(F.classes.map((c) => [c.key, c.values]));
+  const stat = (v) => { const m = v.reduce((a, b) => a + b, 0) / v.length; return `${m.toFixed(1)} (${Math.min(...v).toFixed(1)}-${Math.max(...v).toFixed(1)})`; };
+  const rows = [...F.genes.map((g) => ({ name: g.name, n: g.n, pct: g.pct, dna: stat(dna[g.key]) })),
+    ...F.classes.filter((c) => !F.genes.some((g) => g.key === c.key)).map((c) => ({ name: c.name, n: null, pct: null, dna: stat(c.values) }))];
+  table($("pjFuncTable"), {
+    columns: [{ key: "name", label: "Level" }, { key: "n", label: "Genes", num: true, fmt: (v) => (v === null ? "–" : v.toLocaleString("en")) },
+      { key: "pct", label: "Share of genes (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(1)) },
+      { key: "dna", label: "Share of the day's DNA, mean (range) (%)" }],
+    rows, sortable: false,
+  });
+}
+
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); drawDrv(); drawStrain(); drawFunc(); }
+
+for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv]]) {
   $(id).addEventListener("click", (ev) => {
     const b = ev.target.closest("button[data-v]");
     if (!b) return;

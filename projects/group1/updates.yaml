@@ -1,0 +1,5 @@
+# Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 10:41"
+  what: "Next steps: the tested inStrain server job for per-day strain diversity (Q1); the job is running on the server"
+- when: "3 Nov 2026"
+  what: "Report organised by your hypotheses, with verdicts, a family heat map and a MAG abundance heat map"
