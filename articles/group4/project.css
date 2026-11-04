@@ -1,0 +1,5 @@
+/* group 4 article: two panels side by side, one column on narrow screens */
+.a4grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px }
+.a4grid > div { min-width: 0 }
+.a4lab { font-size: 13px; font-weight: 600; margin: 0 0 2px }
+@media (max-width: 760px) { .a4grid { grid-template-columns: 1fr } }
