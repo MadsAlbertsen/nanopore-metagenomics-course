@@ -3,7 +3,7 @@
 const D = DATA;
 const N = D.numbers;
 const st = { cat: "abs", sort: "taxa", stab: "taxa" };
-const PROFILE = { taxa: "species mix", functions: "genes" };
+const PROFILE = { taxa: "species mix", functions: "genes", products: "all named genes", markers: "marker genes" };
 
 // a number from DATA.numbers: d = decimals, sign = show + for positive values
 function num(key, d, sign) {
@@ -58,10 +58,34 @@ function drawRed() {
   chartLegend(host, order.filter((c) => pts.some((r) => r.category === c)).map((c) => ({ name: c, color: COLORS[c] })));
 }
 
+function drawBeyond() {
+  const B = D.beyond;
+  barChart($("pjBeyond"), {
+    labels: B.bins.map((b) => b.replace(" ", "")), // number of common MAGs carrying the function
+    groups: B.sets.map((s) => ({ name: s.name, values: s.median })),
+    yLabel: "Median day-to-day variation (CV, %)", unit: "%", fmt: (v) => (v === null ? "–" : v.toFixed(1)),
+  });
+  const cols = [{ key: "name", label: "Set" },
+    ...B.bins.map((b, i) => ({ key: `n${i}`, label: `${b} MAG${b === "1" ? "" : "s"} (n)`, num: true, fmt: (v) => String(v) })),
+    { key: "all", label: "Median CV (%)", num: true, fmt: (v) => v.toFixed(1) },
+    { key: "ratio", label: "Ratio to other names (95% interval)", fmt: (v) => `${v[0].toFixed(2)} (${v[1].toFixed(2)}-${v[2].toFixed(2)})` }];
+  const rows = B.sets.map((s) => ({ name: s.name, all: s.all_median, ratio: s.ratio, ...Object.fromEntries(s.n.map((n, i) => [`n${i}`, n])) }));
+  table($("pjBeyondTable"), { columns: cols, rows, sortable: false });
+  const dash = (d) => (v) => (v === null ? "–" : v.toFixed(d));
+  table($("pjMarkers"), {
+    columns: [{ key: "name", label: "Gene" }, { key: "ko", label: "KO" }, { key: "group", label: "Group" }, { key: "what", label: "What it does" },
+      { key: "carriers", label: "Common MAGs", num: true, fmt: (v) => String(v) },
+      { key: "mean", label: "Per 1,000 genes", num: true, fmt: dash(3) },
+      { key: "cv", label: "CV (%)", num: true, fmt: dash(1) },
+      { key: "log2", label: "log2 change", num: true, fmt: dash(2) }],
+    rows: B.markers, sortKey: "carriers", sortDesc: true, maxRows: 12,
+  });
+}
+
 function drawSort() {
   tabs("sortView", "sort");
   const rows = D.loo[st.sort];
-  // grey = sorted right, purple = sorted wrong (not blue / orange: those mean down / up in Figure 5)
+  // grey = sorted right, purple = sorted wrong (not blue / orange: those mean down / up in Figure 6)
   barChart($("pjSort"), {
     labels: rows.map((r) => `Day ${r.day}${r.correct ? "" : " ✗"}`), values: rows.map((r) => r.margin),
     colors: rows.map((r) => (r.correct ? "var(--faint)" : "var(--c7)")),
@@ -112,7 +136,7 @@ function drawFam() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawSort(); drawStab(); drawFam(); }
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab]]) {
   $(id).addEventListener("click", (ev) => {
