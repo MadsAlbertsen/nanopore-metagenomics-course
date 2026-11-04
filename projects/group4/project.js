@@ -60,16 +60,24 @@ function drawRed() {
 
 function drawBeyond() {
   const B = D.beyond;
-  barChart($("pjBeyond"), {
-    labels: B.bins.map((b) => b.replace(" ", "")), // number of common MAGs carrying the function
-    groups: B.sets.map((s) => ({ name: s.name, values: s.median })),
-    yLabel: "Median day-to-day variation (CV, %)", unit: "%", fmt: (v) => (v === null ? "–" : v.toFixed(1)),
-  });
+  // own colours (blue / orange mean down / up in Figure 6); one point per set and carrier group with >= 3 functions,
+  // placed at the group's median number of carriers
+  const COL = ["var(--c3)", "var(--c4)", "var(--faint)", "var(--c5)"];
+  const pts = B.sets.flatMap((s, si) => B.bins.map((b, i) => ({ s, si, b, i })).filter(({ s, i }) => s.n[i] >= 3)
+    .map(({ s, si, b, i }) => ({ x: s.carriers[i], y: s.median[i], label: s.name, color: COL[si], size: 6,
+      extra: `${b} common MAG${b === "1" ? "" : "s"} · ${s.n[i]} functions` })));
+  scatter($("pjBeyond"), { points: pts, logX: true, xLabel: "Common MAGs carrying the function (median of the group, log scale)",
+    yLabel: "Median day-to-day variation (CV, %)", height: 300 });
+  const lg = $("pjBeyondLegend");
+  lg.innerHTML = "";
+  chartLegend(lg, B.sets.map((s, si) => ({ name: s.name, color: COL[si] })));
   const cols = [{ key: "name", label: "Set" },
     ...B.bins.map((b, i) => ({ key: `n${i}`, label: `${b} MAG${b === "1" ? "" : "s"} (n)`, num: true, fmt: (v) => String(v) })),
     { key: "all", label: "Median CV (%)", num: true, fmt: (v) => v.toFixed(1) },
-    { key: "ratio", label: "Ratio to other names (95% interval)", fmt: (v) => `${v[0].toFixed(2)} (${v[1].toFixed(2)}-${v[2].toFixed(2)})` }];
-  const rows = B.sets.map((s) => ({ name: s.name, all: s.all_median, ratio: s.ratio, ...Object.fromEntries(s.n.map((n, i) => [`n${i}`, n])) }));
+    { key: "ratio", label: "Ratio to other Bakta names (95% interval: functions; days)",
+      fmt: (v, r) => (r.ref ? "1 (reference)" : `${v[0].toFixed(2)} (${v[1].toFixed(2)}-${v[2].toFixed(2)}; ${r.day[0].toFixed(2)}-${r.day[1].toFixed(2)})`) }];
+  const rows = B.sets.map((s) => ({ name: s.name, all: s.all_median, ratio: s.ratio, day: s.day_ci, ref: s.name === "Other Bakta names",
+    ...Object.fromEntries(s.n.map((n, i) => [`n${i}`, n])) }));
   table($("pjBeyondTable"), { columns: cols, rows, sortable: false });
   const dash = (d) => (v) => (v === null ? "–" : v.toFixed(d));
   table($("pjMarkers"), {
