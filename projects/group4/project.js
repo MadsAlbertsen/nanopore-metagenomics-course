@@ -109,6 +109,20 @@ function drawSort() {
   });
 }
 
+function drawRank() {
+  const RN = { mag: "MAGs", species: "Species", genus: "Genera", family: "Families" };
+  table($("pjRank"), {
+    columns: [{ key: "rank", label: "Species mix summed to", fmt: (v) => RN[v] },
+      { key: "n", label: "Groups", num: true, fmt: (v) => String(v) },
+      { key: "first_cons_mean", label: "Neighbouring days, days 1-5", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "second_cons_mean", label: "Neighbouring days, days 6-10", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "first_all_mean", label: "All pairs, days 1-5", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "second_all_mean", label: "All pairs, days 6-10", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "between", label: "Between periods", num: true, fmt: (v) => v.toFixed(3) }],
+    rows: D.ranks, sortable: false,
+  });
+}
+
 function drawStab() {
   tabs("stabView", "stab");
   lineChart($("pjDrift"), {
@@ -231,7 +245,7 @@ function drawFunc() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); drawDrv(); drawStrain(); drawFunc(); }
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawDrv(); drawStrain(); drawFunc(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv]]) {
   $(id).addEventListener("click", (ev) => {
