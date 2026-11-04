@@ -174,10 +174,11 @@ function drawTables() {
 
 // part 3.5 (Q1, Q6): what the MAGs capture of the DNA, the butyrate genes and the genomes
 const CAP = D.capture, FR = ["HQ", "MQ", "unbinned"], FRN = { HQ: "HQ MAGs", MQ: "MQ MAGs", unbinned: "unbinned contigs" };
-const meanOf = (a, p) => { const s = p === "hi" ? a.slice(0, 5) : a.slice(5); return s.reduce((x, y) => x + y, 0) / s.length; };
+const meanOf = (a, p) => { const s = p === "hi" ? a.slice(0, 5) : p === "lo" ? a.slice(5) : [a[p]]; return s.reduce((x, y) => x + y, 0) / s.length; };
+const cap1 = (x) => x[0].toUpperCase() + x.slice(1);
 function drawCapture() {
   const B = CAP.bases;
-  lineChart($("g3Cap"), { x: D.days, series: [...FR.map((q) => ({ name: FRN[q], values: B[q] })), { name: "not assembled", values: B["not assembled"] }, { name: "route MAGs (summed)", values: CAP.route }],
+  lineChart($("g3Cap"), { x: D.days, series: [...FR.map((q) => ({ name: FRN[q], values: B[q] })), { name: "not on any contig", values: B["not assembled"] }, { name: "route MAGs (summed)", values: CAP.route }],
     xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%", marks: [{ x: 5.5, label: SPLIT }], zero: true });
   barChart($("g3CapGenes"), { labels: D.genes, groups: FR.map((q) => ({ name: FRN[q], values: D.genes.map((g) => meanOf(CAP.gene_share[g][q], st.capP)) })),
     yLabel: "Share of the gene's depth-weighted copies (%)", unit: "%", fmt: (v) => v.toFixed(0) });
@@ -187,7 +188,7 @@ function drawCaptureTables() {
   table($("g3CapTable"), {
     columns: [{ key: "day", label: "Day", num: true, fmt: String }, { key: "hq", label: "HQ MAGs (%)", num: true, fmt: f1 }, { key: "mq", label: "MQ MAGs (%)", num: true, fmt: f1 },
       { key: "all", label: "All MAGs (%)", num: true, fmt: f1 }, { key: "route", label: "Route MAGs (%)", num: true, fmt: f1 },
-      { key: "unb", label: "Unbinned contigs (%)", num: true, fmt: f1 }, { key: "na", label: "Not assembled (%)", num: true, fmt: f1 }],
+      { key: "unb", label: "Unbinned contigs (%)", num: true, fmt: f1 }, { key: "na", label: "Not on any contig (%)", num: true, fmt: f1 }],
     rows: D.days.map((d, i) => ({ day: d, hq: B.HQ[i], mq: B.MQ[i], all: B.HQ[i] + B.MQ[i], route: CAP.route[i], unb: B.unbinned[i], na: B["not assembled"][i] })), sortable: false,
   });
   const f3 = (v) => v.toFixed(3), arrow = (a) => `${f3(meanOf(a, "hi"))} → ${f3(meanOf(a, "lo"))}`;
@@ -197,8 +198,8 @@ function drawCaptureTables() {
     rows: D.genes.map((g) => ({ gene: g, ...Object.fromEntries(FR.map((q, i) => [q, CAP.gene_copies[g][i]])), bin: arrow(CAP.per_bin[g]), all: arrow(CAP.per_all[g]) })), sortable: false,
   });
   table($("g3Markers"), {
-    columns: [{ key: "marker", label: "Marker" }, ...FR.map((q) => ({ key: q, label: FRN[q], num: true, fmt: String })), { key: "total", label: "Total", num: true, fmt: String },
-      ...FR.map((q) => ({ key: `dep_${q}`, label: `${FRN[q]}, depth-weighted (%)`, num: true, fmt: (v) => v.toFixed(0) }))],
+    columns: [{ key: "marker", label: "Marker" }, ...FR.map((q) => ({ key: q, label: cap1(FRN[q]), num: true, fmt: String })), { key: "total", label: "Total", num: true, fmt: String },
+      ...FR.map((q) => ({ key: `dep_${q}`, label: `${cap1(FRN[q])}, depth-weighted (%)`, num: true, fmt: (v) => v.toFixed(0) }))],
     rows: CAP.markers, sortKey: "total", sortDesc: true,
   });
 }
@@ -235,7 +236,8 @@ function drawButId() {
 }
 
 function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); }
-$("g3CapP").addEventListener("change", (e) => { st.capP = e.target.value; drawCapture(); });
+$("g3CapP").addEventListener("change", (e) => { st.capP = /^\d+$/.test(e.target.value) ? Number(e.target.value) : e.target.value; drawCapture(); });
+$("g3CapP").insertAdjacentHTML("beforeend", D.days.map((d, i) => `<option value="${i}">day ${d}</option>`).join(""));
 
 $("g3GView").addEventListener("change", (e) => { st.gview = e.target.value; drawGeneHeat(); });
 $("g3View").addEventListener("change", (e) => { st.view = e.target.value; drawGenes(); });
