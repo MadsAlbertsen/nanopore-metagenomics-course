@@ -8,7 +8,7 @@
 <section class="panel" id="m2Frame">
   <h2>1. Inference framework</h2>
   <p><b>What the design allows.</b> One person gave ten consecutive daily samples, five on each diet. The days are a short time series, not ten independent replicates: neighbouring days share most of their community (autocorrelation), and the diet periods are confounded with time, with the order of the diets and with the week of the same high-calorie diet before day 1. No sample was taken before that week. A difference between the periods can therefore come from the diet, from a change that was under way anyway, or from carry-over, and the data cannot tell these apart. Every result is a description of this person over these days.</p>
-  <p><b>No tests, so no multiple-testing correction.</b> We report no p-values and test no hypotheses. A test that treats the five days of each period as independent would overstate the evidence, and with one switch there is no replication of the diet effect to test against. Because there are no tests, there is nothing to correct for multiple testing. The multiplicity problem does not go away, however: we looked at <span data-n="mags_considered"></span> MAGs, the substrate groups, <span data-n="fam_kept"></span> CAZy families and <span data-n="s_cells"></span> cut-off settings, and among many contrasts some will look large by chance. We handle this by (i) writing the expected result before each analysis, (ii) reporting all contrasts in the supplementary tables rather than only the large ones, (iii) never ranking or selecting results by a p-value, (iv) labelling views added or changed after seeing the data as exploratory, and (v) treating a result as solid only when it holds across the sensitivity analyses.</p>
+  <p><b>No tests, so no multiple-testing correction.</b> For the changes over time we report no p-values and test no hypotheses (the comparison of risers and fallers, 3.17, is the exception: there the MAGs are the units and a false discovery rate is used). A test that treats the five days of each period as independent would overstate the evidence, and with one switch there is no replication of the diet effect to test against. Because there are no tests, there is nothing to correct for multiple testing. The multiplicity problem does not go away, however: we looked at <span data-n="mags_considered"></span> MAGs, the substrate groups, <span data-n="fam_kept"></span> CAZy families and <span data-n="s_cells"></span> cut-off settings, and among many contrasts some will look large by chance. We handle this by (i) writing the expected result before each analysis, (ii) reporting all contrasts in the supplementary tables rather than only the large ones, (iii) never ranking or selecting results by a p-value, (iv) labelling views added or changed after seeing the data as exploratory, and (v) treating a result as solid only when it holds across the sensitivity analyses.</p>
   <p><b>Effect sizes and their uncertainty.</b> Effect sizes are differences of period means: log2 fold changes for MAGs, percent changes for CAZyme potential, differences in percentage points for phyla. Their uncertainty is described by a day-resampling interval (the middle 90% of <span data-n="boot_reps"></span> resamplings of the five days within each period) and by the range over leaving out one day at a time. Both treat the days within a period as exchangeable, which they are not; the intervals describe how much a number depends on the particular days sampled, are not confidence intervals and are not adjusted for the number of contrasts. A MAG with a steady trend inside a period gets a wide interval, which is the intended warning.</p>
 </section>
 
@@ -178,6 +178,27 @@
     <tr><th>Assumes</th><td>Families with at least <span data-n="fam_min" data-d="1"></span> genes per 1,000 genes are measured well enough.</td></tr>
     <tr><th>Pitfalls</th><td>Added after the main analysis; its cut-off was lowered after seeing the data; with <span data-n="fam_kept"></span> families, the largest changes are partly chance. Its heatmap uses a diverging blue-grey-orange scale rather than viridis because it shows signed changes around zero (log2 relative to days 1-5).</td></tr>
     <tr><th>Alternatives</th><td>Subfamilies; utilisation loci; activity data.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.16 CAZyme potential of the two-fold MAGs (added on request)</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked whether the MAGs that changed differ in carbohydrate potential, without the dilution by the many MAGs that changed less.</td></tr>
+    <tr><th>Assumes</th><td>The same weighting as for the community (each MAG by its share of the DNA times its number of genes), applied to the <span data-n="big"></span> two-fold MAGs only.</td></tr>
+    <tr><th>Pitfalls</th><td>The MAGs were selected because their shares changed, so a change in their combined potential is partly built in; the value describes these MAGs, not the community. Starch and plant fibre came out outside the range written before the run (manuscript Results).</td></tr>
+    <tr><th>Alternatives</th><td>Per-MAG rates compared between risers and fallers (3.17); weighting all MAGs by their change instead of selecting.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.17 Risers against fallers (added on request; exploratory)</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked which genomic capabilities are shared within the MAGs that rose and within those that fell, but differ between them, split into metabolic potential and other capabilities, with tests.</td></tr>
+    <tr><th>How</th><td>MAGs are the units (<span data-n="q3_rise"></span> risers, <span data-n="q3_fall"></span> fallers). Fisher's exact test for present/absent features, Wilcoxon rank-sum test for genes per 1,000 genes and genome traits; features present in at least four MAGs; Benjamini-Hochberg false discovery rate over all <span data-n="q3_tested"></span> tested features; the differing features re-tested on the Bacillota only.</td></tr>
+    <tr><th>Assumes</th><td>MAGs are independent units and the gene calls and names are comparable between MAGs.</td></tr>
+    <tr><th>Pitfalls</th><td>MAGs are not independent: related MAGs share genes, and risers and fallers differ in taxonomy (all fallers Bacillota), so a difference can reflect lineage rather than a trait linked to the diet. Single Bakta gene names are often worded differently for the same gene in different lineages; most of the <span data-n="q3_names_hits"></span> differing names are of this kind, which is why the result was far above the 0-40 expected. Incomplete MAGs miss genes. With <span data-n="q3_bac_rise"></span> against <span data-n="q3_fall"></span> Bacillota, the within-phylum check has little power. Small groups make many exact tests coarse.</td></tr>
+    <tr><th>Alternatives</th><td>Phylogenetic comparative methods (trait against group on a genome tree), which need more MAGs; comparisons within one family; orthologous gene groups (e.g. eggNOG or KEGG orthologs for all genes) instead of gene names, which would remove the naming problem.</td></tr>
   </table>
 </section>
 
