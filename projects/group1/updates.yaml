@@ -1,5 +1,5 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
-- when: "4 Nov 2026, 12:21"
+- when: "4 Nov 2026, 12:33"
   what: "Figure 6 C-D: CAZyme genes and the family groups over the ten days (Q4); new Figure 7: the 30 KEGG marker genes per day, with a methods paragraph and reference; the variable-positions figure is now Figure 8 (Q7). H2 and Next steps: the per-day inStrain job was prepared and tested but not run in this course (Q1)"
 - when: "4 Nov 2026, 11:49"
   what: "New section \"How robust are these results?\" with Table 1: a permutation test of days 1-5 vs days 6-10, and how stable the changing MAGs and their settled days are when one day is left out; a statistics paragraph under Data and methods; the core-MAG table is now Table 2 (Q6)"
@@ -8,6 +8,6 @@
 - when: "4 Nov 2026, 11:14"
   what: "Data and methods: how a MAG's share and Figure 5 are computed, with a worked example (Q5), and why a two-fold threshold, with the counts at other thresholds and references (Q3)"
 - when: "4 Nov 2026, 10:41"
-  what: "Next steps: the tested inStrain server job for per-day strain diversity (Q1); the job is running on the server"
+  what: "Next steps: the tested inStrain server job for per-day strain diversity (Q1); the job is running on the server (stopped 4 Nov 2026; not run in this course)"
 - when: "3 Nov 2026"
   what: "Report organised by your hypotheses, with verdicts, a family heat map and a MAG abundance heat map"

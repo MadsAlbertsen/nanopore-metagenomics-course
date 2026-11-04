@@ -166,7 +166,7 @@ function drawKo() {
   let grp = null;
   for (const r of D.kos) {
     if (r.group !== grp) { grp = r.group; labels.push(`${grp} (group)`); values.push(D.days.map(() => null)); }
-    labels.push(`${r.name} · ${r.carriers} MAGs · log2 ${r.log2 > 0 ? "+" : ""}${r.log2}`);
+    labels.push(`${r.name} · ${r.carriers} MAG${r.carriers === 1 ? "" : "s"} · log2 ${r.log2 > 0 ? "+" : ""}${r.log2}`);
     values.push(r.share.map(lg));
   }
   heatmap($("pjKo"), { rows: labels, cols: D.days.map((d) => "Day " + d), values, label: "Share of the binned DNA",
