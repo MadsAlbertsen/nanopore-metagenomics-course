@@ -185,6 +185,34 @@ function drawFamAll() {
   });
 }
 
+function drawFeas() {
+  const F = D.feas;
+  table($("pjFeasSum"), {
+    columns: [{ key: "k", label: "" }, { key: "v", label: "MAGs", num: true, fmt: (v) => String(v) }],
+    rows: [{ k: "All MAGs", v: N.fz_n }, { k: "At least 75% complete", v: N.fz_compl75 },
+      { k: "iRep rule: >= 75% complete and >= 5x on >= 5 days", v: N.fz_irep },
+      { k: "   of these a single circular contig", v: N.fz_irep_circ },
+      { k: ">= 5x on all 10 days (and >= 75% complete)", v: N.fz_irep_all10 },
+      { k: "GRiD rule: >= 75% complete and >= 0.2x on >= 5 days", v: N.fz_grid }],
+    sortable: false,
+  });
+  table($("pjFeas"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "phylum", label: "Phylum" },
+      { key: "compl", label: "Complete (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "contam", label: "Contam. (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "cpm", label: "Contigs per Mbp", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "pooled", label: "Pooled (x)", num: true, fmt: (v) => v.toFixed(0) },
+      { key: "lo", label: "Lowest day (x)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "hi", label: "Highest day (x)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "d5", label: "Days >= 5x", num: true, fmt: (v) => String(v) },
+      { key: "irep", label: "iRep rule", fmt: (v) => (v ? "yes" : "no") },
+      { key: "grid", label: "GRiD rule", fmt: (v) => (v ? "yes" : "no") },
+      { key: "circ", label: "Circular", fmt: (v) => (v ? "yes" : "") }],
+    rows: F.map((r) => ({ ...r, lo: Math.min(...r.days), hi: Math.max(...r.days) })),
+    filter: true, sortKey: "pooled", sortDesc: true, maxRows: 15,
+  });
+}
+
 function drawDrv() {
   tabs("drvView", "drv");
   const k = st.drv, R = D.drivers;
@@ -272,7 +300,7 @@ function drawFunc() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawStrain(); drawFunc(); }
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawFeas(); drawStrain(); drawFunc(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv], ["famAllView", "famAll", drawFamAll]]) {
   $(id).addEventListener("click", (ev) => {
