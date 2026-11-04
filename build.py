@@ -236,6 +236,16 @@ def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
             f'<p class="panel note pjversion"><b>{esc(p["version_label"])}</b>. This copy is frozen; the current '
             f'report, after the group\'s own questions, is <a href="{current}">version 2</a>.</p>',
         )
+    if "revision_of" in p:
+        n = p["revision_of"]
+        body = place_updates(
+            body,
+            f'<p class="panel note pjversion"><b>{esc(p["revision_label"])}</b>. This is not the group\'s text: it was '
+            f"written by Claude (an AI model) from the group's "
+            f'<a href="article-group{n}.html">submitted article</a>, their project report and the '
+            f'<a href="article-group{n}-review.html">peer review</a>, to show one way the work could be taken further. '
+            "How it was made is described in the box below the title.</p>",
+        )
     js = (d / "project.js").read_text() if (d / "project.js").exists() else ""
     return project_page(p, mods, page, base, p["title"], body, js, p["nav"], examples)
 
@@ -328,7 +338,9 @@ ARTICLES_INTRO = (
     '<section class="intro"><span class="kicker">Articles</span><h1>Articles: the group reports as ISME Journal '
     "articles</h1><p>Each group turns its project report into a short research article in the format of The ISME "
     "Journal. The group chooses the angle from its own analysis; the reports under Projects hold the analyses and "
-    "figures the articles draw on.</p></section>"
+    "figures the articles draw on. Each submitted article has a peer review page. Revision 1 under each group is a "
+    "rewrite by Claude (an AI model) after the review, clearly marked as such, to show one way the work could be "
+    "taken further.</p></section>"
 )
 
 
@@ -342,11 +354,27 @@ def article_title(a: dict) -> str:
 
 
 def build_articles_index(arts: list[dict], mods: list[dict], page: str, base: dict) -> str:
-    cards = [
-        f'<li class="panel"><span class="kicker">Group {a["number"]}</span>'
-        f'<h3><a href="{a["slug"]}.html">{article_title(a)}</a></h3><p>{esc(a["question"])}</p></li>'
-        for a in arts
-    ]
+    revs: dict[int, list[dict]] = {}
+    for a in arts:
+        if "revision_of" in a:
+            revs.setdefault(a["revision_of"], []).append(a)
+    cards = []
+    for a in arts:
+        if "revision_of" in a:
+            continue
+        extra = "".join(
+            f'<p class="fact">{esc(r["revision_label"])}: <a href="{r["slug"]}.html">{article_title(r)}</a></p>'
+            for r in revs.get(a["number"], [])
+        )
+        review = a["dir"] / "review.html"
+        if review.exists():
+            extra = (
+                f'<p class="fact"><a href="{a["slug"]}-review.html">Peer review and editorial decision</a></p>' + extra
+            )
+        cards.append(
+            f'<li class="panel"><span class="kicker">Group {a["number"]}</span>'
+            f'<h3><a href="{a["slug"]}.html">{article_title(a)}</a></h3><p>{esc(a["question"])}</p>{extra}</li>'
+        )
     return fill(
         page,
         {
