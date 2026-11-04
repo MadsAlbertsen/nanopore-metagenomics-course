@@ -7,3 +7,7 @@ status: draft
 data_note: >-
   Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
   Diet facts: information from the data owner. The analyses and figures come from the group's project report.
+pages:
+  - slug: article-group1-review
+    title: "Peer review"
+    body: review.html

@@ -1,0 +1,148 @@
+<div class="intro">
+  <span class="kicker">Group 4 · peer review · The ISME Journal (simulated)</span>
+  <h1>Peer review: Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations</h1>
+  <p class="note">Reviews of the submitted version of the <a href="article-group4.html">article</a> (frozen on 4 Nov 2026, before the reviews). Three anonymous reviewers each covered one aspect, and a handling editor weighed their reports and made the decision. The reviewers and the editor are AI models (Claude); each saw only the submitted article, its figures and its data file, not the group's questions or the course material. Decision: <b>Reject, with encouragement to resubmit a substantially extended study</b>.</p>
+</div>
+<section class="panel">
+<h2>Editorial decision</h2>
+<p><strong>Manuscript:</strong> Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations</p>
+<p><strong>Decision:</strong> Reject, with encouragement to resubmit a substantially extended study</p>
+<p><strong>Summary of the reviews</strong>
+The reviewers praise the clear writing, complete Methods and frank Limitations; the numbers they checked agree with the data file, as do my checks. All three recommend major revision and agree on the main problem: there is no null expectation for the comparison. A profile summed over many genomes varies less than single genomes for purely statistical reasons. So "gene potential stable, composition not" and "more carriers, less variation" are partly built into the measures (R1-M1, R2-M1, R3-M1). They also agree that two period splits are used without saying so (R1-M2, R2-M4, R3-m1), and that the title and "Here we show" claim more than the Discussion does (R2-M5, R3-M2). R2 adds that the strain result mostly restates the diet-linked abundance shift (R2-M3).</p>
+<p><strong>Basis for the decision</strong>
+R2's reanalysis of the data file shows that carrier number and mean family abundance are almost the same thing (Spearman 0.96). With mean abundance controlled for, the redundancy correlation drops from -0.75 to about -0.33. The day-by-day CAZyme and species distances also track each other closely (0.93), and on days 7, 8 and 10 the CAZyme distance is above its range in days 1-5. A null model may thus remove much of the "buffering" result, leaving a damped change: the CAZyme profile moves with composition, only less. That gene content is more stable than taxonomy is already well established (refs 3, 4; Tian et al. 2020).</p>
+<p>The design limits what any reanalysis can add: one person, ten days and one switch, with carbohydrate and calories changed together, diet confounded with time and no neutral baseline, as the authors themselves state. The strain level is a weak exploratory correlation based on variant calls pooled over all days. For these reasons the manuscript does not yet offer the general advance in microbial ecology that ISME J requires, and fixing it would need new analyses and new data, not a revision. The work is careful and the question good, so I encourage resubmission of an extended study.</p>
+<p><strong>Essential points for the authors</strong>
+1. Add a null model for aggregation. For example, permute CAZyme content among MAGs while keeping carrier counts and gene totals, and control for mean abundance. Then report the 0.08 against 0.31 contrast and the CV-carrier correlation against that null (R1-M1, R2-M1, R3-M1).
+2. Describe the CAZyme result as a damped change scaled against day-to-day variation, not as stability. Discuss the 19% rise in host glycans (R2-M2).
+3. Use one period definition, or justify each one. The 1-6/7-10 split was chosen after seeing the data. The Figure 2d log2 values do not match those in Figure 2b, and the count of MAGs that fell two-fold differs between analyses (R1-M2, R2-M4, R3-m1).
+4. Redo the strain analysis with within-period CVs, check that the result does not come from depth (variant share falls with depth) or from the diploid caller, and present it as a hypothesis, also in the title (R1-M4, R2-M3, R3-M2).
+5. Report reads and binned fraction per day, test depth effects by subsampling, and state the gene denominator (R1-M3, R1-M5, R2-M6). Add ethics, consent and funding statements, and the missing wet-lab details (R3-M4).</p>
+<p><strong>Notes on the reviews</strong>
+R1-m5 and R3-M4b ask for public deposition. A journal would require it, but the course withholds the reads to protect the donor's privacy, so I do not count it against the authors. A real submission would deposit host-filtered reads and MAGs in a controlled-access archive such as the EGA. Interactive figures suit the course web page; a static, print-ready version for submission is a production matter, not a scientific weakness.</p>
+<p><strong>What would make this publishable</strong>
+The study needs a design that separates diet from time, for example several participants, repeated switches, or a crossover with washout and a true baseline. The redundancy claim should be tested against an explicit aggregation null. Per-day strain profiles, which long reads make possible, would turn the within-population idea into a testable result. With these, the MAG-resolved split of compositional and functional change could be a real contribution.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 1: Methods and data</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors sequenced ten daily stool samples from one person across a switch from a high- to a low-carbohydrate vegetarian diet with nanopore long reads, co-assembled them and recovered 421 MAGs. They report that species composition moved away from days 1-5 from day 7, while the profile of degrading CAZyme genes (per 1,000 genes, abundance weighted) changed much less, and that families carried by more MAGs varied less from day to day. They attribute part of this to the taxa that changed (Lachnospiraceae, few CAZymes) and, more weakly, to within-MAG strain diversity estimated from pooled variant calls.</p>
+<p><strong>Overall assessment</strong>
+The Methods are unusually complete for a draft: tool versions, databases, thresholds, the abundance definition and the exploratory status of the strain analysis are stated, and the limitations section is candid about the n = 1 design and the confounding of diet, energy and time. The main problem is that the central quantitative claim, that stability "scales with" redundancy and that function is buffered, is compared against no null expectation: a sum over many genomes is mechanically less variable than one genome, so the observed pattern is expected even without any biological buffering. Several analysis choices (period splits, abundance computation) are also not fully described or not used consistently.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>No null model for redundancy versus stability (Results para. 2, Fig. 1c; Methods "Statistical analysis").</em> The CV of a family carried by n MAGs is the CV of a weighted sum of n partly independent shares, and it will fall with n by averaging alone; likewise a Bray-Curtis on 176 aggregated family profiles is expected to be smaller than on 421 MAG shares. The Spearman -0.75 and the 0.08 vs 0.31 contrast therefore do not by themselves show buffering. The 1.19-fold comparison at equal carrier number is a good start but tests gene type, not redundancy. Please add a null: e.g. reassign families to MAGs at random while keeping each family's carrier count (and each MAG's gene count), recompute the CV-carrier relation and the between-period Bray-Curtis, and report where the observed values fall. Without it, "buffered" should be "expected from aggregation".</p>
+</li>
+<li>
+<p><em>Two different period splits (Methods; Fig. 2a-d; Results paras 3-4).</em> The Bray-Curtis decomposition (Fig. 2a) uses days 1-5 vs 6-10, Fig. 2b-c and the Methods use days 1-6 vs 7-10, and Fig. 2d says "between the period means". In data.json, the log2 values in the strain table differ from those in the MAG-change table for 118 of 124 MAGs (e.g. <em>B. adolescentis</em> -0.38 vs -1.00), so the strain analysis evidently uses a different split from the one stated in Methods. Both give 23 two-fold risers, but fallers differ (13 vs 16). State the split for every analysis, justify it, and note that the 1-6/7-10 split was chosen after seeing that day 6 still resembled days 1-5 (a data-driven choice that inflates the contrast).</p>
+</li>
+<li>
+<p><em>Abundance estimation is under-specified (Methods "Genome-resolved metagenomics").</em> The read mapper, filters (MAPQ, identity, secondary alignments), and the fraction of each day's bases that map to MAGs are not given. "Share of the DNA of the day" and "genes per 1,000 genes of the binned community" use different denominators; if the binned fraction varies between days, both profiles shift. Per-sample yield ranges 15-fold (1.95-29.1 Gbp); please report reads/bases per day after filtering, the mapped and binned fraction per day, and test whether the day 1-5 range or the day-to-day CV depends on depth (e.g. by subsampling all days to the smallest).</p>
+</li>
+<li>
+<p><em>Variant calling with a diploid caller (Methods "Strain diversity").</em> Longshot [11] assumes diploid genomes; its genotype model is not designed for haploid populations at arbitrary allele frequencies. Pooling ten days, requiring only 6 reads, and the inverse relation between variant share and depth in the data (median depth 259 in the lowest vs 95 in the highest third) suggest the variant share partly reflects calling sensitivity, mapping of related strains or species, and homopolymer errors. Please justify the caller (or use a population-aware approach), state the mapping step and Longshot version, cite the 0.5% "clear mixture" threshold, and report per-third depth alongside the result. The partial Spearman is helpful but assumes a monotone depth effect.</p>
+</li>
+<li>
+<p><em>Gene sets and counts are not reconciled (Methods "Gene prediction" and "CAZyme gene potential").</em> Bakta CDS (1,017,373) and the denominator for named genes (1,010,206) differ, and CAZymes and KOfam markers were called on a separate Pyrodigal prediction. Which gene count is the denominator for "per 1,000 genes"? MAG completeness (50-100%) affects gene totals; say whether medium-quality MAGs were included in CAZyme densities and whether results hold for high-quality MAGs only. CheckM2 version is missing.</p>
+</li>
+<li>
+<p><em>Statistics treat days and families as independent.</em> Ten consecutive days are autocorrelated, and families sharing carriers are not independent observations, so Spearman p-values (and the 95% resampling interval) are optimistic. Present them as descriptive, or use a block/permutation scheme that respects shared carriers.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong>
+1. Fig. 1a: days 1-5 are compared with the mean of four days, days 6-10 with the mean of five; state that this slightly favours larger distances for days 1-5 (conservative) or use the same reference.
+2. KOfam markers (30 searched) and modified-base calling are described but no result uses them; remove or report.
+3. Ref. [9] (dbCAN3) is attached to pyhmmer; cite the pyhmmer paper for the software and keep [9] for the profiles.
+4. "About 8 correlations": give the exact number and a multiple-testing note (p = 0.004 survives Bonferroni for 8).
+5. Code availability: give a versioned repository or archive; deposit MAGs (host reads removed) even if raw reads are withheld.
+6. Supplementary Fig. 1 legend says numbers "come from the course module pages"; state the source as this analysis.
+7. Fig. 2b colours Lachnospiraceae blue and Bacteroidaceae orange, the reverse of the phylum colours in Fig. 2c-d.</p>
+<p><strong>Checks performed</strong>
+- References: [1] PMID 24336217, [4] 29662222, [7] 40707831, [9] 37125649, [11] 31604920 all exist with matching details. [1] supports the one-day response and the weaker plant-diet effect; [4] supports functional redundancy; [7] is the mmlong2 workflow paper; [11] exists but describes a diploid caller (point 4); [9] supports dbCAN profiles but not pyhmmer (minor 3).
+- Numbers vs data.json: day 6 distance 0.131, day 7 0.230, days 8-10 0.340/0.290/0.371, days 1-5 range 0.090-0.217 (match); CAZyme between-period 0.079 vs taxa 0.309 (match); Spearman -0.755 and -0.617, Lachnospiraceae 39.3/17.2%, Bacteroidaceae 26.0/69.4% (match); 85 of 124 MAGs within two-fold, log2 -3.12 to +4.52 (match); thirds 14/7/2 risers (match). Mismatch in log2 definitions between tables (major 2).
+- Figure: Fig. 1a and its legend agree with the text and data (lag at day 6, functions 0.03-0.10). Fig. 2a bars match the stated percentages.</p>
+<p><strong>Recommendation to the editor</strong>: major revision, because the main conclusion of buffering by redundancy lacks a null model for the averaging effect and several analyses use period definitions and abundance steps that the Methods do not describe consistently.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 2: Results and interpretation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors sequenced ten daily stool samples from one person across a switch from a high-carbohydrate, high-calorie to a low-carbohydrate, low-calorie vegetarian diet. They recovered 421 MAGs and compared the change in species composition with the change in degrading CAZyme gene potential (genes per 1,000 genes). Composition moved away from days 1-5 from day 7 (Bray-Curtis 0.23-0.37), while the CAZyme profile changed less (0.08 against 0.31 between period means). They interpret this as buffering by redundancy across MAGs and, more weakly, by strain diversity within MAGs.</p>
+<p><strong>Overall assessment</strong>
+The numbers are carefully reported and the Limitations are candid. The main problem is that the central comparison has no null expectation. A sum over many genomes varies less than its parts for purely statistical reasons, so "function stable, composition not" and "more carriers, less variation" are partly built into the metrics. The title ("buffered") and Introduction ("Here we show") also claim more than the cautious Discussion does.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>No null model for aggregation (Results paragraph 2; Figure 1a, 1c).</em> The CAZyme profile is a weighted sum over all MAGs, while the species profile is the MAGs themselves. Aggregated profiles necessarily show smaller distances, and the same applies to the family CV against the median MAG CV (the dashed line in Figure 1c). In data.json, the number of carriers is almost the same as the family's mean abundance (Spearman 0.96). Mean abundance alone predicts CV (-0.72). The partial rank correlation of carriers with CV, controlling for mean, is about -0.33, not -0.75. <em>Fix:</em> permute CAZyme content among MAGs (keeping gene counts), or use random gene sets of equal size, and report 0.08 and -0.75 against these null distributions. Also control for mean abundance.</p>
+</li>
+<li>
+<p><em>Gene potential did follow composition, only less (Figure 1a).</em> The day-wise CAZyme and species distances track each other (Spearman 0.93 in data.json). Days 7, 8 and 10 (0.075-0.10) exceed the days 1-5 range (0.028-0.064), and host glycans rose 19%. "Did not follow" and "remains stable" overstate the result. <em>Fix:</em> describe it as a damped change, scaled against day-to-day variation within days 1-5. Discuss the host-glycan rise as a possible real response.</p>
+</li>
+<li>
+<p><em>The strain result restates the abundance change (Figure 2d).</em> A ten-day CV is dominated by the diet-associated shift: a MAG that doubles between periods necessarily has a high CV. The weak "steadier shares" correlation (rho -0.26) and "risers are clonal" (14/23) are therefore largely one observation. In Figure 2d most high-CV points are risers with few variant sites. Variant share also falls with depth (rho -0.44 in data.json). <em>Fix:</em> use CV within each period (or of detrended shares) and present the two results as one finding.</p>
+</li>
+<li>
+<p><em>Inconsistent period definitions.</em> The Bray-Curtis and family splits use days 1-5 vs 6-10. Figure 2b/2c use days 1-6 vs 7-10, a split chosen after the lag was seen. The strain-table log2 values (Figure 2d) differ from the Figure 2b values for 118 of 124 MAGs. Under the Figure 2b definition 16 MAGs fell two-fold, but the thirds analysis counts 12. <em>Fix:</em> use one definition, state why, and label Figure 2d accordingly.</p>
+</li>
+<li>
+<p><em>Causal and mechanistic wording.</em> The title, the Introduction ("a dietary switch reshuffles") and the Figure 2 title read as mechanism. Yet the Limitations correctly state that diet and time are confounded, that calories and carbohydrate changed together, and that days 6-10 were a return towards the habitual diet after about a week of high-calorie eating. A drift back to the habitual community explains the monotone departure to day 10 equally well. <em>Fix:</em> use a descriptive title and discuss these alternatives where the "directional drift" is interpreted. Support "Days 1-5 showed no trend" with a number.</p>
+</li>
+<li>
+<p><em>Compositional data and depth.</em> Shares and genes per 1,000 genes are both relative and cover the binned fraction only. A bloom of one group (the Bacteroidaceae, 69% of the CAZyme change) shifts every other value. Yield ranged 15-fold (1.95-29.1 Gbp) but is not given per day, and a low-depth day could inflate distances and CVs of rare MAGs. <em>Fix:</em> report yield and binned fraction per day, and repeat Figure 1a after subsampling every day to the smallest yield.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>The colours are reversed between panels. In Figure 2b, Lachnospiraceae are blue and Bacteroidaceae orange. In Figure 2c, orange is Bacillota and blue is Bacteroidota.</li>
+<li>Agathobacter rectalis appears twice in Figure 2c (once falling, once stable). Explain that these are two MAGs; two MAGs of one species moving differently is relevant to the strain argument.</li>
+<li>"A steady path" (Figure 1b): day 9 lies closer to days 1-5 than day 8 does (0.29 vs 0.34).</li>
+<li>Abstract: "mostly those with few" should give the counts (14 of 23).</li>
+<li>Give the source of the 0.5% strain-mixture threshold.</li>
+<li>Reference [6] (Garud et al.) concerns within-host evolution, not strain diversity stabilising abundance. Cite it only for the existence of within-host strain variation.
+<strong>Checks performed</strong>
+- <em>References (PubMed):</em> [1] (PMID 24336217), [2] (31194939), [3] (22699609), [4] (29662222), [6] (30673701) and [12] (34795283) all exist as cited. [1], [2], [3], [4] and [12] support their sentences. [6] gives only weak support (minor point 6).
+- <em>Numbers versus data.json:</em> all of the following matched. Day 6 0.131, day 7 0.23, days 8-10 0.34/0.29/0.37, days 1-5 range 0.09-0.22. Between-period distances 0.079/0.309. Spearman -0.755/-0.617. Ratio 1.19 (1.10-1.26). 85 of 124 within two-fold. Third CVs 56/48/37. Risers 14/7/2 and falls 3/4/5. Medians 48/17 and 11/32. Group changes +3/-7/-13/+19%.
+- <em>Figures:</em> Figure 1a/1b and 2a match their legends and the text (axis 1 61%; Lachnospiraceae 39/17%, Bacteroidaceae 26/69%). Two inconsistencies were found: the colours in 2b/2c and the period definition in 2d.
+- <em>My own recomputations from data.json:</em> carriers versus mean 0.96, partial -0.33, distance series 0.93, variant share versus depth -0.44.</li>
+</ol>
+<p><strong>Recommendation to the editor</strong>: major revision. The descriptive results are sound, but the "buffering" claims need a null model for aggregation, a CV not driven by the diet shift itself, and wording that matches a confounded single-person design.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 3: Context, novelty and presentation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors sequenced ten daily stool samples from one person across a switch from a high- to a low-carbohydrate vegetarian diet with nanopore long reads, and recovered 421 MAGs from a co-assembly. They report that species composition shifted from day 7 (one day after the switch), while the community's degrading-CAZyme gene potential changed much less (Bray-Curtis between period means 0.31 against 0.08). They attribute this to functional redundancy across MAGs (families carried by more MAGs vary less) and to taxa with low CAZyme content (Lachnospiraceae) driving most of the compositional change. They propose strain diversity within MAGs as a weaker second level.</p>
+<p><strong>Overall assessment</strong>
+The manuscript is clearly organised, the abstract is within the limit (236 words), the limitations are stated openly, and the authors separate observation from mechanism carefully. The main problem is novelty and framing. That gene content is more stable than taxonomy is a well-established result, and the manuscript does not show what a single-person, ten-day, MAG-resolved study adds. The title and the Introduction's "Here we show" also claim more than the data support, especially for buffering "within populations".</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>Novelty and fit for the journal.</em> Functional redundancy is within scope, but the central observation (taxonomy varies, gene potential is conserved) is the headline of refs [3] and [4], and also of work the manuscript does not cite: Tian et al. 2020 (Nat Commun 11:6217, doi:10.1038/s41467-020-19940-1), which quantifies functional redundancy in the gut from genome-content networks. With n = 1, the generalisable advance has to come from somewhere else, for example (i) the genome-resolved split of the change between MAGs (Figure 2a-c), (ii) a null model showing that redundancy buffers more than expected from aggregation alone (a sum over many genomes has a lower CV for purely statistical reasons), or (iii) the long-read strain angle. State the contribution in the Introduction and frame the gap against this literature, not the HMP alone.</p>
+</li>
+<li>
+<p><em>Title and claims exceed the evidence.</em> "Buffered by redundancy ... within populations" presents as a finding what the Discussion itself calls a hypothesis: a weak (rho = -0.26), exploratory association, absent within Bacteroidota, based on variant calls pooled over all days. Fix: a shorter title (now 126 characters) that states the observed pattern, and "suggest" for the strain level throughout.</p>
+</li>
+<li>
+<p><em>Prior work not used where it directly supports the results.</em> David et al. [1] reported that a low-carbohydrate (animal-based) diet decreased Firmicutes that degrade plant polysaccharides (Roseburia, Eubacterium rectale, Ruminococcus bromii). This parallels the falling Agathobacter rectalis and Roseburia intestinalis here (Figure 2c), yet [1] is cited only for timing. The higher CAZyme content of Bacteroidota (polysaccharide utilisation loci) compared with Bacillota is well documented in the CAZyme literature (e.g. El Kaoutari et al. 2013, Nat Rev Microbiol). The 48 vs 17 per 1,000 genes result confirms known biology and should be presented as such. Wu et al. 2011 (Science 334:105, doi:10.1126/science.1208344), a 10-day controlled feeding study with change within 24 h, is the closest design and should be cited. Reference [6] (Garud et al.) is about within-host evolutionary dynamics; it does not support strain diversity acting as buffering. Cite strain-coexistence work or rephrase.</p>
+</li>
+<li>
+<p><em>Journal requirements missing.</em> (a) There is no ethics statement (approval and informed consent), which is required for human-derived samples. (b) The journal expects sequence data in a public archive. Privacy is a valid reason to withhold the raw reads, but the MAGs (or reads with human reads removed) could be deposited, and the data availability statement should say so. (c) There is no funding statement.</p>
+</li>
+<li>
+<p><em>Figure design: colours carry conflicting meanings.</em> In Figure 2, orange/blue means species vs CAZyme change (a), Bacteroidaceae vs Lachnospiraceae (b), Bacillota vs Bacteroidota (c, so Lachnospiraceae are blue in b but orange in c), and rose vs fell (d). In Figure 1, blue/green means species vs CAZyme in (a) and the two diet periods in (b). Use one consistent mapping, and colour 2b by the same six families as 2a.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>Two period definitions are used: days 1-5 vs 6-10 (Figure 1, Figure 2a) and days 1-6 vs 7-10 (Figure 2b-d). Justify the second (chosen after seeing the lag) in Methods.</li>
+<li>The abstract gives "0.34-0.37" for days 8-10, but day 9 is 0.29 (data file 0.2897). Write "0.29-0.37".</li>
+<li>Methods report both 1,017,373 Bakta coding sequences and 1,010,206 genes. Explain the difference, and state which gene set (Bakta or Pyrodigal) forms the "per 1,000 genes" denominator.</li>
+<li>Figure 2c lists "Agathobacter rectalis" twice (a fall and a stable MAG). Add MAG identifiers as in 2b.</li>
+<li>"Expected results were written down before the analyses": give them in a supplement, or remove the sentence.</li>
+<li>Main-text figure captions read "Details in the figure legends", and the page has an update log. Remove both before submission.</li>
+</ol>
+<p><strong>Checks performed</strong>
+- References (PubMed): [1] David 2014, [2] Johnson 2019, [3] HMP 2012, [4] Louca 2018, [5] Drula 2022, [6] Garud 2019, [7] Sereika 2025, [9] Zheng 2023, [11] Edge 2019 and [12] Vandeputte 2021 all exist with correct details. [1]-[4] and [12] support their sentences. [6] supports within-host strain dynamics but not buffering (major point 3). [11] is a diploid variant caller; its use on mixed microbial populations is not validated.
+- Numbers against data.json: day 7 distance 0.23, period distances 0.31/0.08, Spearman -0.75, medians 48/17, family shares 39/17% and 26/69%, risers by third 14/7/2 (sum 23). All agree except the abstract range (minor point 2).
+- Figures: Figure 2a shows the same six families and values as the data file and legend. In Figure 2c, 6 of the 7 falling MAGs are Lachnospiraceae (the seventh is UBA1381), as stated. The Figure 1a curve matches the to-first values (day 6 = 0.13 inside the days 1-5 range 0.09-0.22).</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The work is careful and clearly presented, but it needs a clearer statement of what it adds beyond known functional-redundancy results, claims scaled back to the evidence (title, strain level), the missing ethics and data-deposition statements, and consistent figure colours.</p>
+</section>

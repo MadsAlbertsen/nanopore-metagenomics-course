@@ -1,0 +1,153 @@
+<div class="intro">
+  <span class="kicker">Group 2 · peer review · The ISME Journal (simulated)</span>
+  <h1>Peer review: Genome-resolved long-read metagenomics of ten daily stool samples shows a shift of the gut community after a switch between a high-carbohydrate, high-calorie and a low-carbohydrate, low-calorie diet while the community's carbohydrate-degradation potential stays nearly constant</h1>
+  <p class="note">Reviews of the submitted version of the <a href="article-group2.html">article</a> (frozen on 4 Nov 2026, before the reviews). Three anonymous reviewers each covered one aspect, and a handling editor weighed their reports and made the decision. The reviewers and the editor are AI models (Claude); each saw only the submitted article, its figures and its data file, not the group's questions or the course material. Decision: <b>Reject in its current form, with encouragement to transfer to ISME Communications after revision, or to resubmit to The ISME Journal as an expanded study with replicate individuals</b>.</p>
+</div>
+<section class="panel">
+<h2>Editorial decision</h2>
+<p><strong>Manuscript:</strong> Genome-resolved long-read metagenomics of ten daily stool samples shows a shift of the gut community after a switch between a high-carbohydrate, high-calorie and a low-carbohydrate, low-calorie diet while the community's carbohydrate-degradation potential stays nearly constant</p>
+<p><strong>Decision:</strong> Reject in its current form, with encouragement to transfer to ISME Communications after revision, or to resubmit to The ISME Journal as an expanded study with replicate individuals</p>
+<p><strong>Summary of the reviews</strong>
+All three reviewers praise the care and honesty of the analysis (hypotheses stated in advance, no tests over non-replicated days, broad sensitivity checks) and found the numbers correct against the data, as did I. They agree on the main technical problem: sequencing depth differs 15-fold between samples (day 2 has 1.67 Gbp), rises over time and tracks the main ordination axis, so a technical cause for the delayed shift is not ruled out (R1, R2). They also agree that choosing the best of nine splits favours a step over a trend (R1, R2). Each adds its own concerns: how abundance and CAZyme potential are computed (R1), selection circularity and over-read mechanisms (R2), and novelty, missing literature and gut transit time (R3). All three recommend major revision.</p>
+<p><strong>Basis for the decision</strong>
+I am not following that shared recommendation, for a reason that is not technical. The ISME Journal publishes work that advances microbial ecology broadly. This study follows one person through one diet switch, without a baseline, and diet is confounded with time, with the return to a habitual diet, and with the joint change in carbohydrate and calories. The authors say this themselves and present their results as hypotheses. That is the right framing, but no revision of the analysis can raise the study beyond a well-described single case. Its main functional finding, a nearly unchanged CAZyme potential, is a negative result from n = 1. It is also not set against the closest prior work (R3-M1).</p>
+<p>Several conclusions also need more support even for a case report: the timing claim depends on the depth check and a fair step-versus-trend comparison. The CAZyme weighting by share × gene count overweights large genomes, as R1 explains correctly (share already scales with genome length). The two-fold-MAG CAZyme analysis is partly circular. Fixing these would give a sound case study, which fits ISME Communications better than this journal.</p>
+<p><strong>Essential points for the authors</strong>
+1. Rule out sequencing depth: subsample every sample to equal bases (with and without day 2) and repeat the ordination, split analysis and two-fold counts (R1-M2, R2-M1, R3-m7, R1-m5).
+2. Make the abundance measure reproducible and stable: give the mapping settings, dereplicate near-identical MAGs (or show it makes no difference), and repeat the riser and faller counts on shares of the binned bases, which rose from 76.5% to 81.9% (R1-M1, R2-m1).
+3. Give the step model no unfair advantage: use a permutation or simulation null for the best split, discuss transit time, and soften "delayed step" unless it holds (R1-M5, R2-M2, R3-M2).
+4. Revise the CAZyme analysis: add weighting by share alone, present the two-fold-MAG analysis as a breakdown of the community change, not evidence of a functional shift, and remove or label the fibre and calorie mechanisms (R1-M4, R2-M3, R2-M4, R2-m2, R2-m3).
+5. Complete the context and reporting: compare with diet-intervention, human-gut long-read and <em>P. copri</em> work; add tool and database versions, exact MIMAG criteria, available wet-lab details, an ethics statement and public code (R3-M1, R3-M3, R1-M3, R3-M5).</p>
+<p><strong>Notes on the reviews</strong>
+- Deposition of reads and MAGs (R1-M3, R3-M5): the data are withheld to protect the donor's privacy; I have not counted this against the authors. A real submission would deposit them in a controlled-access archive such as the EGA.
+- Static figures (R3-M4, R3-m2 to m4): the figures are interactive because the course publishes drafts as web pages. Static, print-ready figures are a fair request for submission, not a scientific weakness, and did not affect this decision.</p>
+<p><strong>What would make this publishable</strong>
+For The ISME Journal, the same design in several individuals, with food records, a baseline week and a return to the first diet, would separate diet from time and turn these hypotheses into tests; expression or metabolite data would show whether stable CAZyme potential means stable function. For ISME Communications, the current data with points 1-5 addressed would be a sound, carefully caveated case study.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 1: Methods and data</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors sequenced ten daily stool samples from one person with nanopore R10.4.1 reads. Days 1-5 were on a high-carbohydrate, high-calorie diet and days 6-10 on a low-carbohydrate, low-calorie diet. From one co-assembly they recovered 421 MAGs and followed the 124 MAGs with a mean share of at least 0.1%. They report a community shift one to two days after the switch, 35 MAGs that changed at least two-fold, a near-constant community CAZyme potential (+2%) driven mainly by Bacteroidota, and an exploratory comparison of rising and falling MAGs.</p>
+<p><strong>Overall assessment</strong>
+The statistical framing is unusually honest for a single-person time series. The authors do no hypothesis tests over time, call the resampling interval descriptive and too narrow, and run sensitivity analyses over cut-offs, MAG quality, a compositional transform and leaving out one day. Every number I checked matches the data. The main problem is upstream of the statistics. How abundance was measured is not described well enough to reproduce. Sequencing depth varies 15-fold between samples and tracks the main ordination axis, so a technical explanation for the "delayed" shift has not been ruled out. The wet-lab part of the methods is missing.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>Abundance estimation is under-described and its denominator moves.</em> (Methods, "Relative abundance"). The read mapper, identity/MAPQ filters and the handling of secondary or multi-mapping reads are not stated. The MAG set is not dereplicated: there are three <em>Phocaeicola vulgatus</em>, three <em>Bacteroides uniformis</em>, two <em>P. copri_B</em> and two <em>Agathobacter rectalis</em> MAGs. Reads from near-identical genomes are split between MAGs depending on the mapper, which affects exactly the MAG-level changes reported. Shares are also per cent of <em>all</em> sequenced bases, so any human DNA and all unbinned bases sit in the denominator. The unbinned fraction fell from 23.5% to 18.1% (Supplementary Table 3), which on its own raises every MAG's share by about 7% in days 6-10 and tilts the counts towards risers (23 up against 12 down). To fix this: state the mapping settings, report the human-read fraction per sample, dereplicate (for example at 95% or 99% ANI) or show the results do not change without it, and repeat the two-fold counts on shares rescaled to the binned bases, the same scale already used for Bray-Curtis.</p>
+</li>
+<li>
+<p><em>Sequencing depth is a plausible confounder of the timing result.</em> Per-sample yield ranged from 1.67 Gbp (day 2, 0.38 M reads) to 25.6 Gbp. Depth correlates with axis 1 (ρ = 0.79), the five days 1-5 sort on axis 1 exactly by depth (ρ = 1.0), and the number of MAGs detected follows depth (ρ = 0.94 by my calculation from Supplementary Table 2). Bray-Curtis "used all MAGs", so detection of rare MAGs, which depends on depth, enters the ordination. In the Limitations the authors say they "cannot explain" this. The 0.5% subset check helps, but it does not equalise depth. Please subsample reads to an equal number of bases per sample before mapping (state the target, and drop or flag day 2), then repeat the ordination, the split analysis and the two-fold counts. The claim of a change "one to two days after the switch" should depend on this check.</p>
+</li>
+<li>
+<p><em>Wet-lab and processing details needed for reproducibility are missing.</em> The methods give no stool collection and storage, DNA extraction method, library batches, negative (extraction blank) controls, Dorado and model versions, demultiplexing settings or host-read removal. Please also confirm that one PromethION flow cell produced the 166 Gbp total. CheckM2 (and its database), the GTDB release, myloasm, polishing and the KOfam and Bakta database releases have no versions. "rRNA and tRNA genes present" is vaguer than MIMAG, which requires 23S, 16S and 5S rRNA plus at least 18 tRNAs [10]. Code "available from the course teacher" does not meet journal policy: deposit the code (with a DOI) and the MAGs, which carry no host reads.</p>
+</li>
+<li>
+<p><em>CAZyme annotation and weighting need justification.</em> E-value and coverage thresholds for the dbCAN HMM search are not given. dbCAN3 [14] predicts substrates with dbCAN-sub (subfamily HMMs) and PUL/CGC matching, not by grouping families. The family-to-substrate table used here is therefore the authors' own, and it should be supplied and cited as such. More importantly, the community value weights each MAG by share × gene count. A MAG's share of bases already scales with its cell number times its genome length, so the extra gene-count factor weights genomes roughly by cell number × length². That favours large-genome Bacteroidota, which the text names as the main driver. Please justify this choice or add a sensitivity analysis that weights by share alone (equivalent to weighting by genes in the DNA).</p>
+</li>
+<li>
+<p><em>Selection advantage in the step/trend analysis.</em> Choosing the best of nine splits gives the step more freedom than the single straight line, even though both have two parameters. With ten correlated points, a best split at 6|7 may be common even under a smooth trend. A small simulation (a linear trend plus the observed residual noise and autocorrelation) giving the distribution of best-split positions would show whether "after the switch" can be told apart from "gradual".</p>
+</li>
+</ol>
+<p><strong>Minor points</strong>
+1. "As those days were to each other (at most 0.25)": 0.25 is the largest <em>mean</em> distance of a day to the other four days. The largest pairwise distance within days 1-5 is 0.29. Please say which one you mean.
+2. Explain the MAG labels (c., s., 1., 2., 3.).
+3. Reference [8] is a soil and sediment study. It supports mmlong2, but cite a gut long-read study for the sentence about time series.
+4. Say in which direction "separation" counts and how ties are handled.
+5. Diversity was lowest on days 2 and 5, which are among the shallowest samples. Comment on whether this is related to depth.
+6. Placeholders remain in the Acknowledgements and Author contributions.</p>
+<p><strong>Checks performed</strong>
+- <em>References</em> (PubMed): [2] Johnson 2019, [3] Duncan 2007, [8] Sereika 2025, [10] Bowers 2017 and [14] Zheng 2023 all exist with the cited details. [2] and [3] support their sentences; [3] was a 4-week study in obese volunteers measured by FISH, which is worth stating. [8] is soil and sediment (minor point 3). [14] does not describe family-level substrate grouping (major point 4).
+- <em>Numbers against data.json</em>:
+  - Matched: Bray-Curtis 0.21/0.24/0.31; day 6 at 0.19, day 7 at 0.26, days 8-10 at 0.32-0.40; depth 12.4 against 20.9 Gbp, ρ 0.79, ρ 1.0 within days 1-5.
+  - Matched: 23 risers and 12 fallers, all fallers Bacillota; best splits 23 after, 9 at and 3 before the switch; 15 completely separated; 21 step and 14 line; 34 of 35 intervals exclude zero (the exception is <em>Roseburia_D yibonii</em>); 25 stay two-fold in every leave-one-day-out run.
+  - Matched: CAZyme 27.07 to 27.61 genes per 1,000 genes (+2.0%), host glycan +19%; <em>Acetatifactor</em> 2.49% to 6.05%; <em>P. copri_B</em> values and completeness; HQ-only 29 MAGs and plant fibre +16%.
+  - Mismatch: only the wording in minor point 1.
+- <em>Figures</em>: In Fig. 3c the bar heights (rise 1/1/7/9/4/1, fall 1/2/9) match the text and legend. Fig. 4a shows one interval crossing zero, as stated.</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is careful and transparently caveated, but the abundance measure (mapping, dereplication, denominator) and the depth confound must be resolved before the timing and riser/faller results can be trusted, and the wet-lab methods and code must be supplied.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 2: Results and interpretation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors follow one person's gut community over ten daily stool samples, five days on a high-carbohydrate, high-calorie diet and then five on a low-carbohydrate, low-calorie diet, using 421 nanopore MAGs. They report that composition differs between the periods (mean Bray-Curtis 0.31 between periods against 0.21 and 0.24 within), with most of the change one to two days after the switch. They report that 35 of 124 common MAGs changed at least two-fold, and that the community's degrading CAZyme genes per 1,000 genes changed by only 2%. An exploratory comparison finds that most trait differences between rising and falling MAGs follow taxonomy.</p>
+<p><strong>Overall assessment</strong>
+This is an unusually self-critical draft. The authors avoid hypothesis tests on non-replicated days, call their resampling interval descriptive, and name the confounding of diet with time, the return to the habitual diet and the joint change of calories and carbohydrate. Text, figures and data.json agree closely (see Checks). The main problem is that the sequencing depth of the samples is a stronger alternative explanation than the text admits, and it is never fully ruled out. Depth rises with time, it tracks ordination axis 1 even within the first period, and one sample is about ten times shallower than the rest. Two further problems: the step-versus-trend comparison favours the step by construction, and the analysis restricted to the two-fold MAGs is partly circular. These need more analysis and changes to the wording. They do not overturn the main descriptive result.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><strong>Sequencing depth as an alternative explanation (Results, Fig. 2, Fig. 4 text, Limitations).</strong> Supplementary Table 2 (data.json <code>depth</code>) shows day 2 with 0.38 M reads and 1.67 Gbp, against 9.8-25.6 Gbp for every other day. The text never mentions this. Within days 1-5, depth ranks axis 1 perfectly (ρ = 1.0, which the Limitations note but "cannot explain"). Across all days, the number of MAGs detected follows depth (my calculation from data.json: Spearman ρ ≈ 0.94). In Fig. 2a the most dissimilar pairs are day 2 against days 8-10. Bray-Curtis on <em>all</em> MAGs, including rare ones, is sensitive to detection, so part of axis 1 may be depth rather than time or diet. The check on 29 MAGs at 0.5% or more helps, but it is only reported as "the same pattern". <strong>Fix:</strong> subsample the reads of each sample to equal depth (for example to the shallowest day apart from day 2, and once with day 2 excluded). Then recompute Bray-Curtis, the axis-1 split analysis and the two-fold counts. Report the ordination without day 2, and state day 2's depth in the Results.</p>
+</li>
+<li>
+<p><strong>The step/trend comparison is not even (Methods "MAG trajectories"; Results on axis 1; Fig. 3).</strong> The Methods say block means and a line "both have two parameters, so neither is favoured". However, the best split is chosen from nine candidates, so its R² is the maximum of nine fits, while the line is a single fit. "A step after day 6 (R² 0.81) beats a line (0.73)" is therefore biased towards the step. The same applies to "23 changed most after the switch". Several MAGs (Zag111, from 0.2% to 5.1%; CAZU01, from 0.01% to 2.08%) rise steadily through days 7-10. Divergence from days 1-5 also keeps growing (day 6 0.19, day 7 0.26, day 10 0.40), which reads more like ongoing drift than a step that comes "one to two days" later. <strong>Fix:</strong> compare models with a penalty for the split search (for example, a permutation null of the best-split R² on shuffled days, or leave-one-out prediction error). Also soften the abstract and section titles ("delayed step") unless the comparison holds up.</p>
+</li>
+<li>
+<p><strong>The two-fold-MAG CAZyme analysis is partly circular (Fig. 7, Discussion paragraph 2).</strong> The MAGs were selected because their shares changed, so weighting only them is bound to move the value towards the risers' repertoire. Their resampling interval, computed on the same days used for selection, cannot show that this is a real difference. The direct, selection-free test in the riser-faller comparison does <em>not</em> support a difference: host glycan per 1,000 genes had q = 0.25 and fructan q = 0.23 (Results; data.json <code>traits</code>). The Discussion sentence "which shows that the MAGs that changed differ in their repertoires" goes beyond the data. <strong>Fix:</strong> present Fig. 7 as a decomposition of the whole-community change and not as evidence of a functional shift. Give the riser-faller medians the main role.</p>
+</li>
+<li>
+<p><strong>Mechanistic readings beyond the data (Results Fig. 5 text, traits section, Discussion).</strong> The host-glycan rise is linked to "a lower-fibre diet" via [6]. Fibre intake was not recorded, both diets were vegetarian, and [6] is a gnotobiotic-mouse fibre-deprivation study. Likewise, the Bacteroidota "two phases ... to the change in food and then to lower calories" rest on one rise from a period-1 low (day 5 21.9%; day 3 was 28.5%). The period means of Bacteroidota are identical (25.9% against 25.9%). <strong>Fix:</strong> remove the fibre and calorie mechanisms, or mark them clearly as speculation, and report the identical period means.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>"Bacillota ended slightly higher (47.9% → 50.0%)" is a denominator effect. The binned fraction rose from 76.5% to 81.9%, and as a share of binned bases Bacillota fell (62.6% → 61.1%; my calculation). The same rise (log2 ≈ 0.10) shifts every MAG's log2 change upwards, which may help explain 23 risers against 12 fallers. State this.</li>
+<li>"Plant-fibre degraders fell" conflicts with "10 of the 12 fallers carry fewer plant-fibre genes than the community". Call them "lineages described as plant-polysaccharide degraders [1]".</li>
+<li>The Discussion pairs the fallers with "butyrate-producing lineages", but a complete butyrate route was found in only 5 of 12 fallers (and 6 risers). Qualify this.</li>
+<li>In [3] the low-carbohydrate diet was also high-protein and lasted four weeks. Mention this when comparing.</li>
+<li>The title is very long and says "shows"; "is associated with" or "follows" fits one person with one switch better.</li>
+<li>Fig. 2a: add day labels with depth, or flag day 2.</li>
+</ol>
+<p><strong>Checks performed</strong>
+- References (PubMed): [1] David et al. 2014 (doi:10.1038/nature12820) exists and supports the Roseburia/E. rectale decline on the animal diet. [2] Johnson et al. 2019 (doi:10.1016/j.chom.2019.05.005) exists and supports "several days of dietary history" and personal responses. [3] Duncan et al. 2007 (doi:10.1128/AEM.02340-06) exists and supports the Roseburia/E. rectale and butyrate decline, but the diet was high-protein (minor point 4). [6] Desai et al. 2016 (doi:10.1016/j.cell.2016.10.043) exists and supports mucus use under fibre deprivation in gnotobiotic mice. Its use for this diet assumes a fibre change that was not measured (major point 4).
+- Numbers against data.json: mean Bray-Curtis within periods 0.209/0.244 and between 0.309 ✓; day 6 vs days 1-5 0.193, day 7 0.262, days 8-10 0.324-0.399 ✓; effective number 54.6 against 55.2 (difference 0.7) ✓; Bacillota 47.9/50.0 ✓; Bacteroidota day 5/6/10 21.9/30.6/18.2 ✓; depth 12.4 against 20.9 Gbp ✓; CAZyme 27.07/27.61 (2.0%, -2.9 to 7.0) ✓; phylum contributions add up to 0.554 ✓; HQ-only plant fibre 15.8% ✓; Acetatifactor 2.49 → 6.05% ✓.
+- Figures: Fig. 3c matches <code>split_counts</code> (9 at 5|6, 23 later, 3 earlier) and its legend. Fig. 2a/b match the legend (viridis, 61%/12% axes), and the day positions match <code>pcoa</code>. Fig. 1a curves match <code>phyla</code>.</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The descriptive results are reported accurately and with care, but sequencing depth (one very shallow sample, depth tracking axis 1 and increasing over time) and the step-favouring split comparison have to be addressed before the timing and diet-related conclusions can stand.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 3: Context, novelty and presentation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors followed the stool microbiome of one person over ten consecutive days, five on a high-carbohydrate, high-calorie diet and five on a low-carbohydrate, low-calorie diet. Using nanopore long reads, one co-assembly and 421 MAGs, they describe a shift in composition that peaks one to two days after the switch, 35 MAGs that changed at least two-fold (all 12 fallers are Bacillota), and a community CAZyme potential that changes by only about 2%. An exploratory comparison of rising and falling MAGs finds trait differences that largely follow taxonomy.</p>
+<p><strong>Overall assessment</strong>
+The manuscript is carefully written and unusually candid about its limits. Pre-stated hypotheses, effect sizes in place of p-values for a time series, positive controls and sensitivity grids are real strengths, and the "functional redundancy" framing suits The ISME Journal's interest in community ecology. The main problem is the gap between that framing and the evidence. One person, one switch and no baseline make the result a well-described case, not a test. The Introduction does not show what this case adds to existing diet-intervention and daily-sampling studies, and some directly relevant prior work is missing. The submission also is not yet in the form the journal needs: the figures are interactive, the title is very long, and code and data access do not meet the journal's policy.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>Novelty and the stated gap (Abstract, Introduction paragraph 3).</em> The gap is that "daily, genome-resolved records ... are scarce", but no citation backs this up, and the Introduction never says what the reader learns here that earlier work did not show. Closely related findings are not cited. Wastyk et al. 2021 (Cell 184:4137, PMID 34256014) reported that a high-fibre diet increased microbiome-encoded CAZymes while diversity stayed stable. That is the opposite direction of the comparison made here and the natural benchmark for Hypothesis 2. Long-read genome recovery from human stool (e.g. Moss et al. 2020, Nat Biotechnol 38:701, PMID 32042169) is a better citation for "long-read metagenomics recovers near-complete genomes" than ref. 8, which concerns soil and sediment and is relevant here only as the source of mmlong2. Please state the gap precisely, cite this work, and present the study as a hypothesis-generating case. The abstract's last sentence already does this well, but the title and the Introduction should match it.</p>
+</li>
+<li>
+<p><em>An alternative explanation for the delay (Results, Fig. 2–3; Discussion paragraph 1).</em> The delay of one to two days is explained by dietary history [2]. Gut transit time (stool passed on day 6 largely reflects food eaten before the switch) is a simpler explanation and is not mentioned. David et al. [1] themselves describe changes appearing after the diet reaches the distal gut. Please discuss transit time with a citation, and say that the data cannot tell it apart from a slow community response.</p>
+</li>
+<li>
+<p><em>Prevotella copri and the plant-fibre result (Results, Fig. 5; Discussion).</em> Both the plant-fibre result and the Bacteroidota contribution depend on two medium-quality <em>P. copri_B</em> MAGs. The open question of whether they are "one genome split in two or two strains" should be placed in the literature on the <em>P. copri</em> complex (Tett et al. 2019, Cell Host Microbe, PMID 31607556) and its known diet responsiveness. Otherwise the reader cannot judge how surprising the fall is.</p>
+</li>
+<li>
+<p><em>Figures must be static (all figures).</em> The figures depend on tabs, menus and hover text. Fig. 1 shows one of three panels at a time. Fig. 3a–b show only one selected MAG, by default CAZU01 sp000432275, which is atypical (0.02% → 0.57%, best split 7|8). Figs 4–5 depend on selectors. A journal PDF will show only the defaults. For each figure, choose the panels that carry the claims, lay them out as fixed multi-panel figures, and show a representative MAG in Fig. 3a–b (or small multiples of several). Fig. 8 was not visible in the submitted page image, so I could not assess it.</p>
+</li>
+<li>
+<p><em>Journal requirements (Data availability, front matter).</em> The journal asks authors to release the code behind a paper publicly. "Available from the course teacher" does not meet this. Withholding the reads for privacy can be accepted only through a formal exception request, and the statement should name what can be shared (for example reads with human reads removed, the MAGs, and gene annotations in a public archive). An ethics and informed-consent statement for the human samples is missing. The text that only describes the web page ("can be downloaded from this page", "Hover over a chart") should go.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>The title is 35 words (277 characters). Shorten it to one main finding, e.g. "Daily long-read metagenomics of one person shows a delayed community shift but stable carbohydrate-degradation potential after a diet switch".</li>
+<li>Fig. 3 uses blue and orange with two different meanings: best split versus switch in panel b, risers versus fallers in panel c. Use separate palettes.</li>
+<li>In Fig. 1a, Actinomycetota and "Other phyla" are two similar greens.</li>
+<li>In Fig. 5, both tabs are labelled "b" and panel a has no label.</li>
+<li>The Results contain interpretation and citations (for example the mucus-glycan reading [6] and the transit/history argument). The journal asks that Results and Discussion stay separate, so either move these into the Discussion or combine the two sections.</li>
+<li>The duplicated version note ("version 2, version 1") and the placeholders under Acknowledgements and Author contributions need completing.</li>
+<li>Day 2 yielded only 1.67 Gbp against 9.8–25.6 Gbp for the other days. Mention this in the main text, not only in Supplementary Table 2.</li>
+<li>Ref. 3 (Duncan 2007) studied obese men on high-protein diets over four weeks. Say so when using it as support, because the diets differ from the one here.</li>
+</ol>
+<p><strong>Checks performed</strong>
+- References. Eight were checked in PubMed. All exist and match the bibliographic details: [1] David 2014, PMID 24336217; [2] Johnson 2019, PMID 31194939; [3] Duncan 2007, PMID 17189447; [4] El Kaoutari 2013, PMID 23748339; [5] Grondin 2017, PMID 28138099; [6] Desai 2016, PMID 27863247; [7] Gloor 2017, PMID 29187837; [8] Sereika 2025, PMID 40707831. Refs 1–3 and 5–7 support their sentences accurately. Ref. 4 is an analysis of a simplified "mini-microbiome" and supports the sentence. Ref. 8 is a soil and sediment study, so it supports the use of mmlong2 but not a gut-specific claim (major point 1).
+- Numbers against data.json:
+  - Bray-Curtis 0.21/0.24/0.31 and PCoA axes 61%/12%: match.
+  - Mean depth 12.4 and 20.9 Gbp: recomputed from the per-day values, match.
+  - Phylum contributions sum to 0.55 genes per 1,000 genes: match.
+  - Effective MAG number, difference 0.7: recomputed as 0.68, match.
+  - Within-period depth versus axis 1, Spearman ρ = 1.0: confirmed (identical ranks).
+  - Split counts 9/23/3: match.
+  - 12 fallers, all Bacillota: match.
+  - 15 MAGs completely separated: match.
+- Figure against legend and text. Fig. 3c bar heights (5|6: 7 rising + 2 falling; 6|7: 9 + 9) agree with the text. Fig. 2a/b agree with the text.
+- Author guidelines (journal website). Abstract 227 words (limit 250). Main text about 4,500 words (limit 5,000). Eight display items (limit 8). Section order is correct.</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is careful and honestly reported, but the novelty and the use of the literature need to be stated against directly relevant work, transit time needs discussing, and the figures and data/code availability must be brought into the form the journal requires.</p>
+</section>
