@@ -224,7 +224,35 @@ def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
     data_path = d / "data.json"
     examples = load_examples(p, json.loads(data_path.read_text()) if data_path.exists() else None)
     body = place_closing((d / "body.html").read_text(), closing(p, "Key findings"))
+    body = place_updates(body, updates_block(d))
     return project_page(p, mods, page, base, p["title"], body, (d / "project.js").read_text(), p["nav"], examples)
+
+
+def updates_block(d: Path) -> str:
+    """The report's change log (projects/groupN/updates.yaml: a list of {when, what}, newest first) as a box near the
+    top of the page, so readers can see what changed since they last looked; empty if the file is missing."""
+    f = d / "updates.yaml"
+    items = (yaml.safe_load(f.read_text()) or []) if f.exists() else []
+    if not items:
+        return ""
+    for u in items:
+        if not {"when", "what"} <= set(u):
+            raise ValueError(f"{f}: every update needs 'when' and 'what'")
+    rows = "".join(f"<li><b>{esc(str(u['when']))}</b>: {esc(str(u['what']))}</li>" for u in items)
+    latest = f"{esc(str(items[0]['when']))}: {esc(str(items[0]['what']))}"
+    return (
+        f'<details class="panel pjupdates"><summary><b>Updates</b> (latest {latest})</summary><ul>{rows}</ul></details>'
+    )
+
+
+def place_updates(body: str, block: str) -> str:
+    """The change log where the body has <!--UPDATES-->, else before the first panel section (right after the intro)."""
+    if not block:
+        return body
+    if "<!--UPDATES-->" in body:
+        return body.replace("<!--UPDATES-->", block, 1)
+    i = body.find('<section class="panel')
+    return body[:i] + block + body[i:] if i >= 0 else block + body
 
 
 PROJECTS_INTRO = (

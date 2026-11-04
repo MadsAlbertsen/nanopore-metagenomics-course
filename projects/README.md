@@ -33,6 +33,11 @@ reader. Sections, in this order (`<section class="panel">` each; figures as befo
 `<!--KEY-FINDINGS-->` (put it right after the Summary section), else at the end of the page. No `discussion` key, no
 guided examples (no examples.yaml) on report pages.
 
+## Change log
+
+`projects/groupN/updates.yaml` (a list of `when` / `what`, newest first) is shown as a collapsible "Updates" box
+right after the intro (or at `<!--UPDATES-->`). Add an entry with every change that goes live.
+
 ## Files
 
 | File | What | Who writes it |

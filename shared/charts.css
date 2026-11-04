@@ -21,3 +21,11 @@
 /* text blocks in report panels: the panel gap alone spaces them (default p/ul margins doubled it); :where keeps
    specificity low so project.css rules still win */
 .panel > :where(p, ul, ol) { margin: 0 }
+/* report change log (projects/groupN/updates.yaml), newest first */
+.pjupdates summary { cursor: pointer; font-size: 14px }
+.pjupdates ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted) }
+.pjupdates li b { color: var(--ink); font-weight: 600 }
+/* report change log (projects/groupN/updates.yaml), newest first */
+.pjupdates summary { cursor: pointer; font-size: 14px }
+.pjupdates ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted) }
+.pjupdates li b { color: var(--ink); font-weight: 600 }
