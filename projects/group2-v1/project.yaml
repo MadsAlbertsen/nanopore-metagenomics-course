@@ -1,0 +1,18 @@
+number: 2
+version_of: 2
+version_label: "Version 1 (4 Nov 2026, morning: before the group's questions)"
+slug: project-group2-v1
+title: "Gut genomes shifted after a diet switch while carbohydrate-degradation potential stayed nearly constant"
+nav: "Group 2: community over time (version 1)"
+question: >-
+  A research manuscript, as the group asked: how do the community, its diversity and single MAGs change over the ten
+  days and between the two diet periods, is a MAG's shift a step at the diet switch or a gradual trend, and does the
+  community's potential to break down carbohydrates (CAZyme genes, weighted by each MAG's share) differ between the
+  periods? With effect sizes, day-resampling intervals, sensitivity analyses, supplementary tables to download and a
+  separate document on the methods' rationale and limitations.
+status: draft
+pages:
+  - slug: project-group2-v1-methods
+    title: "Methodological rationale and limitations"
+    body: methods.html
+    js: methods.js

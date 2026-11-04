@@ -1,0 +1,219 @@
+<div class="intro">
+  <span class="kicker">Group 2 · supplementary document (draft)</span>
+  <h1>Methodological rationale and limitations</h1>
+  <p class="note">The separate document group 2 asked for, written for the <a href="project-group2-v1.html">manuscript</a>. It explains why each analysis was chosen, what it assumes, where it can mislead and what credible alternatives exist, how uncertainty and multiple comparisons are handled, which decisions were taken after seeing the data, and how to reproduce the work. Numbers come from the same data file as the manuscript.</p>
+  <p class="g2jump"><a href="#m2Frame">Inference framework</a> · <a href="#m2Inputs">Inputs</a> · <a href="#m2Analyses">Analysis by analysis</a> · <a href="#m2Expected">Expected and observed</a> · <a href="#m2After">Decisions after seeing the data</a> · <a href="#m2Limits">Limitations</a> · <a href="#m2Repro">Reproducibility</a></p>
+</div>
+
+<section class="panel" id="m2Frame">
+  <h2>1. Inference framework</h2>
+  <p><b>What the design allows.</b> One person gave ten consecutive daily samples, five on each diet. The days are a short time series, not ten independent replicates: neighbouring days share most of their community (autocorrelation), and the diet periods are confounded with time, with the order of the diets and with the week of the same high-calorie diet before day 1. No sample was taken before that week. A difference between the periods can therefore come from the diet, from a change that was under way anyway, or from carry-over, and the data cannot tell these apart. Every result is a description of this person over these days.</p>
+  <p><b>No tests, so no multiple-testing correction.</b> We report no p-values and test no hypotheses. A test that treats the five days of each period as independent would overstate the evidence, and with one switch there is no replication of the diet effect to test against. Because there are no tests, there is nothing to correct for multiple testing. The multiplicity problem does not go away, however: we looked at <span data-n="mags_considered"></span> MAGs, the substrate groups, <span data-n="fam_kept"></span> CAZy families and <span data-n="s_cells"></span> cut-off settings, and among many contrasts some will look large by chance. We handle this by (i) writing the expected result before each analysis, (ii) reporting all contrasts in the supplementary tables rather than only the large ones, (iii) never ranking or selecting results by a p-value, (iv) labelling views added or changed after seeing the data as exploratory, and (v) treating a result as solid only when it holds across the sensitivity analyses.</p>
+  <p><b>Effect sizes and their uncertainty.</b> Effect sizes are differences of period means: log2 fold changes for MAGs, percent changes for CAZyme potential, differences in percentage points for phyla. Their uncertainty is described by a day-resampling interval (the middle 90% of <span data-n="boot_reps"></span> resamplings of the five days within each period) and by the range over leaving out one day at a time. Both treat the days within a period as exchangeable, which they are not; the intervals describe how much a number depends on the particular days sampled, are not confidence intervals and are not adjusted for the number of contrasts. A MAG with a steady trend inside a period gets a wide interval, which is the intended warning.</p>
+</section>
+
+<section class="panel" id="m2Inputs">
+  <h2>2. Inputs and missing information</h2>
+  <p>The analysis started from an inventory of the available tables (below; manuscript Supplementary Table 1). All come from the course's own sequencing run of the ten samples, processed with mmlong2 and the course's annotation steps. Missing for the group's questions: food records or nutrient intake per day, a sample before the high-calorie week, replicate DNA extractions or sequencing runs, RNA, protein or metabolite data (activity), cell counts or spike-ins (absolute abundance), and a read-based profile of the bases outside the MAGs. The diet facts (both periods vegetarian, days 6-10 closer to the person's normal diet, a similar high-calorie diet for about a week before day 1) come from the data owner.</p>
+  <div id="m2Inv"></div>
+</section>
+
+<h2 class="pjh" id="m2Analyses">3. Analysis by analysis</h2>
+
+<section class="panel">
+  <h3>3.1 Relative abundance from mapped bases</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The share of a day's sequenced bases that maps to a MAG is the most direct per-genome abundance a long-read metagenome gives, and it is comparable between days of different depth.</td></tr>
+    <tr><th>Assumes</th><td>Reads map to the right MAG; DNA extraction and sequencing recover all taxa equally on every day; MAG boundaries are right.</td></tr>
+    <tr><th>Pitfalls</th><td>Shares are compositional: a rise in one MAG lowers all others. DNA from dead cells or food counts too. Only the <span data-n="binned_min"></span>-<span data-n="binned_max"></span>% of bases in MAGs are seen.</td></tr>
+    <tr><th>Alternatives</th><td>Coverage depth per MAG (depends on sequencing effort); read-based taxonomic profiles (include unbinned reads, lose genome resolution); absolute abundance with spike-ins or cell counts (not measured).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.2 Bray-Curtis dissimilarity and principal coordinates</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>A standard, easily read summary of how different two days are, weighted by abundance, so that it follows the dominant MAGs; PCoA shows the main gradient across the days.</td></tr>
+    <tr><th>Assumes</th><td>Shares of the binned bases are comparable between days; the distance captures the change of interest.</td></tr>
+    <tr><th>Pitfalls</th><td>Dominated by abundant MAGs; not a compositional distance; within- and between-period means use overlapping pairs of days, so they are not independent numbers. With only ten days, one dominant gradient can give the first axis a large share of the variation (here <span data-n="pc1"></span>%).</td></tr>
+    <tr><th>Alternatives</th><td>Aitchison distance (3.3, done); Jaccard (presence only); phylogenetic distances (UniFrac); non-metric scaling (NMDS). PERMANOVA would add a p-value, but its permutations assume exchangeable samples, which autocorrelated days are not.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.3 Centred log-ratio and Aitchison distance</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked to consider compositional effects. Log-ratios against the day's geometric mean remove the closure of shares [7], so a MAG's change is read relative to the community rather than to a fixed total.</td></tr>
+    <tr><th>Assumes</th><td>A pseudocount (0.01%) for zeros; the reference (geometric mean of the <span data-n="mags_considered"></span> MAGs) is stable enough.</td></tr>
+    <tr><th>Pitfalls</th><td>Results depend on the pseudocount and on which MAGs form the reference; a CLR change is relative, not absolute.</td></tr>
+    <tr><th>Alternatives</th><td>Additive log-ratios against a reference taxon; balances (isometric log-ratios); tools built on log-ratios for groups of samples. Here CLR agreed with the plain log2 change (Spearman <span data-n="clr_rho" data-d="2"></span>), so the choice does not change the conclusions.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.4 Diversity</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Shannon diversity, shown as its effective number of MAGs, is easy to read (the number of equally common MAGs with the same diversity) and responds to both richness and evenness.</td></tr>
+    <tr><th>Assumes</th><td>The <span data-n="mags_considered"></span> MAGs with a mean share of at least 0.1% are detected on every day regardless of depth.</td></tr>
+    <tr><th>Pitfalls</th><td>Rare MAGs are left out on purpose (their detection depends on depth); only binned bases count; a stable index can hide a reshuffle of members (which is what happened here).</td></tr>
+    <tr><th>Alternatives</th><td>Richness after rarefying reads; Simpson or Hill numbers of other orders; diversity on all MAGs (in the script, same conclusion).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.5 Period change of single MAGs</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The log2 ratio of the period means is a plain effect size with a symmetric scale (+1 = doubled, −1 = halved); the two-fold and 0.1% cut-offs keep the list to MAGs that change visibly and are measured on every day.</td></tr>
+    <tr><th>Assumes</th><td>A pseudocount of 0.01% keeps absent MAGs finite; the two periods are the relevant contrast.</td></tr>
+    <tr><th>Pitfalls</th><td>Cut-offs are arbitrary and shape the counts (3.9); a large pseudocount shrinks changes of small MAGs (seen: <span data-n="s_p1"></span> two-fold MAGs at 0.1% against <span data-n="s_p01"></span> at 0.01%); a period mean hides the timing (3.6).</td></tr>
+    <tr><th>Alternatives</th><td>Differential-abundance tools such as DESeq2, ANCOM-BC, ALDEx2 or MaAsLin2. They are designed for groups of independent samples; on five against five autocorrelated days their p-values would look more certain than the data are, so we did not use them.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.6 Step or trend: the split check</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked to separate phase-associated shifts from general time trends. Fitting each of the nine possible early/late splits and a straight line, each with two parameters, shows where a MAG changes most and whether a step at the switch describes it better than a steady drift, without a test.</td></tr>
+    <tr><th>Assumes</th><td>One change point or one linear trend; log2 shares; the same weight for every day.</td></tr>
+    <tr><th>Pitfalls</th><td>Choosing the best of nine splits favours a step over a line (so the fair comparison uses the 5|6 step only); the two-fold MAGs were selected on the 5|6 split, which favours a step there; ten days cannot separate a delayed response from a trend that began by chance.</td></tr>
+    <tr><th>Alternatives</th><td>Segmented regression or Bayesian change-point models; models with a trend and a step together; autoregressive or state-space models; smoothing splines. All need more time points than ten to estimate their extra parameters reliably.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.7 Day resampling</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>A simple, transparent way to show how much each contrast depends on the particular days sampled, as the group asked for uncertainty with every effect size.</td></tr>
+    <tr><th>Assumes</th><td>Days within a period are exchangeable.</td></tr>
+    <tr><th>Pitfalls</th><td>The intervals are too narrow, for three reasons: a percentile bootstrap of a five-day mean is too narrow even for independent days (its spread is about √(4/5) of the true standard error); each period has only 126 distinct resamples; and neighbouring days are autocorrelated, so they carry less independent information than five days would. A trend inside a period widens them. They are not adjusted for the number of contrasts. And for MAGs selected because they changed a lot, an interval that excludes zero is close to built in: "<span data-n="boot_excl0"></span> of <span data-n="big"></span> exclude zero" shows mainly that no single day carries the change, not that the change is certain.</td></tr>
+    <tr><th>Alternatives</th><td>Moving-block bootstrap (blocks of two or three days leave almost no distinct resamples in five days); permuting the position of the switch (only nine splits, so the switch can at best rank first of nine); Bayesian models with autocorrelation (too few days for the extra parameters).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.8 Leave one day out</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Shows whether a single day, for example the weakly sequenced day 2 or the transition day 6, drives a result.</td></tr>
+    <tr><th>Assumes</th><td>Nine days still describe each period.</td></tr>
+    <tr><th>Pitfalls</th><td>Removing a day changes which MAGs pass the 0.1% cut-off, so counts can move for reasons unrelated to the change itself.</td></tr>
+    <tr><th>Alternatives</th><td>Leaving out pairs of days; jackknife estimates of variance (assume independence).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.9 Cut-off sensitivity</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Every count of "changed MAGs" depends on three choices (fold change, minimum share, pseudocount); a grid of <span data-n="s_cells"></span> settings shows which conclusions survive other reasonable choices.</td></tr>
+    <tr><th>Assumes</th><td>The grid spans the reasonable range.</td></tr>
+    <tr><th>Pitfalls</th><td>Counts at strict cut-offs are small and jumpy; looking at many settings invites picking the one that fits.</td></tr>
+    <tr><th>Alternatives</th><td>Reporting a continuous ranking of all MAGs (done in Supplementary Table 4) instead of counts.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.10 MAG quality</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Medium-quality MAGs can be incomplete or contaminated, which distorts both abundance and gene content; repeating the analysis with the <span data-n="hq_n"></span> high-quality MAGs only shows which results depend on the <span data-n="mq_n"></span> medium-quality ones.</td></tr>
+    <tr><th>Assumes</th><td>CheckM2 estimates are right [9]; the quality classes follow the MIMAG thresholds [10].</td></tr>
+    <tr><th>Pitfalls</th><td>Dropping MAGs changes the community being described; a key MAG can be medium quality for reasons other than completeness (missing rRNA genes). Here the plant-fibre result changed (<span data-n="cz_plant_fibre_pct"></span>% with all MAGs, <span data-n="hq_cz_plant_fibre"></span>% with HQ only) because both <i>P. copri_B</i> MAGs are medium quality.</td></tr>
+    <tr><th>Alternatives</th><td>Weighting by completeness; correcting gene counts for completeness; manual refinement of the key MAGs.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.11 Sequencing depth</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Depth varied between samples (<span data-n="gbp_min" data-d="1"></span> to <span data-n="gbp_max" data-d="1"></span> Gbp) and was higher in days 6-10, so a period difference could partly be a depth effect on which MAGs are detected.</td></tr>
+    <tr><th>Assumes</th><td>Shares of bases do not depend on depth on average; well-covered MAGs are measured equally well on every day.</td></tr>
+    <tr><th>Pitfalls</th><td>Depth runs with time (Spearman <span data-n="rho_depth_ax1" data-d="2"></span> with PCoA axis 1), so the two cannot be separated by correlation. On the <span data-n="d5_n"></span> MAGs above 0.5% the result is the same, but within days 1-5 depth and axis 1 have the same rank order (Spearman <span data-n="rho_within1" data-d="1"></span>; days 6-10 <span data-n="rho_within2" data-d="1"></span>): not explained.</td></tr>
+    <tr><th>Alternatives</th><td>Subsampling every sample's reads to the same number of bases and repeating the mapping (a server job); sequencing the shallow samples again.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.12 CAZyme annotation and substrate groups</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The dbCAN HMMs are a standard way to find CAZyme families in predicted proteins, and dbCAN3's substrate information groups families by what they degrade [14]; searching every MAG with the same models keeps the community comparable.</td></tr>
+    <tr><th>Assumes</th><td>An HMM hit means a functional enzyme of that family; a family's substrate group describes its typical substrate.</td></tr>
+    <tr><th>Pitfalls</th><td>One tool, no consensus of several; some families are weak (GH109: many hits are not glycoside hydrolases); families act on several substrates; incomplete MAGs miss genes; gene presence is potential, not activity.</td></tr>
+    <tr><th>Alternatives</th><td>dbCAN's consensus of HMM, DIAMOND and subfamily searches; polysaccharide utilisation loci for Bacteroidota [5]; metatranscriptomics or metaproteomics for activity (not measured).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.13 Abundance-weighted community potential</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked for abundance-weighted potential. Weighting each MAG's genes by its share gives the community's gene content per 1,000 genes, which does not grow with genome size or completeness and can be compared between days.</td></tr>
+    <tr><th>Assumes</th><td>A share of bases is proportional to the share of genomes; the MAGs represent the community.</td></tr>
+    <tr><th>Pitfalls</th><td>Large genomes take more bases per cell; unbinned bases are left out; a stable total can hide opposite changes within it (seen here).</td></tr>
+    <tr><th>Alternatives</th><td>Weighting by genome copies (share divided by genome size); annotating all reads directly (includes unbinned reads, loses genome links).</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.14 Contribution decomposition</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>The group asked which MAGs drive the CAZyme change. The decomposition splits the change at the period-mean shares exactly into one term per MAG, positive when a MAG rises and is richer than the community (or falls and is poorer), and sums by phylum.</td></tr>
+    <tr><th>Assumes</th><td>The change at the period-mean shares stands for the change of the daily means (they differ slightly).</td></tr>
+    <tr><th>Pitfalls</th><td>A large contribution needs a large change in share or an unusual gene content, so abundant MAGs dominate; it is an accounting identity, not a cause.</td></tr>
+    <tr><th>Alternatives</th><td>Leaving each MAG out in turn and recomputing (does not add up); Shapley-value decompositions; taxon-level contribution methods developed for groups of samples.</td></tr>
+  </table>
+</section>
+
+<section class="panel">
+  <h3>3.15 CAZy family view (exploratory)</h3>
+  <table class="g2rat">
+    <tr><th>Why</th><td>Checks whether single enzyme families change behind stable substrate groups.</td></tr>
+    <tr><th>Assumes</th><td>Families with at least <span data-n="fam_min" data-d="1"></span> genes per 1,000 genes are measured well enough.</td></tr>
+    <tr><th>Pitfalls</th><td>Added after the main analysis; its cut-off was lowered after seeing the data; with <span data-n="fam_kept"></span> families, the largest changes are partly chance. Its heatmap uses a diverging blue-grey-orange scale rather than viridis because it shows signed changes around zero (log2 relative to days 1-5).</td></tr>
+    <tr><th>Alternatives</th><td>Subfamilies; utilisation loci; activity data.</td></tr>
+  </table>
+</section>
+
+<section class="panel" id="m2Expected">
+  <h2>4. Expected and observed</h2>
+  <p>The expected result of every analysis was written in the analysis script before it was run; results inside and outside the expected range got the same checks. Inside the range: Bray-Curtis within and between the periods; change from day 7; the day-resampling intervals (<span data-n="boot_excl0"></span> of <span data-n="big"></span> two-fold MAGs exclude zero; total CAZyme potential includes zero; host glycan above zero); the compositional check; the community split check (best split <span data-n="ax_best"></span>); the phylum decomposition; completeness and CAZyme rate unrelated.</p>
+  <p>Outside the range, each checked before it was used: PCoA axis 1 held <span data-n="pc1"></span>% (expected 25-50%; all axes rebuild the matrix exactly, so the share is right). Only <span data-n="fam_kept_first"></span> CAZy families reached the first family cut-off (expected 30-60; the cut-off was lowered, see 5). One leave-one-day-out run gave <span data-n="lodo_big_max"></span> two-fold MAGs, one above the expected maximum. A pseudocount of 0.1% halved the count of two-fold MAGs (expected less than 20%; a pseudocount the size of the smallest MAGs shrinks their changes, checked by hand). With high-quality MAGs only, plant fibre changed by <span data-n="hq_cz_plant_fibre"></span>% instead of <span data-n="cz_plant_fibre_pct"></span>% (expected within 5 points; traced to the two medium-quality <i>P. copri_B</i> MAGs). Depth correlated with axis 1 (<span data-n="rho_depth_ax1" data-d="2"></span>, expected below 0.6; follow-up on well-covered MAGs in 3.11).</p>
+</section>
+
+<section class="panel" id="m2After">
+  <h2>5. Decisions taken after seeing the data</h2>
+  <ul>
+    <li>The CAZy family view was added after the main analysis, and its cut-off lowered from <span data-n="fam_first_min" data-d="1"></span> to <span data-n="fam_min" data-d="1"></span> genes per 1,000 genes once only <span data-n="fam_kept_first"></span> families reached the first one; it is labelled exploratory.</li>
+    <li>The depth follow-up (well-covered MAGs, depth within each period) was added after the first depth check came out of range; its expected result was written before it was run.</li>
+    <li>The manuscript form, the resampling intervals, the sensitivity grid, the compositional and quality checks and the phylum decomposition were added at the group's request, after the first version of the report; the main numbers (Bray-Curtis, two-fold counts, CAZyme changes) did not change.</li>
+  </ul>
+</section>
+
+<section class="panel" id="m2Limits">
+  <h2>6. Limitations</h2>
+  <ul>
+    <li>One person, ten days, one switch: no biological replicates, no tests; nothing generalises beyond this person.</li>
+    <li>Diet is confounded with time, order and the high-calorie week before day 1; there is no sample before it and none after day 10.</li>
+    <li>Autocorrelation and carry-over: neighbouring days are not independent, and the community may respond over several days.</li>
+    <li>Shares of DNA, not cell counts; dead cells and food DNA count; only binned bases are seen.</li>
+    <li>Depth differed between samples and ran with time; a depth link within days 1-5 is not explained.</li>
+    <li>Two medium-quality MAGs drive part of the CAZyme change.</li>
+    <li>CAZyme genes are potential, not activity; one annotation tool; broad substrate groups.</li>
+  </ul>
+</section>
+
+<section class="panel" id="m2Repro">
+  <h2>7. Reproducibility</h2>
+  <p><b>Code.</b> One analysis script, scripts/42_project_group2.py of the course's analysis code, reads the input tables (section 2), runs every analysis, checks its positive controls (it stops if one fails) and writes the result tables and the data file behind the manuscript. It needs Python with pandas and numpy and runs in seconds on a laptop; the resampling uses a fixed seed, so a rerun gives the same numbers. The code is available from the course teacher; the expected results and their outcomes are written in the script's header.</p>
+  <p><b>Processed data and figure source data.</b> Every figure in the manuscript has a source-data download (CSV or TSV) under its legend, and the ten supplementary tables can be downloaded in the same formats. They hold derived data only (shares, distances, gene counts per MAG), no reads.</p>
+  <p><b>Upstream steps.</b> Read filtering, assembly, binning, quality and taxonomy (mmlong2 [8], CheckM2 [9], GTDB-Tk) and the gene and CAZyme search are documented in the course modules (<a href="data.html">module 8</a>, <a href="binning.html">module 4</a>, <a href="mag-quality.html">module 5</a>, <a href="annotation.html">module 7</a>).</p>
+</section>
+
+<section class="panel refs">
+  <h2>References</h2>
+  <p class="note">Numbers as in the manuscript.</p>
+  <ol>
+    <li value="5">Grondin JM, Tamura K, Déjean G, Abbott DW, Brumer H. Polysaccharide utilization loci: fueling microbial communities. J Bacteriol 2017;199:e00860-16. doi:<a href="https://doi.org/10.1128/JB.00860-16">10.1128/JB.00860-16</a>, PMID 28138099.</li>
+    <li value="7">Gloor GB, Macklaim JM, Pawlowsky-Glahn V, Egozcue JJ. Microbiome datasets are compositional: and this is not optional. Front Microbiol 2017;8:2224. doi:<a href="https://doi.org/10.3389/fmicb.2017.02224">10.3389/fmicb.2017.02224</a>, PMID 29187837.</li>
+    <li value="8">Sereika M, Mussig AJ, Jiang C, et al. Genome-resolved long-read sequencing expands known microbial diversity across terrestrial habitats. Nat Microbiol 2025;10:2018-2030. doi:<a href="https://doi.org/10.1038/s41564-025-02062-z">10.1038/s41564-025-02062-z</a>, PMID 40707831.</li>
+    <li value="9">Chklovski A, Parks DH, Woodcroft BJ, Tyson GW. CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nat Methods 2023;20:1203-1212. doi:<a href="https://doi.org/10.1038/s41592-023-01940-w">10.1038/s41592-023-01940-w</a>, PMID 37500759.</li>
+    <li value="10">Bowers RM, Kyrpides NC, Stepanauskas R, et al. Minimum information about a single amplified genome (MISAG) and a metagenome-assembled genome (MIMAG) of bacteria and archaea. Nat Biotechnol 2017;35:725-731. doi:<a href="https://doi.org/10.1038/nbt.3893">10.1038/nbt.3893</a>, PMID 28787424.</li>
+    <li value="14">Zheng J, Ge Q, Yan Y, Zhang X, Huang L, Yin Y. dbCAN3: automated carbohydrate-active enzyme and substrate annotation. Nucleic Acids Res 2023;51:W115-W121. doi:<a href="https://doi.org/10.1093/nar/gkad328">10.1093/nar/gkad328</a>, PMID 37125649.</li>
+  </ol>
+</section>
