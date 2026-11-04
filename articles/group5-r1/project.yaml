@@ -1,0 +1,12 @@
+number: 5
+slug: article-group5-r1
+title: "A reproducible rise of Bifidobacterium angulatum in a replicated ten-day long-read gut time series"
+nav: "Group 5 article, revision 1"
+question: "Revision 1 asks whether the day-5 rise of B. angulatum is larger than counting and library noise, whether the group of MAGs that rose with it is larger than chance, and what the GH13 subfamilies of its closed genome predict."
+status: draft
+revision_of: 5
+revision_label: "Revision 1 (rewritten by Claude after peer review, 4 Nov 2026)"
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples, and a second library of
+  each sample made during the course), analysed with mmlong2. Diet facts: information from the participant. Numbers
+  and figures come from np26 scripts/45_project_group5.py (revision 1).
