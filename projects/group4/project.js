@@ -123,12 +123,37 @@ function drawRank() {
   });
 }
 
+// PCoA of the days: points joined in day order, coloured by period (own drawing: the shared scatter has no lines)
+function drawPcoa() {
+  const P = D.pcoa[st.stab], N2 = (k) => P.var[k].toFixed(0);
+  mountChart($("pjPcoa"), () => {
+    const host = $("pjPcoa");
+    const { svg, W, H } = newSvg(host, 330);
+    const box = { l: 60, r: W - 16, t: 14, b: H - 44 };
+    const [x0, x1] = extent(P.pts.map((p) => p.x), { pad: 0.12 }), [y0, y1] = extent(P.pts.map((p) => p.y), { pad: 0.12 });
+    const x = scale(x0, x1, box.l, box.r), y = scale(y0, y1, box.b, box.t);
+    axes(svg, x, y, box, { xLabel: `PCoA axis 1 (${N2(0)}% of the variation)`, yLabel: `Axis 2 (${N2(1)}%)`, xTicks: x.ticks(6), yTicks: y.ticks(5), xFmt: (v) => v.toFixed(2), yFmt: (v) => v.toFixed(2) });
+    const col = (p) => (p.period === "Days 1-5" ? "var(--c1)" : "var(--c3)");
+    for (let i = 1; i < P.pts.length; i++) {
+      const a = P.pts[i - 1], b = P.pts[i];
+      el("line", { x1: x(a.x), y1: y(a.y), x2: x(b.x), y2: y(b.y), style: `stroke:${col(b)}`, "stroke-width": 1.6, opacity: 0.6 }, svg);
+    }
+    for (const p of P.pts) {
+      const c = el("circle", { cx: x(p.x), cy: y(p.y), r: 5, style: `fill:${col(p)}`, class: "dot" }, svg);
+      tipOn(c, `<b>Day ${p.day}</b><br>${esc(p.period)}`);
+      el("text", { x: x(p.x) + 7, y: y(p.y) - 6, class: "dlab" }, svg).textContent = String(p.day);
+    }
+    chartLegend(host, [{ name: "Days 1-5", color: "var(--c1)" }, { name: "Days 6-10", color: "var(--c3)" }]);
+  });
+}
+
 function drawStab() {
   tabs("stabView", "stab");
   lineChart($("pjDrift"), {
     x: D.days, series: [{ name: "To days 1-5", values: D.to_first[st.stab] }], xLabel: "Day", xName: "Day",
     yLabel: `To days 1-5 (Bray-Curtis, ${PROFILE[st.stab]})`, marks: [{ x: 5.5, label: "diet switch" }], zero: true, height: 240,
   });
+  drawPcoa();
   const names = D.days.map((d) => `Day ${d}`);
   heatmap($("pjHeat"), { rows: names, cols: names, values: D.bc[st.stab].map((r, i) => r.map((v, j) => (i === j ? null : v))), label: `Bray-Curtis (${PROFILE[st.stab]})`, format: (v) => (v === null ? "–" : v.toFixed(3)) });
   const s = D.stability[st.stab];
