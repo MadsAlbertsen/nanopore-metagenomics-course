@@ -190,10 +190,11 @@ function drawFeas() {
   table($("pjFeasSum"), {
     columns: [{ key: "k", label: "" }, { key: "v", label: "MAGs", num: true, fmt: (v) => String(v) }],
     rows: [{ k: "All MAGs", v: N.fz_n }, { k: "At least 75% complete", v: N.fz_compl75 },
-      { k: "iRep rule: >= 75% complete and >= 5x on >= 5 days", v: N.fz_irep },
-      { k: "   of these a single circular contig", v: N.fz_irep_circ },
-      { k: ">= 5x on all 10 days (and >= 75% complete)", v: N.fz_irep_all10 },
-      { k: "GRiD rule: >= 75% complete and >= 0.2x on >= 5 days", v: N.fz_grid }],
+      { k: "At least 75% complete and at least 5x on at least 5 days", v: N.fz_cov_only },
+      { k: "iRep thresholds (also at most 2% contamination, fewer than 175 fragments per Mbp)", v: N.fz_irep },
+      { k: "Of the iRep MAGs: one circular contig", v: N.fz_irep_circ },
+      { k: "Of the iRep MAGs: at least 5x on all 10 days", v: N.fz_irep_all10 },
+      { k: "GRiD thresholds (at least 75% complete, at most 5% contamination, at least 0.2x on at least 5 days)", v: N.fz_grid }],
     sortable: false,
   });
   table($("pjFeas"), {
@@ -202,13 +203,12 @@ function drawFeas() {
       { key: "contam", label: "Contam. (%)", num: true, fmt: (v) => v.toFixed(1) },
       { key: "cpm", label: "Contigs per Mbp", num: true, fmt: (v) => v.toFixed(1) },
       { key: "pooled", label: "Pooled (x)", num: true, fmt: (v) => v.toFixed(0) },
-      { key: "lo", label: "Lowest day (x)", num: true, fmt: (v) => v.toFixed(1) },
-      { key: "hi", label: "Highest day (x)", num: true, fmt: (v) => v.toFixed(1) },
-      { key: "d5", label: "Days >= 5x", num: true, fmt: (v) => String(v) },
-      { key: "irep", label: "iRep rule", fmt: (v) => (v ? "yes" : "no") },
-      { key: "grid", label: "GRiD rule", fmt: (v) => (v ? "yes" : "no") },
+      ...D.days.map((d, i) => ({ key: `d${i}`, label: `Day ${d} (x)`, num: true, fmt: (v) => (v < 10 ? v.toFixed(1) : v.toFixed(0)) })),
+      { key: "d5", label: "Days ≥ 5x", num: true, fmt: (v) => String(v) },
+      { key: "irep", label: "iRep", fmt: (v) => (v ? "yes" : "no") },
+      { key: "grid", label: "GRiD", fmt: (v) => (v ? "yes" : "no") },
       { key: "circ", label: "Circular", fmt: (v) => (v ? "yes" : "") }],
-    rows: F.map((r) => ({ ...r, lo: Math.min(...r.days), hi: Math.max(...r.days) })),
+    rows: F.map((r) => ({ ...r, ...Object.fromEntries(r.days.map((v, i) => [`d${i}`, v])) })),
     filter: true, sortKey: "pooled", sortDesc: true, maxRows: 15,
   });
 }
