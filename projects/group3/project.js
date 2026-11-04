@@ -1,6 +1,6 @@
 // Group 3: butyrate genes across the two diet periods. DATA from np26 scripts/43_project_group3.py.
 const D = DATA, N = D.numbers;
-const st = { gview: "per1000", view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag", capP: "hi" };
+const st = { gview: "per1000", view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag", capP: "hi", famView: "families" };
 const byId = Object.fromEntries(D.mags.map((m) => [m.id, m]));
 const mains = D.mags.filter((m) => m.main);
 const SPLIT = "diet switch";
@@ -24,7 +24,7 @@ function setControls() {
   $("g3MagLab").hidden = st.series !== "mag";
 }
 
-// Figure 1: genes x days, grouped by step (dehydrogenase, CoA-transferase, kinase)
+// Figure 2: genes x days, grouped by step (dehydrogenase, CoA-transferase, kinase)
 function drawGeneHeat() {
   const G = D.gene_heat, order = ["bcd", "but", "atoD", "atoA", "ptb", "buk"].map((g) => G.genes.indexOf(g));
   const src = st.gview === "carrier" ? G.carrier : G.per1000;
@@ -128,7 +128,7 @@ function drawLine() {
   }
 }
 
-// Figure 5: change in percentage points per MAG (largest 16) or per genus and final step
+// Figure 6: change in percentage points per MAG (largest 16) or per genus and final step
 function drawBars() {
   let rows;
   if (st.contrib === "mag") {
@@ -235,7 +235,134 @@ function drawButId() {
   barChart($("g3ButId"), { labels: bins.map((b) => `${b}-${b + 5}`), groups: BUTG.map(([k, name]) => ({ name, values: count(k) })), yLabel: "Proteins", unit: "proteins", fmt: String });
 }
 
-function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); }
+// Figure 1 (Q4): the pathway as a drawn scheme; gene boxes from D.pathway (np26 scripts/43 pathway())
+function drawPathway() {
+  const P = Object.fromEntries(D.pathway.map((g) => [g.gene, g]));
+  const W = 480, X = 150; // main chain at x = X
+  const col = (g) => (g.dir === "down" ? "var(--c1)" : g.dir === "up" ? "var(--c2)" : "var(--muted)");
+  const sym = { up: "▲", down: "▼", level: "●" };
+  const t = (x, y, txt, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" text-anchor="${o.anchor || "start"}" fill="${o.fill || "var(--ink)"}"${o.bold ? ' font-weight="600"' : ""}>${esc(txt)}</text>`;
+  const arrow = (x1, y1, x2, y2, o = {}) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.stroke || "var(--muted)"}" stroke-width="1.6"${o.dash ? ' stroke-dasharray="5 4"' : ""} marker-end="url(#g3ah)"/>`;
+  const box = (x, y, w, genes) => {
+    // one box per enzyme step; genes: list of gene ids shown in it
+    const lines = [];
+    genes.forEach((id) => {
+      const g = P[id];
+      lines.push([`${g.gene} · ${g.enzyme}`, "var(--ink)", true]);
+      if (!g.dir) lines.push(["not searched", "var(--muted)", false]);
+      else {
+        lines.push([`found by ${g.how}`, "var(--muted)", false]);
+        const gen = g.genera.filter((x) => Math.abs(x.pp) >= 0.05).map((x) => `${x.genus} ${x.pp > 0 ? "+" : "−"}${Math.abs(x.pp).toFixed(1)}`).join(", ");
+        lines.push([`${sym[g.dir]} ${g.dir} (log2 ${g.log2 > 0 ? "+" : "−"}${Math.abs(g.log2).toFixed(2)})`, col(g), true]);
+        if (gen) lines.push([`${gen} points`, col(g), false]);
+      }
+    });
+    const h = 10 + lines.length * 15;
+    const searched = genes.some((id) => P[id].dir);
+    const stroke = genes.map((id) => P[id]).find((g) => g.dir && g.dir !== "level");
+    let out = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="var(--surface)" stroke="${stroke ? col(stroke) : "var(--line)"}" stroke-width="${stroke ? 2 : 1}"${searched ? "" : ' stroke-dasharray="4 3"'}/>`;
+    lines.forEach(([txt, fill, bold], i) => { out += t(x + 8, y + 18 + i * 15, txt, { size: 10.5, fill, bold }); });
+    return { svg: out, h };
+  };
+  let svg = `<defs><marker id="g3ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker></defs>`;
+  const met = [["acetyl-CoA (× 2)", 24], ["acetoacetyl-CoA", 104], ["3-hydroxybutyryl-CoA", 184], ["crotonyl-CoA", 264], ["butyryl-CoA", 360]];
+  met.forEach(([m, y]) => { svg += t(X, y, m, { anchor: "middle", bold: true, size: 13 }); });
+  [["thl", 30], ["hbd", 110], ["crt", 190]].forEach(([id, y]) => {
+    svg += arrow(X, y + 2, X, y + 60);
+    svg += box(X + 70, y + 4, 255, [id]).svg;
+  });
+  svg += arrow(X, 272, X, 344);
+  const b = box(X + 70, 280, 255, ["bcd"]);
+  svg += b.svg;
+  // alternative entries (not searched), joining at crotonyl-CoA
+  svg += `<rect x="4" y="212" width="126" height="34" rx="6" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
+  svg += t(10, 226, "lysine, glutarate,", { size: 10, fill: "var(--muted)" }) + t(10, 239, "4-aminobutyrate routes", { size: 10, fill: "var(--muted)" });
+  svg += arrow(60, 247, X - 50, 258, { dash: true });
+  svg += t(8, 262, "not searched", { size: 10, fill: "var(--muted)" });
+  // two final steps
+  const L = 90, R = 340;
+  svg += arrow(X - 10, 368, L, 398) + arrow(X + 10, 368, R, 398);
+  const bb = box(4, 402, 228, ["but"]);
+  svg += bb.svg;
+  const ba = box(4, 402 + bb.h + 6, 228, ["atoD", "atoA"]);
+  svg += ba.svg;
+  svg += t(118, 402 + bb.h + ba.h + 22, "acetate in → acetyl-CoA out", { size: 10, anchor: "middle", fill: "var(--muted)" });
+  const yL = 402 + bb.h + ba.h + 30;
+  const pb = box(248, 402, 228, ["ptb"]);
+  svg += pb.svg;
+  svg += t(R + 22, 402 + pb.h + 28, "butyryl-phosphate", { anchor: "middle", bold: true, size: 12 });
+  svg += arrow(R + 22, 402 + pb.h + 2, R + 22, 402 + pb.h + 14) + arrow(R + 22, 402 + pb.h + 34, R + 22, 402 + pb.h + 46);
+  const kb = box(248, 402 + pb.h + 50, 228, ["buk"]);
+  svg += kb.svg;
+  svg += t(R + 22, 402 + pb.h + 50 + kb.h + 22, "ATP made", { size: 10, anchor: "middle", fill: "var(--muted)" });
+  const yB = Math.max(yL, 402 + pb.h + 50 + kb.h + 30) + 24;
+  svg += arrow(118, yL, 200, yB - 14) + arrow(R + 22, 402 + pb.h + 50 + kb.h + 30, 300, yB - 14);
+  svg += t(250, yB, "butyrate", { anchor: "middle", bold: true, size: 14 });
+  svg += t(6, 384, "CoA-transferase route", { size: 10.5, fill: "var(--muted)" });
+  svg += t(474, 384, "kinase route", { anchor: "end", size: 10.5, fill: "var(--muted)" });
+  const H = yB + 12;
+  $("g3Path").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:640px;display:block;margin:0 auto" role="img" aria-label="Butyrate pathway with the searched genes and their change">${svg}</svg>`;
+}
+
+// part 3.7 (Q3, Q7): community shifts and compositional effects
+const CS = D.community_shift;
+function drawCommunity() {
+  const P = CS.pcoa;
+  const pts = D.days.map((d, i) => ({ x: P.x[i], y: P.y[i], label: `day ${d}`, group: i < 5 ? "days 1-5" : "days 6-10", color: i < 5 ? "var(--c1)" : "var(--c2)", size: 6 }));
+  scatter($("g3DayPcoa"), { points: pts, xLabel: `PCoA axis 1 (${N.q3_pc1}%)`, yLabel: `PCoA axis 2 (${N.q3_pc2}%)`, labelled: true, height: 320 });
+  // join the days in order: a polyline through the drawn points (re-added whenever the chart redraws)
+  const join = () => {
+    const svg = $("g3DayPcoa").querySelector("svg");
+    if (!svg || svg.querySelector("polyline.g3join")) return;
+    const cs = [...svg.querySelectorAll("circle.dot")];
+    if (cs.length !== pts.length) return;
+    const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    pl.setAttribute("class", "g3join");
+    pl.setAttribute("points", cs.map((c) => `${c.getAttribute("cx")},${c.getAttribute("cy")}`).join(" "));
+    pl.setAttribute("style", "fill:none;stroke:var(--muted);stroke-width:1;opacity:0.6");
+    svg.insertBefore(pl, cs[0]);
+  };
+  if (!drawCommunity.obs) { drawCommunity.obs = new MutationObserver(join); drawCommunity.obs.observe($("g3DayPcoa"), { childList: true, subtree: true }); }
+  join();
+  const R = CS.ratios, names = Object.keys(R);
+  const rel = (v) => { const b = v.slice(0, 5).reduce((a, x) => a + x, 0) / 5; return v.map((x) => (x > 0 && b > 0 ? Math.log2(x / b) : null)); };
+  const SHORT_R = ["but / kinase", "but / bcd", "falling / rising genera", "but carriers / route"];
+  lineChart($("g3Ratio"), { x: D.days, series: names.map((k, i) => ({ name: SHORT_R[i] || k, values: rel(R[k].values) })), xLabel: "Day", xName: "Day",
+    yLabel: "log2 of the ratio relative to days 1-5", marks: [{ x: 5.5, label: SPLIT }], zero: false });
+  $("g3RatioNote").innerHTML = names.map((k) => `${esc(k)}: log2 ${R[k].log2.toFixed(2)} between the period means; first day outside days 1-5: ${R[k].first_out_day ? `day ${R[k].first_out_day} (${R[k].first_out_dir})` : "none"}.`).join("<br>");
+}
+function drawCommunityTables() {
+  const f2 = (v) => v.toFixed(2);
+  table($("g3Top"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "family", label: "Family" }, { key: "hi", label: "Days 1-5 (%)", num: true, fmt: f2 }, { key: "lo", label: "Days 6-10 (%)", num: true, fmt: f2 },
+      { key: "log2", label: "log2 change", num: true, fmt: f2 }, { key: "pp", label: "Points", num: true, fmt: f2 }, { key: "route", label: "Butyrate route" },
+      { key: "gh13", label: "GH13", num: true, fmt: String }, { key: "starch", label: "Starch genes", num: true, fmt: String }, { key: "fibre", label: "Plant-fibre genes", num: true, fmt: String },
+      { key: "mucin", label: "GH33 + GH29 + GH95", num: true, fmt: String }],
+    rows: CS.top, sortKey: "log2", sortDesc: true, maxRows: 20,
+  });
+  table($("g3Bloom"), {
+    columns: [{ key: "group", label: "Bloom group" }, { key: "n", label: "MAGs", num: true, fmt: String }, { key: "hi", label: "Bloom, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "lo", label: "Bloom, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_hi", label: "But carriers, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "dilution", label: "Dilution factor", num: true, fmt: (v) => v.toFixed(3) }, { key: "c_factor", label: "But carriers, factor", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "o_factor", label: "Other MAGs, factor", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "c_lo", label: "But carriers, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_expect", label: "Dilution only (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "explained", label: "Fall explained (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(0)) }],
+    rows: CS.blooms, sortable: false,
+  });
+  drawFam();
+}
+function drawFam() {
+  const g = st.famView === "genera";
+  table($("g3Fam"), {
+    columns: [{ key: g ? "genus" : "family", label: g ? "Genus" : "Family" }, ...(g ? [{ key: "family", label: "Family" }] : []), { key: "n", label: "MAGs", num: true, fmt: String },
+      { key: "hi", label: "Days 1-5 (%)", num: true, fmt: (v) => v.toFixed(2) }, { key: "lo", label: "Days 6-10 (%)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "pp", label: "Points", num: true, fmt: (v) => v.toFixed(2) }, { key: "log2", label: "log2 change", num: true, fmt: (v) => v.toFixed(2) }],
+    rows: g ? CS.genera : CS.families, sortKey: "pp", maxRows: 20,
+  });
+}
+$("g3FamView").addEventListener("change", (e) => { st.famView = e.target.value; drawFam(); });
+
+function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); drawPathway(); drawCommunity(); }
 $("g3CapP").addEventListener("change", (e) => { st.capP = /^\d+$/.test(e.target.value) ? Number(e.target.value) : e.target.value; drawCapture(); });
 $("g3CapP").insertAdjacentHTML("beforeend", D.days.map((d, i) => `<option value="${i}">day ${d}</option>`).join(""));
 
@@ -251,4 +378,5 @@ stats();
 drawTables();
 drawCaptureTables();
 drawRelTables();
+drawCommunityTables();
 drawAll();
