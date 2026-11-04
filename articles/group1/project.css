@@ -1,0 +1,11 @@
+/* group 1 article: layout of the paired figure, reference-state note, abstract */
+.g1abs { font-size: 15px; line-height: 1.6 }
+.g1sub { font-size: 17px }
+.g1ref { font-size: 14px; line-height: 1.55; border-left: 3px solid var(--c1); padding: 6px 12px; margin: 10px 0; background: var(--accent-soft); color: var(--ink) }
+.g1scroll { overflow-x: auto }
+.g1pair { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 0 4px; min-width: 860px; align-items: start }
+.g1ptitle { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 2px 6px }
+.refs { font-size: 13px }
+.refs ol { padding-left: 22px }
+.refs li { margin-bottom: 4px }
+.panel p a, .panel td a { color: var(--accent) }
