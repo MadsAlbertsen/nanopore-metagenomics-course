@@ -31,3 +31,4 @@
 .pjupdates li b { color: var(--ink); font-weight: 600 }
 /* frozen earlier version of a report */
 .pjversion { margin: 0 }
+p.pjversion { display: block }
