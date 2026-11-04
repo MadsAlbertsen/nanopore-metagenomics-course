@@ -1,0 +1,7 @@
+# Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 11:00"
+  what: "Part 3.6: how reliable the butyrate gene calls are (Q2)"
+- when: "4 Nov 2026, 10:58"
+  what: "Part 3.5: butyrate genes and DNA outside the MAGs, genome count; literature on the route shift (Q1, Q5, Q6)"
+- when: "3 Nov 2026"
+  what: "Restructured into your five parts, with a genes x days heat map"
