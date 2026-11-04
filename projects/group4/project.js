@@ -329,7 +329,53 @@ function drawFunc() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawFeas(); drawStrain(); drawFunc(); }
+// Q9: common MAGs, mean share against log2 change (days 1-6 to 7-10), top risers and fallers labelled
+function drawMagChange() {
+  const M = D.magchange;
+  const fams = Object.entries(M.mags.reduce((a, r) => ((a[r.family] = (a[r.family] || 0) + 1), a), {})).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6);
+  const colOf = (f) => (fams.includes(f) ? catColor(fams.indexOf(f)) : "var(--faint)");
+  const lab = (r) => r.name.replace(/ \(.*\)$/, "");
+  const up = [...M.mags].sort((a, b) => b.log2 - a.log2).slice(0, 10), down = [...M.mags].sort((a, b) => a.log2 - b.log2).slice(0, 10);
+  const named = new Set([...up, ...down].map((r) => r.name));
+  mountChart($("pjMcScatter"), () => {
+    const host = $("pjMcScatter");
+    const { svg, W, H } = newSvg(host, 420);
+    const box = { l: 60, r: W - 16, t: 14, b: H - 44 };
+    const [x0, x1] = [Math.min(...M.mags.map((r) => r.log2)) - 2.2, Math.max(...M.mags.map((r) => r.log2)) + 2.2];
+    const x = scale(x0, x1, box.l, box.r), y = scale(...extent(M.mags.map((r) => r.mean), { log: true }), box.b, box.t, true);
+    axes(svg, x, y, box, { xLabel: "log2 change, days 7-10 over days 1-6 (0 = no change, 1 = twice as much)", yLabel: "Mean share over the ten days (% of DNA, log scale)", xTicks: x.ticks(8), yTicks: y.ticks(), xFmt: (v) => String(+v.toFixed(1)) });
+    el("line", { x1: x(0), x2: x(0), y1: box.t, y2: box.b, class: "mark" }, svg);
+    for (const r of M.mags) {
+      const c = el("circle", { cx: x(r.log2), cy: y(r.mean), r: named.has(r.name) ? 5.5 : 4, style: `fill:${colOf(r.family)}`, class: "dot" }, svg);
+      tipOn(c, `<b>${esc(r.name)}</b><br>${esc(r.family)}<br>Days 1-6: ${r.m1.toFixed(2)}%, days 7-10: ${r.m2.toFixed(2)}%<br>log2 change: ${r.log2.toFixed(2)}`);
+    }
+    // labels: right of risers, left of fallers; pushed down so that they do not overlap
+    for (const [grp, anchor, dx] of [[up, "start", 8], [down, "end", -8]]) {
+      const ls = grp.map((r) => ({ r, x: x(r.log2) + dx, y: y(r.mean) + 4 })).sort((a, b) => a.y - b.y);
+      for (let i = 1; i < ls.length; i++) ls[i].y = Math.max(ls[i].y, ls[i - 1].y + 12);
+      for (const l of ls) el("text", { x: l.x, y: l.y, "text-anchor": anchor, class: "dlab" }, svg).textContent = lab(l.r);
+    }
+    chartLegend(host, [...fams.map((f) => ({ name: f, color: colOf(f) })), { name: "Other families", color: "var(--faint)" }]);
+  });
+  heatmap($("pjMcHeat"), {
+    rows: M.top20.map((r) => `${lab(r)} (${r.log2 > 0 ? "+" : ""}${r.log2.toFixed(1)})`), cols: D.days.map((d) => `Day ${d}`),
+    values: M.top20.map((r) => r.rel), diverging: true, span: 3, label: "log2 over the days 1-6 mean", format: (v) => (v === null ? "–" : v.toFixed(2)),
+  });
+  table($("pjMcTaxa"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "family", label: "Family" },
+      { key: "m1", label: "Days 1-6 (%)", num: true, fmt: (v) => v.toFixed(2) }, { key: "m2", label: "Days 7-10 (%)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "log2", label: "log2 change", num: true, fmt: (v) => (v > 0 ? "+" : "") + v.toFixed(2) }],
+    rows: M.taxa, sortable: false,
+  });
+  table($("pjMcHg"), {
+    columns: [{ key: "family", label: "Family" }, { key: "n_up", label: "Risers", num: true, fmt: String }, { key: "n_down", label: "Fallers", num: true, fmt: String },
+      { key: "up", label: "Risers: median host-glycan genes per 1,000 genes", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "down", label: "Fallers: median", num: true, fmt: (v) => v.toFixed(2) }],
+    rows: M.hgfam, sortable: false,
+  });
+}
+
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawMagChange(); drawFeas(); drawStrain(); drawFunc(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv], ["famAllView", "famAll", drawFamAll], ["famSetView", "famSet", drawFamAll]]) {
   $(id).addEventListener("click", (ev) => {
