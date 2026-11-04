@@ -1,0 +1,88 @@
+{
+ "days": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "diet": [
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb"
+ ],
+ "mags": [
+  {
+   "id": "c.101",
+   "name": "Bifidobacterium angulatum (c.101)",
+   "share": [
+    0.0801,
+    0.0497,
+    0.0873,
+    0.131,
+    0.2943,
+    0.2371,
+    0.0503,
+    0.0228,
+    0.0272,
+    0.0115
+   ],
+   "mean_high": 0.128,
+   "mean_low": 0.07
+  },
+  {
+   "id": "c.62",
+   "name": "Bifidobacterium adolescentis (c.62)",
+   "share": [
+    0.2684,
+    0.1852,
+    0.1815,
+    0.1914,
+    0.9613,
+    0.5916,
+    0.177,
+    0.0975,
+    0.2261,
+    0.2741
+   ],
+   "mean_high": 0.358,
+   "mean_low": 0.273
+  },
+  {
+   "id": "c.16",
+   "name": "Bifidobacterium longum (c.16)",
+   "share": [
+    0.0551,
+    0.0302,
+    0.0379,
+    0.0543,
+    0.0676,
+    0.0744,
+    0.036,
+    0.0243,
+    0.0199,
+    0.0135
+   ],
+   "mean_high": 0.049,
+   "mean_low": 0.034
+  }
+ ],
+ "numbers": {
+  "size_mb": 1.99,
+  "completeness": 99.95,
+  "contamination": 0.32,
+  "depth": 82.0
+ }
+}

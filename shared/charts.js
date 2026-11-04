@@ -139,7 +139,7 @@ function lineChart(host, o) {
     const hit = el("rect", { x: box.l, y: box.t, width: box.r - box.l, height: box.b - box.t, fill: "transparent" }, svg);
     const cross = el("line", { y1: box.t, y2: box.b, class: "cross", visibility: "hidden" }, svg);
     hit.addEventListener("mousemove", (ev) => {
-      const px = ev.clientX - svg.getBoundingClientRect().left;
+      const r = svg.getBoundingClientRect(), px = ((ev.clientX - r.left) * W) / r.width; // also on a scaled slide
       const j = o.x.reduce((b, xv, k) => (Math.abs(x(xv) - px) < Math.abs(x(o.x[b]) - px) ? k : b), 0);
       cross.setAttribute("x1", x(o.x[j])); cross.setAttribute("x2", x(o.x[j])); cross.setAttribute("visibility", "visible");
       const rows = o.series.map((s, i) => ({ s, i, v: s.values[j] })).sort((a, b) => (b.v ?? -Infinity) - (a.v ?? -Infinity)).slice(0, 12);

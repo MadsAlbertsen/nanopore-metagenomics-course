@@ -19,6 +19,7 @@ def test_every_page_builds(tmp_path):
     arts = build.read_projects(root=build.ARTICLES)
     built |= {"articles.html"} | {f"{a['slug']}.html" for a in arts}
     built |= {f"{x['slug']}.html" for a in arts for x in a.get("pages", [])}
+    built |= {"presentations.html"} | {f"{d['slug']}.html" for d in build.read_projects(root=build.SLIDES)}
     assert {p.name for p in pages} == {"index.html", "glossary.html", "teachers.html", build.ZIP_NAME} | built
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
         assert set(z.namelist()) == {"index.html", "glossary.html", "teachers.html"} | built
@@ -114,3 +115,21 @@ def test_versions_and_articles(tmp_path):
         assert "Version 1" in (tmp_path / f"project-group{g}-v1.html").read_text()
         assert f'href="article-group{g}.html"' in (tmp_path / "articles.html").read_text()
     assert idx.count('<li class="panel">') == 5
+
+
+def test_slide_decks(tmp_path):
+    """A deck builds as a full-window presentation with its slides, the chart kit and the navigation; at most
+    MAX_SLIDES slides; unpublished decks (the template) stay off presentations.html."""
+    build.build(tmp_path, unpublished=True)
+    html = (tmp_path / "slides-example.html").read_text()
+    assert html.count('<section class="slide') == 4 and "function lineChart" in html and "grid(true)" in html
+    assert "slides-example" not in (tmp_path / "presentations.html").read_text()
+    d = tmp_path / "deck"
+    d.mkdir()
+    (d / "body.html").write_text('<section class="slide"><h2>x</h2></section>\n' * (build.MAX_SLIDES + 1))
+    p = {"number": 9, "slug": "slides-groupX", "title": "X", "nav": "X", "dir": d}
+    base = {"BASE_CSS": "", "COMMON_JS": "", "MODULES": "[]"}
+    with pytest.raises(ValueError, match="slides"):
+        build.build_deck(p, base)
+    (d / "body.html").write_text('<section class="slide"><h2>x</h2></section>\n' * build.MAX_SLIDES)
+    assert "{{" not in build.build_deck(p, base)

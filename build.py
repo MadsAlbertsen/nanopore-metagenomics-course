@@ -19,7 +19,10 @@ Group reports (projects/<id>/project.yaml) may list extra pages that belong to t
 Planned modules only appear in the navigation and on the index. Also built: glossary.html (shared/glossary.yaml),
 teachers.html (shared/teachers_intro.html plus each module's teacher block: time, before, flow, discussion_points,
 pitfalls), the index with the analysis in numbers (shared/overview.json, made by np26 scripts/23_course_overview.py)
-and a zip of all pages for offline use. Run: python build.py [out dir]
+and a zip of all pages for offline use. Slide decks (slides/<id>/: project.yaml as for a report, body.html with one
+<section class="slide"> per slide and at most MAX_SLIDES of them, optional project.js, data.json, project.css) are
+built with shared/slides.html as full-window presentations and listed on presentations.html.
+Run: python build.py [out dir]
 """
 
 import importlib.util
@@ -39,6 +42,8 @@ EXAMPLE_KEYS = {"title", "question", "answer", "state"}
 ZIP_NAME = "nanopore-metagenomics-course.zip"
 PROJECTS = ROOT / "projects"
 ARTICLES = ROOT / "articles"
+SLIDES = ROOT / "slides"
+MAX_SLIDES = 10
 PROJECT_KEYS = {"number", "slug", "title", "nav", "question", "status"}
 PAGE_KEYS = {"slug", "title", "body"}
 
@@ -102,6 +107,8 @@ def nav(mods: list[dict], current: str | None) -> str:
     items.append(f'<a href="projects.html"{cur}>Projects</a>')
     cur = ' aria-current="page"' if current == "articles" else ""
     items.append(f'<a href="articles.html"{cur}>Articles</a>')
+    cur = ' aria-current="page"' if current == "presentations" else ""
+    items.append(f'<a href="presentations.html"{cur}>Presentations</a>')
     cur = ' aria-current="page"' if current == "glossary" else ""
     items.append(f'<a class="gloss" href="glossary.html"{cur}>Glossary</a>')
     cur = ' aria-current="page"' if current == "teachers" else ""
@@ -391,6 +398,78 @@ def build_articles_index(arts: list[dict], mods: list[dict], page: str, base: di
     )
 
 
+def build_deck(p: dict, base: dict) -> str:
+    """A group's slide deck: body.html holds one <section class="slide"> per slide (at most MAX_SLIDES), drawn on a
+    960 x 540 stage scaled to the window, with the chart kit, the deck's data.json and the navigation of slides.js."""
+    d = p["dir"]
+    body = (d / "body.html").read_text()
+    n = len(re.findall(r'<section class="slide[ "]', body))
+    if not 1 <= n <= MAX_SLIDES:
+        raise ValueError(f"{d.name}: a deck has 1 to {MAX_SLIDES} slides, found {n}")
+    data_path = d / "data.json"
+    own_css = (d / "project.css").read_text() if (d / "project.css").exists() else ""
+    js = (d / "project.js").read_text() if (d / "project.js").exists() else ""
+    return fill(
+        (SHARED / "slides.html").read_text(),
+        {
+            **base,
+            "TITLE": f"Group {p['number']}: {p['title']}",
+            "DECK_TITLE": f"Group {p['number']} · {esc(p['title'])}",
+            "MODULE_CSS": (SHARED / "charts.css").read_text() + (SHARED / "slides.css").read_text() + own_css,
+            "BODY": body,
+            "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + js,
+            "SLIDES_JS": (SHARED / "slides.js").read_text(),
+            "DATA": script_json(json.loads(data_path.read_text()) if data_path.exists() else None),
+            "DECK": script_json({"label": f"Group {p['number']}", "slides": n}),
+            "FOOTER": footer(p["nav"], p.get("data_note", FOOTER)),
+        },
+    )
+
+
+PRESENTATIONS_INTRO = (
+    '<section class="intro"><span class="kicker">Presentations</span><h1>Presentations: each group\'s story in at '
+    f"most {MAX_SLIDES} slides</h1><p>Each group presents its project as a short slide deck, built from its own "
+    "analysis and the figures in its report and article. Open a deck to present it: the arrow keys or the buttons move "
+    "between slides, O shows all slides at once, N the speaker notes and F full screen. The charts keep their "
+    "tooltips on the slides.</p></section>"
+)
+
+
+def build_presentations_index(decks: list[dict], mods: list[dict], page: str, base: dict) -> str:
+    """One card per deck with a live thumbnail of its first slide."""
+    cards = [
+        f'<li class="panel deckcard"><a class="thumb" href="{p["slug"]}.html" aria-label="Open the presentation">'
+        f'<iframe src="{p["slug"]}.html?thumb" loading="lazy" tabindex="-1" title="First slide"></iframe></a>'
+        f'<span class="kicker">Group {p["number"]}{" · draft" if p["status"] == "draft" else ""}</span>'
+        f'<h3><a href="{p["slug"]}.html">{esc(p["title"])}</a></h3><p>{esc(p["question"])}</p></li>'
+        for p in decks
+    ]
+    listing = (
+        f'<ol class="modules">{"".join(cards)}</ol>'
+        if cards
+        else '<p class="panel note">The presentations will appear here once the groups have made them.</p>'
+    )
+    css = (
+        ".deckcard .thumb { display: block; aspect-ratio: 16 / 9; border: 1px solid var(--line); border-radius: 6px; "
+        "overflow: hidden; position: relative }\n.deckcard iframe { position: absolute; inset: 0; width: 100%; "
+        "height: 100%; border: 0; pointer-events: none }\n"
+    )
+    return fill(
+        page,
+        {
+            **base,
+            "TITLE": "Presentations: nanopore metagenomics course",
+            "NAV": nav(mods, "presentations"),
+            "MODULE_CSS": (ROOT / "shared" / "index.css").read_text() + css,
+            "BODY": PRESENTATIONS_INTRO + listing,
+            "MODULE_JS": "",
+            "DATA": "null",
+            "EXAMPLES": "[]",
+            "FOOTER": footer("Presentations"),
+        },
+    )
+
+
 def build_index(mods: list[dict], page: str, base: dict) -> str:
     overview = {o["module"]: o["facts"] for o in json.loads((SHARED / "overview.json").read_text())}
     cards = []
@@ -499,6 +578,7 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
     arts = read_projects(unpublished, ARTICLES)
     for a in arts:
         a["section"] = "articles"
+    decks = read_projects(unpublished, SLIDES)
     page = (SHARED / "page.html").read_text()
     base = {
         "BASE_CSS": (SHARED / "base.css").read_text(),
@@ -514,6 +594,13 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
     written[-1].write_text(build_projects_index([p for p in projs if p.get("publish", True)], mods, page, base))
     written.append(out / "articles.html")
     written[-1].write_text(build_articles_index([a for a in arts if a.get("publish", True)], mods, page, base))
+    written.append(out / "presentations.html")
+    written[-1].write_text(build_presentations_index([p for p in decks if p.get("publish", True)], mods, page, base))
+    for p in decks:
+        path = out / f"{p['slug']}.html"
+        path.write_text(build_deck(p, base))
+        if p.get("publish", True):
+            written.append(path)
     for p in projs + arts:
         path = out / f"{p['slug']}.html"
         path.write_text(build_project(p, mods, page, base))
