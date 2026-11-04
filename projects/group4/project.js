@@ -148,7 +148,7 @@ function drawStrain() {
   // orange = rose, blue = fell at least two-fold (as in Figure 6); grey = the rest
   const col = (r) => (r.log2 >= 1 ? "var(--c2)" : r.log2 <= -1 ? "var(--c1)" : "var(--faint)");
   scatter($("pjStrain"), {
-    points: D.strains.map((r) => ({ x: Math.max(r.var, 0.0005), y: r.cv, label: r.name, color: col(r),
+    points: D.strains.map((r) => ({ x: r.var, y: r.cv, label: r.name, color: col(r),
       extra: `${r.phylum} · variant sites ${r.var}% · change log2 ${r.log2} · depth ${r.depth}x` })),
     logX: true, xLabel: "Variant sites (% of the MAG's positions, log scale)", yLabel: "Day-to-day variation (CV, %)",
   });
@@ -160,7 +160,7 @@ function drawStrain() {
   table($("pjThirds"), {
     columns: [{ key: "third", label: "MAGs", fmt: (v) => NAME[v] },
       { key: "n", label: "n", num: true, fmt: (v) => String(v) },
-      { key: "var_lo", label: "Variant sites (%)", num: true, fmt: (v, r) => `${v.toFixed(3)}-${r.var_hi.toFixed(3)}` },
+      { key: "var_lo", label: "Variant sites (%)", num: true, fmt: (v, r) => `${v.toFixed(4)}-${r.var_hi.toFixed(4)}` },
       { key: "cv", label: "Median CV (%)", num: true, fmt: (v) => v.toFixed(0) },
       { key: "abslog2", label: "Median |log2 change|", num: true, fmt: (v) => v.toFixed(2) },
       { key: "depth", label: "Median depth (x)", num: true, fmt: (v) => v.toFixed(0) },
@@ -171,7 +171,7 @@ function drawStrain() {
   const dash = (d) => (v) => (v === null ? "–" : v.toFixed(d));
   table($("pjStrainTable"), {
     columns: [{ key: "name", label: "MAG" }, { key: "phylum", label: "Phylum" },
-      { key: "var", label: "Variant sites (%)", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "var", label: "Variant sites (%)", num: true, fmt: (v) => v.toFixed(4) },
       { key: "maf", label: "Minor allele fraction", num: true, fmt: dash(2) },
       { key: "sh", label: "CheckM strain het.", num: true, fmt: dash(0) },
       { key: "depth", label: "Depth (x)", num: true, fmt: (v) => v.toFixed(0) },
@@ -183,7 +183,7 @@ function drawStrain() {
 }
 
 // not blue / orange (down / up elsewhere on the page)
-const FCOL = { close: "var(--c3)", distant: "var(--c4)", domain: "var(--c5)", none: "var(--c6)", noncoding: "var(--faint)", unbinned: "var(--c7)" };
+const FCOL = { close: "var(--c3)", distant: "var(--c4)", domain: "var(--c5)", none: "var(--c7)", noncoding: "var(--faint)", unbinned: "var(--ink)" };
 function drawFunc() {
   const F = D.fshare;
   lineChart($("pjFunc"), {
