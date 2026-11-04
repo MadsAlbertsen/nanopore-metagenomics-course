@@ -1,0 +1,68 @@
+/* shared/slides.js: a slide deck (slides/<id>/body.html, one section.slide element per slide). Every slide is drawn on
+   a 960 x 540 stage that is scaled to the window, so text and charts keep their layout on any screen or projector. */
+html, body.deck { height: 100%; margin: 0; overflow: hidden }
+body.deck { display: flex; flex-direction: column; background: var(--bg) }
+.deckbar { display: flex; align-items: center; gap: 12px; padding: 8px 16px; font-size: 13px; border-bottom: 1px solid var(--line); background: var(--surface) }
+.deckbar .back { color: var(--muted); text-decoration: none; white-space: nowrap }
+.deckbar .back:hover { color: var(--ink) }
+.decktitle { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted) }
+.deckbtns { display: flex; align-items: center; gap: 6px; white-space: nowrap }
+.deckbtns button { font: inherit; font-size: 13px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer }
+.deckbtns button:hover { background: var(--accent-soft) }
+.deckbtns button[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent) }
+#deckPos { min-width: 52px; text-align: center; color: var(--muted) }
+.viewport { flex: 1; min-height: 0; position: relative; overflow: hidden }
+.stage { position: absolute; left: 0; top: 0; width: 960px; height: 540px; transform-origin: 0 0 }
+.progress { height: 3px; background: var(--line) }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.25s }
+.decknote { margin: 0; padding: 4px 16px 6px; font-size: 11px; color: var(--faint) }
+.decknote a { color: var(--muted) }
+.notespane { max-height: 28vh; overflow: auto; padding: 10px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 15px; line-height: 1.5 }
+.notespane p { margin: 0 0 6px }
+
+/* one slide */
+.slide { position: absolute; inset: 0; background: var(--surface); padding: 40px 56px 44px; display: flex; flex-direction: column; gap: 16px; overflow: hidden; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; font-size: 20px; line-height: 1.4 }
+.slide.on { opacity: 1; visibility: visible }
+.slide > aside.notes { display: none }
+.slide h1 { font-size: 40px; line-height: 1.15; font-weight: 600; letter-spacing: -0.015em }
+.slide h2 { font-size: 30px; line-height: 1.2; font-weight: 600; text-transform: none; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance }
+.slide .kicker { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 600 }
+.slide p, .slide ul, .slide ol { margin: 0 }
+.slide ul, .slide ol { padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px }
+.slide .lead { font-size: 22px; color: var(--muted) }
+.slide .take { font-size: 26px; font-weight: 500; border-left: 4px solid var(--accent); padding-left: 16px }
+.slide .src { margin-top: auto; padding-right: 96px; font-size: 12px; color: var(--faint) }
+.slide .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; flex: 1; min-height: 0 }
+.slide .cols.wide { grid-template-columns: 3fr 2fr }
+.slide .chart { font-size: 14px }
+.slide .chart text { font-size: 13px }
+.slide .chart text.lab, .slide .chart text.dlab { font-size: 14px }
+.slide .chart .legend { font-size: 14px }
+.slide .big { display: flex; gap: 40px; flex-wrap: wrap }
+.slide .big div b { display: block; font-size: 48px; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.1 }
+.slide .big div > span { font-size: 16px; color: var(--muted) }
+.slide.title { justify-content: center; gap: 22px; background: linear-gradient(135deg, var(--surface) 55%, var(--accent-soft)) }
+.slide.title .who { font-size: 18px; color: var(--muted) }
+.slide .slno { position: absolute; right: 22px; bottom: 14px; font-size: 12px; color: var(--faint) }
+
+/* overview: every slide as a thumbnail; click one to open it */
+.deck.grid .viewport { overflow: auto }
+.deck.grid .stage { position: relative; transform: none !important; width: auto; height: auto; display: grid; grid-template-columns: repeat(auto-fill, 288px); justify-content: center; gap: 16px; padding: 16px }
+.deck.grid .slide { position: relative; inset: auto; width: 960px; height: 540px; zoom: 0.3; opacity: 1; visibility: visible; transition: none; cursor: pointer; border: 3px solid var(--line); border-radius: 16px }
+.deck.grid .slide.on { border-color: var(--accent) }
+.deck.grid .slide * { pointer-events: none }
+
+/* thumbnail inside presentations.html (?thumb): the first slide only, no controls */
+.deck.thumb .deckbar, .deck.thumb .progress, .deck.thumb .decknote, .deck.thumb .notespane { display: none }
+
+@media (max-width: 640px) {
+  .deckbtns button[data-act="notes"], .deckbtns button[data-act="full"], .decktitle { display: none }
+}
+@media print {
+  @page { size: 960px 540px; margin: 0 }
+  html, body.deck { height: auto; overflow: visible; display: block }
+  .deckbar, .progress, .decknote, .notespane, .tip { display: none !important }
+  .viewport { overflow: visible }
+  .stage { position: static; transform: none !important; height: auto }
+  .slide { position: relative; width: 960px; height: 540px; opacity: 1; visibility: visible; break-after: page; print-color-adjust: exact; -webkit-print-color-adjust: exact }
+}

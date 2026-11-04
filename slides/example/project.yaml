@@ -1,0 +1,11 @@
+number: 0
+slug: slides-example
+title: "Example deck (template)"
+nav: Example deck
+question: >-
+  A template for the group presentations: a title slide, a chart slide, a numbers slide and a take-home slide. Not
+  published.
+status: draft
+publish: false
+data_note: >-
+  Template only: the numbers are from group 5's report (projects/group5/data.json), used here to show the slide layouts.

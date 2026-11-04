@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<style>
+{{BASE_CSS}}
+{{MODULE_CSS}}
+</style>
+</head>
+<body class="deck">
+<header class="deckbar">
+  <a class="back" href="presentations.html">&larr; Presentations</a>
+  <span class="decktitle">{{DECK_TITLE}}</span>
+  <span class="deckbtns">
+    <button type="button" data-act="prev" aria-label="Previous slide">&lsaquo;</button>
+    <span id="deckPos" class="num">1 / 1</span>
+    <button type="button" data-act="next" aria-label="Next slide">&rsaquo;</button>
+    <button type="button" data-act="grid" title="Overview (O)">Overview</button>
+    <button type="button" data-act="notes" title="Speaker notes (N)">Notes</button>
+    <button type="button" data-act="full" title="Full screen (F)">Full screen</button>
+  </span>
+</header>
+<main class="viewport" id="viewport"><div class="stage" id="stage">
+{{BODY}}
+</div></main>
+<div class="progress" aria-hidden="true"><i id="deckBar"></i></div>
+<aside class="notespane" id="notesPane" hidden></aside>
+<p class="decknote">{{FOOTER}}</p>
+<div class="tip" id="tip" hidden></div>
+<script>
+const DATA = {{DATA}};
+const EXAMPLES = [];
+const MODULES = {{MODULES}};
+const DECK = {{DECK}};
+</script>
+<script>
+{{COMMON_JS}}
+</script>
+<script>
+{{MODULE_JS}}
+</script>
+<script>
+{{SLIDES_JS}}
+</script>
+</body>
+</html>
