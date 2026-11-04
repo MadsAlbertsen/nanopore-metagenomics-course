@@ -16,6 +16,7 @@ def test_every_page_builds(tmp_path):
     built = {f"{m['slug']}.html" for m in mods if m["status"] != "planned"}
     built |= {"projects.html"} | {f"{p['slug']}.html" for p in build.read_projects()}
     built |= {f"{x['slug']}.html" for p in build.read_projects() for x in p.get("pages", [])}
+    built |= {"articles.html"} | {f"{a['slug']}.html" for a in build.read_projects(root=build.ARTICLES)}
     assert {p.name for p in pages} == {"index.html", "glossary.html", "teachers.html", build.ZIP_NAME} | built
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
         assert set(z.namelist()) == {"index.html", "glossary.html", "teachers.html"} | built
@@ -100,3 +101,14 @@ def test_extra_pages_are_built_and_zipped(tmp_path):
         for x in p.get("pages", []):
             assert f"{x['slug']}.html" in names and f"{x['slug']}.html" in zipped
             assert f'href="{x["slug"]}.html"' in (tmp_path / f"{p['slug']}.html").read_text(), "report links its page"
+
+
+def test_versions_and_articles(tmp_path):
+    """Frozen version 1 reports are linked from their group card, not listed; articles get their own index."""
+    build.build(tmp_path)
+    idx = (tmp_path / "projects.html").read_text()
+    for g in range(1, 6):
+        assert f'href="project-group{g}-v1.html"' in idx
+        assert "Version 1" in (tmp_path / f"project-group{g}-v1.html").read_text()
+        assert f'href="article-group{g}.html"' in (tmp_path / "articles.html").read_text()
+    assert idx.count('<li class="panel">') == 5

@@ -1,0 +1,23 @@
+number: 3
+version_of: 3
+version_label: "Version 1 (4 Nov 2026, morning: before the group's questions)"
+slug: project-group3-v1
+title: "Butyrate genes across the two diet periods"
+nav: "Group 3: butyrate genes (version 1)"
+question: >-
+  Do the genes for butyrate production change in abundance between the high-carbohydrate days and the
+  low-carbohydrate days, which genomes carry them, and from which day does a change show? The genomes with a complete
+  butyrate route keep a level share of the DNA, because genomes with one type of final step fall while a few genomes
+  with the other type rise.
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person, sequenced on one PromethION flow cell and analysed with mmlong2.
+  Genes were searched in every genome with the course's own method (module 8 data); diet periods and diet history are
+  information from the data owner. Every number on this page comes from np26 scripts/43_project_group3.py.
+# {key} placeholders are filled from data.json numbers by project.js
+takeaways:
+  - "{n_route} of {n_mags} MAGs carry a complete butyrate route (bcd plus but, ptb or buk); together they held {total_hi}% of the sample's bases on days 1-5 and {total_lo}% on days 6-10, so the expected fall did not show."
+  - "Gene by gene (copies per 1,000 genes, abundance-weighted), bcd stayed level ({w_bcd_hi} and {w_bcd_lo}), the CoA-transferase gene but fell ({w_but_hi} to {w_but_lo}) and the kinase-route genes ptb and buk rose (buk {w_buk_hi} to {w_buk_lo}); each was first outside its days 1-5 range on day {wbut_first} to {wbuk_first}, though part of the kinase rise began before the switch."
+  - "Both moves rest on few genomes: Agathobacter, Roseburia and Anaerostipes account for {but_known_pp} percentage points of the but group's fall, and three Lachnospiraceae (led by Acetatifactor intestinalis) for +{pb_top3_pp} points of the kinase group's rise. {deep_species} of the {n_route} route MAGs are named to species by GTDB."
+  - "As in Duncan et al. (2007), where obese men ate high-protein weight-loss diets, the Roseburia / E. rectale group fell (here {rer_hi}% to {rer_lo}% of the bases, log2 {rer_log2}) while Lachnospiraceae as a whole (log2 {lachno_log2}) and Faecalibacterium stayed close to level; the fall here is smaller than theirs at {lit_d_carb_lo} g carbohydrate per day, and their cut came with more protein, ours with fewer calories."
+  - "Gene potential in one person over ten days: whether butyrate production changed cannot be said from these data."

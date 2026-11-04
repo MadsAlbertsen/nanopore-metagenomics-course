@@ -1,0 +1,9 @@
+number: 1
+slug: article-group1
+title: "Group 1 article (title to be decided by the group)"
+nav: "Group 1 article"
+question: "The angle of the article is chosen by the group from its project report (Projects, group 1)."
+status: draft
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Diet facts: information from the data owner. The analyses and figures come from the group's project report.
