@@ -350,6 +350,12 @@ function drawCommunityTables() {
     rows: CS.blooms, sortable: false,
   });
   drawFam();
+  table($("g3WithinFam"), {
+    columns: [{ key: "family", label: "Family" }, { key: "n_up", label: "Risers", num: true, fmt: String }, { key: "n_down", label: "Fallers", num: true, fmt: String },
+      { key: "gh13_up", label: "GH13, risers", num: true, fmt: (v) => v.toFixed(1) }, { key: "gh13_down", label: "GH13, fallers", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "fibre_up", label: "Plant fibre, risers", num: true, fmt: (v) => v.toFixed(1) }, { key: "fibre_down", label: "Plant fibre, fallers", num: true, fmt: (v) => v.toFixed(1) }],
+    rows: CS.within_family, sortable: false,
+  });
 }
 function drawFam() {
   const g = st.famView === "genera";
