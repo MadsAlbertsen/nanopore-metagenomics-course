@@ -1,4 +1,6 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 14:11"
+  what: "Figure 6 E-F: degrading CAZyme genes per 1,000 genes by substrate group over the ten days, for the changing MAGs and for the core MAGs separately (Q4)"
 - when: "4 Nov 2026, 12:33"
   what: "Figure 6 C-D: CAZyme genes and the family groups over the ten days (Q4); new Figure 7: the 30 KEGG marker genes per day, with a methods paragraph and reference; the variable-positions figure is now Figure 8 (Q7). H2 and Next steps: the per-day inStrain job was prepared and tested but not run in this course (Q1)"
 - when: "4 Nov 2026, 11:49"
