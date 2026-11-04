@@ -2,7 +2,7 @@
 // (np26 scripts/44_project_group4.py); numbers in the text and in the key findings come from DATA.numbers.
 const D = DATA;
 const N = D.numbers;
-const st = { cat: "abs", sort: "taxa", stab: "taxa" };
+const st = { cat: "abs", sort: "taxa", stab: "taxa", drv: "sp" };
 const PROFILE = { taxa: "species mix", functions: "genes", products: "all named genes", markers: "marker genes" };
 
 // a number from DATA.numbers: d = decimals, sign = show + for positive values
@@ -144,6 +144,35 @@ function drawFam() {
   });
 }
 
+function drawDrv() {
+  tabs("drvView", "drv");
+  const k = st.drv, R = D.drivers;
+  const top = [...R.mags].sort((a, b) => Math.abs(b[k]) - Math.abs(a[k])).slice(0, 15);
+  // orange = the MAG's share rose, blue = it fell (as in Figure 6)
+  barChart($("pjDrv"), {
+    labels: top.map((r) => r.name), values: top.map((r) => r[k]), horizontal: true,
+    colors: top.map((r) => (r.dir > 0 ? "var(--c2)" : "var(--c1)")),
+    yLabel: k === "sp" ? "Part of the species-mix change (%)" : "Part of the gene-profile change (%)", unit: "%",
+    fmt: (v) => v.toFixed(1),
+  });
+  const lg = $("pjDrvLegend");
+  lg.innerHTML = "";
+  chartLegend(lg, [{ name: "Share rose", color: "var(--c2)" }, { name: "Share fell", color: "var(--c1)" }]);
+  table($("pjDrvFam"), {
+    columns: [{ key: "family", label: "Family" }, { key: "phylum", label: "Phylum" },
+      { key: "sp", label: "Species mix (%)", num: true, fmt: (v) => (Math.abs(v) < 0.05 ? "0.0" : v.toFixed(1)) },
+      { key: "gp", label: "Gene profile (%)", num: true, fmt: (v) => (Math.abs(v) < 0.05 ? "0.0" : v.toFixed(1)) }],
+    rows: R.families, sortKey: k, sortDesc: true, maxRows: 10,
+  });
+  table($("pjDrvCat"), {
+    columns: [{ key: "name", label: "Substrate group" },
+      { key: "d", label: "Change (per 1,000 genes)", num: true, fmt: (v) => (v > 0 ? "+" : "") + v.toFixed(3) },
+      { key: "top", label: "Largest MAG parts (per 1,000 genes)",
+        fmt: (v) => v.map((t) => `${t.name} ${t.c > 0 ? "+" : ""}${t.c.toFixed(3)}`).join("; ") }],
+    rows: R.cats, sortable: false,
+  });
+}
+
 function drawStrain() {
   // orange = rose, blue = fell at least two-fold (as in Figure 6); grey = the rest
   const col = (r) => (r.log2 >= 1 ? "var(--c2)" : r.log2 <= -1 ? "var(--c1)" : "var(--faint)");
@@ -202,9 +231,9 @@ function drawFunc() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); drawStrain(); drawFunc(); }
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawFam(); drawDrv(); drawStrain(); drawFunc(); }
 
-for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab]]) {
+for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv]]) {
   $(id).addEventListener("click", (ev) => {
     const b = ev.target.closest("button[data-v]");
     if (!b) return;
