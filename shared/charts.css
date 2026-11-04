@@ -29,3 +29,5 @@
 .pjupdates summary { cursor: pointer; font-size: 14px }
 .pjupdates ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted) }
 .pjupdates li b { color: var(--ink); font-weight: 600 }
+/* frozen earlier version of a report */
+.pjversion { margin: 0 }

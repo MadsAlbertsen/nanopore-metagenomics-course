@@ -1,0 +1,20 @@
+/* group 1: verdict boxes per hypothesis, the server-step code block, print layout */
+.verdict { padding: 10px 14px; border-left: 4px solid var(--faint); background: var(--accent-soft); color: var(--ink); border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.5 }
+.verdict.yes { border-left-color: var(--c3) }
+.verdict.partly { border-left-color: var(--c4) }
+.verdict.no { border-left-color: var(--c2) }
+.verdict.na { border-left-color: var(--faint) }
+.pjcode { font-family: var(--mono); font-size: 11.5px; line-height: 1.45; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin: 6px 0 0; overflow-x: auto; white-space: pre }
+@media print {
+  body { background: #fff }
+  @page { size: A4; margin: 12mm }
+  html { zoom: 0.72 }
+  .panel { border: none; padding: 2px 0; gap: 6px }
+  .pjscreen { display: none !important }
+  h3, .cap { break-after: avoid }
+  svg { break-inside: avoid }
+  select, label.note, .stats, nav, header, footer, .tip { display: none !important }
+  .verdict { break-inside: avoid; background: none; border: 1px solid #999; border-left-width: 4px }
+  .pjcode { white-space: pre-wrap; font-size: 9.5px }
+  a { color: inherit; text-decoration: none }
+}

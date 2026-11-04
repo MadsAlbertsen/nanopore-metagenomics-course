@@ -38,6 +38,7 @@ STATUSES = {"ready", "draft", "planned"}
 EXAMPLE_KEYS = {"title", "question", "answer", "state"}
 ZIP_NAME = "nanopore-metagenomics-course.zip"
 PROJECTS = ROOT / "projects"
+ARTICLES = ROOT / "articles"
 PROJECT_KEYS = {"number", "slug", "title", "nav", "question", "status"}
 PAGE_KEYS = {"slug", "title", "body"}
 
@@ -53,11 +54,11 @@ def read_modules() -> list[dict]:
     return mods
 
 
-def read_projects(unpublished: bool = False) -> list[dict]:
+def read_projects(unpublished: bool = False, root: Path = PROJECTS) -> list[dict]:
     """Group project reports: projects/<id>/project.yaml (+ body.html, project.js, data.json, optional project.css,
     examples.yaml). publish: false (the template) builds only when unpublished=True (tests) and is never listed."""
     out = []
-    dirs = sorted(p for p in PROJECTS.iterdir() if (p / "project.yaml").exists()) if PROJECTS.exists() else []
+    dirs = sorted(p for p in root.iterdir() if (p / "project.yaml").exists()) if root.exists() else []
     for d in dirs:
         p = yaml.safe_load((d / "project.yaml").read_text())
         if missing := PROJECT_KEYS - set(p):
@@ -99,6 +100,8 @@ def nav(mods: list[dict], current: str | None) -> str:
             items.append(f'<a href="{m["slug"]}.html"{cur}>{label}</a>')
     cur = ' aria-current="page"' if current == "projects" else ""
     items.append(f'<a href="projects.html"{cur}>Projects</a>')
+    cur = ' aria-current="page"' if current == "articles" else ""
+    items.append(f'<a href="articles.html"{cur}>Articles</a>')
     cur = ' aria-current="page"' if current == "glossary" else ""
     items.append(f'<a class="gloss" href="glossary.html"{cur}>Glossary</a>')
     cur = ' aria-current="page"' if current == "teachers" else ""
@@ -207,7 +210,7 @@ def project_page(
         {
             **base,
             "TITLE": f"Group {p['number']}: {title}",
-            "NAV": nav(mods, "projects"),
+            "NAV": nav(mods, p.get("section", "projects")),
             "MODULE_CSS": (SHARED / "charts.css").read_text() + own_css,
             "BODY": body,
             "MODULE_JS": (SHARED / "charts.js").read_text() + "\n" + js,
@@ -219,13 +222,22 @@ def project_page(
 
 
 def build_project(p: dict, mods: list[dict], page: str, base: dict) -> str:
-    """One group report (body.html, project.js; key findings placed by place_closing)."""
+    """One group report or article (body.html, optional project.js; key findings placed by place_closing; updates.yaml
+    as a change log; a frozen earlier version, version_of: N, gets a banner linking the current report)."""
     d = p["dir"]
     data_path = d / "data.json"
     examples = load_examples(p, json.loads(data_path.read_text()) if data_path.exists() else None)
     body = place_closing((d / "body.html").read_text(), closing(p, "Key findings"))
     body = place_updates(body, updates_block(d))
-    return project_page(p, mods, page, base, p["title"], body, (d / "project.js").read_text(), p["nav"], examples)
+    if "version_of" in p:
+        current = f"project-group{p['version_of']}.html"
+        body = place_updates(
+            body,
+            f'<p class="panel note pjversion"><b>{esc(p["version_label"])}</b>. This copy is frozen; the current '
+            f'report, after the group\'s own questions, is <a href="{current}">version 2</a>.</p>',
+        )
+    js = (d / "project.js").read_text() if (d / "project.js").exists() else ""
+    return project_page(p, mods, page, base, p["title"], body, js, p["nav"], examples)
 
 
 def updates_block(d: Path) -> str:
@@ -273,12 +285,23 @@ def build_project_page(p: dict, x: dict, mods: list[dict], page: str, base: dict
 
 
 def build_projects_index(projs: list[dict], mods: list[dict], page: str, base: dict) -> str:
+    """One card per group report; frozen earlier versions (version_of: N) are linked from their group's card."""
+    old = {}
+    for p in projs:
+        if "version_of" in p:
+            old.setdefault(p["version_of"], []).append(p)
     cards = []
     for p in projs:
+        if "version_of" in p:
+            continue
         status = " · draft" if p["status"] == "draft" else ""
+        versions = ""
+        if p["number"] in old:
+            links = " · ".join(f'<a href="{v["slug"]}.html">{esc(v["version_label"])}</a>' for v in old[p["number"]])
+            versions = f'<p class="note">Version 2 (current): the title above. Earlier: {links}</p>'
         cards.append(
             f'<li class="panel"><span class="kicker">Group {p["number"]}{status}</span>'
-            f'<h3><a href="{p["slug"]}.html">{esc(p["title"])}</a></h3><p>{esc(p["question"])}</p></li>'
+            f'<h3><a href="{p["slug"]}.html">{esc(p["title"])}</a></h3><p>{esc(p["question"])}</p>{versions}</li>'
         )
     listing = (
         f'<ol class="modules">{"".join(cards)}</ol>'
@@ -297,6 +320,36 @@ def build_projects_index(projs: list[dict], mods: list[dict], page: str, base: d
             "DATA": "null",
             "EXAMPLES": "[]",
             "FOOTER": footer("Projects"),
+        },
+    )
+
+
+ARTICLES_INTRO = (
+    '<section class="intro"><span class="kicker">Articles</span><h1>Articles: the group reports as ISME Journal '
+    "articles</h1><p>Each group turns its project report into a short research article in the format of The ISME "
+    "Journal. The group chooses the angle from its own analysis; the reports under Projects hold the analyses and "
+    "figures the articles draw on.</p></section>"
+)
+
+
+def build_articles_index(arts: list[dict], mods: list[dict], page: str, base: dict) -> str:
+    cards = [
+        f'<li class="panel"><span class="kicker">Group {a["number"]}</span>'
+        f'<h3><a href="{a["slug"]}.html">{esc(a["title"])}</a></h3><p>{esc(a["question"])}</p></li>'
+        for a in arts
+    ]
+    return fill(
+        page,
+        {
+            **base,
+            "TITLE": "Articles: nanopore metagenomics course",
+            "NAV": nav(mods, "articles"),
+            "MODULE_CSS": (ROOT / "shared" / "index.css").read_text(),
+            "BODY": ARTICLES_INTRO + f'<ol class="modules">{"".join(cards)}</ol>',
+            "MODULE_JS": "",
+            "DATA": "null",
+            "EXAMPLES": "[]",
+            "FOOTER": footer("Articles"),
         },
     )
 
@@ -406,6 +459,9 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
     """Write the site; unpublished=True also builds projects marked publish: false (for the tests)."""
     mods = read_modules()
     projs = read_projects(unpublished)
+    arts = read_projects(unpublished, ARTICLES)
+    for a in arts:
+        a["section"] = "articles"
     page = (SHARED / "page.html").read_text()
     base = {
         "BASE_CSS": (SHARED / "base.css").read_text(),
@@ -419,7 +475,9 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
     written[2].write_text(build_teachers(mods, page, base))
     written.append(out / "projects.html")
     written[-1].write_text(build_projects_index([p for p in projs if p.get("publish", True)], mods, page, base))
-    for p in projs:
+    written.append(out / "articles.html")
+    written[-1].write_text(build_articles_index([a for a in arts if a.get("publish", True)], mods, page, base))
+    for p in projs + arts:
         path = out / f"{p['slug']}.html"
         path.write_text(build_project(p, mods, page, base))
         if p.get("publish", True):

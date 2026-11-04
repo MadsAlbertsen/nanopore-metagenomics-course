@@ -1,0 +1,25 @@
+.g2two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; align-items: start }
+@media (max-width: 760px) { .g2two { grid-template-columns: 1fr } }
+.g2sum { font-size: 13px; margin: 8px 0 }
+#g2F1Tabs { margin-bottom: 8px }
+.fig .spctl { margin-bottom: 4px }
+.g2int { font-size: 14px; margin-top: 10px }
+#g2FamTable { margin-top: 12px }
+.refs ol { padding-left: 22px; font-size: 13px }
+.refs li { margin-bottom: 4px }
+.g2jump { font-size: 13px; margin-top: 8px }
+.g2abs { font-size: 15px; line-height: 1.6 }
+.g2rq { margin: 18px 0 8px; font-size: 15px }
+.g2sub { font-size: 17px }
+.g2tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 1px 8px; vertical-align: 2px; margin-left: 6px }
+.dl { font-size: 13px; margin: 6px 0 }
+.dl .dlset { margin-right: 14px; white-space: nowrap }
+.g2supp { border-top: 1px solid var(--line); padding: 8px 0 }
+.g2supp summary { cursor: pointer; font-size: 14px }
+.g2supp .note { margin: 6px 0 }
+.g2rat { width: 100%; border-collapse: collapse; font-size: 13px }
+.g2rat th, .g2rat td { text-align: left; vertical-align: top; padding: 6px 8px; border-top: 1px solid var(--line) }
+.g2rat th { color: var(--muted); font-weight: 500; white-space: nowrap; width: 92px }
+@media (max-width: 760px) { .g2rat th { white-space: normal } }
+.panel p a, .panel td a { color: var(--accent) }
+.spctl select { max-width: 100% }

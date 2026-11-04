@@ -69,7 +69,9 @@ def cases() -> list[tuple[str, str, int | None]]:
     out = [("index", "index.html", None), ("glossary", "glossary.html", None)]
     out.append(("teachers", "teachers.html", None))
     out.append(("projects", "projects.html", None))
+    out.append(("articles", "articles.html", None))
     pages = [m for m in build.read_modules() if m["status"] != "planned"] + build.read_projects(unpublished=True)
+    pages += build.read_projects(unpublished=True, root=build.ARTICLES)
     for m in pages:
         out.append((m["slug"], f"{m['slug']}.html", None))
         path = m["dir"] / "examples.yaml"
