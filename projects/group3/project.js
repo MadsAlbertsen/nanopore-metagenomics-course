@@ -24,7 +24,7 @@ function setControls() {
   $("g3MagLab").hidden = st.series !== "mag";
 }
 
-// Figure 1: genes x days, grouped by step (dehydrogenase, CoA-transferase, kinase)
+// Figure 2: genes x days, grouped by step (dehydrogenase, CoA-transferase, kinase)
 function drawGeneHeat() {
   const G = D.gene_heat, order = ["bcd", "but", "atoD", "atoA", "ptb", "buk"].map((g) => G.genes.indexOf(g));
   const src = st.gview === "carrier" ? G.carrier : G.per1000;
@@ -128,7 +128,7 @@ function drawLine() {
   }
 }
 
-// Figure 5: change in percentage points per MAG (largest 16) or per genus and final step
+// Figure 6: change in percentage points per MAG (largest 16) or per genus and final step
 function drawBars() {
   let rows;
   if (st.contrib === "mag") {
@@ -275,7 +275,7 @@ function drawPathway() {
   const b = box(X + 70, 280, 255, ["bcd"]);
   svg += b.svg;
   // alternative entries (not searched), joining at crotonyl-CoA
-  svg += `<rect x="4" y="212" width="112" height="34" rx="6" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
+  svg += `<rect x="4" y="212" width="126" height="34" rx="6" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
   svg += t(10, 226, "lysine, glutarate,", { size: 10, fill: "var(--muted)" }) + t(10, 239, "4-aminobutyrate routes", { size: 10, fill: "var(--muted)" });
   svg += arrow(60, 247, X - 50, 258, { dash: true });
   svg += t(8, 262, "not searched", { size: 10, fill: "var(--muted)" });
@@ -326,7 +326,8 @@ function drawCommunity() {
   join();
   const R = CS.ratios, names = Object.keys(R);
   const rel = (v) => { const b = v.slice(0, 5).reduce((a, x) => a + x, 0) / 5; return v.map((x) => (x > 0 && b > 0 ? Math.log2(x / b) : null)); };
-  lineChart($("g3Ratio"), { x: D.days, series: names.map((k) => ({ name: k, values: rel(R[k].values) })), xLabel: "Day", xName: "Day",
+  const SHORT_R = ["but / kinase", "but / bcd", "falling / rising genera", "but carriers / route"];
+  lineChart($("g3Ratio"), { x: D.days, series: names.map((k, i) => ({ name: SHORT_R[i] || k, values: rel(R[k].values) })), xLabel: "Day", xName: "Day",
     yLabel: "log2 of the ratio relative to days 1-5", marks: [{ x: 5.5, label: SPLIT }], zero: false });
   $("g3RatioNote").innerHTML = names.map((k) => `${esc(k)}: log2 ${R[k].log2.toFixed(2)} between the period means; first day outside days 1-5: ${R[k].first_out_day ? `day ${R[k].first_out_day} (${R[k].first_out_dir})` : "none"}.`).join("<br>");
 }
@@ -342,6 +343,8 @@ function drawCommunityTables() {
   table($("g3Bloom"), {
     columns: [{ key: "group", label: "Bloom group" }, { key: "n", label: "MAGs", num: true, fmt: String }, { key: "hi", label: "Bloom, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
       { key: "lo", label: "Bloom, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_hi", label: "But carriers, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "dilution", label: "Dilution factor", num: true, fmt: (v) => v.toFixed(3) }, { key: "c_factor", label: "But carriers, factor", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "o_factor", label: "Other MAGs, factor", num: true, fmt: (v) => v.toFixed(3) },
       { key: "c_lo", label: "But carriers, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_expect", label: "Dilution only (%)", num: true, fmt: (v) => v.toFixed(1) },
       { key: "explained", label: "Fall explained (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(0)) }],
     rows: CS.blooms, sortable: false,
