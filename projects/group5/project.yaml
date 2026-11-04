@@ -18,3 +18,4 @@ takeaways:
   - "Its share of the bases fell from a mean of 0.128% on days 1-5 to 0.07% on days 6-10 (log2 -0.8), as the group predicted, but it varied strongly between days (CV 76% and 136%)."
   - "The share rose 5.9-fold within days 1-5 on an unchanged diet, peaked on day 5 and dropped most from day 6 to day 7 (log2 -2.24); the step across the diet switch was small (log2 -0.31)."
   - "Counting reads directly in a random read sample (positive control against the base shares passed) also found the most reads on days 5-6, but with 0-9 reads per sample (22 of 18,070 pooled) too few to show the day-to-day pattern."
+  - "Of the 166.5 Gbp of filtered bases, 80.1% lie in the 421 MAGs (62.5% in high-quality, 17.6% in medium-quality MAGs; 74.1-83.4% per sample); B. angulatum holds 0.014-0.379% of the bases in MAGs and ranks 45th to 339th among the MAGs, depending on the day."

@@ -4,7 +4,8 @@
 // carb (Table 3: carbohydrate genes of c.101), map (c.101's genes: [start, stop, strand, symbol, product, evidence,
 // identity %, CAZy families, CAZy class, carbohydrate role]; lookups products, symbols, families, classes, roles,
 // evidence; crispr arrays; ori), categories + cat_counts (degrading CAZyme genes per substrate category), families
-// (genes per family), groups + members (named-gene groups).
+// (genes per family), groups + members (named-gene groups), context (Figure 4 / Table 5: per sample % of the filtered
+// bases in HQ / MQ MAGs, unbinned contigs, not on the assembly; c.101's share, share of MAG bases and rank).
 const D = DATA, N = D.numbers, MAP = D.map, FOCUS = D.mags[0];
 const short = (m) => m.name.replace(/^Bifidobacterium /, "B. ").replace(/ \(.*\)$/, "");
 const num = (v) => (typeof v === "number" ? v.toLocaleString("en-US") : String(v));
@@ -53,10 +54,12 @@ const st = { ...DEFAULTS };
 const CARB = D.carb.data.map((row) => Object.fromEntries(D.carb.columns.map((c, i) => [c, row[i]])));
 const CARB_AT = new Map(CARB.map((c) => [c.start + ":" + c.stop, c]));
 
+// context shares (Figure 4) keep one decimal: 56.0, not 56
+const CTX1 = /^ctx_(hq|mq|mag|unbinned|off|asm|rs_all_mag|rs_kept_asm)_(min|max|pooled|high|low)$|^ctx_gbp$/;
 function fillNumbers() {
   document.querySelectorAll("[data-n]").forEach((e) => {
     const k = e.dataset.n;
-    e.textContent = k in N ? num(N[k]) : "?";
+    e.textContent = !(k in N) ? "?" : CTX1.test(k) ? N[k].toFixed(1) : num(N[k]);
   });
 }
 function stats() {
@@ -318,10 +321,54 @@ function drawGroups() {
   });
 }
 
+// --- Figure 4 and Table 5: share of each sample's filtered bases in HQ / MQ MAGs, unbinned contigs, not on the
+// assembly (custom stacked bars: the chart kit has no stacked bar chart)
+const CTX = [["hq", "HQ MAGs", "var(--c1)"], ["mq", "MQ MAGs", "var(--c3)"], ["unbinned", "Unbinned contigs", "var(--c4)"], ["off", "Not on the assembly", "var(--c2)"]];
+function drawCtx() {
+  const host = $("g5CtxFig"), S = D.context;
+  mountChart(host, () => {
+    const { svg, W, H } = newSvg(host, 320);
+    const box = { l: 56, r: W - 12, t: 22, b: H - 48 };
+    const n = S.length, band = (box.r - box.l) / n, bw = band * 0.72;
+    const y = scale(0, 100, box.b, box.t);
+    axes(svg, () => 0, y, box, { yLabel: "Share of the filtered bases (%)", xTicks: [], yTicks: y.ticks(5) });
+    const hi = S.filter((s) => s.diet === "high_carb").length, small = band < 46;
+    el("text", { x: box.l + (band * hi) / 2, y: box.t - 8, "text-anchor": "middle", class: "note" }, svg).textContent = small ? "high carb" : "high carbohydrate";
+    el("text", { x: box.l + band * (hi + (n - hi) / 2), y: box.t - 8, "text-anchor": "middle", class: "note" }, svg).textContent = small ? "low carb" : "low carbohydrate";
+    S.forEach((s, i) => {
+      const xc = box.l + band * (i + 0.5);
+      let acc = 0;
+      for (const [k, name, color] of CTX) {
+        const v = s[k];
+        const rect = el("rect", { x: xc - bw / 2, y: y(acc + v), width: bw, height: y(acc) - y(acc + v), style: `fill:${color}` }, svg);
+        tipOn(rect, `<b>${esc(s.sample)} · day ${s.day}</b> (${s.gbp.toFixed(2)} Gbp)<br>${esc(name)}: ${v.toFixed(1)}%` +
+          (k === "hq" ? `<br><i>B. angulatum</i>: ${s.c101.toFixed(3)}% of all bases, ${s.c101_of_mag.toFixed(3)}% of the MAG bases, rank ${s.c101_rank} of ${N.n_mags}` : ""));
+        acc += v;
+      }
+      el("text", { x: xc, y: box.b + 16, "text-anchor": "middle" }, svg).textContent = small ? String(s.day) : s.sample;
+      if (!small) el("text", { x: xc, y: box.b + 30, "text-anchor": "middle", class: "note" }, svg).textContent = "day " + s.day;
+    });
+    el("line", { x1: box.l + band * hi, x2: box.l + band * hi, y1: box.t, y2: box.b, class: "mark" }, svg);
+    if (small) el("text", { x: (box.l + box.r) / 2, y: box.b + 34, "text-anchor": "middle", class: "lab" }, svg).textContent = "Day (sample DNA01-DNA10)";
+    chartLegend(host, CTX.map(([, name, color]) => ({ name, color })));
+  });
+  const f1 = (v) => v.toFixed(1);
+  table($("g5CtxTable"), {
+    columns: [
+      { key: "sample", label: "Sample" }, { key: "day", label: "Day", num: true, fmt: String }, { key: "gbp", label: "Gbp", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "hq", label: "HQ MAGs %", num: true, fmt: f1 }, { key: "mq", label: "MQ MAGs %", num: true, fmt: f1 }, { key: "mag", label: "All MAGs %", num: true, fmt: f1 },
+      { key: "unbinned", label: "Unbinned contigs %", num: true, fmt: f1 }, { key: "off", label: "Not on assembly %", num: true, fmt: f1 },
+      { key: "c101", label: "B. angulatum % of bases", num: true, fmt: (v) => v.toFixed(3) },
+      { key: "c101_of_mag", label: "% of MAG bases", num: true, fmt: (v) => v.toFixed(3) }, { key: "c101_rank", label: "Rank", num: true, fmt: String },
+    ],
+    rows: D.context, sortKey: "day", sortDesc: false,
+  });
+}
+
 function drawAll() {
   $("g5Reads").checked = st.reads; $("g5Rel").checked = st.rel; $("g5Log").checked = st.log;
   $("g5Color").value = st.color; $("g5Lab").checked = st.labels; $("g5Q").value = st.q; $("g5Unit").value = st.unit;
-  drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups();
+  drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups(); drawCtx();
 }
 function write() {
   writeHashParams({ reads: st.reads ? 1 : "", rel: st.rel ? 1 : "", log: st.log ? 1 : "", color: st.color !== DEFAULTS.color ? st.color : "", lab: st.labels ? "" : 0, q: st.q, role: st.role, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "" });
