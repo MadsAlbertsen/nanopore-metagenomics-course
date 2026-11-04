@@ -7,4 +7,3 @@
 .pjctl label { max-width: 100%; min-width: 0 } .pjctl select { max-width: 100%; min-width: 0 }
 #r5Resp td:nth-child(2), #r5Resp td:nth-child(3), #r5Gh td:nth-child(3), #r5Gh td:nth-child(4) { white-space: normal; min-width: 160px }
 #r5Resp td:nth-child(3) { min-width: 300px }
-p.pjversion { display: block }

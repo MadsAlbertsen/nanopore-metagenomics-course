@@ -13,6 +13,7 @@ const sum = (a) => a.reduce((x, y) => x + y, 0);
   N.mean_low_3 = f3(N.mean_low);
   N.r1_length_fmt = N.r1_length.toLocaleString("en-US");
   N.noise_ratio_max = Math.round(100 * Math.max(...D.noise.classes.map((c) => c.tech / c.temp)));
+  N.rep_reads_d6 = D.depth[5].rep_reads;
   N.runs_max_day = D.null.runs.reduce((b, r) => (r.n > b.n ? r : b)).peak_day;
   N.gh_gs = N.r1_gh13_c101_glycogen + N.r1_gh13_c101_sucrose;
   N.gh_branch = N.r1_gh13_c101_pull + N.r1_gh13_c101_olig;
@@ -145,7 +146,7 @@ const RESP = [
   ["R1-M2", "No technical replicate; extraction effects",
     "Partly. The second library repeats library preparation, sequencing and read sampling, and reproduces the course of B. angulatum and the phylum shift on day 5. It does not repeat DNA extraction, whose method is not recorded in the project notes; the Discussion names extraction as the remaining technical explanation."],
   ["R1-M3", "No chance expectation for the day 3-4-5 group; compositional data",
-    "Done. 1/8 per MAG and an exact joint permutation null over all ordered four-day sets: the observed count is below the expectation. The group is now presented as not exceeding chance, and compositional effects are discussed."],
+    "Done. 1/8 per MAG and an exact joint permutation null over all ordered four-day sets: the observed count lies within the chance range. The group is now presented as not exceeding chance, and compositional effects are discussed."],
   ["R1-M4", "Abundance estimation under-specified; breadth of coverage",
     "Partly. The share is defined with an equation, mapper and depth format are named; the mapping filters inside mmlong2 were not inspected. Breadth of coverage per day needs the alignment files on the server and was not computed."],
   ["R1-M5", "Annotation: Bakta light database, dbCAN consensus, GH13 subfamilies, median-MAG bias, polishing",
@@ -153,7 +154,7 @@ const RESP = [
   ["R1-M6", "Versions, HQ definition, deposition",
     "Done for versions (Methods) and the quality classes (CheckM2 thresholds that reproduce mmlong2's class of every MAG). Reads are withheld to protect the participant; controlled-access deposition is named as the route for a submission."],
   ["R2-M1", "Day 3-4-5 group indistinguishable from noise; minimum effect size",
-    `Done. Null model (Figure 4A), a stricter rule with at least a ${N.r1_strict_fold}-fold rise, all runs of four consecutive days (Figure 4B), and the replicate check. The Abstract now says the count is below chance.`],
+    `Done. Null model (Figure 4A), a stricter rule with at least a ${N.r1_strict_fold}-fold rise, all runs of four consecutive days (Figure 4B), and the replicate check. The Abstract now says the count is within the chance range.`],
   ["R2-M2", "Day 4 is a low point; rank depends on the baseline",
     `Done. One baseline (median of days 1-4) throughout; B. angulatum ranks ${N.r1_med_rank} of ${N.d5_eligible} by it, against ${N.d45_c101_rank_fold} with day 4 as baseline; both are given.`],
   ["R2-M3", "Inconsistent fold baselines; depth on the low days",
