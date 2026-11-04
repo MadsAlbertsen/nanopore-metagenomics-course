@@ -1,0 +1,9 @@
+.r5two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start }
+@media (max-width: 900px) { .r5two { grid-template-columns: minmax(0, 1fr) } }
+.eq { text-align: center; font-family: var(--mono); font-size: 14px; color: var(--ink) }
+.r5refs { margin: 0; padding-left: 22px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px }
+.r5refs a { color: var(--accent) }
+.pjctl { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 13px }
+.pjctl label { max-width: 100%; min-width: 0 } .pjctl select { max-width: 100%; min-width: 0 }
+#r5Resp td:nth-child(2), #r5Resp td:nth-child(3), #r5Gh td:nth-child(3), #r5Gh td:nth-child(4) { white-space: normal; min-width: 160px }
+#r5Resp td:nth-child(3) { min-width: 300px }
