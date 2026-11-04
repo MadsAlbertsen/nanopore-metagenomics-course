@@ -1,4 +1,6 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 12:42"
+  what: "Figure 5: ordination (PCoA) of the days for the species mix and the genes; wording of Other function sets: how the cut-offs were chosen (Q7)"
 - when: "4 Nov 2026, 12:32"
   what: "Figure 6: all families over time and the largest relative changes, now also for the marker genes (KOfam) and the Bakta-named genes (Q6, edited)"
 - when: "4 Nov 2026, 12:25"
