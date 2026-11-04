@@ -111,7 +111,7 @@ function forest(host) {
       el("text", { x: box.l - 6, y: y + 4, "text-anchor": "end", class: "dlab" }, svg).textContent = name;
       if (!clr) el("line", { x1: x(m.lo), x2: x(m.hi), y1: y, y2: y, style: `stroke:${color};stroke-width:2` }, svg);
       const c = el("circle", { cx: x(val(m)), cy: y, r: 4.2, class: "dot", style: m.stays ? `fill:${color};stroke:${color}` : `fill:var(--surface);stroke:${color};stroke-width:1.6` }, svg);
-      tipOn(c, `<b>${esc(m.name)}</b><br>${esc(m.phylum)}, ${esc(m.quality)}<br>log2 change ${m.log2.toFixed(2)} (interval ${m.lo.toFixed(2)} to ${m.hi.toFixed(2)})<br>centred log-ratio change ${m.clr.toFixed(2)}<br>${m.stays ? "two-fold in all ten leave-one-day-out runs" : "not two-fold in every leave-one-day-out run"}`);
+      tipOn(c, `<b>${esc(m.name)}</b><br>${esc(m.phylum)}, ${esc(m.quality)}<br>log2 change ${m.log2.toFixed(2)} (interval ${m.lo.toFixed(2)} to ${m.hi.toFixed(2)})<br>centred log-ratio change ${m.clr.toFixed(2)}<br>${m.stays ? "two-fold and above the 0.1% cut-off in all ten leave-one-day-out runs" : "not two-fold and above the 0.1% cut-off in every leave-one-day-out run"}`);
     });
     const seen = [...new Set(rows.map((m) => (PHYLA.includes(m.phylum) ? m.phylum : "Other phyla")))];
     chartLegend(host, seen.map((p) => ({ name: p, color: phylumColor(p) })));
@@ -183,7 +183,7 @@ const SOURCES = {
     cols: [{ label: "split", key: "s" }, { label: "MAGs rising >= 2-fold", get: (r) => D.split_counts.rise[r.k] }, { label: "MAGs falling >= 2-fold", get: (r) => D.split_counts.fall[r.k] }] }],
   fig4: [{ file: "fig4a_effect_sizes", title: "a", rows: D.mags.filter((m) => m.big),
     cols: [{ label: "MAG", key: "mag" }, { label: "name", key: "name" }, { label: "phylum", key: "phylum" }, { label: "log2 change", key: "log2" },
-      { label: "interval 5%", key: "lo" }, { label: "interval 95%", key: "hi" }, { label: "CLR change (log2 units)", key: "clr" }, { label: "two-fold in all leave-one-day-out runs", key: "stays" }] },
+      { label: "interval 5%", key: "lo" }, { label: "interval 95%", key: "hi" }, { label: "CLR change (log2 units)", key: "clr" }, { label: "two-fold and >= 0.1% in all leave-one-day-out runs", key: "stays" }] },
   { file: "fig4b_cutoff_grid", title: "b", rows: D.sens,
     cols: [{ label: "pseudocount (%)", key: "pseudo" }, { label: "mean share cut-off (%)", key: "min_mean" }, { label: "fold cut-off", key: "fold" }, { label: "MAGs followed", key: "mags" },
       { label: "down", key: "down" }, { label: "up", key: "up" }, { label: "best split at 5|6", key: "at_switch" }, { label: "later", key: "later" }, { label: "earlier", key: "earlier" }] }],
@@ -215,7 +215,7 @@ const SUPP = [
       { key: "contamination", label: "Contamination (%)", num: true, fmt: f(2) }, { key: "size_mb", label: "Size (Mbp)", num: true, fmt: f(2) },
       { key: "high", label: "Days 1-5 (%)", num: true, fmt: f(3) }, { key: "low", label: "Days 6-10 (%)", num: true, fmt: f(3) },
       { key: "log2", label: "log2 change", num: true, fmt: f(2) }, { key: "lo", label: "Interval 5%", num: true, fmt: f(2) }, { key: "hi", label: "Interval 95%", num: true, fmt: f(2) },
-      { key: "clr", label: "CLR change", num: true, fmt: f(2) }, { key: "stays", label: "Two-fold in all leave-one-out runs", fmt: (v, r) => (!r.big ? "–" : v ? "yes" : "no") },
+      { key: "clr", label: "CLR change", num: true, fmt: f(2) }, { key: "stays", label: "Two-fold and ≥ 0.1% in all leave-one-out runs", fmt: (v, r) => (!r.big ? "–" : v ? "yes" : "no") },
       { key: "best", label: "Best split", num: true, fmt: (v) => SPLITS[v - 1] },
       { key: "r2_switch", label: "R² step at 5|6", num: true, fmt: fmtR }, { key: "r2_line", label: "R² line", num: true, fmt: fmtR },
       { key: "sep", label: "Separation (of 5)", num: true, fmt: String }, { key: "fit", label: "Fit" }], sortKey: "log2", filter: true },

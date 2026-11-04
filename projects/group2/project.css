@@ -23,3 +23,9 @@
 @media (max-width: 760px) { .g2rat th { white-space: normal } }
 .panel p a, .panel td a { color: var(--accent) }
 .spctl select { max-width: 100% }
+.g2steps { padding-left: 22px; font-size: 14px; line-height: 1.55; margin: 0 }
+.g2steps li { margin-bottom: 6px }
+.chart .g2box { fill: var(--surface); stroke: var(--line); stroke-width: 1 }
+.chart .g2mean { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1 }
+.chart text.g2val { fill: var(--ink); font-size: 11.5px }
+.chart .g2ci { stroke: var(--accent); stroke-width: 2 }

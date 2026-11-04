@@ -82,6 +82,15 @@
 
 <section class="panel">
   <h3>3.7 Day resampling</h3>
+  <p><b>Why it was done.</b> The research question asks which MAGs differ between the two diet periods. With one person and one sample per day there are no replicate samples, so a "two-fold change" could rest on one unusual day, for example the weakly sequenced day 2 or the transition day 6. Day resampling and leaving out one day at a time (3.8) ask the same practical question: would the MAG still look changed if a somewhat different set of days had been sampled? This matters because the list of risers and fallers (Fig. 4a), and the interpretation built on it, should not depend on a single day.</p>
+  <p><b>Step by step, with one MAG.</b> The numbers below are for the MAG chosen in the menu (Fig. R1); <i>Acetatifactor intestinalis</i> is a clear riser, <i>Roseburia_D yibonii</i> the one two-fold MAG whose interval includes zero.</p>
+  <div class="spctl"><label>MAG <select id="m2BxMag" aria-label="MAG for the worked example"></select></label></div>
+  <ol class="g2steps" id="m2BxSteps"></ol>
+  <div class="fig">
+    <div id="m2BxSchema"></div>
+    <div class="g2two"><div id="m2BxHist"></div><div id="m2BxLodo"></div></div>
+    <p class="cap"><b>Fig. R1 | Day resampling and leaving out one day, for one MAG.</b> <b>a</b>, The MAG's measured share of each day's bases (top row of each period, percent) and the first of the <span data-bx="reps"></span> random draws of five days with replacement (second row; days drawn twice or more appear twice or more, days not drawn are missing). The box at the right is the mean of the row; the two means give the log2 change written below (computed from the unrounded shares). <b>b</b>, The <span data-bx="reps"></span> log2 changes from all draws (bars, 0.25 log2 units wide; values beyond the axis are counted in the end bars), the observed change (dot), the 5th and 95th percentiles that form the 90% interval in Fig. 4a (solid lines) and two-fold (dashed). <b>c</b>, The log2 change with each of the ten days left out (dots); dashed line: two-fold. A filled dot in Fig. 4a means every dot here lies beyond the dashed line and the MAG's mean share over the nine days stays at or above 0.1% in every run.</p>
+  </div>
   <table class="g2rat">
     <tr><th>Why</th><td>A simple, transparent way to show how much each contrast depends on the particular days sampled, as the group asked for uncertainty with every effect size.</td></tr>
     <tr><th>Assumes</th><td>Days within a period are exchangeable.</td></tr>
@@ -94,6 +103,7 @@
   <h3>3.8 Leave one day out</h3>
   <table class="g2rat">
     <tr><th>Why</th><td>Shows whether a single day, for example the weakly sequenced day 2 or the transition day 6, drives a result.</td></tr>
+    <tr><th>How</th><td>Each of the ten days is removed once; the period means, the log2 changes and the list of two-fold MAGs are recomputed on the other nine days (four in one period, five in the other). For the worked example in 3.7 the ten runs are shown in Fig. R1c.</td></tr>
     <tr><th>Assumes</th><td>Nine days still describe each period.</td></tr>
     <tr><th>Pitfalls</th><td>Removing a day changes which MAGs pass the 0.1% cut-off, so counts can move for reasons unrelated to the change itself.</td></tr>
     <tr><th>Alternatives</th><td>Leaving out pairs of days; jackknife estimates of variance (assume independence).</td></tr>
