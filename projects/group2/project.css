@@ -29,3 +29,5 @@
 .chart .g2mean { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1 }
 .chart text.g2val { fill: var(--ink); font-size: 11.5px }
 .chart .g2ci { stroke: var(--accent); stroke-width: 2 }
+.g2scroll { overflow-x: auto }
+#g2Traits { min-width: 820px }

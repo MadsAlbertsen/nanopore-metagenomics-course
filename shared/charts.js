@@ -233,7 +233,8 @@ function heatmap(host, o) {
     const fmt = o.format || fmtNum;
     let color;
     if (o.diverging) {
-      const c = o.center || 0, span = Math.max(...vals.map((v) => Math.abs(v - c))) || 1;
+      // span (optional): values further than span from the centre get the full colour (clip); default = largest
+      const c = o.center || 0, span = o.span || Math.max(...vals.map((v) => Math.abs(v - c))) || 1;
       const neg = cssVar("--c1") || "#2a78d6", pos = cssVar("--c2") || "#eb6834", mid = cssVar("--v4") || "#d3d8d6";
       color = (v) => (v < c ? mix(mid, neg, Math.min(1, (c - v) / span)) : mix(mid, pos, Math.min(1, (v - c) / span)));
     } else {
@@ -256,7 +257,7 @@ function heatmap(host, o) {
     const leg = document.createElement("div");
     leg.className = "legend";
     leg.innerHTML = o.diverging
-      ? `<span>${esc(o.label || "")}: <i class="sw" style="background:var(--c1)"></i>below ${fmt(o.center || 0)} <i class="sw" style="background:var(--v4)"></i>${fmt(o.center || 0)} <i class="sw" style="background:var(--c2)"></i>above</span>`
+      ? `<span>${esc(o.label || "")}: <i class="sw" style="background:var(--c1)"></i>below ${fmt(o.center || 0)} <i class="sw" style="background:var(--v4)"></i>${fmt(o.center || 0)} <i class="sw" style="background:var(--c2)"></i>above${o.span ? ` (full colour from ±${fmt(o.span)})` : ""}</span>`
       : `<span>${esc(o.label || "")}: ${fmt(lo)} <i class="ramp" style="display:inline-block;width:120px;height:10px;vertical-align:-1px;background:linear-gradient(90deg,${[0, 0.25, 0.5, 0.75, 1].map(viridis).join(",")})"></i> ${fmt(hi)}</span>`;
     host.appendChild(leg);
   });

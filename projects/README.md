@@ -66,7 +66,7 @@ lineChart(host, { x: [1..10], series: [{ name, values, color? }], xLabel: "Day",
 barChart(host, { labels, values } | { labels, groups: [{ name, values }] }, yLabel, unit?, horizontal?, colors?, fmt?, height? })
 scatter(host, { points: [{ x, y, label, group?, size?, color?, extra? }], xLabel, yLabel, logX?, logY?, diagonal?,
   labelled?, xRange?, yRange?, height? })
-heatmap(host, { rows, cols, values: [[...]] (null = no value), label, diverging?, center?, min?, max?, format?, cell? })
+heatmap(host, { rows, cols, values: [[...]] (null = no value), label, diverging?, center?, span? (diverging: full colour beyond ±span), min?, max?, format?, cell? })
 table(host, { columns: [{ key, label, num?, fmt?(value, row) }], rows: [{...}], filter?, sortKey?, sortDesc?, maxRows?,
   sortable? })
 chartLegend(host, [{ name, color }])
