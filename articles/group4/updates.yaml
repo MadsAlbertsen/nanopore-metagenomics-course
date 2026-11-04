@@ -1,3 +1,5 @@
+- when: "4 Nov 2026, 16:07"
+  what: "Figure titles shortened (ISME style); Introduction cut to two paragraphs; Results openings and first Discussion paragraph rewritten (Q19, Q20)"
 - when: "4 Nov 2026, 16:02"
   what: "Figure 2: new panel b (mean share against log2 change of each MAG; the former b and c are now c and d); Figure 1c: families coloured by substrate group (Q17, Q18)"
 - when: "4 Nov 2026, 15:50"
