@@ -1,0 +1,11 @@
+number: 2
+slug: article-group2-r1
+title: "Genome turnover without detectable compensation: carbohydrate-degradation potential of one person's gut community stays within what averaging predicts across a diet switch"
+nav: "Group 2 article, revision 1"
+question: "Is the near-constant carbohydrate-degradation potential across the diet switch compensation by rising genomes or the averaging expected by chance? A rewrite of the group's article after peer review, with a trait-shuffling null model and the reviewers' depth and abundance checks."
+status: draft
+revision_of: 2
+revision_label: "Revision 1 (rewritten by Claude after peer review, 4 Nov 2026)"
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Diet facts: information from the participant. New analyses: np26 scripts/42_project_group2.py (revision 1).
