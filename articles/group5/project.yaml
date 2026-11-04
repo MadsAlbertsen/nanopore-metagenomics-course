@@ -2,7 +2,7 @@ number: 5
 slug: article-group5
 title: "Carbohydrate gene content and ten-day relative abundance of Bifidobacterium angulatum in one person's gut metagenome"
 nav: "Group 5 article"
-question: "The angle of the article is chosen by the group from its project report (Projects, group 5)."
+question: "The relative abundance and carbohydrate gene content of Bifidobacterium angulatum over ten days and a diet switch, with the data-quality checks behind them."
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.

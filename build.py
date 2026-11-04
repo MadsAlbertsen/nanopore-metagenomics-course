@@ -332,10 +332,19 @@ ARTICLES_INTRO = (
 )
 
 
+def article_title(a: dict) -> str:
+    """The title the group sees on the article page: its <h1> (italics kept), else the title in project.yaml."""
+    m = re.search(r"<h1>(.*?)</h1>", (a["dir"] / "body.html").read_text(), re.S)
+    if not m:
+        return esc(a["title"])
+    parts = re.split(r"(</?i>)", m.group(1))
+    return "".join(x if x in ("<i>", "</i>") else esc(re.sub(r"<[^>]+>", "", x)) for x in parts).strip()
+
+
 def build_articles_index(arts: list[dict], mods: list[dict], page: str, base: dict) -> str:
     cards = [
         f'<li class="panel"><span class="kicker">Group {a["number"]}</span>'
-        f'<h3><a href="{a["slug"]}.html">{esc(a["title"])}</a></h3><p>{esc(a["question"])}</p></li>'
+        f'<h3><a href="{a["slug"]}.html">{article_title(a)}</a></h3><p>{esc(a["question"])}</p></li>'
         for a in arts
     ]
     return fill(

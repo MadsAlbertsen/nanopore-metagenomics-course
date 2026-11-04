@@ -2,7 +2,7 @@ number: 4
 slug: article-group4
 title: "A dietary switch reshuffles gut microbiome composition, but carbohydrate-degrading gene potential barely moves: a ten-day long-read metagenomic time series"
 nav: "Group 4 article"
-question: "The angle of the article is chosen by the group from its project report (Projects, group 4)."
+question: "Species composition changed after the diet switch while the carbohydrate-degrading gene potential changed little; redundancy across genomes is discussed as one explanation."
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
