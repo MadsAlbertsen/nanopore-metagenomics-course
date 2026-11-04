@@ -1,0 +1,12 @@
+number: 4
+slug: article-group4-r1
+title: "Carbohydrate-degrading gene potential after a diet switch is no more stable than averaging across genomes predicts: a null-model test in a ten-day long-read gut metagenome"
+nav: "Group 4 article, revision 1"
+question: "A rewrite of the group's article after peer review: null models test whether the stable carbohydrate-degrading gene potential is more than the averaging expected from summing many genomes, and whether genomes sharing a gene family compensate for each other."
+status: draft
+revision_of: 4
+revision_label: "Revision 1 (rewritten by Claude after peer review, 4 Nov 2026)"
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Diet facts: information from the data owner. The analyses, figures and text of this revision were made by Claude
+  (np26 scripts/44_project_group4.py, function revision1).
