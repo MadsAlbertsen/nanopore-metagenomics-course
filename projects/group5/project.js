@@ -480,7 +480,7 @@ function drawUb() {
       for (const [k, name, color] of UB) {
         const v = U.by_size[k][i];
         const rect = el("rect", { x: xc - bw / 2, y: y(acc + v), width: bw, height: y(acc) - y(acc + v), style: `fill:${color}` }, svg);
-        tipOn(rect, `<b>${esc(s.sample)} · day ${s.day}</b><br>unbinned contigs ${esc(name)}: ${v.toFixed(2)}%<br>all unbinned: ${tot[i].toFixed(1)}%; ten largest: ${U.top10[i].toFixed(1)}%`);
+        tipOn(rect, `<b>${esc(s.sample)} · day ${s.day}</b><br>unbinned contigs ${esc(name)}: ${v.toFixed(2)}%<br>all unbinned: ${tot[i].toFixed(1)}%; ten with the largest share: ${U.top10[i].toFixed(1)}%`);
         acc += v;
       }
       el("text", { x: xc, y: box.b + 16, "text-anchor": "middle" }, svg).textContent = small ? String(s.day) : s.sample;
@@ -490,16 +490,16 @@ function drawUb() {
     if (small) el("text", { x: (box.l + box.r) / 2, y: box.b + 34, "text-anchor": "middle", class: "lab" }, svg).textContent = "Day (sample DNA01-DNA10)";
     chartLegend(host, UB.map(([, name, color]) => ({ name, color })));
   });
-  const KIND = { "multi-copy": "multi-copy", chromosome: "chromosome-sized", fragment: "fragment" };
+  const KIND = { deep: "deeper than any MAG", large: "large", fragment: "fragment" };
+  const methyl = (r) => [r.flagged === null ? "" : `${r.flagged}/${r.windows} flagged`, r.placed ? `placed in ${r.placed} (${r.placed_ratio}x)` : ""].filter(Boolean).join("; ") || "–";
   table($("g5UbTable"), {
     columns: [
-      { key: "id", label: "Contig" }, { key: "length_kb", label: "Length (kb)", num: true, fmt: (v) => v.toLocaleString("en-US") },
-      { key: "depth", label: "Depth (x)", num: true, fmt: (v) => v.toLocaleString("en-US") }, { key: "circular", label: "Circular", fmt: (v) => (v ? "yes" : "no") },
-      { key: "gc", label: "GC %", num: true, fmt: (v) => v.toFixed(1) }, { key: "species", label: "Metabuli species" },
-      { key: "same_species_mag", label: "MAG of same species", fmt: (v) => (v ? "yes" : "no") },
-      { key: "mean", label: "Mean %", num: true, fmt: (v) => v.toFixed(2) }, { key: "max", label: "Highest day %", num: true, fmt: (v) => v.toFixed(2) },
-      { key: "flagged", label: "Methylation windows flagged", fmt: (v, r) => (v === null ? "–" : `${v} / ${r.windows}`) },
-      { key: "placed", label: "Placed in MAG", fmt: (v, r) => (v ? `${v} (depth ratio ${r.placed_ratio})` : "–") },
+      { key: "id", label: "Contig" }, { key: "length_kb", label: "kb", num: true, fmt: (v) => v.toLocaleString("en-US") },
+      { key: "depth", label: "Depth", num: true, fmt: (v) => v.toLocaleString("en-US") + "x" }, { key: "circular", label: "Circ.", fmt: (v) => (v ? "yes" : "no") },
+      { key: "gc", label: "GC %", num: true, fmt: (v) => v.toFixed(1) }, { key: "species", label: "Species (Metabuli)" },
+      { key: "mag_depth", label: "Same-species MAG", num: true, fmt: (v) => (v === null ? "–" : v.toLocaleString("en-US") + "x") },
+      { key: "mean", label: "Mean %", num: true, fmt: (v) => v.toFixed(2) }, { key: "max", label: "Max %", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "flagged", label: "Methylation", fmt: (v, r) => methyl(r) },
       { key: "kind", label: "Class", fmt: (v) => KIND[v] || v },
     ],
     rows: D.unbinned.top, sortKey: "mean", sortDesc: true,
