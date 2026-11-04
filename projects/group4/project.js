@@ -375,7 +375,76 @@ function drawMagChange() {
   });
 }
 
-function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawMagChange(); drawFeas(); drawStrain(); drawFunc(); }
+// Q12: bubble plot of the MAGs with the largest change plus stable references, with community rows
+function drawBubble() {
+  const B = D.bubble, cols = ["Plant fibre", "Starch", "Fructan", "Host glycans", "Other CAZymes"];
+  const colr = (m) => (m.stable ? "var(--faint)" : m.log2 < 0 ? "var(--c1)" : "var(--c3)");
+  const lab = (r) => r.name.replace(/ \(.*\)$/, "");
+  const vmax = Math.max(...B.mags.flatMap((m) => m.v), ...B.rows.slice(0, 2).flatMap((r) => r.v));
+  const host = $("pjBub");
+  host.style.overflowX = "auto";
+  mountChart(host, () => {
+    host.innerHTML = "";
+    const inner = document.createElement("div");
+    host.appendChild(inner);
+    const rowH = 28, colW = 78, famW = 118, nameW = 190, barW = 130, top = 46;
+    const W = famW + nameW + colW * 5 + barW + 30;
+    const nm = B.mags.length, gap = 26;
+    const H = top + nm * rowH + gap + 2 * rowH + 56;
+    inner.style.minWidth = W + "px";
+    const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img" }, inner);
+    const x0 = famW + nameW, r = (v) => 12.5 * Math.sqrt(v / vmax);
+    const bx = x0 + colW * 5 + 14, bscale = (v) => (v / 5) * (barW / 2);
+    cols.forEach((c, j) => el("text", { x: x0 + colW * (j + 0.5), y: top - 10, "text-anchor": "middle", class: "dlab" }, svg).textContent = c);
+    el("text", { x: 4, y: top - 10, class: "dlab" }, svg).textContent = "Family";
+    el("text", { x: famW, y: top - 10, class: "dlab" }, svg).textContent = "MAG";
+    el("text", { x: bx + barW / 2, y: top - 10, "text-anchor": "middle", class: "dlab" }, svg).textContent = "log2 change";
+    const rowY = (i) => top + i * rowH + rowH / 2;
+    B.mags.forEach((m, i) => {
+      const y = rowY(i), g = el("g", {}, svg);
+      if (i === 20) el("line", { x1: 0, x2: W, y1: top + i * rowH, y2: top + i * rowH, class: "mark", "stroke-dasharray": "3 3" }, svg);
+      el("text", { x: 4, y: y + 4, class: "dlab" }, g).textContent = m.family.length > 17 ? m.family.slice(0, 16) + "…" : m.family;
+      el("text", { x: famW, y: y + 4, class: "dlab" }, g).textContent = lab(m).length > 30 ? lab(m).slice(0, 29) + "…" : lab(m);
+      m.v.forEach((v, j) => {
+        const c = el("circle", { cx: x0 + colW * (j + 0.5), cy: y, r: Math.max(v > 0 ? 1.5 : 0.8, r(v)), style: `fill:${v > 0 ? colr(m) : "none"};stroke:${v > 0 ? "none" : "var(--line)"};fill-opacity:.85` }, g);
+        tipOn(c, `<b>${esc(m.name)}</b><br>${esc(m.family)}<br>${cols[j]}: ${v.toFixed(1)} genes per 1,000 genes of the MAG<br>log2 change ${m.log2.toFixed(2)}, mean share ${m.mean.toFixed(2)}%`);
+      });
+      const bar = el("rect", { x: Math.min(bx + barW / 2, bx + barW / 2 + bscale(m.log2)), y: y - 7, width: Math.abs(bscale(m.log2)), height: 14, style: `fill:${colr(m)}` }, g);
+      tipOn(bar, `<b>${esc(m.name)}</b><br>log2 change ${m.log2.toFixed(2)}`);
+      el("text", { x: bx + barW / 2 + (m.log2 < 0 ? 4 : -4), y: y + 4, "text-anchor": m.log2 < 0 ? "start" : "end", class: "dlab", style: "fill:var(--ink)" }, g).textContent = "";
+    });
+    el("line", { x1: bx + barW / 2, x2: bx + barW / 2, y1: top, y2: top + nm * rowH, class: "mark" }, svg);
+    [-4, -2, 0, 2, 4].forEach((t) => el("text", { x: bx + barW / 2 + bscale(t), y: top + nm * rowH + 12, "text-anchor": "middle", class: "dlab" }, svg).textContent = t);
+    // community rows (days 1-5 and 6-10 as in Figure 2)
+    const y0 = top + nm * rowH + gap;
+    el("line", { x1: 0, x2: W, y1: y0 - 4, y2: y0 - 4, class: "mark" }, svg);
+    B.rows.slice(0, 2).forEach((row, i) => {
+      const y = y0 + i * rowH + rowH / 2;
+      el("text", { x: 4, y: y + 4, class: "dlab", style: "font-weight:600" }, svg).textContent = "Community";
+      el("text", { x: famW, y: y + 4, class: "dlab", style: "font-weight:600" }, svg).textContent = `${row.label} (weighted mean)`;
+      row.v.forEach((v, j) => {
+        const c = el("circle", { cx: x0 + colW * (j + 0.5), cy: y, r: r(v), style: "fill:var(--ink);fill-opacity:.55" }, svg);
+        tipOn(c, `<b>Community, ${row.label}</b><br>${cols[j]}: ${v.toFixed(2)} genes per 1,000 genes (each MAG weighted by its share of the DNA times its number of genes)`);
+        el("text", { x: x0 + colW * (j + 0.5) + r(v) + 3, y: y + 4, class: "dlab", style: "font-size:10px" }, svg).textContent = v.toFixed(1);
+      });
+    });
+    const ly = y0 + 2 * rowH + 22;
+    let lx = 4;
+    for (const [t, c] of [["fell (blue)", "var(--c1)"], ["rose (green)", "var(--c3)"], ["stable reference (grey)", "var(--faint)"]]) {
+      el("circle", { cx: lx + 6, cy: ly, r: 6, style: `fill:${c}` }, svg);
+      el("text", { x: lx + 16, y: ly + 4, class: "dlab" }, svg).textContent = t;
+      lx += 24 + t.length * 6.2;
+    }
+    for (const v of [1, 10, 40]) {
+      el("circle", { cx: lx + 14, cy: ly, r: r(v), style: "fill:none;stroke:var(--muted)" }, svg);
+      el("text", { x: lx + 14 + r(v) + 4, y: ly + 4, class: "dlab" }, svg).textContent = v;
+      lx += 24 + r(v) * 2 + 10;
+    }
+    el("text", { x: lx + 8, y: ly + 4, class: "dlab" }, svg).textContent = "genes per 1,000 genes of the MAG";
+  });
+}
+
+function drawAll() { drawCat(); drawRed(); drawBeyond(); drawSort(); drawStab(); drawRank(); drawFam(); drawFamAll(); drawDrv(); drawMagChange(); drawBubble(); drawFeas(); drawStrain(); drawFunc(); }
 
 for (const [id, key, draw] of [["catView", "cat", drawCat], ["sortView", "sort", drawSort], ["stabView", "stab", drawStab], ["drvView", "drv", drawDrv], ["famAllView", "famAll", drawFamAll], ["famSetView", "famSet", drawFamAll]]) {
   $(id).addEventListener("click", (ev) => {
