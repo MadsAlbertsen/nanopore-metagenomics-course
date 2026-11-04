@@ -1,6 +1,6 @@
 // Group 3: butyrate genes across the two diet periods. DATA from np26 scripts/43_project_group3.py.
 const D = DATA, N = D.numbers;
-const st = { gview: "per1000", view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag", capP: "hi" };
+const st = { gview: "per1000", view: "genes", hset: "all", hscale: "share", series: "community", mag: D.mags.find((m) => m.main).id, contrib: "mag", capP: "hi", famView: "families" };
 const byId = Object.fromEntries(D.mags.map((m) => [m.id, m]));
 const mains = D.mags.filter((m) => m.main);
 const SPLIT = "diet switch";
@@ -304,7 +304,62 @@ function drawPathway() {
   $("g3Path").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:640px;display:block;margin:0 auto" role="img" aria-label="Butyrate pathway with the searched genes and their change">${svg}</svg>`;
 }
 
-function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); drawPathway(); }
+// part 3.7 (Q3, Q7): community shifts and compositional effects
+const CS = D.community_shift;
+function drawCommunity() {
+  const P = CS.pcoa;
+  const pts = D.days.map((d, i) => ({ x: P.x[i], y: P.y[i], label: `day ${d}`, group: i < 5 ? "days 1-5" : "days 6-10", color: i < 5 ? "var(--c1)" : "var(--c2)", size: 6 }));
+  scatter($("g3DayPcoa"), { points: pts, xLabel: `PCoA axis 1 (${N.q3_pc1}%)`, yLabel: `PCoA axis 2 (${N.q3_pc2}%)`, labelled: true, height: 320 });
+  // join the days in order: a polyline through the drawn points (re-added whenever the chart redraws)
+  const join = () => {
+    const svg = $("g3DayPcoa").querySelector("svg");
+    if (!svg || svg.querySelector("polyline.g3join")) return;
+    const cs = [...svg.querySelectorAll("circle.dot")];
+    if (cs.length !== pts.length) return;
+    const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    pl.setAttribute("class", "g3join");
+    pl.setAttribute("points", cs.map((c) => `${c.getAttribute("cx")},${c.getAttribute("cy")}`).join(" "));
+    pl.setAttribute("style", "fill:none;stroke:var(--muted);stroke-width:1;opacity:0.6");
+    svg.insertBefore(pl, cs[0]);
+  };
+  if (!drawCommunity.obs) { drawCommunity.obs = new MutationObserver(join); drawCommunity.obs.observe($("g3DayPcoa"), { childList: true, subtree: true }); }
+  join();
+  const R = CS.ratios, names = Object.keys(R);
+  const rel = (v) => { const b = v.slice(0, 5).reduce((a, x) => a + x, 0) / 5; return v.map((x) => (x > 0 && b > 0 ? Math.log2(x / b) : null)); };
+  lineChart($("g3Ratio"), { x: D.days, series: names.map((k) => ({ name: k, values: rel(R[k].values) })), xLabel: "Day", xName: "Day",
+    yLabel: "log2 of the ratio relative to days 1-5", marks: [{ x: 5.5, label: SPLIT }], zero: false });
+  $("g3RatioNote").innerHTML = names.map((k) => `${esc(k)}: log2 ${R[k].log2.toFixed(2)} between the period means; first day outside days 1-5: ${R[k].first_out_day ? `day ${R[k].first_out_day} (${R[k].first_out_dir})` : "none"}.`).join("<br>");
+}
+function drawCommunityTables() {
+  const f2 = (v) => v.toFixed(2);
+  table($("g3Top"), {
+    columns: [{ key: "name", label: "MAG" }, { key: "family", label: "Family" }, { key: "hi", label: "Days 1-5 (%)", num: true, fmt: f2 }, { key: "lo", label: "Days 6-10 (%)", num: true, fmt: f2 },
+      { key: "log2", label: "log2 change", num: true, fmt: f2 }, { key: "pp", label: "Points", num: true, fmt: f2 }, { key: "route", label: "Butyrate route" },
+      { key: "gh13", label: "GH13", num: true, fmt: String }, { key: "starch", label: "Starch genes", num: true, fmt: String }, { key: "fibre", label: "Plant-fibre genes", num: true, fmt: String },
+      { key: "mucin", label: "GH33 + GH29 + GH95", num: true, fmt: String }],
+    rows: CS.top, sortKey: "log2", sortDesc: true, maxRows: 20,
+  });
+  table($("g3Bloom"), {
+    columns: [{ key: "group", label: "Bloom group" }, { key: "n", label: "MAGs", num: true, fmt: String }, { key: "hi", label: "Bloom, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "lo", label: "Bloom, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_hi", label: "But carriers, days 1-5 (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "c_lo", label: "But carriers, days 6-10 (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "c_expect", label: "Dilution only (%)", num: true, fmt: (v) => v.toFixed(1) },
+      { key: "explained", label: "Fall explained (%)", num: true, fmt: (v) => (v === null ? "–" : v.toFixed(0)) }],
+    rows: CS.blooms, sortable: false,
+  });
+  drawFam();
+}
+function drawFam() {
+  const g = st.famView === "genera";
+  table($("g3Fam"), {
+    columns: [{ key: g ? "genus" : "family", label: g ? "Genus" : "Family" }, ...(g ? [{ key: "family", label: "Family" }] : []), { key: "n", label: "MAGs", num: true, fmt: String },
+      { key: "hi", label: "Days 1-5 (%)", num: true, fmt: (v) => v.toFixed(2) }, { key: "lo", label: "Days 6-10 (%)", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "pp", label: "Points", num: true, fmt: (v) => v.toFixed(2) }, { key: "log2", label: "log2 change", num: true, fmt: (v) => v.toFixed(2) }],
+    rows: g ? CS.genera : CS.families, sortKey: "pp", maxRows: 20,
+  });
+}
+$("g3FamView").addEventListener("change", (e) => { st.famView = e.target.value; drawFam(); });
+
+function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); drawPathway(); drawCommunity(); }
 $("g3CapP").addEventListener("change", (e) => { st.capP = /^\d+$/.test(e.target.value) ? Number(e.target.value) : e.target.value; drawCapture(); });
 $("g3CapP").insertAdjacentHTML("beforeend", D.days.map((d, i) => `<option value="${i}">day ${d}</option>`).join(""));
 
@@ -320,4 +375,5 @@ stats();
 drawTables();
 drawCaptureTables();
 drawRelTables();
+drawCommunityTables();
 drawAll();
