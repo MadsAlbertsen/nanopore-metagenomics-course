@@ -2,7 +2,7 @@
 // (np26 scripts/44_project_group4.py); numbers in the text and in the key findings come from DATA.numbers.
 const D = DATA;
 const N = D.numbers;
-const st = { cat: "abs", sort: "taxa", stab: "taxa", drv: "sp", famAll: "abs" };
+const st = { cat: "abs", sort: "taxa", stab: "taxa", drv: "sp", famAll: "rel" };
 const PROFILE = { taxa: "species mix", functions: "genes", products: "all named genes", markers: "marker genes" };
 
 // a number from DATA.numbers: d = decimals, sign = show + for positive values
@@ -166,13 +166,13 @@ function drawFamAll() {
     return f.values.map((v) => (v > 0 ? (rel ? (m > 0 ? Math.log2(v / m) : null) : Math.log10(v)) : null));
   });
   heatmap($("pjFamAll"), {
-    rows: F.map((f) => `${f.family} (${f.category})`), cols: days, values: vals, cell: 12, diverging: rel, center: 0,
+    rows: F.map((f) => `${f.family} (${f.category})`), cols: days, values: vals, cell: 12, diverging: rel, center: 0, span: rel ? 1.5 : undefined,
     label: rel ? "log2 of the day over the days 1-5 mean" : "Genes per 1,000 genes",
     format: (v) => (v === null || !Number.isFinite(v) ? "absent" : rel ? v.toFixed(2) : (10 ** v).toPrecision(2)),
   });
   const T = D.famtop;
   heatmap($("pjFamTop"), {
-    rows: T.map((f) => `${f.family} (${f.category})`), cols: days, values: T.map((f) => f.rel), diverging: true, center: 0,
+    rows: T.map((f) => `${f.family} (${f.category})`), cols: days, values: T.map((f) => f.rel), diverging: true, center: 0, span: 1,
     label: "log2 of the day over the days 1-5 mean", format: (v) => v.toFixed(2),
   });
   table($("pjFamTopTable"), {
