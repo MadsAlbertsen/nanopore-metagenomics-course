@@ -13,12 +13,8 @@ data_note: >-
   Barcoding Kit, R10.4.1), analysed with mmlong2, Bakta and the dbCAN protein models. Every number on this page comes
   from np26 scripts/45_project_group5.py; diet details are information from the data owner.
 takeaways:
-  - "The B. angulatum genome is one circular contig of 1.99 Mb (CheckM2 completeness 99.95%) with 1,564 protein-coding genes, 83 of them with a carbohydrate role (Table 3)."
-  - "It carries 39 carbohydrate-degrading enzyme genes in 20 families, more than the median MAG for starch (11 against 5) and plant fibre (12 against 3), plus 12 sugar transporter parts and a phosphoketolase, the bifid-shunt enzyme."
-  - "Its share of the bases fell from a mean of 0.128% on days 1-5 to 0.07% on days 6-10 (log2 -0.8), as the group predicted, but it varied strongly between days (CV 76% and 136%)."
-  - "The share rose 5.9-fold within days 1-5 on an unchanged diet, peaked on day 5 and dropped most from day 6 to day 7 (log2 -2.24); the step across the diet switch was small (log2 -0.31)."
-  - "Counting reads directly in a random read sample (positive control against the base shares passed) also found the most reads on days 5-6, but with 0-9 reads per sample (22 of 18,070 pooled) too few to show the day-to-day pattern."
-  - "Of the 166.5 Gbp of filtered bases, 80.1% lie in the 421 MAGs (62.5% in high-quality, 17.6% in medium-quality MAGs; 74.1-83.4% per sample); B. angulatum holds 0.014-0.379% of the bases in MAGs and ranks 45th to 339th among the MAGs, depending on the day."
-  - "GH13 starch genes are in 368 of the 421 MAGs, which hold 71.15-77.73% of the bases every day, with no drop after the switch; weighted by abundance, GH13 genes per thousand genes fell slightly (2.67 to 2.42) and peaked on day 5 (3.13)."
-  - "The most abundant species is Prevotella copri_B (2 MAGs, mean 8.65% of the bases); the ten most abundant species hold 35.6%."
-  - "On day 5, 9 MAGs rose at least 2-fold over their median of days 1-4, B. angulatum (3.5-fold) and B. adolescentis (5.1-fold) among them, but days 6-10 had 12-23 such MAGs each: day 5 was not an unusual day for the community."
+  - "The B. angulatum genome is one circular contig of 1.99 Mb (CheckM2 completeness 99.95%) with 1,564 protein-coding genes; it carries 39 carbohydrate-degrading enzyme genes in 20 families, more than the median MAG for starch (11 against 5) and plant fibre (12 against 3), and a phosphoketolase, the bifid-shunt enzyme."
+  - "Its share of the bases fell from a mean of 0.128% on days 1-5 to 0.07% on days 6-10 (log2 -0.8), as the group predicted, but it rose 5.9-fold within days 1-5 on an unchanged diet and peaked on day 5; the step across the diet switch was small (log2 -0.31)."
+  - "Counting reads directly in a random read sample also found the most reads on days 5-6, but with 0-9 reads per sample too few to show the day-to-day pattern."
+  - "Of the 166.5 Gbp of filtered bases, 80.1% lie in the 421 MAGs (62.5% in high-quality, 17.6% in medium-quality MAGs; 74.1-83.4% per sample); B. angulatum holds 0.014-0.379% of the bases in MAGs."
+  - "GH13 starch genes are in 368 of the 421 MAGs (71.2-77.7% of the bases, no drop after the switch). On day 5, 9 MAGs rose at least 2-fold, B. adolescentis among them, and abundance-weighted GH13 genes per thousand genes peaked (3.13), but other days had similar numbers of rising MAGs (5-16 on days 6-10 after adjusting for the diet periods)."

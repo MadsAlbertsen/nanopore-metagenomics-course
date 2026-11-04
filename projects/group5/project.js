@@ -57,7 +57,7 @@ const CARB = D.carb.data.map((row) => Object.fromEntries(D.carb.columns.map((c, 
 const CARB_AT = new Map(CARB.map((c) => [c.start + ":" + c.stop, c]));
 
 // context shares (Figure 4) keep one decimal: 56.0, not 56
-const CTX1 = /^ctx_(hq|mq|mag|unbinned|off|asm|rs_all_mag|rs_kept_asm)_(min|max|pooled|high|low)$|^ctx_gbp$/;
+const CTX1 = /^ctx_(hq|mq|mag|unbinned|off|asm|rs_all_mag|rs_kept_asm)_(min|max|pooled|high|low)$|^ctx_gbp$|^gh13_(share|ofmag)_(min|max|high|low)$/;
 function fillNumbers() {
   document.querySelectorAll("[data-n]").forEach((e) => {
     const k = e.dataset.n;
@@ -404,16 +404,53 @@ function drawTop() {
   });
 }
 
+// --- Figure 7 and Table 7: the day-5 risers
+// the kit's diverging legend shows no magnitudes: replace it with the scale's end values (again after each redraw)
+let d5Span = 0;
+function d5Legend() {
+  const leg = $("g5D5Heat").querySelector(".legend");
+  if (leg && d5Span) leg.innerHTML = `<span>log2 of share / median of days 1-4 (diverging scale): ${(-d5Span).toFixed(1)} <i class="ramp" style="display:inline-block;width:120px;height:10px;vertical-align:-1px;background:linear-gradient(90deg,var(--c1),var(--v4),var(--c2))"></i> +${d5Span.toFixed(1)} (0 = equal, 1 = twice, -1 = half)</span>`;
+}
+{
+  let t;
+  const again = () => { clearTimeout(t); t = setTimeout(d5Legend, 300); };
+  addEventListener("resize", again);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", again);
+}
 // narrow screens: day numbers as column labels and genus initials in row labels, so that the heatmap cells stay readable
 const narrow = (host) => (host.clientWidth || 640) < 560;
 const abbr = (name) => name.replace(/^([A-Z])[a-z]+(?:_[A-Z])? (?=[a-z])/, "$1. ");
 function drawDay5() {
   const R = D.day5;
-  barChart($("g5D5Bar"), { labels: R.counts.map((c) => "day " + c.day), values: R.counts.map((c) => c.risers), colors: R.counts.map((c) => (c.day === 5 ? "var(--c2)" : "var(--c1)")), yLabel: "Rising MAGs", unit: "MAGs", height: 220, fmt: (v) => String(Math.round(v)) });
+  // grouped bars (plain / diet-adjusted) with the diet switch between day 5 and day 6 (custom: the kit's barChart
+  // has no marks)
+  const host = $("g5D5Bar"), C = R.counts, G = [["risers", "plain shares", "var(--c1)"], ["adj", "diet-adjusted", "var(--c3)"]];
+  mountChart(host, () => {
+    const { svg, W, H } = newSvg(host, 230);
+    const box = { l: 56, r: W - 12, t: 22, b: H - 30 };
+    const n = C.length, band = (box.r - box.l) / n, bw = (band * 0.7) / G.length;
+    const y = scale(0, Math.ceil(Math.max(...C.map((c) => Math.max(c.risers, c.adj))) / 5) * 5, box.b, box.t);
+    axes(svg, () => 0, y, box, { yLabel: "Rising MAGs", xTicks: [], yTicks: y.ticks(4) });
+    C.forEach((c, i) => {
+      const xc = box.l + band * (i + 0.5);
+      el("text", { x: xc, y: box.b + 16, "text-anchor": "middle" }, svg).textContent = band < 60 ? String(c.day) : "day " + c.day;
+      G.forEach(([k, name, color], gi) => {
+        const v = c[k], xx = xc - (bw * G.length) / 2 + gi * bw;
+        const rect = el("rect", { x: xx, y: y(v), width: bw - 1, height: y(0) - y(v), style: `fill:${color}`, rx: 2 }, svg);
+        tipOn(rect, `<b>Day ${c.day}</b> · ${esc(name)}<br>${v} rising MAGs` + (c.within !== null && k === "risers" ? `<br>against the low-carbohydrate days before only: ${c.within}` : ""));
+      });
+    });
+    const xs = box.l + band; // between day 5 and day 6
+    el("line", { x1: xs, x2: xs, y1: box.t, y2: box.b, class: "mark" }, svg);
+    el("text", { x: xs + 4, y: box.t - 6, class: "note" }, svg).textContent = "diet switch";
+    chartLegend(host, G.map(([, name, color]) => ({ name, color })));
+  });
   const med = (a) => { const b = [...a].sort((x, y) => x - y); return (b[1] + b[2]) / 2; };
   const vals = R.risers.map((x) => { const m = med(x.share.slice(0, 4)); return x.share.map((v) => (m > 0 && v > 0 ? Math.log2(v / m) : null)); });
   const nw = narrow($("g5D5Heat"));
   heatmap($("g5D5Heat"), { rows: R.risers.map((x) => (nw ? abbr(x.name) : x.name)), cols: D.days.map((d) => (nw ? String(d) : "day " + d)), values: vals, diverging: true, center: 0, label: "log2 of share / median of days 1-4", format: (v) => (v === null || v === undefined ? "–" : v.toFixed(2)), colLabelHeight: 46 });
+  d5Span = Math.max(...vals.flat().filter((v) => v !== null).map(Math.abs));
+  d5Legend();
   table($("g5D5Table"), {
     columns: [
       { key: "name", label: "MAG" }, { key: "phylum", label: "Phylum" }, { key: "family", label: "Family" }, { key: "quality", label: "Quality" },
