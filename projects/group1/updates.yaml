@@ -1,4 +1,6 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 11:35"
+  what: "New section and Figure 6: carbohydrate-active enzymes of the changing MAGs compared with non-changing MAGs of the same family, with a methods paragraph and references; the variable-positions figure is now Figure 7 (Q4). The day 1 vs day 10 comparison (H1b) is removed; H1 is about the switch at day 6 (Q10)"
 - when: "4 Nov 2026, 11:14"
   what: "Data and methods: how a MAG's share and Figure 5 are computed, with a worked example (Q5), and why a two-fold threshold, with the counts at other thresholds and references (Q3)"
 - when: "4 Nov 2026, 10:41"
