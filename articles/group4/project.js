@@ -50,8 +50,11 @@ function fig1b() {
   });
 }
 // Figure 1c: the report's redundancy scatter (carriers against day-to-day CV) with the median common MAG as a reference line
+// colours of the report's Figure 2 (redundancy): substrate group of the family
+const RORDER = ["Plant fibre", "Starch", "Fructan", "Host glycans", "Mixed", "Other", "Unmapped"];
+const RCOL = { "Plant fibre": "var(--c1)", Starch: "var(--c2)", Fructan: "var(--c3)", "Host glycans": "var(--c4)", Mixed: "var(--c5)", Other: "var(--faint)", Unmapped: "var(--c7)" };
 function fig1c() {
-  const host = $("a4F1c"), pts = D.redundancy;
+  const host = $("a4F1c"), pts = [...D.redundancy].sort((a, b) => RORDER.indexOf(a.category) - RORDER.indexOf(b.category));
   mountChart(host, () => {
     const { svg, W, H } = newSvg(host, 300);
     const box = { l: 56, r: W - 12, t: 14, b: H - 44 };
@@ -61,10 +64,13 @@ function fig1c() {
     el("line", { x1: box.l, x2: box.r, y1: y(N.mag_cv_median), y2: y(N.mag_cv_median), class: "mark" }, svg);
     el("text", { x: box.r - 4, y: y(N.mag_cv_median) - 5, "text-anchor": "end", class: "note" }, svg).textContent = "median common MAG";
     for (const p of pts) {
-      const c = el("circle", { cx: x(p.carriers), cy: y(p.cv), r: 3.6, style: "fill:var(--c3)", class: "dot" }, svg);
-      tipOn(c, `<b>${esc(p.family)}</b><br>carried by ${p.carriers} common MAGs<br>variation ${p.cv}%<br>${p.mean} genes per 1,000 genes`);
+      const c = el("circle", { cx: x(p.carriers), cy: y(p.cv), r: 3.6, style: `fill:${RCOL[p.category]}`, class: "dot" }, svg);
+      tipOn(c, `<b>${esc(p.family)}</b><br>carried by ${p.carriers} common MAGs<br>variation ${p.cv}%<br>${p.category} · ${p.mean} genes per 1,000 genes`);
     }
   });
+  const lg = $("a4F1cLeg");
+  lg.innerHTML = "";
+  chartLegend(lg, RORDER.filter((c) => pts.some((r) => r.category === c)).map((c) => ({ name: c, color: RCOL[c] })));
 }
 // Figure 2a: share of the species-mix change and of the CAZyme-profile change, by family
 function fig2a() {
@@ -73,13 +79,41 @@ function fig2a() {
     groups: [{ name: "species-mix change", values: F.map((f) => f.sp) }, { name: "CAZyme-profile change", values: F.map((f) => f.gp) }],
     yLabel: "Share of the change between the periods (%)", unit: "%", fmt: (v) => v.toFixed(0) });
 }
-// Figure 2b: the report's bubble plot (Figure 7): MAGs ordered by log2 change, four substrate groups, bubble area = genes per 1,000 genes of the MAG
+// Figure 2b: the report's scatter "Individual MAGs: who rose and who fell" (mean share against log2 change, days 7-10 over days 1-6)
 function fig2b() {
+  const M = D.magchange;
+  const fams = Object.entries(M.mags.reduce((a, r) => ((a[r.family] = (a[r.family] || 0) + 1), a), {})).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6);
+  const colOf = (f) => (fams.includes(f) ? `var(--c${(fams.indexOf(f) % 7) + 1})` : "var(--faint)");
+  const lab = (r) => r.name.replace(/ \(.*\)$/, "");
+  const up = [...M.mags].sort((a, b) => b.log2 - a.log2).slice(0, 10), down = [...M.mags].sort((a, b) => a.log2 - b.log2).slice(0, 10);
+  const named = new Set([...up, ...down].map((r) => r.name));
+  mountChart($("a4F2b"), () => {
+    const host = $("a4F2b");
+    const { svg, W, H } = newSvg(host, 420);
+    const box = { l: 60, r: W - 16, t: 14, b: H - 44 };
+    const [x0, x1] = [Math.min(...M.mags.map((r) => r.log2)) - 2.2, Math.max(...M.mags.map((r) => r.log2)) + 2.2];
+    const x = scale(x0, x1, box.l, box.r), y = scale(...extent(M.mags.map((r) => r.mean), { log: true }), box.b, box.t, true);
+    axes(svg, x, y, box, { xLabel: "log2 change, days 7-10 over days 1-6 (0 = no change, 1 = twice as much)", yLabel: "Mean share over the ten days (% of DNA, log scale)", xTicks: x.ticks(8), yTicks: y.ticks(), xFmt: (v) => String(+v.toFixed(1)) });
+    el("line", { x1: x(0), x2: x(0), y1: box.t, y2: box.b, class: "mark" }, svg);
+    for (const r of M.mags) {
+      const c = el("circle", { cx: x(r.log2), cy: y(r.mean), r: named.has(r.name) ? 5 : 3.6, style: `fill:${colOf(r.family)}`, class: "dot" }, svg);
+      tipOn(c, `<b>${esc(r.name)}</b><br>${esc(r.family)}<br>Days 1-6: ${r.m1.toFixed(2)}%, days 7-10: ${r.m2.toFixed(2)}%<br>log2 change: ${r.log2.toFixed(2)}`);
+    }
+    for (const [grp, anchor, dx] of [[up, "start", 8], [down, "end", -8]]) {
+      const ls = grp.map((r) => ({ r, x: x(r.log2) + dx, y: y(r.mean) + 4 })).sort((a, b) => a.y - b.y);
+      for (let i = 1; i < ls.length; i++) ls[i].y = Math.max(ls[i].y, ls[i - 1].y + 12);
+      for (const l of ls) el("text", { x: l.x, y: l.y, "text-anchor": anchor, class: "dlab" }, svg).textContent = lab(l.r);
+    }
+    chartLegend(host, [...fams.map((f) => ({ name: f, color: colOf(f) })), { name: "Other families", color: "var(--faint)" }]);
+  });
+}
+// Figure 2c: the report's bubble plot (Figure 7): MAGs ordered by log2 change, four substrate groups, bubble area = genes per 1,000 genes of the MAG
+function fig2c() {
   const B = D.bubble, cols = ["Plant fibre", "Starch", "Fructan", "Host glycans"], nc = cols.length;
   const colr = (m) => (m.phylum === "Bacteroidota" ? "var(--c1)" : m.phylum === "Bacillota" ? "var(--c2)" : "var(--faint)");
   const lab = (m) => { const s = `${m.family}: ${m.name.replace(/ \(.*\)$/, "")}`; return s.length > 40 ? s.slice(0, 39) + "…" : s; };
   const vmax = Math.max(...B.mags.flatMap((m) => m.v.slice(0, nc)), ...B.rows.slice(0, 2).flatMap((r) => r.v.slice(0, nc)));
-  const host = $("a4F2b");
+  const host = $("a4F2c");
   host.style.overflowX = "auto";
   mountChart(host, () => {
     host.innerHTML = "";
@@ -132,12 +166,12 @@ function fig2b() {
     el("text", { x: lx + 4, y: ly + 4, class: "dlab" }, svg).textContent = "genes per 1,000 genes of the MAG";
   });
 }
-// Figure 2c: the report's strain scatter (Figure 8): variant sites against day-to-day variation
-function fig2c() {
+// Figure 2d: the report's strain scatter (Figure 8): variant sites against day-to-day variation
+function fig2d() {
   const col = (r) => (r.log2 >= 1 ? "var(--c2)" : r.log2 <= -1 ? "var(--c1)" : "var(--faint)");
-  scatter($("a4F2c"), { points: D.strains.map((r) => ({ x: r.var, y: r.cv, label: r.name, color: col(r), extra: `${r.phylum} · change log2 ${r.log2}` })),
+  scatter($("a4F2d"), { points: D.strains.map((r) => ({ x: r.var, y: r.cv, label: r.name, color: col(r), extra: `${r.phylum} · change log2 ${r.log2}` })),
     logX: true, xLabel: "Variant sites (% of the MAG's positions, log scale)", yLabel: "Day-to-day variation (CV, %)", height: 330 });
-  legend("a4F2cLeg", [{ name: "rose at least 2-fold", color: "var(--c2)" }, { name: "fell at least 2-fold", color: "var(--c1)" }, { name: "less than 2-fold", color: "var(--faint)" }]);
+  legend("a4F2dLeg", [{ name: "rose at least 2-fold", color: "var(--c2)" }, { name: "fell at least 2-fold", color: "var(--c1)" }, { name: "less than 2-fold", color: "var(--faint)" }]);
 }
 // Supplementary Figure 1: pipeline flowcharts, hand-drawn SVG in the page's colour variables
 function flow(id, boxes, arrows, extra) {
@@ -194,5 +228,5 @@ function figS2() {
     { x: 350, y: 176, w: 160, h: 140, t: ["Strain diversity", "Longshot variants", "reads pooled"] }],
     [[260, 64, 260, 92], [260, 148, 90, 176], [260, 148, 260, 176], [260, 148, 430, 176]]);
 }
-function drawAll() { figS2(); fig1a(); fig1b(); fig1c(); fig2a(); fig2b(); fig2c(); figS1(); }
+function drawAll() { figS2(); fig1a(); fig1b(); fig1c(); fig2a(); fig2b(); fig2c(); fig2d(); figS1(); }
 drawAll();
