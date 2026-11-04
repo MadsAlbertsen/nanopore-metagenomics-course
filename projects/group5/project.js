@@ -7,7 +7,8 @@
 // (genes per family), groups + members (named-gene groups), context (Figure 4 / Table 5: per sample % of the filtered
 // bases in HQ / MQ MAGs, unbinned contigs, not on the assembly; c.101's share, share of MAG bases and rank), gh13
 // (Figure 5 / Table 6: daily share of GH13 carriers, GH13 density, top carriers), species (Figure 6: top 10 species),
-// day5 (Figure 7 / Table 7: riser counts per day, the day-5 risers with daily shares and CAZyme densities).
+// day5 (Figure 7 / Table 7: riser counts per day, the day-5 risers with daily shares and CAZyme densities), unbinned
+// (Figure 8 / Table 8: unbinned share per day by contig size class, the top listable unbinned contigs).
 const D = DATA, N = D.numbers, MAP = D.map, FOCUS = D.mags[0];
 const short = (m) => m.name.replace(/^Bifidobacterium /, "B. ").replace(/ \(.*\)$/, "");
 const num = (v) => (typeof v === "number" ? v.toLocaleString("en-US") : String(v));
@@ -461,10 +462,54 @@ function drawDay5() {
   });
 }
 
+// --- Figure 8 and Table 8: unbinned contigs (custom stacked bars, as Figure 4)
+const UB = [["large", "at least 1 Mb", "var(--c1)"], ["mid", "100 kb to 1 Mb", "var(--c3)"], ["small", "below 100 kb", "var(--c4)"]];
+function drawUb() {
+  const host = $("g5UbFig"), U = D.unbinned, S = D.context;
+  mountChart(host, () => {
+    const { svg, W, H } = newSvg(host, 280);
+    const box = { l: 56, r: W - 12, t: 22, b: H - 48 };
+    const n = S.length, band = (box.r - box.l) / n, bw = band * 0.72;
+    const tot = S.map((_, i) => UB.reduce((a, [k]) => a + U.by_size[k][i], 0));
+    const y = scale(0, Math.ceil(Math.max(...tot) / 5) * 5, box.b, box.t);
+    axes(svg, () => 0, y, box, { yLabel: "Share of the filtered bases (%)", xTicks: [], yTicks: y.ticks(5) });
+    const hi = S.filter((s) => s.diet === "high_carb").length, small = band < 46;
+    S.forEach((s, i) => {
+      const xc = box.l + band * (i + 0.5);
+      let acc = 0;
+      for (const [k, name, color] of UB) {
+        const v = U.by_size[k][i];
+        const rect = el("rect", { x: xc - bw / 2, y: y(acc + v), width: bw, height: y(acc) - y(acc + v), style: `fill:${color}` }, svg);
+        tipOn(rect, `<b>${esc(s.sample)} · day ${s.day}</b><br>unbinned contigs ${esc(name)}: ${v.toFixed(2)}%<br>all unbinned: ${tot[i].toFixed(1)}%; ten with the largest share: ${U.top10[i].toFixed(1)}%`);
+        acc += v;
+      }
+      el("text", { x: xc, y: box.b + 16, "text-anchor": "middle" }, svg).textContent = small ? String(s.day) : s.sample;
+      if (!small) el("text", { x: xc, y: box.b + 30, "text-anchor": "middle", class: "note" }, svg).textContent = "day " + s.day;
+    });
+    el("line", { x1: box.l + band * hi, x2: box.l + band * hi, y1: box.t, y2: box.b, class: "mark" }, svg);
+    if (small) el("text", { x: (box.l + box.r) / 2, y: box.b + 34, "text-anchor": "middle", class: "lab" }, svg).textContent = "Day (sample DNA01-DNA10)";
+    chartLegend(host, UB.map(([, name, color]) => ({ name, color })));
+  });
+  const KIND = { deep: "deeper than any MAG", large: "large", fragment: "fragment" };
+  const methyl = (r) => [r.flagged === null ? "" : `${r.flagged}/${r.windows} flagged`, r.placed ? `placed in ${r.placed} (${r.placed_ratio}x)` : ""].filter(Boolean).join("; ") || "–";
+  table($("g5UbTable"), {
+    columns: [
+      { key: "id", label: "Contig" }, { key: "length_kb", label: "kb", num: true, fmt: (v) => v.toLocaleString("en-US") },
+      { key: "depth", label: "Depth", num: true, fmt: (v) => v.toLocaleString("en-US") + "x" }, { key: "circular", label: "Circ.", fmt: (v) => (v ? "yes" : "no") },
+      { key: "gc", label: "GC %", num: true, fmt: (v) => v.toFixed(1) }, { key: "species", label: "Species (Metabuli)" },
+      { key: "mag_depth", label: "Same-species MAG", num: true, fmt: (v) => (v === null ? "–" : v.toLocaleString("en-US") + "x") },
+      { key: "mean", label: "Mean %", num: true, fmt: (v) => v.toFixed(2) }, { key: "max", label: "Max %", num: true, fmt: (v) => v.toFixed(2) },
+      { key: "flagged", label: "Methylation", fmt: (v, r) => methyl(r) },
+      { key: "kind", label: "Class", fmt: (v) => KIND[v] || v },
+    ],
+    rows: D.unbinned.top, sortKey: "mean", sortDesc: true,
+  });
+}
+
 function drawAll() {
   $("g5Reads").checked = st.reads; $("g5Rel").checked = st.rel; $("g5Log").checked = st.log;
   $("g5Color").value = st.color; $("g5Lab").checked = st.labels; $("g5Q").value = st.q; $("g5Unit").value = st.unit;
-  drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups(); drawCtx(); $("g5GhSel").value = st.gh; drawGh(); drawTop(); drawDay5();
+  drawLine(); drawTable(); drawStats(); drawLegend(); drawMap(); drawCarb(); drawCazy(); drawGroups(); drawCtx(); $("g5GhSel").value = st.gh; drawGh(); drawTop(); drawDay5(); drawUb();
 }
 function write() {
   writeHashParams({ reads: st.reads ? 1 : "", rel: st.rel ? 1 : "", log: st.log ? 1 : "", color: st.color !== DEFAULTS.color ? st.color : "", lab: st.labels ? "" : 0, q: st.q, role: st.role, group: st.group !== DEFAULTS.group ? st.group : "", unit: st.unit !== DEFAULTS.unit ? st.unit : "", gh: st.gh !== DEFAULTS.gh ? st.gh : "" });
