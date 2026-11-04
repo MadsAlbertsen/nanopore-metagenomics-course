@@ -109,11 +109,22 @@
 
 <section class="panel fig">
   <h3>Figure 6. CAZy families that changed most between the periods</h3>
-  <p>Finally, which common families changed most, and which MAGs carry them.</p>
+  <p>Next, which common families changed most, and which MAGs carry them.</p>
   <div id="pjFam"></div>
   <div id="pjFamTable"></div>
   <p class="cap"><b>What it shows.</b> The <span data-n="n_families_listed"></span> degrading CAZy families with at least <span data-n="min_family"></span> genes per 1,000 genes in one of the periods, by their change: log2 of the mean of days 6-10 over the mean of days 1-5 (1 = twice as many, -1 = half; orange up, blue down). The table adds the means, whether the day values of the two periods overlap, and the MAG that contributes most of the family's weighted genes in the period where it is higher. Families in which the two periods do not overlap at all: <span data-n="n_families_apart"></span>.</p>
   <p><b>Interpretation.</b> No common family changes by more than about a fifth (largest drop <span data-n="fam_down"></span>, log2 <span data-n="fam_down_log2" data-d="2"></span>; largest rise <span data-n="fam_up"></span>, log2 <span data-n="fam_up_log2" data-d="2" data-sign="1"></span>). The largest contributor to most of the rising families is <span data-n="fam_up_mag"></span>, and to all the falling ones <span data-n="fam_down_mag"></span> (the table gives each one's share of the family's weighted genes in the period where the family is higher, not its share of the change). This suggests that the family changes follow a few abundant MAGs rather than a community-wide shift in gene content; Figure 7 splits each change into MAG parts. The day values of the two periods overlap in every listed family, so no single family marks the diet.</p>
+  <h4>All families over the ten days, and the 20 largest relative changes</h4>
+  <p>The bar chart above covers the common families (at least <span data-n="min_family"></span> per 1,000 genes), none of which changes by more than about a fifth. Here: the same profile for every degrading family, day by day, and the 20 largest relative changes, which are rarer families (at least <span data-n="min_top"></span> per 1,000 genes).</p>
+  <div class="tabs" role="tablist" id="famAllView">
+    <button role="tab" data-v="rel" aria-selected="true">Relative to days 1-5 (log2)</button>
+    <button role="tab" data-v="abs" aria-selected="false">Genes per 1,000 genes (log scale)</button>
+  </div>
+  <div id="pjFamAll"></div>
+  <div id="pjFamTop"></div>
+  <div id="pjFamTopTable"></div>
+  <p class="cap"><b>What it shows.</b> First heat map: all <span data-n="n_fam_all"></span> degrading CAZy families (rows, grouped by substrate group, then by mean) on each day, as log2 of the day's value over the family's days 1-5 mean (blue below, orange above; full colour from ±1.5, the tooltip gives the value), or as genes per 1,000 genes of the binned community (log10 scale, viridis). Second heat map and table: the 20 families with the largest change between the period means (|log2|), among the <span data-n="n_fam_elig"></span> families with at least <span data-n="min_top"></span> genes per 1,000 genes in one of the periods; each day as log2 over the family's days 1-5 mean (full colour from ±1), and the number of common MAGs that carry the family. The cut-off leaves out <span data-n="rare_n"></span> rarer families: <span data-n="rare_le2"></span> of them are carried by at most two common MAGs (median <span data-n="rare_carriers_median" data-d="0"></span>), and their ratios can jump up to about <span data-n="rare_max_fold" data-d="0"></span>-fold (<span data-n="rare_max_fam"></span>); <span data-n="rare_gt2"></span> of them change more than two-fold and <span data-n="rare_gt10"></span> more than tenfold.</p>
+  <p><b>Interpretation.</b> Even the largest relative changes are modest: <span data-n="top20_lo" data-d="2"></span> to <span data-n="top20_hi" data-d="2"></span> in |log2| (at most about twice as much), <span data-n="top20_up"></span> families rising and <span data-n="top20_down"></span> falling, led by <span data-n="top20_first"></span> (log2 <span data-n="top20_first_log2" data-d="2"></span>). They are carried by a median of <span data-n="top20_carriers_median" data-d="0"></span> common MAGs, so they are not single-MAG families. In the heat map the changes show mostly from day 7 or 8 rather than on day 6, the same timing as the species mix (Figure 5). Rising families include several host glycan and plant fibre families, and most of the falling ones are plant fibre families; one reading is that a few abundant MAGs that rose or fell carry them (Figure 7).</p>
 </section>
 
 <section class="panel fig">
