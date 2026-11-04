@@ -148,18 +148,7 @@
 <section class="panel">
   <h2>Next steps</h2>
   <ul>
-    <li><b>Per-day strain diversity (H2), a server job of some hours.</b> Map each day's trimmed reads on their own to the co-assembly and profile the MAGs with inStrain [9], then compare the days: inStrain's <code>compare</code> gives popANI between days per MAG, which is the group's own measure. inStrain was written for paired short reads; its manual's section on long reads recommends, for Nanopore reads, a minimum base quality that matches the reads (10-20 instead of the default Q30, which would drop most Nanopore bases), keeping unpaired reads (<code>--pairing_filter non_discordant</code>), skipping the per-mismatch-level profiling, a lower read identity cut-off (<code>-l 0.9</code>), and the same base quality in <code>compare</code>. Try the settings on a small subsample first. <code>profile</code> gives nucleotide diversity per MAG and day, <code>compare</code> popANI between days. In the course data layout the steps are:
-      <pre class="pjcode">for f in np26_coassembly/results/bins/*.fa; do
-  grep '>' "$f" | sed 's/^>//; s/ .*//' | awk -v b="$(basename "$f" .fa)" '{print $1 "\t" b}'
-done > mags.stb
-ASM=np26_coassembly/results/np26_coassembly_assembly.fasta
-for d in 01 02 03 04 05 06 07 08 09 10; do
-  minimap2 -ax lr:hq -t 32 "$ASM" mmlong2_input_trim/reads/DNA$d.fastq.gz | samtools sort -@ 8 -o DNA$d.bam
-  samtools index DNA$d.bam
-  inStrain profile DNA$d.bam "$ASM" -o DNA$d.IS -s mags.stb -p 32 \
-    --min_base_quality 15 --pairing_filter non_discordant --skip_mm_profiling -l 0.9
-done
-inStrain compare -i DNA*.IS -s mags.stb -p 32 --min_base_quality 15 -o days_compare.IS</pre></li>
+    <li><b>Per-day strain diversity (H2), a server job of some hours (script written and tested; waiting for the server run).</b> Each day's trimmed reads are mapped on their own to the co-assembly (minimap2, the same long-read setting as mmlong2) and the MAGs are profiled with inStrain [9]; inStrain's <code>compare</code> then gives popANI between every pair of days for each MAG, the group's own measure, and <code>profile</code> gives nucleotide diversity per MAG and day. inStrain was written for short reads; its manual's section on long reads recommends, for Nanopore reads, a minimum base quality that matches the reads (here Q20, which most of our bases reach, instead of the default Q30), keeping unpaired reads, skipping the per-mismatch-level profiling and a lower read identity cut-off. A simulated test with a known answer (a second strain that differs from the first at a known set of positions, reads with random errors) found nearly all planted differences as variable positions in a mixture of the two strains and none in the pure strains, and gave the expected popANI between the two pure strains. The test also shows that nucleotide diversity has a floor set by read errors, so the days are compared with each other rather than read as absolute values. Job script: <code>scripts/51_instrain_days.sbatch</code> in the analysis repository.</li>
     <li><b>The end of the change.</b> Do the rising families level off after day 10? Needs samples after day 10 (not measured).</li>
     <li><b>The <i>P. copri_B</i> pair.</b> One genome or two strains? Compare the two MAGs' sequences and genes (on the Mac, from module 8).</li>
     <li><b>Fast and slow genomes.</b> Do the MAGs that settle on day 6 share carbohydrate-active enzymes (module 7) that the slower ones lack? On the Mac.</li>
