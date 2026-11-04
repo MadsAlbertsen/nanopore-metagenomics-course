@@ -127,7 +127,24 @@ function drawMagHeat() {
     format: pct, cell: 16, colLabelHeight: 50 });
 }
 
-function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCore(); }
+// Figure 6 (Q4): degrading CAZyme genes per 1,000 genes of the changing MAGs, falling MAGs first, and group medians
+function drawCazy() {
+  const c = D.cazy, nc = c.cats.length - 1;  // the last column ("all degrading") goes to panel B only
+  const labels = [], values = [], narrow = $("pjCazyHeat").clientWidth < 520;
+  let dir = null;
+  for (const r of c.rows) {
+    if (r.dir !== dir) { dir = r.dir; labels.push(dir === "down" ? "falling MAGs" : "rising MAGs"); values.push(c.cats.slice(0, nc).map(() => null)); }
+    labels.push(narrow ? `${r.name.split(" ")[0]} ${r.name.match(/\([^)]+\)$/)[0]}` : shortName(r.name));  // phone: genus + MAG id
+    values.push(r.per.slice(0, nc));
+  }
+  const short = { "plant fibre": "fibre", "host glycan": "host" };  // short column labels fit a phone screen
+  heatmap($("pjCazyHeat"), { rows: labels, cols: c.cats.slice(0, nc).map((x) => short[x] || x), values, label: "Genes per 1,000 genes", cell: 16,
+    colLabelHeight: 56, format: (v) => (v === null ? "–" : v.toFixed(1)) });
+  barChart($("pjCazyBars"), { labels: c.cats, groups: c.groups.map((g, i) => ({ name: `${g} (${c.n[i]})`, values: c.median.map((row) => row[i]) })),
+    yLabel: "Median genes per 1,000 genes", fmt: (v) => v.toFixed(1), horizontal: true });
+}
+
+function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCazy(); drawCore(); }
 $("pjTaxLevel").addEventListener("change", () => { st2.tax = $("pjTaxLevel").value; drawTax(); });
 $("pjHeatSet").addEventListener("change", () => { st2.heat = $("pjHeatSet").value; drawMagHeat(); });
 
