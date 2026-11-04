@@ -1,8 +1,8 @@
 number: 2
 slug: article-group2
-title: "Group 2 article (title to be decided by the group)"
+title: "Gut genomes shifted after a diet switch while carbohydrate-degradation potential stayed nearly constant: a ten-day nanopore metagenomic series"
 nav: "Group 2 article"
-question: "The angle of the article is chosen by the group from its project report (Projects, group 2)."
+question: "How do community composition, single genomes and carbohydrate-degradation potential change over ten daily samples from one person across a diet switch? (ISME Journal-style draft of the group's report)"
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
