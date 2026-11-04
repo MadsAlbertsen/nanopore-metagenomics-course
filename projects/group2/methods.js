@@ -12,20 +12,21 @@ const BX = DATA.boot_example;
 document.querySelectorAll("[data-bx]").forEach((s) => { s.textContent = String(BX[s.dataset.bx]); });
 let bxMag = 0;
 const f2 = (v) => v.toFixed(2);
+const fs = (v) => (Math.abs(v) < 1 ? v.toFixed(3) : v.toFixed(2)); // shares in percent: 3 decimals below 1%
 const sortedDays = (days, vals, first) => days.map((d) => ({ d, v: vals[d - first] })).sort((a, b) => a.d - b.d);
 function bxSteps() {
   const m = BX.mags[bxMag], sep = DATA.mags.find((x) => x.mag === m.mag).sep;
   const dh = sortedDays(m.r1_days_high, m.high, 1), dl = sortedDays(m.r1_days_low, m.low, 6);
   const missing = (ds, first) => [0, 1, 2, 3, 4].map((i) => i + first).filter((d) => !ds.some((x) => x.d === d));
-  const list = (ds) => ds.map((x) => `day ${x.d} (${f2(x.v)}%)`).join(", ");
+  const list = (ds) => ds.map((x) => `day ${x.d} (${fs(x.v)}%)`).join(", ");
   const steps = [
-    `<b>Start from the measured shares.</b> ${esc(m.name)} held ${m.high.map(f2).join(", ")}% of the bases on days 1-5 and ${m.low.map(f2).join(", ")}% on days 6-10. The period means are ${f2(m.mean_high)}% and ${f2(m.mean_low)}%, and the log2 change is log2((${f2(m.mean_low)} + 0.01) / (${f2(m.mean_high)} + 0.01)) = ${f2(m.log2)}, a ${m.fold.toFixed(1)}-fold ${m.log2 > 0 ? "rise" : "fall"}. This is the dot in Fig. 4a.`,
-    `<b>Make one resampled data set.</b> Within each period, draw five days at random from that period's five days, with replacement. In the first draw, days 1-5 were drawn as ${list(dh)}, and days 6-10 as ${list(dl)}; ${[...missing(dh, 1), ...missing(dl, 6)].map((d) => "day " + d).join(", ")} were not drawn. The means of the drawn days are ${f2(m.r1_mean_high)}% and ${f2(m.r1_mean_low)}%, a log2 change of ${f2(m.r1)} (Fig. R1a).`,
-    `<b>Repeat ${BX.reps} times</b> with a fixed random seed, so a rerun gives the same numbers. Ignoring the order, each period has only ${BX.distinct} different draws of five days, so the ${BX.reps} draws repeat these many times.`,
-    `<b>Read off the middle 90%.</b> Sort the ${BX.reps} log2 changes; the 5th and 95th percentiles, ${f2(m.lo)} to ${f2(m.hi)}, are the line in Fig. 4a (Fig. R1b). ${m.below1_pct}% of the draws gave less than a two-fold ${m.log2 > 0 ? "rise" : "fall"} (log2 change below ${m.log2 > 0 ? 1 : -1}), and ${m.log2 > 0 ? m.below0_pct : (100 - m.below0_pct).toFixed(1)}% a change in the other direction.`,
-    `<b>Leave one day out.</b> Removing each day once gives ten log2 changes from ${f2(m.lodo_min)} to ${f2(m.lodo_max)} (Fig. R1c), so the MAG ${m.stays ? "stays two-fold in all ten runs (filled dot in Fig. 4a)" : `drops below two-fold in at least one run (open dot in Fig. 4a); leaving out day ${m.lodo.indexOf(m.lodo_min) + 1} gives ${f2(m.lodo_min)}`}.`,
+    `<b>Start from the measured shares.</b> ${esc(m.name)} held ${m.high.map(fs).join(", ")}% of the bases on days 1-5 and ${m.low.map(fs).join(", ")}% on days 6-10. The period means are ${fs(m.mean_high)}% and ${fs(m.mean_low)}%, and the log2 change is log2((${fs(m.mean_low)} + 0.01) / (${fs(m.mean_high)} + 0.01)) = ${f2(m.log2)} (computed from the unrounded shares), a ${m.fold.toFixed(1)}-fold ${m.log2 > 0 ? "rise" : "fall"}. This is the dot in Fig. 4a.`,
+    `<b>Make one resampled data set.</b> Within each period, draw five days at random from that period's five days, with replacement. In the first draw, days 1-5 were drawn as ${list(dh)}, and days 6-10 as ${list(dl)}; ${[...missing(dh, 1), ...missing(dl, 6)].map((d) => "day " + d).join(", ")} were not drawn. The means of the drawn days are ${fs(m.r1_mean_high)}% and ${fs(m.r1_mean_low)}%, a log2 change of ${f2(m.r1)} (Fig. R1a). Every MAG uses the same drawn days, so this first draw is the same set of days for both example MAGs and for all other contrasts.`,
+    `<b>Repeat ${BX.reps} times</b> with a fixed random seed, so a rerun gives the same numbers. Ignoring the order, each period has only ${BX.distinct} different draws of five days, so each period's ${BX.reps} draws repeat each of these ${BX.distinct} draws many times.`,
+    `<b>Read off the middle 90%.</b> Sort the ${BX.reps} log2 changes; the 5th and 95th percentiles, ${f2(m.lo)} to ${f2(m.hi)}, are the line in Fig. 4a (Fig. R1b). ${m.short_pct}% of the draws gave less than a two-fold ${m.log2 > 0 ? "rise (log2 change below 1)" : "fall (log2 change above -1)"}, and ${m.wrong_pct}% a change in the other direction.`,
+    `<b>Leave one day out.</b> Removing each day once gives ten log2 changes from ${f2(m.lodo_min)} to ${f2(m.lodo_max)} (Fig. R1c), so the MAG ${m.stays ? "stays at least two-fold, and above the 0.1% mean-share cut-off, in all ten runs (filled dot in Fig. 4a)" : `drops below two-fold in at least one run (open dot in Fig. 4a); leaving out day ${m.lodo.indexOf(m.lodo_min) + 1} gives ${f2(m.lodo_min)}`}. A dot is filled only if the change stays at least two-fold and the mean share stays at or above 0.1% in every run; ${N2.lodo_cut_open_n} MAGs (${esc(N2.lodo_cut_open)}) are open only because of the cut-off: their change stays two-fold in every run.`,
   ];
-  if (m.lo <= 0 && m.hi >= 0) steps.push(`<b>Why this interval includes zero.</b> The rise rests on days 9 and 10 (${f2(m.low[3])} and ${f2(m.low[4])}%). A draw of five days misses both of them with a chance of (3/5)<sup>5</sup> = ${BX.p_miss_two_pct}%, and such draws give a change below zero in almost every case: ${m.below0_pct}% of the draws were below zero. This is the warning the interval is meant to give: the rise depends on two late days, and it looks more like a late rise than a step at the switch.`);
+  if (m.lo <= 0 && m.hi >= 0) steps.push(`<b>Why this interval includes zero.</b> The rise rests on days 9 and 10 (${fs(m.low[3])} and ${fs(m.low[4])}%). A draw of five days misses both of them with a chance of (3/5)<sup>5</sup> = ${BX.p_miss_two_pct}%, and every such draw gives a fall; in our ${BX.reps} draws, ${m.wrong_pct}% were below zero. This is the warning the interval is meant to give: the rise depends on two late days, and it looks more like a late rise than a step at the switch.`);
   else steps.push(`<b>How to read it.</b> ${sep === 5 ? `Each of days 6-10 had a ${m.log2 > 0 ? "higher" : "lower"} share than each of days 1-5, so whichever days are drawn, the two means stay apart` : `Most draws keep the two means apart`}; the interval excludes zero. Because the ${N2.big} MAGs were picked for a large change, an interval that excludes zero is close to built in; it says that no single day carries the change, not that the change is certain or caused by the diet.`);
   $("m2BxSteps").innerHTML = steps.map((t) => `<li>${t}</li>`).join("");
 }
@@ -41,6 +42,7 @@ function bxSchema(host) {
     const rowH = 44, top = 22, gapP = 14;
     const { svg, W } = newSvg(host, top + rows.length * rowH + gapP + 46);
     const labW = W < 480 ? 74 : 130, cell = Math.min(64, (W - labW - 8) / 6.4);
+    const fz = `font-size:${cell < 48 ? 9.5 : 11.5}px`;
     rows.forEach((r, i) => {
       const y = top + i * rowH + (i >= 2 ? gapP : 0);
       const lab = el("text", { x: 0, y: y + 17, class: "dlab" }, svg);
@@ -49,25 +51,25 @@ function bxSchema(host) {
       r.vals.forEach((v, k) => {
         const x = labW + k * cell;
         el("rect", { x, y, width: cell - 4, height: 36, rx: 4, class: "g2box" }, svg);
-        el("text", { x: x + (cell - 4) / 2, y: y + 14, "text-anchor": "middle", class: "note" }, svg).textContent = "day " + r.days[k];
-        el("text", { x: x + (cell - 4) / 2, y: y + 29, "text-anchor": "middle", class: "g2val" }, svg).textContent = f2(v);
+        el("text", { x: x + (cell - 4) / 2, y: y + 14, "text-anchor": "middle", class: "note", style: fz }, svg).textContent = "day " + r.days[k];
+        el("text", { x: x + (cell - 4) / 2, y: y + 29, "text-anchor": "middle", class: "g2val", style: fz }, svg).textContent = fs(v);
       });
       const xm = labW + 5 * cell + cell * 0.3;
       el("rect", { x: xm, y, width: cell - 4, height: 36, rx: 4, class: "g2mean" }, svg);
-      el("text", { x: xm + (cell - 4) / 2, y: y + 14, "text-anchor": "middle", class: "note" }, svg).textContent = "mean";
-      el("text", { x: xm + (cell - 4) / 2, y: y + 29, "text-anchor": "middle", class: "g2val" }, svg).textContent = f2(r.mean);
+      el("text", { x: xm + (cell - 4) / 2, y: y + 14, "text-anchor": "middle", class: "note", style: fz }, svg).textContent = "mean";
+      el("text", { x: xm + (cell - 4) / 2, y: y + 29, "text-anchor": "middle", class: "g2val", style: fz }, svg).textContent = fs(r.mean);
     });
     el("text", { x: 0, y: 12, class: "dlab" }, svg).textContent = "a";
     const yb = top + rows.length * rowH + gapP + 16;
-    el("text", { x: 0, y: yb, class: "lab" }, svg).textContent = `Measured: log2((${f2(m.mean_low)} + 0.01) / (${f2(m.mean_high)} + 0.01)) = ${f2(m.log2)}`;
-    el("text", { x: 0, y: yb + 18, class: "lab" }, svg).textContent = `Draw 1: log2((${f2(m.r1_mean_low)} + 0.01) / (${f2(m.r1_mean_high)} + 0.01)) = ${f2(m.r1)}`;
+    el("text", { x: 0, y: yb, class: "lab" }, svg).textContent = `Measured: log2((${fs(m.mean_low)} + 0.01) / (${fs(m.mean_high)} + 0.01)) = ${f2(m.log2)}`;
+    el("text", { x: 0, y: yb + 18, class: "lab" }, svg).textContent = `Draw 1: log2((${fs(m.r1_mean_low)} + 0.01) / (${fs(m.r1_mean_high)} + 0.01)) = ${f2(m.r1)}`;
   });
 }
 function bxHist(host) {
   return mountChart(host, () => {
     const m = BX.mags[bxMag], e = BX.edges;
-    const { svg, W } = newSvg(host, 230);
-    const box = { l: 46, r: W - 10, t: 22, b: 180 };
+    const { svg, W } = newSvg(host, 240);
+    const box = { l: 46, r: W - 10, t: 34, b: 190 };
     const x = scale(e[0], e[e.length - 1], box.l, box.r), ymax = Math.max(...m.hist);
     const y = scale(0, ymax * 1.08, box.b, box.t);
     axes(svg, x, y, box, { xLabel: "log2 change, days 6-10 / days 1-5", yLabel: "Draws", xTicks: x.ticks(6), yTicks: y.ticks(4) });
@@ -77,9 +79,9 @@ function bxHist(host) {
       tipOn(r, `${f2(e[k])} to ${f2(e[k + 1])}: ${c} of ${BX.reps} draws`);
     });
     for (const t of [-1, 1]) el("line", { x1: x(t), x2: x(t), y1: box.t, y2: box.b, class: "mark" }, svg);
-    for (const t of [m.lo, m.hi]) el("line", { x1: x(t), x2: x(t), y1: box.t - 6, y2: box.b, class: "g2ci" }, svg);
-    el("text", { x: x(m.lo) - 4, y: box.t - 8, "text-anchor": "end", class: "note" }, svg).textContent = `5%: ${f2(m.lo)}`;
-    el("text", { x: x(m.hi) + (x(m.hi) + 70 > W ? -4 : 4), y: box.t - 8, "text-anchor": x(m.hi) + 70 > W ? "end" : "start", class: "note" }, svg).textContent = `95%: ${f2(m.hi)}`;
+    for (const t of [m.lo, m.hi]) el("line", { x1: x(t), x2: x(t), y1: box.t - (t === m.lo ? 18 : 6), y2: box.b, class: "g2ci" }, svg);
+    el("text", { x: x(m.lo) + (x(m.lo) < 120 ? 4 : -4), y: box.t - 20, "text-anchor": x(m.lo) < 120 ? "start" : "end", class: "note" }, svg).textContent = `5th percentile: ${f2(m.lo)}`;
+    el("text", { x: x(m.hi) + (x(m.hi) + 120 > W ? -4 : 4), y: box.t - 8, "text-anchor": x(m.hi) + 120 > W ? "end" : "start", class: "note" }, svg).textContent = `95th percentile: ${f2(m.hi)}`;
     const d = el("circle", { cx: x(m.log2), cy: box.b, r: 5, class: "dot", style: `fill:var(--ink)` }, svg);
     tipOn(d, `Observed log2 change ${f2(m.log2)}`);
     el("text", { x: 0, y: 12, class: "dlab" }, svg).textContent = "b";

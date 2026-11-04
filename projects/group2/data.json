@@ -9328,21 +9328,21 @@
     "mag": "c.33",
     "name": "Acetatifactor intestinalis (c.33)",
     "high": [
-     3.0,
-     2.27,
-     2.46,
-     2.8,
-     1.9
+     3.002,
+     2.272,
+     2.459,
+     2.803,
+     1.904
     ],
     "low": [
-     3.38,
-     6.71,
-     7.43,
-     6.28,
-     6.44
+     3.376,
+     6.713,
+     7.431,
+     6.275,
+     6.443
     ],
-    "mean_high": 2.49,
-    "mean_low": 6.05,
+    "mean_high": 2.488,
+    "mean_low": 6.048,
     "log2": 1.28,
     "fold": 2.4,
     "r1_days_high": [
@@ -9359,13 +9359,13 @@
      9,
      6
     ],
-    "r1_mean_high": 2.53,
-    "r1_mean_low": 5.12,
+    "r1_mean_high": 2.526,
+    "r1_mean_low": 5.116,
     "r1": 1.02,
     "lo": 0.96,
     "hi": 1.55,
-    "below1_pct": 7.8,
-    "below0_pct": 0.0,
+    "short_pct": 7.8,
+    "wrong_pct": 0.0,
     "hist": [
      0,
      0,
@@ -9406,21 +9406,21 @@
     "mag": "c.71",
     "name": "Roseburia_D yibonii (c.71)",
     "high": [
-     0.09,
-     0.11,
-     0.13,
-     0.13,
-     0.17
+     0.091,
+     0.112,
+     0.129,
+     0.132,
+     0.174
     ],
     "low": [
-     0.07,
-     0.04,
-     0.1,
-     0.57,
-     1.13
+     0.072,
+     0.037,
+     0.102,
+     0.567,
+     1.127
     ],
-    "mean_high": 0.13,
-    "mean_low": 0.38,
+    "mean_high": 0.128,
+    "mean_low": 0.381,
     "log2": 1.51,
     "fold": 2.8,
     "r1_days_high": [
@@ -9437,13 +9437,13 @@
      9,
      6
     ],
-    "r1_mean_high": 0.13,
-    "r1_mean_low": 0.37,
+    "r1_mean_high": 0.131,
+    "r1_mean_low": 0.369,
     "r1": 1.43,
     "lo": -0.63,
     "hi": 2.42,
-    "below1_pct": 28.0,
-    "below0_pct": 7.5,
+    "short_pct": 28.0,
+    "wrong_pct": 7.5,
     "hist": [
      7,
      20,
@@ -9645,6 +9645,8 @@
   "lodo_big_min": 30,
   "lodo_big_max": 43,
   "lodo_stay": 25,
+  "lodo_cut_open_n": 2,
+  "lodo_cut_open": "CAG-307 sp001916215 (c.84), CAZU01 sp000432275 (c.50)",
   "lodo_cz_starch_min": -9,
   "lodo_cz_starch_max": -4,
   "lodo_cz_fructan_min": -16,
