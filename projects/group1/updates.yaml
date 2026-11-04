@@ -1,4 +1,6 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 11:41"
+  what: "New section \"How robust are these results?\" with Table 1: a permutation test of days 1-5 vs days 6-10, and how stable the changing MAGs and their settled days are when one day is left out; a statistics paragraph under Data and methods; the core-MAG table is now Table 2 (Q6)"
 - when: "4 Nov 2026, 11:35"
   what: "New section and Figure 6: carbohydrate-active enzymes of the changing MAGs compared with non-changing MAGs of the same family, with a methods paragraph and references; the variable-positions figure is now Figure 7 (Q4). The day 1 vs day 10 comparison (H1b) is removed; H1 is about the switch at day 6 (Q10)"
 - when: "4 Nov 2026, 11:14"
