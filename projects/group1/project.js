@@ -143,6 +143,11 @@ function drawCazy() {
     cell: 16, colLabelHeight: 56, format: (v) => (v === null ? "–" : v.toFixed(1)) });
   barChart($("pjCazyBars"), { labels: c.cats, groups: c.groups.map((g, i) => ({ name: g, values: c.median.map((row) => row[i]) })),
     yLabel: "Median genes per 1,000 genes", fmt: (v) => v.toFixed(1), horizontal: true });
+  const p = c.perDay;
+  lineChart($("pjCazyDays"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Genes per 1,000 genes", zero: true, marks: SWITCH,
+    series: p.cats.map((name, i) => ({ name, values: p.values[i] })) });
+  lineChart($("pjCazyGroups"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%",
+    zero: true, marks: SWITCH, series: p.groups.map((name, i) => ({ name, values: p.share[i] })) });
 }
 
 // Table 1 (Q6): robustness of each changing MAG under leave-one-day-out reruns
@@ -155,7 +160,20 @@ function drawRobust() {
   });
 }
 
-function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCazy(); drawRobust(); drawCore(); }
+// Figure 7 (Q7): marker KOs per day, percent of the binned DNA on carrying MAGs (log10 colour scale as Figure 1)
+function drawKo() {
+  const labels = [], values = [], tips = {};
+  let grp = null;
+  for (const r of D.kos) {
+    if (r.group !== grp) { grp = r.group; labels.push(`${grp} (group)`); values.push(D.days.map(() => null)); }
+    labels.push(`${r.name} · ${r.carriers} MAGs · log2 ${r.log2 > 0 ? "+" : ""}${r.log2}`);
+    values.push(r.share.map(lg));
+  }
+  heatmap($("pjKo"), { rows: labels, cols: D.days.map((d) => "Day " + d), values, label: "Share of the binned DNA",
+    format: pct, cell: 18, colLabelHeight: 50 });
+}
+
+function drawAll() { drawTax(); drawMagHeat(); drawHeat(); drawTiming(); drawChange(); drawMovers(); drawCazy(); drawRobust(); drawKo(); drawCore(); }
 $("pjTaxLevel").addEventListener("change", () => { st2.tax = $("pjTaxLevel").value; drawTax(); });
 $("pjHeatSet").addEventListener("change", () => { st2.heat = $("pjHeatSet").value; drawMagHeat(); });
 
