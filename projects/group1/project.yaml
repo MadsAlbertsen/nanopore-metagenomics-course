@@ -13,7 +13,7 @@ data_note: >-
   the reads of all ten days pooled. Diet facts: information from the data owner.
 takeaways:
   - "H1, delayed response (partly supported): day 6, the first day of the new diet, still resembled days 1-5 (Bray-Curtis to day 1 0.19); the community moved over days 7-8 (0.33 on day 8), while 12 of 35 changing MAGs had already reached their new level on day 6 and some taxa were still changing on day 10 (Gastranaerophilaceae 0.2 to 5.1% of the bases from day 6 to day 10)."
-  - "H1, day 1 and day 10 most similar (not supported): Bray-Curtis 0.38, rank 40 of 45 pairs (1 = most similar); day 1 followed about a week of the high-calorie diet, so it is not a sample of the usual diet."
+  - "Carbohydrate-active enzymes of the changing MAGs: the rising Bacteroidaceae carry a median of 54 degrading CAZyme genes per 1,000 genes, the falling MAGs 19; the rising Bacteroidaceae have more plant-fibre (21.2 vs 3.5) and host-glycan genes (10.9 vs 0.4 per 1,000 genes) than the falling Lachnospiraceae (gene content, not activity)."
   - "Community profile: Lachnospiraceae (30.8 and 30.2% of the bases, days 1-5 and days 6-10) and Bacteroidaceae (19.5 and 18.1%) dominated both periods; 2 of the 12 largest families changed at least two-fold."
   - "H2, more strain diversity during the transition (not testable with these data): the variant file has one sample column (all reads pooled). Pooled, none of the 61 MAGs present on every day looks like a strain mixture (median 0.005% variable positions, highest 0.13%)."
   - "One person, one switch, one sample per day: the timing is described, not tested."

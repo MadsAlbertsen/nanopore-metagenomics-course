@@ -7,8 +7,8 @@
 
 <section class="panel">
   <h2>Summary</h2>
-  <p><b>Question.</b> Does the community follow the diet switch with a delay (H1), are day 1 and day 10 the most similar pair of days (H1), and do the genomes present on every day carry more strain diversity during the transition (H2)? We profiled each day by family and by MAG (percent of the sample's bases), compared days with the Bray-Curtis dissimilarity, followed the <span data-n="nChange"></span> MAGs that changed at least two-fold, and used the variable positions in each MAG for strain diversity.</p>
-  <p><b>H1, delay: partly supported.</b> Day <span data-n="firstNewDay"></span>, the first day of the new diet, still resembled days 1-5 (Bray-Curtis to day 1: <span data-n="d1to6"></span>); the community moved over days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span> (<span data-n="d1to8"></span> on day <span data-n="jumpDay"></span>). But <span data-n="nSettle6"></span> of the <span data-n="nChange"></span> changing MAGs reached their new level on day <span data-n="firstNewDay"></span> already, and a few taxa were still changing on the last day. <b>H1, day 1 vs day 10: not supported</b> (rank <span data-n="rank110"></span> of <span data-n="pairs"></span> pairs, 1 = most similar). <b>H2: not testable with these data</b>: the variant file holds the reads of all days pooled, so there is no per-day strain diversity; pooled, no core MAG looks like a strain mixture. Per-day strain profiling is a server job, described under next steps.</p>
+  <p><b>Question.</b> Does the community follow the diet switch at day 6 with a delay (H1), and do the genomes present on every day carry more strain diversity during the transition (H2)? We profiled each day by family and by MAG (percent of the sample's bases), compared days with the Bray-Curtis dissimilarity, followed the <span data-n="nChange"></span> MAGs that changed at least two-fold, and used the variable positions in each MAG for strain diversity.</p>
+  <p><b>H1, delay: partly supported.</b> Day <span data-n="firstNewDay"></span>, the first day of the new diet, still resembled days 1-5 (Bray-Curtis to day 1: <span data-n="d1to6"></span>); the community moved over days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span> (<span data-n="d1to8"></span> on day <span data-n="jumpDay"></span>). But <span data-n="nSettle6"></span> of the <span data-n="nChange"></span> changing MAGs reached their new level on day <span data-n="firstNewDay"></span> already, and a few taxa were still changing on the last day. <b>H2: not testable with these data</b>: the variant file holds the reads of all days pooled, so there is no per-day strain diversity; pooled, no core MAG looks like a strain mixture. Per-day strain profiling is a server job, described under next steps.</p>
 </section>
 
 <!--KEY-FINDINGS-->
@@ -23,8 +23,8 @@
 <section class="panel">
   <h2>Hypotheses and how they are tested</h2>
   <ul>
-    <li><b>H1a, delayed response.</b> The group expected a delay of about one day (transit) and about five days for a new community to establish. Test: on which day after the switch at day 6 do the community and each changing MAG move to their new level, and is the community still moving on days 9-10? Expected (written before the analysis): days 1-6 alike, a change from day 7, days 8-10 most different.</li>
-    <li><b>H1b, day 1 and day 10 most similar.</b> Test: rank of the day 1 vs day 10 pair among all <span data-n="pairs"></span> pairs. Expected: not the most similar pair, since day 1 followed a week of the high-calorie diet.</li>
+    <li><b>H1, delayed response.</b> The group expected a delay of about one day (transit) and about five days for a new community to establish. Test: on which day after the switch at day 6 do the community and each changing MAG move to their new level, and is the community still moving on days 9-10? Expected (written before the analysis): days 1-6 alike, a change from day 7, days 8-10 most different.</li>
+    <li><b>Dropped: day 1 and day 10 most similar.</b> The group first also expected day 1 and day 10 to be the most similar pair (both on the usual diet). Day 1 followed about a week of a similar high-calorie diet (information from the data owner), so it does not represent the usual diet, and the group dropped this part to focus on the switch at day 6.</li>
     <li><b>H2, more strain diversity during the transition</b> in the core MAGs; the group expected popANI to be highest before a new community is established. popANI compares two samples (100% = no fixed differences between their populations), so we restate the prediction as two measures inStrain gives: per-day nucleotide diversity of each core MAG highest on the days around the switch, and popANI between consecutive days. Test: per-day values if the variant data have one column per day; otherwise only the pooled variable positions per MAG. Expected: pooled data only, and variable positions mostly below 1% of a MAG's positions.</li>
   </ul>
 </section>
@@ -71,7 +71,7 @@
 </section>
 
 <section class="panel fig">
-  <h3>H1a. When does the community move after the switch at day 6?</h3>
+  <h3>H1. When does the community move after the switch at day 6?</h3>
   <h3>Figure 4. Distance of each day to reference states</h3>
   <p class="note"><b>A.</b> Bray-Curtis dissimilarity of each day to day 1, to the mean of days 2-5 and to the mean of days 8-10.</p>
   <div id="pjTiming"></div>
@@ -107,13 +107,7 @@
 </section>
 
 <section class="panel">
-  <div class="verdict partly"><b>Verdict H1a (delayed response): partly supported.</b> There is a delay: the first day of the new diet still looks like the old period, and most of the community's move comes on days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span>, one to two days after the switch. A five-day establishment is not clearly seen: after day <span data-n="jumpDay"></span> the distance to day 1 shows no clear trend, although day <span data-n="farDay1"></span> is the farthest from day 1. Some genomes change within a day of the switch, and a few taxa (<span data-n="famRise"></span>, the <i>P. copri_B</i> pair) are still changing on the last day, so it is open whether the new state is complete. The delay after day 1 cannot be tested: the diet did not change at day 1.</div>
-</section>
-
-<section class="panel">
-  <h3>H1b. Are day 1 and day 10 the most similar pair?</h3>
-  <p>In Figure 3, day 1 vs day 10 has a Bray-Curtis dissimilarity of <span data-n="bc110"></span>, rank <span data-n="rank110"></span> of <span data-n="pairs"></span> pairs (1 = most similar): one of the most different pairs. <i>Interpretation:</i> the group expected days 1 and 10 to match because both would reflect the usual diet. With the data owner's information, day 1 followed about a week of the high-calorie diet and belongs to the first period, so no match was expected. Whether day 10 is close to the subject's usual community cannot be checked without a sample from before the study.</p>
-  <div class="verdict no"><b>Verdict H1b: not supported.</b> Day 1 and day 10 are among the most different pairs of days, consistent with day 1 belonging to the high-calorie period.</div>
+  <div class="verdict partly"><b>Verdict H1 (delayed response): partly supported.</b> There is a delay: the first day of the new diet still looks like the old period, and most of the community's move comes on days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span>, one to two days after the switch. A five-day establishment is not clearly seen: after day <span data-n="jumpDay"></span> the distance to day 1 shows no clear trend, although day <span data-n="farDay1"></span> is the farthest from day 1. Some genomes change within a day of the switch, and a few taxa (<span data-n="famRise"></span>, the <i>P. copri_B</i> pair) are still changing on the last day, so it is open whether the new state is complete. The delay after day 1 cannot be tested: the diet did not change at day 1.</div>
 </section>
 
 <h2 class="pjh">Hypothesis 2: more strain diversity during the transition</h2>
@@ -143,7 +137,7 @@
 
 <section class="panel">
   <h2>Discussion</h2>
-  <p><b>H1.</b> The community changes after the switch with a short delay: unchanged on day <span data-n="firstNewDay"></span>, moving on days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span>. A lag of about a day fits transit time [4, 5] and the feeding studies where the community changed within one to a few days [1, 2]; a further day fits a community that depends on several days of diet history [3]. The five-day establishment the group expected is not clearly seen for the community as a whole, but some taxa still grow or shrink on the last day, and the series ends there. That day 1 and day 10 differ is consistent with day 1 belonging to the high-calorie period, rather than with a failed return to baseline.</p>
+  <p><b>H1.</b> The community changes after the switch with a short delay: unchanged on day <span data-n="firstNewDay"></span>, moving on days <span data-n="crossDay"></span>-<span data-n="jumpDay"></span>. A lag of about a day fits transit time [4, 5] and the feeding studies where the community changed within one to a few days [1, 2]; a further day fits a community that depends on several days of diet history [3]. The five-day establishment the group expected is not clearly seen for the community as a whole, but some taxa still grow or shrink on the last day, and the series ends there.</p>
   <p><b>H2.</b> The question is good but needs per-day data. The pooled result is the least certain one in the report, because method limits (read errors, the 10% filter, a caller made for diploid genomes) and biology are mixed.</p>
   <p><b>Solid and uncertain.</b> Solid: the two blocks of days in Figure 3, which rest on all MAGs together, and the stable family profile. Uncertain: the exact settled day of single MAGs, which one odd day can shift, and anything about strains. Carbohydrate and calories changed together, so no cause can be named.</p>
 </section>
