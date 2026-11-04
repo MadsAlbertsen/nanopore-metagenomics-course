@@ -10,10 +10,14 @@ for (const e of document.querySelectorAll("[data-n]")) {
 const legend = (id, items) => { const h = $(id); h.innerHTML = ""; chartLegend(h, items); };
 const SWITCH = [{ x: 5.5, label: "diet switch" }];
 
-// Figure 1a: Bray-Curtis of each day to the days 1-5 mean (species mix)
+// Figure 1a: each substrate group per day as a percent of its days 1-5 mean (the report's Figure 1, "Relative to days 1-5")
 function fig1a() {
-  lineChart($("a4F1a"), { x: D.days, series: [{ name: "species mix", values: D.to_first.taxa, color: "var(--c1)" }],
-    xLabel: "Day", xName: "Day", yLabel: "Bray-Curtis to the days 1-5 mean", marks: SWITCH, zero: true });
+  const series = D.categories.map((c) => {
+    const m = c.values.slice(0, 5).reduce((a, b) => a + b, 0) / 5;
+    return { name: c.name, values: c.values.map((v) => (100 * v) / m) };
+  });
+  lineChart($("a4F1a"), { x: D.days, series, xLabel: "Day", xName: "Day", unit: "%",
+    yLabel: "Percent of the days 1-5 mean (%)", marks: SWITCH, zero: false });
 }
 // Figure 1b: PCoA of the species mix, days joined in order
 function fig1b() {
