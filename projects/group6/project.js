@@ -4,7 +4,7 @@
 // reads_mag_pct, asm_pct / mag_pct with bootstrap intervals *_lo / *_hi).
 const D = DATA, N = D.numbers, S = D.samples;
 // counts as integers; every other number keeps at least one decimal (76.0, not 76, next to 84.2)
-const INT = new Set(["mags", "contigs", "contigs_binned", "samples", "rs_raw_per_sample", "rs_reads", "rs_kept_reads", "rs_kept_min", "rs_kept_max", "boot", "min_q", "min_len", "rs_longest_kb", "rs_longest_aligned_pct"]);
+const INT = new Set(["mags", "contigs", "contigs_binned", "samples", "rs_raw_per_sample", "rs_reads", "rs_kept_reads", "rs_kept_min", "rs_kept_max", "boot", "min_q", "min_len", "rs_longest_kb", "rs_longest_aligned_pct", "gap_q"]);
 const num = (v, k) => {
   if (typeof v !== "number") return String(v);
   if (INT.has(k)) return v.toLocaleString("en-US");
@@ -70,12 +70,30 @@ function drawFig() {
   });
 }
 
-// --- Figure 2: reads vs bases (all sequenced reads, read sample)
+// --- Figure 2: reads vs bases (all sequenced reads, read sample); custom bars so that the sample labels stay
+// horizontal (the kit's barChart rotates more than 8 labels)
 function drawUnits() {
-  barChart($("g6Units"), {
-    labels: S.map((s) => s.sample),
-    groups: [{ name: "share of reads", values: S.map((s) => s.a_reads_pct) }, { name: "share of bases", values: S.map((s) => s.a_asm_pct) }],
-    yLabel: "Aligned to the assembly (%)", unit: "%",
+  const host = $("g6Units");
+  const groups = [["a_reads_pct", "share of reads", "var(--c1)"], ["a_asm_pct", "share of bases", "var(--c2)"]];
+  mountChart(host, () => {
+    const { svg, W, H } = newSvg(host, 300);
+    const box = { l: 56, r: W - 12, t: 14, b: H - 44 };
+    const n = S.length, band = (box.r - box.l) / n, bw = (band * 0.75) / groups.length;
+    const y = scale(0, 100, box.b, box.t);
+    axes(svg, () => 0, y, box, { yLabel: "Aligned to the assembly (%)", xTicks: [], yTicks: y.ticks(5) });
+    const small = band < 46;
+    S.forEach((s, i) => {
+      const xc = box.l + band * (i + 0.5);
+      el("text", { x: xc, y: box.b + 16, "text-anchor": "middle" }, svg).textContent = small ? String(s.day) : s.sample;
+      if (!small) el("text", { x: xc, y: box.b + 30, "text-anchor": "middle", class: "note" }, svg).textContent = "day " + s.day;
+      groups.forEach(([k, name, color], gi) => {
+        const v = s[k], xx = xc - (bw * groups.length) / 2 + gi * bw;
+        const rect = el("rect", { x: xx, y: y(v), width: bw - 1, height: y(0) - y(v), style: `fill:${color}`, rx: 2 }, svg);
+        tipOn(rect, `<b>${esc(s.sample)} · day ${s.day}</b> · ${esc(name)}<br>${v.toFixed(1)}% (all ${num(s.a_reads, "rs_reads")} sampled reads)`);
+      });
+    });
+    if (small) el("text", { x: (box.l + box.r) / 2, y: box.b + 34, "text-anchor": "middle", class: "lab" }, svg).textContent = "Day (sample DNA01-DNA10)";
+    chartLegend(host, groups.map(([, name, color]) => ({ name, color })));
   });
 }
 

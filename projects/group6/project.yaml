@@ -13,7 +13,7 @@ data_note: >-
   Barcoding Kit, R10.4.1), assembled and binned with mmlong2. Every number on this page comes from np26
   scripts/46_project_group6.py; diet details are information from the data owner.
 takeaways:
-  - "In every sample, 95.7-96.6% of the filtered bases (the reads used for the assembly) map to the assembly, and 74.1-83.4% to the 421 MAGs (all reads, coverage-based)."
+  - "In every sample, 95.7-96.6% of the filtered bases (the reads used for the assembly) map to the assembly, and 74.1-83.4% to the 421 MAGs (every filtered read, from contig depths)."
   - "The MAGs hold 80.1% of all filtered bases but only 59.7% of the assembly's length: the binned contigs are the well-covered ones, and 16.3% of the bases lie on contigs that were not binned."
-  - "A random sample of raw reads (median 2,997 per sample) confirms this: 98.9-99.3% of the filtered bases align to the assembly and 76.0-84.2% to MAGs, within 3.8 percentage points of the full data in every sample."
+  - "A random sample of raw reads (median 2,998 per sample) confirms this: 98.9-99.3% of the filtered bases align to the assembly and 76.0-84.2% to MAGs, within 3.8 percentage points of the full data in every sample."
   - "Counted in reads instead of bases, fewer of all sequenced reads align (62.1% in DNA02, 91.4% pooled), because many short, low-quality reads do not; counted in bases 97.9% align."
