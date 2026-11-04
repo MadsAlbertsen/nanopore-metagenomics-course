@@ -1,0 +1,88 @@
+<div class="intro">
+  <span class="kicker">Group 6 · draft report</span>
+  <h1>How much of the sequenced data does the assembly represent?</h1>
+  <p>A short research report on one question about the whole study: how much of each day's sequenced DNA ends up in the assembly, and how much in the genomes recovered from it (MAGs). It answers the group's first question with the plot they asked for (<a href="#g6Fig1">Figure 1</a>) and will grow with their next questions. Interpretation is marked as such ("this suggests", "one explanation is"); everything else is a measured result of this study or a cited source.</p>
+  <div class="stats" id="pjStats"></div>
+</div>
+
+<section class="panel">
+  <h2>Summary</h2>
+  <p>The group asked how much of the data the assembly actually covers, per sample, and how much of it is in bins. We measured this in bases (the summed length of the reads), because nanopore reads differ greatly in length and the study's abundances are shares of bases. Over all reads used for the assembly (<span data-n="total_gbp"></span> Gbp after the quality and length filter), <span data-n="asm_min"></span>-<span data-n="asm_max"></span>% of each sample's bases map to the assembly and <span data-n="mag_min"></span>-<span data-n="mag_max"></span>% to the <span data-n="mags"></span> MAGs (pooled <span data-n="asm_pooled"></span>% and <span data-n="mag_pooled"></span>%). A random sample of the raw reads, mapped separately, gives the same picture: <span data-n="rs_kept_asm_min"></span>-<span data-n="rs_kept_asm_max"></span>% of the filtered bases align to the assembly and <span data-n="rs_kept_mag_min"></span>-<span data-n="rs_kept_mag_max"></span>% to MAGs. The MAGs hold four fifths of the bases although their contigs are only <span data-n="binned_length_pct"></span>% of the assembly's length. Our interpretation: almost all of the sequenced DNA is represented in the assembly, and most of it in MAGs, so the MAG-based results of this course describe most of each day's DNA; about one sixth lies on contigs that were not binned.</p>
+</section>
+<!--KEY-FINDINGS-->
+
+<section class="panel">
+  <h2>Background</h2>
+  <p>A metagenome is sequenced as a mixture of all the DNA in a sample. Assembly joins overlapping reads into longer contigs, and binning groups the contigs that seem to come from one genome into metagenome-assembled genomes (MAGs). Every later result of this course, from the share of a MAG on a day to the genes it carries, rests on the MAGs, so it matters how much of the sequenced DNA they represent. Part of the DNA never makes it: genomes with too few reads to assemble, regions that are hard to assemble, and contigs that the binning tools cannot place. A common way to say how well a genome collection represents a community is to map the reads back and report the share that lands on it; adding MAGs from new studies to the reference collections raised the share of sequencing data that could be classified, both in human gut samples [1] and in soil and sediment samples sequenced with nanopore reads and assembled with mmlong2 [2], the workflow used here.</p>
+  <p>The study: one person gave a stool sample on each of ten days. Both diet periods were vegetarian. Days 1-5 were high in carbohydrate and calories, days 6-10 low in carbohydrate and calories, closer to the subject's normal diet. The subject had eaten a similar high-calorie diet for about a week before day 1, so the switch at day 6 is the main change (information from the data owner). All ten samples were sequenced on one nanopore flow cell and assembled together (one co-assembly of <span data-n="assembly_gbp"></span> Gbp in <span data-n="contigs"></span> contigs), then binned into <span data-n="mags"></span> MAGs from <span data-n="contigs_binned"></span> contigs.</p>
+  <p><b>Question.</b> For each of the ten samples, which share of the sample's data maps to the assembly, and which share to the contigs in bins (MAGs)? <b>Expected</b> (written before the analysis, from the study's earlier results): MAGs <span data-n="mag_min"></span>-<span data-n="mag_max"></span>% of the filtered bases per sample, as in the study's abundance table; the assembly 95-99% in every sample; a lower share for all sequenced reads than for the filtered reads, most of all when counted in reads, because the filter removed many short and low-quality reads.</p>
+</section>
+
+<section class="panel">
+  <h2>Data and methods</h2>
+  <p><b>Which data.</b> "The data" can mean two things here. (1) The reads used for the assembly: the study kept reads with a mean quality of at least Q<span data-n="min_q"></span> and a length of at least <span data-n="min_len"></span> bases and trimmed their adapters (<span data-n="total_reads_m"></span> million reads, <span data-n="total_gbp"></span> Gbp, <span data-n="gbp_min"></span>-<span data-n="gbp_max"></span> Gbp per sample; <a href="reads.html">module 2</a>). (2) All sequenced reads, before that filter. The filter removed <span data-n="rs_kept_reads_pct_removed"></span>% of the reads but only <span data-n="rs_kept_bases_pct_removed"></span>% of the bases (read sample, below), because the removed reads are mostly short.</p>
+  <p><b>Unit.</b> All shares are percent of a sample's <b>bases</b> (summed read length), per sample. A nanopore read can be a few hundred or tens of thousands of bases long, so one long read carries as much DNA as many short ones, and a share of reads would weight the short reads too heavily. Read shares are shown next to them in Table 1 and Figure 2.</p>
+  <p><b>Full data (Figure 1, filled points).</b> mmlong2 <span data-n="v_mmlong2"></span> [2] assembled the reads with myloasm <span data-n="v_myloasm"></span>, mapped each sample's filtered reads back to the contigs with minimap2 <span data-n="v_minimap2_mmlong2"></span> [3] and computed the mean depth of every contig in every sample with MetaBAT2's depth tool (version <span data-n="v_metabat2"></span>) [4], from primary alignments of at least 95% identity. The bases of a sample on a contig are its mean depth times the contig's length. The assembly share is the sum over all contigs, the MAG share the sum over the contigs in bins, each divided by the sample's filtered bases. This uses every read; it is how the study computes MAG abundance (<a href="binning.html">module 4</a>).</p>
+  <p><b>Read sample (Figure 1, open points; Figure 2).</b> The course's random sample of raw reads (median <span data-n="rs_raw_per_sample"></span> per sample, <span data-n="rs_reads"></span> in all, before any filter) was mapped to the assembly with minimap2 <span data-n="v_minimap2_sample"></span> [3] (<a href="reads.html">module 2</a>). For each read we counted the read bases covered by its alignments (overlapping alignments once), and those on contigs in bins. This is the only measure available for all sequenced reads, including those the filter removed; the filtered reads are the <span data-n="rs_kept_reads"></span> sampled reads that pass the study's filter (<span data-n="rs_kept_min"></span>-<span data-n="rs_kept_max"></span> per sample). Its 95% intervals come from resampling the reads (<span data-n="boot"></span> bootstrap resamples).</p>
+  <p><b>Checks</b> (the script stops if one fails): the full-data MAG share per sample equals the study's MAG abundance table; the pooled profile equals the base-weighted mean of the ten samples; the read-sample counts equal module 2's; independently, the read sample's MAG share is within <span data-n="rs_vs_full_mag_max"></span> percentage points of the full data in every sample, and the pooled shares are close to mmlong2's own run summary (<span data-n="mm_yield_assembled"></span>% of the bases in reads that map, <span data-n="mm_yield_binned"></span>% binned, <span data-n="mm_assembly_binned"></span>% of the assembly length in bins). Analysis: np26 scripts/46_project_group6.py.</p>
+</section>
+
+<h2 class="pjh">Results</h2>
+
+<section class="panel fig" id="g6Fig1">
+  <h3>Figure 1. Share of each sample's data on the assembly and on the MAGs</h3>
+  <p>The plot the group asked for: one column per sample (day), with the share of its bases that map to the whole assembly and to the contigs in bins.</p>
+  <div class="pjctl">
+    <label class="check"><input type="checkbox" id="g6Rs" checked> read sample</label>
+    <label>reads in the sample: <select id="g6Set"><option value="k">filtered reads (as the assembly)</option><option value="a">all sequenced reads</option></select></label>
+    <label class="check"><input type="checkbox" id="g6Zoom"> zoom (axis from 60%)</label>
+  </div>
+  <div id="g6Fig"></div>
+  <p class="cap"><b>Figure 1.</b> Percent of each sample's bases that map to the assembly (all contigs, blue) and to the contigs in bins (MAGs, orange); one sample per day. Filled points: all filtered reads of the sample, from mmlong2's contig depths. Open points with bars: the random read sample (aligned read bases) with its 95% interval; the menu switches it between the filtered reads and all sequenced reads (before the filter). Shaded: the high-carbohydrate days; dashed line: the diet switch. The axis starts at zero unless zoomed.</p>
+  <p class="interp"><b>Interpretation.</b> In every sample almost all of the filtered bases map to the assembly (<span data-n="asm_min"></span>-<span data-n="asm_max"></span>%), and the share hardly differs between days. The MAG share varies more, from <span data-n="mag_min"></span>% (<span data-n="mag_min_sample"></span>) to <span data-n="mag_max"></span>% (<span data-n="mag_max_sample"></span>); it was lower on days 1-5 (mean <span data-n="mag_mean_high"></span>%) than on days 6-10 (<span data-n="mag_mean_low"></span>%). One explanation is that more of the early samples' DNA came from bacteria whose genomes stayed on unbinned contigs (low coverage or fragmented); with one person and the diet confounded with time this is a description, not a diet effect. The read sample puts the assembly share <span data-n="rs_kept_asm_min"></span>-<span data-n="rs_kept_asm_max"></span>%, about three points above the full data. The gap of <span data-n="gap_pooled"></span> points (pooled) comes from how the depth is counted: mmlong2 counts depth only from primary alignments (supplementary parts of split reads are removed) with at least 95% identity (its setting for nanopore reads; MetaBAT2's own default is 97%). Estimated from the read sample, keeping only each read's longest alignment lowers the aligned share by <span data-n="gap_primary"></span> point (to <span data-n="rs_kept_primary_pooled"></span>%), and reads with a mean quality below Q<span data-n="gap_q"></span> (about 95% accuracy, a stand-in for the identity filter) hold <span data-n="gap_lowq"></span>% of the filtered bases; together this is close to the gap. mmlong2's own run summary (<span data-n="mm_yield_assembled"></span>% assembled) is close to the read sample; it counts the bases of reads that map at all (primary alignments, all samples pooled), not aligned bases. For the MAG share the two measures agree within <span data-n="rs_vs_full_mag_max"></span> points. With all sequenced reads, the shares fall a little (pooled <span data-n="rs_all_asm_pooled"></span>% on the assembly, <span data-n="rs_all_mag_pooled"></span>% on MAGs) and spread more: DNA02 (<span data-n="rs_all_asm_min"></span>%) has many low-quality reads (the filter removes <span data-n="dna02_removed_bases_pct"></span>% of its sampled bases, <span data-n="dna02_lowq_bases_pct"></span>% in reads below Q<span data-n="min_q"></span>), and in <span data-n="rs_longest_sample"></span> a single raw read of <span data-n="rs_longest_kb"></span> kb (mean Q <span data-n="rs_longest_q"></span>, <span data-n="rs_longest_aligned_pct"></span>% aligned) is <span data-n="rs_longest_share"></span>% of the sampled bases.</p>
+</section>
+
+<section class="panel fig">
+  <h3>Figure 2. Reads or bases: the unit changes the answer</h3>
+  <p>The same read sample, all sequenced reads, counted in two ways: the share of reads with any alignment to the assembly, and the share of bases that align.</p>
+  <div id="g6Units"></div>
+  <p class="cap"><b>Figure 2.</b> Percent of all sequenced reads in the read sample (before the filter) that align to the assembly, counted in reads (blue) and in bases (orange), per sample. A read counts if any part of it aligns; a base counts if it lies in an alignment.</p>
+  <p class="interp"><b>Interpretation.</b> Counted in reads, <span data-n="rs_all_reads_min"></span>% (<span data-n="rs_all_reads_min_sample"></span>) to <span data-n="rs_all_reads_max"></span>% of the reads align (pooled <span data-n="rs_all_reads_pct_pooled"></span>%); counted in bases, <span data-n="rs_all_asm_pooled"></span>%. The reads that do not align are mostly short or of low quality, so they carry little of the DNA. This is why "how much of the data" needs a unit: a read share says how many molecules are explained, a base share how much DNA.</p>
+</section>
+
+<section class="panel fig">
+  <h3>Table 1. The numbers per sample</h3>
+  <div id="g6Table"></div>
+  <p class="cap"><b>Table 1.</b> One row per sample. Full data (all filtered reads): reads (million), bases (Gbp), percent of the bases on the assembly, on MAGs, on unbinned contigs and on no contig. Read sample, filtered reads and all sequenced reads: number of reads, percent of reads that align, percent of bases on the assembly and on MAGs. Click a column to sort.</p>
+</section>
+
+<section class="panel">
+  <h2>Limitations</h2>
+  <ul class="g6ul">
+    <li>The full-data shares rest on mmlong2's depth table, which counts only primary alignments of at least 95% identity; the assembly share is therefore about <span data-n="gap_pooled"></span> points lower than the share of bases that align at all (see Figure 1).</li>
+    <li>For all sequenced reads (before the filter) only the read sample is available, about <span data-n="rs_raw_per_sample"></span> reads per sample; a base share from so few reads is sensitive to single very long reads.</li>
+    <li>"Maps to the assembly" means a read aligns to a contig; it does not mean that the contig is correct or that the read comes from that genome alone.</li>
+    <li>Shares are relative to what was sequenced: DNA that the extraction or library preparation missed is not counted at all.</li>
+    <li>One person, ten days, one sample per day: differences between days are descriptions, not effects of the diet.</li>
+  </ul>
+</section>
+
+<section class="panel">
+  <h2>Open questions and possible next analyses</h2>
+  <ul class="g6ul">
+    <li><b>What is on the unbinned contigs?</b> <span data-n="unbinned_pooled"></span>% of the bases lie on contigs that were not binned: their length, coverage and taxonomy (contig table, on the Mac).</li>
+    <li><b>Why do days 1-5 have a lower MAG share?</b> Which unbinned contigs are more abundant in those samples (contig depths per sample, on the Mac).</li>
+    <li><b>All reads, full data:</b> map every raw read of each sample (before the filter) to the assembly for exact shares without sampling noise (a server job).</li>
+    <li><b>Assembly share without the depth filter:</b> count aligned bases directly in mmlong2's read mappings, with all alignments and with primary alignments only, to confirm the explanation for the three-point gap (a server job).</li>
+  </ul>
+</section>
+
+<section class="panel">
+  <h2>References</h2>
+  <ol class="g6refs">
+    <li>Almeida A et al. (2019). A new genomic blueprint of the human gut microbiota. Nature 568:499-504. <a href="https://doi.org/10.1038/s41586-019-0965-1">doi:10.1038/s41586-019-0965-1</a> (PMID 30745586)</li>
+    <li>Sereika M et al. (2025). Genome-resolved long-read sequencing expands known microbial diversity across terrestrial habitats. Nat Microbiol 10:2018-2030. <a href="https://doi.org/10.1038/s41564-025-02062-z">doi:10.1038/s41564-025-02062-z</a> (PMID 40707831)</li>
+    <li>Li H (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics 34:3094-3100. <a href="https://doi.org/10.1093/bioinformatics/bty191">doi:10.1093/bioinformatics/bty191</a> (PMID 29750242)</li>
+    <li>Kang DD et al. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ 7:e7359. <a href="https://doi.org/10.7717/peerj.7359">doi:10.7717/peerj.7359</a> (PMID 31388474)</li>
+  </ol>
+</section>
