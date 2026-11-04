@@ -1,7 +1,7 @@
 // Group 3 article: butyrate gene potential across ten days. DATA is a subset of projects/group3/data.json (the report).
 const D = DATA, N = D.numbers;
 const SPLIT = "diet switch";
-const st = { capP: "hi" };
+const st = { capP: "hi", contrib: "mag" };
 document.querySelectorAll("[data-n]").forEach((e) => { e.textContent = String(N[e.dataset.n]); });
 
 // Figure 1 and Figure 4: where the DNA and the butyrate genes lie (HQ MAGs, MQ MAGs, unbinned contigs)
@@ -137,8 +137,24 @@ function drawCommunity() {
   join();
 }
 
+// Figure 5: change in percentage points per route MAG (largest 16) or per genus and final step
+const KIN = { but: ["but", "var(--c1)"], ptb_buk: ["ptb + buk", "var(--c2)"], buk_only: ["buk without ptb", "var(--c3)"] };
+function drawBars() {
+  let rows;
+  if (st.contrib === "mag") {
+    rows = [...D.mags].sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 16).sort((a, b) => b.pp - a.pp).map((m) => ({ label: m.name, v: m.pp, kin: m.kin }));
+  } else {
+    rows = Object.entries(D.groups).flatMap(([kin, gs]) => gs.filter((g) => Math.abs(g.pp) >= 0.05).map((g) => ({ label: `${g.genus} (${g.n}) · ${KIN[kin][0]}`, v: g.pp, kin }))).sort((a, b) => b.v - a.v);
+  }
+  barChart($("g3Bars"), { labels: rows.map((r) => r.label), values: rows.map((r) => r.v), colors: rows.map((r) => KIN[r.kin][1]), horizontal: true,
+    yLabel: "Days 6-10 minus days 1-5 (percentage points)", unit: "percentage points" });
+  chartLegend($("g3Bars"), Object.values(KIN).map(([name, color]) => ({ name, color })));
+}
+$("g3Contrib").addEventListener("change", (e) => { st.contrib = e.target.value; drawBars(); });
+
 drawCapture();
 drawRel();
 drawPathway();
 drawCommunity();
 drawGeneHeat();
+drawBars();
