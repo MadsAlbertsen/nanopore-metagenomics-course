@@ -1,4 +1,6 @@
 # Change log shown at the top of the report (newest first). Add an entry with every change that goes live.
+- when: "4 Nov 2026, 14:42"
+  what: "Figure 7: bubble plot of the 20 largest MAG changes plus 5 stable MAGs, with the community-weighted rows for days 1-5 and 6-10 (Q12, bubble plot)"
 - when: "4 Nov 2026, 12:48"
   what: "Figure 7: which common MAGs rose or fell between days 1-6 and 7-10, the 20 largest changes, Prevotella/Roseburia/Agathobacter, and host-glycan genes within families (Q9)"
 - when: "4 Nov 2026, 12:42"
