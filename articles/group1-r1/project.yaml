@@ -1,0 +1,12 @@
+number: 1
+slug: article-group1-r1
+title: "Staggered genome turnover after a diet change in one person, and a null-model test of whether carbohydrate-enzyme gene content is buffered"
+nav: "Group 1 article, revision 1"
+question: "Revision of the group's article: the delayed community shift is followed genome by genome (step fits, a late contrast, the Prevotella copri_B collapse), and the stable carbohydrate-enzyme gene density is tested against gene-content permutation null models."
+status: draft
+revision_of: 1
+revision_label: "Revision 1 (rewritten by Claude after peer review, 4 Nov 2026)"
+data_note: >-
+  Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
+  Diet facts: information from the data owner. Revision 1 by Claude: the group's analyses plus new ones (np26
+  scripts/41_project_group1.py, section R1).

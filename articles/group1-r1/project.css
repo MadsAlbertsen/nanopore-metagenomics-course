@@ -1,0 +1,17 @@
+/* group 1, revision 1: abstract, equations, the paired figure, the review response table */
+.r1abs { font-size: 15px; line-height: 1.6 }
+.r1how p { margin: 6px 0 }
+.r1eq { font-size: 15px; text-align: center; margin: 10px 0; color: var(--ink) }
+.r1scroll { overflow-x: auto }
+.r1pair { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 0 4px; min-width: 860px; align-items: start }
+.r1ptitle { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 2px 6px }
+.r1wide { overflow-x: auto }
+.refs { font-size: 13px }
+.refs ol { padding-left: 22px }
+.refs li { margin-bottom: 4px }
+.panel table.r1resp td { vertical-align: top; font-size: 13px }
+.panel table.r1resp td:first-child, .panel table.r1resp th:first-child { width: 30% }
+.panel p a, .panel td a { color: var(--accent) }
+@media (max-width: 720px) { .r1pair { grid-template-columns: 1fr; min-width: 520px } }
+.panel table.r1resp { width: 100%; table-layout: fixed; border-collapse: collapse }
+.panel table.r1resp th, .panel table.r1resp td { white-space: normal; overflow-wrap: anywhere; padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left }
