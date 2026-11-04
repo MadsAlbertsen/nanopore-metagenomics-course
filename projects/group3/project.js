@@ -203,7 +203,38 @@ function drawCaptureTables() {
   });
 }
 
-function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); }
+// part 3.6 (Q2): reliability of the gene calls
+const REL = D.reliability;
+function drawRelTables() {
+  const arrow = (v) => (v[0] === null ? "–" : `${v[0].toFixed(3)} → ${v[1].toFixed(3)}`);
+  table($("g3Rel"), {
+    columns: [{ key: "gene", label: "Gene" }, { key: "n", label: "Calls", num: true, fmt: String }, { key: "confident", label: "Confident", num: true, fmt: String },
+      { key: "borderline", label: "Borderline", num: true, fmt: String }, { key: "doubtful", label: "Doubtful", num: true, fmt: String },
+      { key: "score", label: "Score / threshold" }, { key: "near", label: "Within 10% above" }, { key: "below", label: "Just below" },
+      { key: "all", label: "Per 1,000 genes, all" }, { key: "nod", label: "Without doubtful" }, { key: "conf", label: "Confident only" }],
+    rows: REL.summary.map((r) => {
+      const g = r.gene, isBut = g === "but";
+      return { ...r, n: r.confident + r.borderline + r.doubtful,
+        score: isBut ? `identity ${N.q2_strict_min}-${N.q2_strict_max}% (exact name), ${N.q2_broad_min}-${N.q2_broad_max}% (broad name)` : `${N[`q2_${g}_rmin`]}-${N[`q2_${g}_rmax`]}`,
+        near: isBut ? "–" : String(N[`q2_${g}_near`]), below: isBut ? "–" : String(N[`q2_${g}_below`]),
+        all: arrow(REL.robust.all[g]), nod: arrow(REL.robust.no_doubtful[g]), conf: r.confident ? arrow(REL.robust.confident[g]) : "no confident call" };
+    }), sortable: false,
+  });
+  table($("g3Calls"), {
+    columns: [{ key: "gene", label: "Gene" }, { key: "name", label: "MAG" }, { key: "ev", label: "Evidence", num: true, fmt: (v, r) => (r.gene === "but" ? `${Math.round(100 * v)}% identity` : `${v.toFixed(2)} × threshold`) },
+      { key: "partner", label: "Neighbour", fmt: (v) => (v === null ? "–" : v ? "yes" : "no") }, { key: "meth", label: "Methylation" },
+      { key: "contam", label: "Contamination (%)", num: true, fmt: (v) => v.toFixed(1) }, { key: "cls", label: "Class" }, { key: "why", label: "Reasons", fmt: (v) => v || "–" }],
+    rows: REL.calls, filter: true, sortKey: "gene", maxRows: 15,
+  });
+}
+const BUTG = [["strict", "butyryl-CoA:acetate CoA-transferase (counted)"], ["broad", "acetyl-CoA hydrolase/transferase (counted)"], ["putative", "putative butyrate:acetyl-CoA CoA-transferase"], ["other", "other family members"]];
+function drawButId() {
+  const bins = Array.from({ length: 20 }, (_, i) => i * 5);
+  const count = (gr) => bins.map((b) => REL.but_family.filter((f) => f.group === gr && f.ident >= b && (f.ident < b + 5 || (b === 95 && f.ident <= 100))).length);
+  barChart($("g3ButId"), { labels: bins.map((b) => `${b}-${b + 5}`), groups: BUTG.map(([k, name]) => ({ name, values: count(k) })), yLabel: "Proteins", unit: "proteins", fmt: String });
+}
+
+function drawAll() { setControls(); drawGeneHeat(); drawGenes(); drawHeat(); drawPcoa(); drawLine(); drawBars(); drawCapture(); drawButId(); }
 $("g3CapP").addEventListener("change", (e) => { st.capP = e.target.value; drawCapture(); });
 
 $("g3GView").addEventListener("change", (e) => { st.gview = e.target.value; drawGeneHeat(); });
@@ -217,4 +248,5 @@ $("g3Contrib").addEventListener("change", (e) => { st.contrib = e.target.value; 
 stats();
 drawTables();
 drawCaptureTables();
+drawRelTables();
 drawAll();
