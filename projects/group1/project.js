@@ -148,6 +148,11 @@ function drawCazy() {
     series: p.cats.map((name, i) => ({ name, values: p.values[i] })) });
   lineChart($("pjCazyGroups"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%",
     zero: true, marks: SWITCH, series: p.groups.map((name, i) => ({ name, values: p.share[i] })) });
+  // Figure 6 E-F (Q4): the same per-day profile for the changing MAGs and the core MAGs, one common y axis
+  const sub = c.perDaySub;
+  sub.panels.forEach((pn, k) => lineChart($(k === 0 ? "pjCazyChanging" : "pjCazyCore"), { x: D.days, xLabel: "Day", xName: "Day",
+    yLabel: "Genes per 1,000 genes", zero: true, yRange: [0, 36], marks: SWITCH,
+    series: sub.cats.map((name, i) => ({ name, values: pn.values[i] })) }));
 }
 
 // Table 1 (Q6): robustness of each changing MAG under leave-one-day-out reruns
