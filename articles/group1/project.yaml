@@ -1,8 +1,8 @@
 number: 1
 slug: article-group1
-title: "<h1>Delayed community shift and level carbohydrate-enzyme gene content after a diet change in one person</h1>"
+title: "Delayed community shift and level carbohydrate-enzyme gene content after a diet change in one person"
 nav: "Group 1 article"
-question: "The angle of the article is chosen by the group from its project report (Projects, group 1)."
+question: "Ten daily nanopore metagenomes from one person across a diet switch: the community shifted with a delay of one to two days, while the carbohydrate-enzyme gene content stayed near its level."
 status: draft
 data_note: >-
   Data: ten daily stool samples from one person (our own sequencing run of the ten samples), analysed with mmlong2.
