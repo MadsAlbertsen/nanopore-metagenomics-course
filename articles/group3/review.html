@@ -1,0 +1,164 @@
+<div class="intro">
+  <span class="kicker">Group 3 · peer review · The ISME Journal (simulated)</span>
+  <h1>Peer review: Butyrate gene potential is maintained but redistributed after a carbohydrate reduction: a ten-day long-read metagenomic time series</h1>
+  <p class="note">Reviews of the submitted version of the <a href="article-group3.html">article</a> (frozen on 4 Nov 2026, before the reviews). Three anonymous reviewers each covered one aspect, and a handling editor weighed their reports and made the decision. The reviewers and the editor are AI models (Claude); each saw only the submitted article, its figures and its data file, not the group's questions or the course material. Decision: <b>Reject, with encouragement to resubmit</b>.</p>
+</div>
+<section class="panel">
+<h2>Editorial decision</h2>
+<p><strong>Manuscript:</strong> Butyrate gene potential is maintained but redistributed after a carbohydrate reduction: a ten-day long-read metagenomic time series</p>
+<p><strong>Decision:</strong> Reject, with encouragement to resubmit</p>
+<p><strong>Summary of the reviews</strong>
+All three reviewers praise the graded gene calls, the unbinned-contig and dilution checks and the open limitations. All three recommend major revision and agree on the central problem. The fall of the CoA-transferase gene <em>but</em> (and of Agathobacter/Roseburia) is well supported. The rise of the kinase route, and with it the word "redistributed", is not. R1 adds sequencing and pipeline detail, R2 the diet-time confound and the dilution bound, R3 novelty and journal format. I checked their numerical claims against the data file. Two numbers in the text could not be reproduced from the per-day values in the data file: the ratio change (log2 −0.89 in the text, −0.81 to −0.83 from the data) and the first day <em>but</em> leaves its days 1-5 range (day 7 in the text, day 6 in the exact-name <em>but</em> series). The text most likely mixes two gene definitions; the authors should state which one each number uses.</p>
+<p><strong>Basis for the decision</strong>
+This is one person, one sample per day for ten days and a single diet change, with no technical replicates. Diet is confounded with time, with calories and with a return to the habitual diet (R2-M3, R1-M4). Several series move before the switch (<em>buk</em> and the ratio on day 4), and five reference days cannot separate a response from drift. Revision cannot fix these limits, and the gap is not set against existing time-series and butyrate-gene work (R3-M1). This is a well-checked case description, not a general advance.</p>
+<p>"Maintained" rests on <em>bcd</em>, which the authors call an upper bound, and on a route share that varies from 25.7% to 33.3% of bases within days 1-5. "Redistributed" rests on <em>ptb</em>, which has no confident call, and on a <em>buk</em> count that includes genomes outside the authors' own route definition (Phocaeicola). The rise is carried largely by one genome, Acetatifactor intestinalis (R1-M3, R2-M1, R2-M2, R3-M2). I am therefore declining the manuscript. The analysis is sound, and I would welcome a new submission built on a stronger design.</p>
+<p><strong>Essential points for the authors</strong>
+1. Recompute the kinase route and the ratio with ptb-linked <em>buk</em> only, under your own route definition. Retitle around the robust result, the fall of <em>but</em> (R1-M3, R2-M1, R2-M2, R3-M2).
+2. Define one primary abundance measure with an equation. Use it consistently in the abstract, text, Table 1 and Figures 4 and 6, with the others as sensitivity analyses. State how the ratio (log2 −0.89) and the first-day values are computed, and make them agree with the gene definition used in the figures (R1-M2, R2-m2, R3-M3).
+3. Treat time and diet as confounded throughout, including the title and abstract. Show the pre-switch movements openly, and add a descriptive check of how unusual the day 5/6 split is (permutation of split points) (R1-M4, R2-M3).
+4. Restate the dilution result descriptively. Relative data cannot bound it "at most a third" without total load (R2-M4). Compare with Duncan et al. in direction only (R2-M5).
+5. Report sequencing per sample (reads, bases, read N50, Q) and a tools/versions/parameters table, including the methylation screen. List missing wet-lab details (extraction, library kit) as needed (R1-M1, R2-M6). Give Figure 6 a numeric colour scale, and make Figure 4 and the text agree on atoD and atoA (R3-M4, R2-m3).</p>
+<p><strong>Notes on the reviews</strong>
+R1 (minor 7) and R3 (M5) ask for public deposition of the reads. A journal would require this. The reads are withheld to protect the donor's privacy, so this is not counted against the authors. A real submission would use controlled-access deposition (e.g. EGA). The other required statements (ethics and consent, keywords, contributions) still need to be added. The interactive figures (R1-m5, R3-M4) exist because the course publishes drafts as web pages. A static, print-ready version is a fair request for submission, but it is a formatting step, not a scientific weakness, and played no part in this decision.</p>
+<p><strong>What would make this publishable</strong>
+For ISME J, the design must separate diet from time and from the individual. That means several people, or a crossover with a washout and a return to the first diet, with replicate extractions and total load or faecal butyrate measured. Genome-resolved attribution of the shift to particular MAGs is the real strength here (R3-M1) and should be the stated aim. A revised single-person analysis, limited to the robust <em>but</em> result, would suit a short-format venue such as ISME Communications better.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 1: Methods and data</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors analyse Nanopore metagenomes of ten daily stool samples from one person whose diet changed from high-carbohydrate, high-calorie (days 1-5) to low-carbohydrate, low-calorie (days 6-10). From 421 MAGs (257 high quality) they count butyrate genes (bcd, but, ptb, buk, atoD, atoA) as copies per 1,000 genes, weighted by each MAG's share of the day's sequenced bases. They report that bcd is level, but falls and ptb/buk rise (but / (ptb + buk) log2 -0.89), that a few abundant genomes carry the change, and that dilution explains at most a third of it.</p>
+<p><strong>Overall assessment</strong>
+The graded gene-call assessment, with the main result recomputed without doubtful calls (Table 1), is a real strength, as are the unbinned-contig and dilution checks and the honest limitations. The main problem is that the Methods do not describe data generation and the pipeline well enough to reproduce the work, and the "kinase rise" is measured with a buk count that includes genomes the authors themselves consider non-producers. Several headline numbers also disagree between abstract, text, Table 1 and the data file.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>Sequencing and pipeline not described (Methods, "Data and genomes").</em> Missing: DNA extraction, library kit, flow cell, basecaller model/version, read filtering, and per-sample yield, read N50 and Q score; whether mmlong2 ran one co-assembly or per-sample assemblies, its version and mode, polishing, the mapper used for contig depth, HQ/MQ criteria (CheckM2 thresholds; rRNA/tRNA?) and dereplication; versions of Bakta and its database, KOfam release, Pyrodigal mode and GTDB-Tk. The methylation screen used in Table 1 is never described. Per-sample depth matters here, because shares and the "first day outside the range" depend on even sequencing. Add a per-sample sequencing table and a tools/versions/parameters table.</p>
+</li>
+<li>
+<p><em>Abundance metric undefined and numbers inconsistent (Methods; Abstract; Table 1; "When the gene shift shows").</em> "Weighted by its share of the day's bases times its number of genes" needs an equation; note that base share is not cell share (large genomes get more bases per cell). Abstract and Results give bcd 0.168 → 0.168, ptb 0.050 → 0.067, buk 0.142 → 0.189; Table 1 gives 0.166 → 0.170, 0.048 → 0.067, 0.136 → 0.189 for what reads as the same quantity. The log2 -0.89 ratio change could not be reproduced from the per-day gene values in the data file (-0.81 as a ratio of period means, -0.83 as mean daily log2); define it. The text says but first leaves its days 1-5 range on day 7, but the data give day 6 (0.0685) below the days 1-5 minimum (0.0703).</p>
+</li>
+<li>
+<p><em>buk is not restricted to the butyrate route (Methods "Gene definitions"; Figure 4; Table 1).</em> Only 25 of 122 buk calls lie next to ptb, and Figure 4 names Phocaeicola (+2.7 points) as the second driver of the buk rise, which the text concedes is "probably not part of a butyrate route". Yet buk calls without ptb are only "borderline", and the ratio uses all of them, so the "redistribution" may partly be growth of a non-producer. Report the buk change and the ratio with ptb-linked buk only (the confident-buk column, 0.048 → 0.067, approximates this) and state which conclusion survives.</p>
+</li>
+<li>
+<p><em>Design and inference.</em> One person, one sample per day and no technical replicates mean day-to-day noise is unknown, so "outside the days 1-5 range" with five baseline points is a weak criterion. Signs of pre-switch drift exist: the HQ share rises from day 2, route MAGs peak on day 5 (33.3%), the ratio is already low on day 4 (0.275), and the largest ptb and buk steps precede the switch; with a week of similar diet before day 1, drift or return-to-habitual cannot be excluded. "No basis for a statistical test" is too strong: ranking the observed 5/5 split among all 252 splits, or comparing the day 5/6 boundary with every other breakpoint, would give a descriptive measure of how unusual it is; a bootstrap over reads or contigs would give per-day uncertainty. Report any duplicate extraction or sequencing.</p>
+</li>
+<li>
+<p><em>Classes and controls.</em> Methods say classes were "fixed in advance"; the Table 1 legend says "after the KOfam scores had been seen". Reconcile. The positive control tolerance ("within 10%") is close to the effect size (but falls about 24%); report the actual differences. On unbinned contigs but is found by a profile, not by the Bakta name, so the all-contig comparison (but 0.070 → 0.057) is not like-for-like.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong>
+1. Describe how 12 marker genes give "about 45% of detected genomes".
+2. Bray-Curtis uses only binned bases (76.5-81.9%), a fraction that itself changes between periods.
+3. Cite Pyrodigal itself, not only Prodigal.
+4. Duncan et al. also report a bifidobacteria decrease; "most other large groups did not change" should say so.
+5. Figure 6's colour scale lacks a numeric range; legends of Figures 2, 5 and 6 refer to interactive features ("hover", "choose above").
+6. State how calls without a methylation verdict were classed.
+7. Data availability: deposit reads (controlled access after human-read removal) and code with a versioned DOI.</p>
+<p><strong>Checks performed</strong>
+- References (PubMed): Duncan et al. 2007 (PMID 17189447) exists and supports 19 subjects, 399/164/24 g carbohydrate and Roseburia/E. rectale 11% → 3%. Louis et al. 2004 (PMID 15028695) supports linked ptb/buk and CoA-transferase dominance in isolates. Meili et al. 2026 (PMID 42812005) reports Acetatifactor enrichment on a ketogenic diet in virus-infected mice, as cited. Pfeiffer et al. 2012, Vital et al. 2014 and Sereika et al. 2025 exist. None missing.
+- Numbers vs data.json: HQ 56.0/64.8%, unbinned 19.8/14.5%, route MAGs 25.7-33.3%, Agathobacter + Roseburia 9.1 → 6.2% (log2 -0.55), group nets -3.4 and +4.9 points all match. Mismatches: Table 1 vs text abundances, log2 -0.89, and but's first out-of-range day (6, not 7).
+- Figure 3 vs legend and text: axes 61%/12%, period means -0.12/+0.12, day 6 among days 1-5 all agree. Figure 1 agrees with the per-day values.</p>
+<p><strong>Recommendation to the editor</strong>: major revision - the analyses are careful and partly self-checked, but the Methods lack the sequencing and pipeline detail needed for reproducibility, and the kinase-route result must be recomputed with route-linked buk and consistent numbers before the conclusion can stand.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 2: Results and interpretation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors followed ten consecutive daily stool samples from one person who switched from a high-carbohydrate, high-calorie vegetarian diet (days 1-5) to a low-carbohydrate, low-calorie one (days 6-10). They used Nanopore metagenomes, a co-assembly and 421 MAGs to track genes for the final steps of butyrate formation. They report that bcd stayed level, the CoA-transferase gene but fell and the kinase-route genes ptb and buk rose. They conclude that butyrate gene potential was "maintained but redistributed". The shift appears from about day 7, coincides with a community-wide change and is carried by a few abundant genomes.</p>
+<p><strong>Overall assessment</strong>
+The manuscript is careful in many places. It checks gene coverage outside the MAGs, grades every gene call by its evidence, says plainly that the work measures gene potential rather than butyrate, and openly discusses the return to the habitual diet and the fact that calories and carbohydrate changed together. The fall of but, and of Agathobacter/Roseburia, is well supported within this single series. The main problem is that the headline, "redistributed between final steps", depends on the kinase side. That side is weaker than the text admits. The buk signal is largely buk without ptb, including Phocaeicola, which the authors' own definition excludes from the route. The ptb signal rests on one dominant genome whose calls all sit close to the score threshold. In addition, the title, abstract and the dilution argument read more causally and more conclusively than a single uncontrolled, compositional series allows.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><strong>The kinase rise and the ratio include buk that is not part of the route.</strong> The Methods define the kinase route as ptb and buk together (25 MAGs). However, the buk abundances (0.142 to 0.189 per 1,000 genes) and the ratio but / (ptb + buk) (log2 -0.89) use all 122 buk calls, and only 25 of these lie next to ptb. Figure 4 attributes the buk rise partly to Phocaeicola (+2.7 points), which the text itself says is "probably not part of a butyrate route". The confident buk calls rise exactly as ptb does (0.048 to 0.067), so the extra buk signal comes from non-route genomes. <em>Fix:</em> recompute the ratio and Figures 4 and 6 using only ptb-linked buk, or report both versions. State the result that holds under the authors' own route definition.</p>
+</li>
+<li>
+<p><strong>"Maintained but redistributed" overstates the evidence.</strong> "Maintained" rests on bcd, which the authors call an upper bound (68 of 197 calls have an Etf neighbour; the K00248 profile also matches other short-chain acyl-CoA dehydrogenases). It also rests on a route-MAG share that swings between 25.7% and 33.3% of the bases within days 1-5 alone. "Redistributed" rests on ptb, for which there is no confident call (25 of 25 calls within 10% of the threshold). That rise comes mainly from one MAG, Acetatifactor intestinalis (+3.56 points out of +4.9 for the group). <em>Fix:</em> soften the title and conclusion, for example to "the CoA-transferase gene fell while kinase-route genomes rose", and present the kinase result as tentative and driven by a single genome.</p>
+</li>
+<li>
+<p><strong>Diet is confounded with time and with a return to the habitual diet.</strong> The authors discuss this well, but the title ("after a carbohydrate reduction") and abstract still frame the change as a diet response. The abstract mentions calories but not the return to the habitual diet, even though the high-calorie diet had already run for about a week before day 1. The time course also argues against a clean response to the switch. The largest steps in ptb and buk come before the switch (buk on day 4 is 0.202, above days 6, 7 and 9). The ratio on day 4 (0.275) is almost as low as on day 6 (0.309). With only five reference days, "first day outside the days 1-5 range" is a fragile criterion. <em>Fix:</em> use neutral wording in the title and abstract, name both confounders in the abstract, and show the day 4 behaviour openly rather than only in a subordinate clause.</p>
+</li>
+<li>
+<p><strong>The dilution check cannot bound dilution at "a third at most".</strong> In relative data, a fall of one group must be balanced by rises elsewhere. Seeing "all other MAGs stayed level or grew (factor 1.058)" is therefore expected both under true loss of the but carriers and under growth of others. The 31% figure only says what five chosen risers could account for. It is not an upper limit, and the authors note that the 38% variant is circular. Ratios within a sample remove the total, but they still cannot tell whether but carriers fell or kinase carriers bloomed. <em>Fix:</em> replace "at most about a third" with a descriptive statement, and say that the absolute direction cannot be determined without total load (qPCR, flow cytometry or a spike-in).</p>
+</li>
+<li>
+<p><strong>Comparison with Duncan et al. [6] in magnitude.</strong> The direction agrees. However, comparing log2 effect sizes (-0.55 versus -0.46 and -1.87) mixes FISH counts as a percentage of bacteria with a share of sequenced bases. It also compares 5-day with 4-week diets and 19 men with one person. "Close to their first step" implies a dose match the data cannot support. <em>Fix:</em> keep the comparison in direction only.</p>
+</li>
+<li>
+<p><strong>Sequencing depth per sample is not reported.</strong> The HQ share rises from 49.5% (day 2) to 71.8% (day 10) and the MQ share falls to 10.2%. This could reflect community change, differences in depth or read length between samples, or both. Detecting rare genes (atoD, atoA) also depends on depth. <em>Fix:</em> give bases and read N50 per sample, and check that the main ratios do not follow depth.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>The abstract says "the kinase genes rested on calls close to their score thresholds". This is true for ptb, but buk scores 1.25-3.40 times its threshold with none within 10%. Its weakness is the missing ptb neighbour.</li>
+<li>Two "all calls" values are given for the same quantity: 0.050 to 0.067 (ptb) and 0.142 to 0.189 (buk) in the text and Figure 6, versus 0.048 to 0.067 and 0.136 to 0.189 in Table 1. Explain the difference. For but, the exact-name values (0.080 to 0.061) coincide with "confident only" in Table 1 (0.080 to 0.060), which is confusing.</li>
+<li>The text says atoD and atoA "change little", but Figure 4 labels both ▼ down (log2 -0.30 and -0.34, beyond the authors' 0.2 cut-off).</li>
+<li>The Figure 6 colour key shows only "below 0 / 0 / above", with no scale values.</li>
+<li>Within-species heterogeneity is not discussed: Agathobacter rectalis c.40 fell by 1.45 points while c.38 rose slightly.</li>
+<li>"Which final step dominates is not predicted by family" depends on supplementary material that is not shown.</li>
+</ol>
+<p><strong>Checks performed</strong></p>
+<ul>
+<li>References (PubMed): [6] Duncan 2007 (PMID 17189447) exists and supports the claim (19 obese men; 399/164/24 g carbohydrate; Roseburia/E. rectale 11%, 8%, 3%; the larger groups did not change). [14] Walker 2011 (PMID 20686513) exists and supports the claim (14 overweight men; E. rectale relatives fell on the reduced-carbohydrate diet). [17] Pfeiffer 2012 (PMID 22659832) exists and supports the claim (isolated from the caecum of mice fed a high-calorie diet). [18] Meili 2026 (PMID 42812005) exists and reports Acetatifactor enriched under a ketogenic diet in virus-infected mice, as stated.</li>
+<li>Numbers against data.json:</li>
+<li>HQ share 56.0/64.8% and all MAGs 76.5/81.9%: correct.</li>
+<li>Agathobacter + Roseburia 9.07 to 6.2% (log2 -0.55): correct.</li>
+<li>Agathobacter/Roseburia/Anaerostipes sum -3.55 (stated -3.6): correct.</li>
+<li>Per-day gene means bcd 0.168/0.168, but 0.079/0.060, ptb 0.050/0.067, buk 0.142/0.189: match after rounding.</li>
+<li>The ratio from the per-day values gives log2 -0.81 to -0.83, not the stated -0.89.</li>
+<li>The per-day but value on day 6 (0.0685) is already below the days 1-5 minimum (0.0703). In data.json, but therefore first leaves its range on day 6, not day 7 as stated. The ptb (day 7), buk (day 8) and ratio (day 7) timings are reproduced.</li>
+<li>Figures: Figure 3 agrees with its legend and text (axes 61%/12%; day 6 among days 1-5; days 8-10 furthest out). Figure 4 contradicts the text on atoD/atoA (minor point 3). Figure 5 agrees with the stated per-MAG changes.</li>
+</ul>
+<p><strong>Recommendation to the editor</strong>: major revision. The fall of but is well supported, but the "redistribution" towards the kinase route depends on buk calls outside the authors' route definition and on one near-threshold genome, and the causal framing and the dilution bound go beyond what a single compositional series shows.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 3: Context, novelty and presentation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors followed one person's stool daily for ten days, five on a high-carbohydrate, high-calorie diet and five on a low-carbohydrate, low-calorie diet. They used Nanopore metagenomics, 421 MAGs and a targeted search for genes of the final butyrate-forming steps. bcd stays level, the CoA-transferase gene but falls and the kinase genes ptb and buk rise. A few abundant genomes carry most of the change, which shows from day 7.</p>
+<p><strong>Overall assessment</strong>
+The gene-call classes (Table 1), the unbinned-contig check (Figure 2) and the dilution test are good practice. The main problem is the framing. The gap is narrow and not set against the relevant literature. The title claims more than the weakest gene calls support. Interactive figures, missing required statements and several versions of the key numbers would stop the manuscript at the editorial check.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><em>Novelty and gap (Abstract; Introduction paragraph 2).</em> Dense time series already exist. David et al. 2014 (Genome Biol 15:R89) sampled daily over a year. Johnson et al. 2019 (Cell Host Microbe 25:789) sampled 34 people daily for 17 days with shotgun metagenomes. Vital et al. 2017 (mSystems 2:e00130-17) quantified the terminal butyrate genes in 2,387 metagenomes and discussed functional stability under disturbances. This bears on the redundancy interpretation. The abstract's second gap, "how reliably long-read metagenomics resolves it", is never tested, because nothing is compared with another method. With n = 1, the contribution is a carefully checked case. The Introduction should say what it adds to these studies, most plausibly attributing the shift to particular genomes, and state that as the aim.</p>
+</li>
+<li>
+<p><em>The title and conclusion go further than the data (Title; Abstract; Discussion paragraph 1).</em> "Maintained" rests on bcd, which the authors call an upper bound (68 of 197 calls have an Etf neighbour). "Redistributed" depends on ptb, which has no confident call, and the kinase rise may have started before the switch. The Discussion's "the shift persisted under all checks" therefore overstates Table 1. A title built on the robust result (the decline of the CoA-transferase route), with the kinase rise presented as tentative, would fit the evidence.</p>
+</li>
+<li>
+<p><em>One quantity, several numbers.</em> For but, the abstract and Figure 6 text give 0.080 to 0.061 copies per 1,000 genes. Table 1 gives 0.112 to 0.094 (all calls), the all-contig count gives 0.070 to 0.057, and confident calls only give 0.080 to 0.060. bcd is 0.168 to 0.168 in the abstract but 0.166 to 0.170 in Table 1. Define one primary estimate, use it in the abstract, text and Figures 4 and 6, and label the rest as sensitivity analyses.</p>
+</li>
+<li>
+<p><em>Figures are not in a publishable form.</em> Figures 2 and 5 need drop-down menus ("choose above"), and Figures 5 and 6 need hovering. Show the alternative views as static panels instead. The Figure 6 key reads only "below 0.00 / 0.00 / above" and should be a continuous colour bar with numeric limits. Figure 5 labels carry internal bin IDs (c.33). Figure 4 marks atoD and atoA as "down" (log2 -0.30 and -0.34), while the text says they "change little".</p>
+</li>
+<li>
+<p><em>Author guidelines.</em> The abstract (about 247 words), the main text (about 3,100 words) and the 7 display items are within the limits (250, 5,000 and 8). Missing items:
+   - keywords;
+   - an ethics and consent statement for the human samples, which the guidelines require in the Methods;
+   - author contributions and competing interests (still placeholders);
+   - a concluding final paragraph of the Discussion (it currently ends with Limitations);
+   - figure citations for each Results claim (the "Data quality" and "Gene-call quality" paragraphs cite none).</p>
+</li>
+</ol>
+<p>The journal also expects data to be public where ethically possible. Reads with human reads removed (for example under controlled access) or at least the MAGs could be deposited, and the code should have a citable location.</p>
+<p><strong>Minor points</strong>
+1. Abstract: "Of 465 gene calls, the fall of but was robust..." is ungrammatical. "Few genomes" should be a number. The Roseburia / E. rectale decrease is compared with earlier work before it has been reported.
+2. "In stool metagenomes but is the more frequent final-step gene [4]": Vital 2014 shows that the acetyl-CoA pathway dominates. Vital 2017 states the but-specific point and should be cited.
+3. The Methods give no sequencing details (kit, flow cell, basecaller model, yield).
+4. Table 1 legend: "fixed before they were computed, after the KOfam scores had been seen" reads as contradictory.
+5. The supplementary material points to an external report. It must be submitted with the article.</p>
+<p><strong>Checks performed</strong>
+- References, checked in PubMed:
+  - [5] Louis 2004 exists and supports the linked ptb/buk genes.
+  - [6] Duncan 2007 exists; the doses and the fall from 11% to 8% to 3% are reported correctly (log2 -0.46 and -1.87 are right).
+  - [14] Walker 2011, [15] Russell 2011, [16] David 2014 and [17] Pfeiffer 2012 exist and support their sentences. Ref. [15] comes from the same group as [6], so "not an independent repeat" is fair.
+  - [18] Meili 2026 exists (Acetatifactor enriched on a ketogenic diet in virus-infected mice) and supports the claim. It also found Roseburia depleted, a parallel worth adding.
+  - No non-existent references were found.
+- Numbers against data.json:
+  - Shares of bases on HQ MAGs (56.0% and 64.8%) and on all MAGs (76.5% and 81.9%), the HQ share of buk (70% and 75%) and the PCoA axis-1 means (±0.12) all agree with data.json.
+  - Per-MAG but 0.079 to 0.060 versus 0.080 to 0.061 in the text: slight mismatch, probably rounding; please check.
+- Figures:
+  - Figure 3 matches its legend and text: day 6 lies at -0.071, inside the days 1-5 range, and day 7 is the first day outside it.
+  - Figure 4 contradicts the text for atoD and atoA (major point 4).</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is careful, but the gap, the title claim, the figures and the required statements all need reworking to meet ISME J standards.</p>
+</section>

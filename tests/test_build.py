@@ -16,7 +16,9 @@ def test_every_page_builds(tmp_path):
     built = {f"{m['slug']}.html" for m in mods if m["status"] != "planned"}
     built |= {"projects.html"} | {f"{p['slug']}.html" for p in build.read_projects()}
     built |= {f"{x['slug']}.html" for p in build.read_projects() for x in p.get("pages", [])}
-    built |= {"articles.html"} | {f"{a['slug']}.html" for a in build.read_projects(root=build.ARTICLES)}
+    arts = build.read_projects(root=build.ARTICLES)
+    built |= {"articles.html"} | {f"{a['slug']}.html" for a in arts}
+    built |= {f"{x['slug']}.html" for a in arts for x in a.get("pages", [])}
     assert {p.name for p in pages} == {"index.html", "glossary.html", "teachers.html", build.ZIP_NAME} | built
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
         assert set(z.namelist()) == {"index.html", "glossary.html", "teachers.html"} | built

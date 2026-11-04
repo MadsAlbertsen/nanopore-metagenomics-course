@@ -1,0 +1,186 @@
+<div class="intro">
+  <span class="kicker">Group 1 · peer review · The ISME Journal (simulated)</span>
+  <h1>Peer review: Delayed community shift and level carbohydrate-enzyme gene content after a diet change in one person</h1>
+  <p class="note">Reviews of the submitted version of the <a href="article-group1.html">article</a> (frozen on 4 Nov 2026, before the reviews). Three anonymous reviewers each covered one aspect, and a handling editor weighed their reports and made the decision. The reviewers and the editor are AI models (Claude); each saw only the submitted article, its figures and its data file, not the group's questions or the course material. Decision: <b>Reject in its current form, with encouragement to resubmit an extended study</b>.</p>
+</div>
+<section class="panel">
+<h2>Editorial decision</h2>
+<p><strong>Manuscript:</strong> Delayed community shift and level carbohydrate-enzyme gene content after a diet change in one person</p>
+<p><strong>Decision:</strong> Reject in its current form, with encouragement to resubmit an extended study</p>
+<p><strong>Summary of the reviews</strong></p>
+<p>All three reviewers find the work careful and unusually candid. Every number they recomputed matched, apart from one rounding tie, and all three recommend major revision. They agree on one central problem: the two <em>Prevotella copri_B</em> MAGs are the largest change in the series and are highlighted in the Abstract, yet they are not among the 35 changing MAGs. They differ in emphasis: methods and reproducibility (R1), interpretation (R2), and context and novelty (R3).</p>
+<p><strong>Basis for the decision</strong></p>
+<p>The reviewers' points can all be fixed by revision. The obstacle for The ISME Journal is the design, which revision cannot change. The study has one person, ten days and one diet switch, with no samples before or after. Diet is confounded with time, carbohydrate and calories changed together, and the switch was also a return towards the person's usual diet. As your Limitations say, timing can be described, not tested. Refs 1-3 already showed responses within days that differ between people. What is new here is genome-resolved timing and the within-family turnover of CAZyme-carrying genomes. Shown in one person, that is a hypothesis, not a general advance in microbial ecology.</p>
+<p>Some headline statements also go beyond the data. The Abstract and Discussion say the CAZyme content stayed level "because Bacteroidaceae and Lachnospiraceae ... replaced one another". In the Figure 5c data, both families keep almost the same total share (Bacteroidaceae 19.4% then 18.0%; Lachnospiraceae 28.0% then 27.7%). The Results correctly describe turnover within families.</p>
+<p><strong>Essential points for the authors</strong></p>
+<ol>
+<li><strong>Definition of "changing" and <em>P. copri_B</em></strong> (R1-M5, R2-M2, R3-M3). State which group these MAGs are in. They appear to make up most of the "non-changing Bacteroidaceae", which fall from 19.7% to 5.1%. Show their curves and add a comparison of days 1-5 with days 8-10, or a fit per MAG that finds when its abundance changes. Check its compositional effect on other shares (R2-M2b).</li>
+<li><strong>Make the CAZyme explanation match the numbers</strong> (R2-M1, R1-m3, R2-m3, R3-M1). Use the same wording in the Abstract, Results and Discussion. Show a calculation that holds the shares fixed, give the margin behind "level", and say that only the 74-83% of bases in MAGs is covered.</li>
+<li><strong>Timing and alternative explanations</strong> (R2-M3, R2-M4, R3-M4). Give the sampling times. Treat the one-day lag as "consistent with" transit time, not explained by it. Remove the claim of "no trend" after day 8, which contradicts your own Results. Discuss the return to the habitual diet as an alternative.</li>
+<li><strong>Methods needed for reproducibility</strong> (R1-M1 to M4, R1-M6, R1-M7). Read statistics and depth per day, MAG quality and dereplication, mapping settings, whether shares were renormalised, the family-to-substrate table (your own grouping, not dbCAN3's) and public code. Name the missing wet-lab details (extraction and library kits).</li>
+<li><strong>Ecological context</strong> (R3-M1, R3-M2). Compare your taxa with earlier diet studies: Roseburia and <em>E. rectale</em> (= <em>Agathobacter rectalis</em>), Prevotella and fibre, and functional redundancy within families.</li>
+</ol>
+<p><strong>Notes on the reviews</strong></p>
+<ul>
+<li>R1-M2 lists the two <em>P. copri_B</em> MAGs among the duplicated species in the changing set. They are not in that set, as R1-M5 itself notes. The dereplication question still stands for the other three pairs.</li>
+<li>Public deposition (R1-M7, R3-M5): a journal would require the reads and MAGs. Here they are withheld to protect the donor's privacy, which the course requires, so this does not count against you. A real submission would deposit host-filtered reads under controlled access (for example the EGA).</li>
+<li>R3-M5 on format: the interactive figures exist because the course publishes drafts as web pages. Static figures with panel letters are a fair request for submission but are not a scientific weakness.</li>
+</ul>
+<p><strong>What would make this publishable</strong></p>
+<p>The study needs replication: several people, samples taken before the switch and for longer after it, and ideally a crossover design, so that diet can be separated from time. With that design, your genome-resolved timing and CAZyme turnover analysis, which the reviewers found sound, could test the hypotheses this draft raises. Expression or metabolite data would let the CAZyme result speak to function.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 1: Methods and data</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors follow one person's gut community over ten consecutive daily stool samples, across a single diet switch between day 5 and day 6. They used Nanopore long reads, a co-assembly and 421 MAGs. Relative abundance is the share of each day's sequenced bases on each MAG. From this they describe Bray-Curtis dissimilarity between days, a permutation PERMANOVA, a "settled day" for each of 35 MAGs that change at least two-fold, and carbohydrate-active enzyme (CAZyme) gene content per 1,000 genes. They conclude that the community shifted with a lag of about one day and that community CAZyme content stayed level because families replaced one another.</p>
+<p><strong>Overall assessment</strong>
+The analysis is careful and unusually honest about its limits. The authors wrote down their expectation before the analysis. They point out that diet is confounded with time, that the permutation test assumes independent days, and that the reference states were chosen after looking at the data. They also check the two-fold rule by leaving out one day at a time and by measuring day-to-day noise. The numbers I checked agree with the underlying data. The main problem is that the wet-lab and bioinformatic methods are too thin to reproduce or judge. There is nothing on DNA extraction, library preparation, basecalling or read statistics. MAG quality is not reported at all, there is no dereplication step, and the CAZyme annotation thresholds and the substrate mapping are not given. Code and data are not available. A second problem is that the two-period contrast does not fit a series where much of the change comes late.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li><strong>Sequencing and read processing are not described</strong> (Methods, "Sequencing, assembly and binning"; "Share of a MAG"). Only "R10.4.1" is given. Please report:
+   - the extraction kit and any bead-beating
+   - the library kit, barcoding and flow cell
+   - the basecaller, model and version (for example Dorado sup/hac)
+   - the tools and thresholds for quality filtering and adapter trimming
+   - per-sample yield, read N50 and median Q score.</li>
+</ol>
+<p>Per-sample depth matters here because low-abundance MAGs near the 0.1% threshold, and the Bray-Curtis values, depend on it. If depth differed between days, say whether the reads were subsampled.</p>
+<ol start="2">
+<li>
+<p><strong>MAG quality and redundancy are not reported</strong> (Methods; Results). No completeness or contamination estimates are given (for example CheckM2), no quality tiers (MIMAG), and no inclusion threshold. The MAG labels (c., s., 1., 2., 3.) are not explained. Several species appear twice among the changing MAGs: two <em>Phocaeicola vulgatus</em>, two <em>Bacteroides uniformis</em>, two <em>Anaerostipes amylophilus</em> and two <em>Prevotella copri_B</em>. Without dereplication (for example at 95/99% ANI), reads from one population can be split between bins or counted twice, and that affects both the shares and the count of changing MAGs. Please give a quality table and state whether dereplication was done. Gene counts per 1,000 genes also depend on assembly accuracy, because indel errors in Nanopore assemblies cause frameshifts and inflate the gene count. State whether the assembly was polished and give the coding density.</p>
+</li>
+<li>
+<p><strong>The abundance estimate needs some clarification</strong> ("Share of a MAG on each day").
+   - Give the minimap2 preset and any MAPQ filter.
+   - Explain how the 95% identity cut-off interacts with redundant MAGs when only primary alignments are kept.
+   - Say whether Bray-Curtis was computed on shares that sum to 74-83% or on shares renormalised to the binned fraction. With unscaled shares, part of the dissimilarity reflects changes in the unbinned fraction.
+   - jgi_summarize_bam_contig_depths was written for short reads. Please justify its use on long reads, or compare it with CoverM output.</p>
+</li>
+<li>
+<p><strong>The CAZyme annotation is under-specified</strong> ("Carbohydrate-active enzymes").
+   - Give the dbCAN HMM database version and the E-value and coverage cut-offs.
+   - Give the Pyrodigal mode (meta or single).
+   - Give the table that maps families to substrates.</p>
+</li>
+</ol>
+<p>dbCAN3 [14] predicts substrates at the subfamily level (dbCAN-sub) and at the CAZyme gene cluster level, not from family HMM hits. The grouping used here is therefore the authors' own and should be described as such, with the mapping in a supplement. Without it, the "plant fibre" and "host glycan" values cannot be interpreted.</p>
+<ol start="5">
+<li>
+<p><strong>The two-period contrast misses late changes</strong> ("Changing MAGs"; Results). The text calls the two <em>Prevotella copri_B</em> MAGs "the clearest example", and the Abstract highlights them. Yet they are not among the 35 changing MAGs in the data behind Figures 3-4. The 12 "not changing" Bacteroidaceae fell from about 19% on days 6-7 to 5% on day 10 (Figure 5c). When period means include days 6-7, MAGs that change late look stable, and the settled day is biased (one MAG "settled" on day 5). Two fixes would help: also compare days 1-5 with days 8-10, and describe each MAG's trajectory with a simple change-point or segmented fit. Explain why the <em>P. copri_B</em> MAGs did not pass the rule.</p>
+</li>
+<li>
+<p><strong>Statistics</strong> ("Bray-Curtis dissimilarity and reference states"). I reproduced pseudo-F 5.40, R² 0.40 and p = 4/252 = 0.016 from the matrix in Figure 1. Since the authors already note that the days are autocorrelated, a restricted permutation would fit the design better than free permutation: for example, only contiguous splits (nine are possible), or cyclic shifts. The 0.01% pseudocount sets the log2 change for rare MAGs (CAZU01: 0.019% versus 0.575%). Report how sensitive the list is to the pseudocount.</p>
+</li>
+<li>
+<p><strong>Reproducibility</strong> (Statistics; Data availability). "The course's analysis script, available from the course teacher" and "hover over the charts" do not meet the journal's policy. Deposit the following, and give the parameters for every tool:
+   - the code, with a version or commit in a public repository
+   - the MAGs (for example ENA or Zenodo)
+   - the reads after removal of human reads, under controlled access if needed</p>
+</li>
+</ol>
+<p>Also give the GTDB release used with GTDB-Tk 2.5.2. "An independent reviewer recomputed the numbers" should say what was recomputed and how.</p>
+<p><strong>Minor points</strong>
+1. Reference [6] is a soil and sediment study. It is the right citation for mmlong2, but not evidence about gut metagenomes.
+2. The Figure 1 colour scale runs from 0.148 to 0.454, while the legend explains 0-1. State the range in the legend.
+3. The causal wording "stays level because members of the same families replace each other" goes beyond what was done. A decomposition (holding composition fixed) would support it.
+4. "Core MAGs (61) present on every day" means at least 0.1% on every day, not presence. Use one wording throughout.
+5. State how the 0.1% mean-share filter was chosen.</p>
+<p><strong>Checks performed</strong>
+- Numbers (against data.json):
+  - Within- and between-period Bray-Curtis means: 0.209, 0.244, 0.309. Correct.
+  - PERMANOVA pseudo-F 5.39, R² 40%, p 0.016, best split days 1, 2, 3, 5, 6 with pseudo-F 6.85. Recomputed; correct.
+  - Settled-day counts 12 / 18 / 4 / 1 and median 7. Correct.
+  - Falling-MAG CAZyme median 19, and seven rising MAGs above the falling maximum, all Bacteroidaceae. Correct.
+  - Community CAZyme means 27.1 and 27.6. Correct.
+  - The <em>P. copri_B</em> MAGs are absent from the list of changing MAGs (point 5).
+- Figure 2: the plotted values match data.json and the legend, including the crossing at day 7 and the largest step from day 4 to 5 (0.276).
+- References (PubMed):
+  - [1] Wu et al. 2011 exists and supports the sentence: change within 24 h, enterotype stable over the 10 days.
+  - [6] Sereika et al. 2025 exists (see minor point 1).
+  - [8] McCarthy and Smyth 2009 exists and concerns testing against fold-change thresholds. The specific "1.3- to 4-fold" range could not be confirmed from the abstract; please give the page.
+  - [11] Caporaso et al. 2011 exists and supports day-to-day variation.
+  - [14] dbCAN3 exists but does not support a family-level substrate grouping (point 4).</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is sound and transparent, but the sequencing, MAG-quality, annotation and code or data details needed to reproduce it are missing, and the period-mean definition of change misses the late shifts that the text itself highlights.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 2: Results and interpretation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors follow ten daily stool metagenomes from one person across a reported switch from a high-carbohydrate, high-calorie diet (days 1-5) to a low-carbohydrate, low-calorie diet (days 6-10). They use 421 nanopore MAGs and each MAG's share of the day's sequenced bases. They report that whole-community Bray-Curtis dissimilarity moves on days 7-8 rather than day 6, that 35 MAGs change at least two-fold and reach their new level on different days, and that degrading CAZyme genes per 1,000 community genes stay near 27 while the 35 changing MAGs show a transient rise.</p>
+<p><strong>Overall assessment</strong>
+The manuscript is careful and honest in many places. Diet is said to be confounded with time, the permutation test is called descriptive, the period-mean references are said to have been chosen after looking at the data, and there is a leave-one-day-out robustness analysis. I could reproduce the numbers I spot-checked from the data. The main problem is that some headline interpretations go further than, or against, the authors' own numbers. The abstract and Discussion explain the stable CAZyme content as Bacteroidaceae and Lachnospiraceae replacing each other, but both families keep almost the same total share. The largest single change in the data, the collapse of the two <em>Prevotella copri_B</em> MAGs, falls outside the "changing" set and appears to sit inside the "non-changing Bacteroidaceae" comparison group. The timing is explained by transit time, but transit time was not measured and the sampling time is not given.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><strong>The mechanism for the "level" CAZyme content contradicts the data.</strong> The Abstract says the value stayed level "because Bacteroidaceae and Lachnospiraceae with different gene sets replaced one another", and the Discussion says the same. From the Figure 5c data, the period-mean share of Bacteroidaceae (rising plus non-changing) is 19.4% then 18.0%, and that of Lachnospiraceae (all three groups) is 28.0% then 27.7%. The Results say it correctly: "members of the same families replace each other". Please make the Abstract, Results and Discussion agree. Please also present the explanation as a decomposition, not a cause: show what the community value would be with the family shares held fixed. "Level" is a claim of no difference, so state the margin (the day 7 peak, 29.7, against a days 1-5 range of 25.6-28.1). Also state that it covers only the 74-83% of bases that are binned.</p>
+</li>
+<li>
+<p><strong><em>Prevotella copri_B</em> and the definition of "changing".</strong> The two <em>P. copri_B</em> MAGs fall from 12.4% of the bases on day 6 to 0.5% on day 10, but they are not among the 35 MAGs (Figure 3a, Figure 4). The Abstract sentence ("Of 35 MAGs ...; the two <em>P. copri_B</em> MAGs were still falling") reads as if they were. In GTDB, <em>Prevotella</em> belongs to Bacteroidaceae. The "non-changing Bacteroidaceae" fall from 19.7% (day 6) to 5.1% (day 10), which matches the <em>P. copri</em> fall almost exactly. This would mean that the comparison "changing vs non-changing Bacteroidaceae carry similar CAZyme sets", and the conclusion "gene content does not explain which MAGs changed", both rest on a group that contains the biggest change in the series. There is also a compositional effect: a drop of about 12 points raises every other share by about 14% (log2 about 0.2) with no change in that MAG's own abundance. That is enough to push MAGs near the threshold over two-fold, and 62 MAGs pass 1.5-fold against 35 at two-fold. Please (a) state which group the <em>P. copri_B</em> MAGs are in and show their days 1-10 shares, (b) repeat the changing-MAG list with these MAGs removed and the shares renormalised, or with a log-ratio against a stable reference set, and (c) name the families consistently (for example, "Bacteroides/Phocaeicola" versus Bacteroidaceae sensu GTDB).</p>
+</li>
+<li>
+<p><strong>The timing conclusions are stronger than the data.</strong> "A lag of about one day fits transit time [4, 5]" is a mechanistic reading. References 4 and 5 show that transit time varies and is linked to community composition. They do not show that this person's stool lags by one day. When the samples were taken relative to the first meal of the new diet is not stated. If the day 6 sample was passed in the morning, it largely reflects day 5 food, and no biological lag is needed. Three findings within the manuscript also complicate the "community moved on days 7-8" picture. First, 12 MAGs, including 8 of the 12 falling ones, settle on day 6 (rising MAGs settle at a median of day 7, falling ones at day 6; this asymmetry is not reported). Second, the Discussion's "no trend followed on days 9 and 10" conflicts with the Results' "still changing when the series ended": day 10 is the day farthest from day 1 (0.383), Bacteroidaceae fall from 25.0% to 9.8%, and the top-ranked MAG in Figure 3a (CAZU01, c.50) rises only on days 9-10. Third, the falling list is weaker than the rising one: by my count, 5 of the 12 falling MAGs, but only 4 of the 23 rising ones, have a within-days-1-5 step at least as large as their period change. Please report the sampling times, use "consistent with" wording that lists the alternatives, and remove the "no trend" statement.</p>
+</li>
+<li>
+<p><strong>Alternative explanations are under-weighted.</strong> The Introduction says that the person ate a similar high-calorie diet for about a week before day 1, and that the days 6-10 diet was closer to their normal diet. The change may therefore be a return to the habitual community rather than a response to low carbohydrate. This alternative is missing from the Limitations and should be discussed explicitly. The best-separating permutation split puts day 4 with days 7-10, and the largest step is within days 1-5, which fits time or other variation as well as diet. Sequencing depth (bases per day) is not reported. The binned fraction varies by 9 points (74.1-83.4%), and Bray-Curtis on shares that are not renormalised partly reflects this. Please report the bases per day and repeat Figure 1 on shares renormalised to the binned total.</p>
+</li>
+</ol>
+<p><strong>Minor points</strong>
+1. Robustness: from data.json I count 9, not 8, MAGs whose largest early step is at least their period change. The difference is one MAG on a rounding tie (<em>B. uniformis</em> 3.339: 1.013 vs 1.01). Please state how ties are handled.
+2. The r = 0.25 (host-glycan genes vs Bacteroidaceae share, n = 10) needs its interval, or should be dropped as uninformative.
+3. The rise in the changing-MAG CAZyme profile (Figure 5d) is partly built in, because the MAGs were selected on change and are weighted by share. The authors note membership but should say this explicitly.
+4. Reference 15 used a single species (<em>B. thetaiotaomicron</em>) in germ-free mice. Say this in the sentence.
+5. Title: "level" is a claim of no difference. "Similar" or "stable within day-to-day variation" would be safer.</p>
+<p><strong>Checks performed</strong>
+- References: [1] Wu 2011 (PMID 21885731), [2] David 2014 (24336217), [3] Johnson 2019 (31194939), [4] Roager 2016 (27562254), [5] Asnicar 2021 (33722860) and [15] Sonnenburg 2005 (15790854) all exist with matching details. Refs 1-3 and 15 support their sentences. Refs 4-5 support "transit varies and relates to the community", but not the one-day-lag interpretation (point 3).
+- Numbers recomputed from data.json: within/between Bray-Curtis 0.209/0.244/0.309 (match); day 6 mean distance to days 1-5 0.193 (supports "as close as those days to each other"); community CAZyme period means 27.07/27.61 and changing-group means 27.85/30.74 (match); family-group shares 1.92→4.99, 17.49→13.02 and 5.39→1.69 (match); r = 0.254 (match); CAZyme medians for falling/rising MAGs 18.95/25.9, the 7 rising MAGs above the falling maximum all Bacteroidaceae, and other rising MAGs 14.7 (match after rounding); settled days, recomputed from the shares, match for all 35 MAGs; robustness step count 9 vs 8 (minor 1).
+- Figures: the Figure 2a crossing at day 7 and the Figure 3c counts (day 6: 4 rising, 8 falling; day 7: 11 and 3) match the legends, text and data.json.</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is sound and transparent, but the central interpretations (the reason the CAZyme content is stable, the treatment of the <em>P. copri_B</em> collapse, and the transit-time lag) need to be brought in line with the authors' own numbers and alternative explanations.</p>
+</section>
+<section class="panel">
+<h2>Reviewer 3: Context, novelty and presentation</h2>
+<p><strong>Summary of the manuscript</strong>
+The authors follow one person's stool community over ten daily samples, across a reported switch from a high- to a low-carbohydrate (and calorie) vegetarian diet. They use Nanopore long reads, one co-assembly and 421 MAGs. Day 6 still resembles days 1-5, and the community moves mainly on days 7-8. The authors identify 35 MAGs that change at least two-fold and give the day each settles. Community degrading CAZyme gene density stays level, which they explain by Bacteroidaceae and Lachnospiraceae replacing each other.</p>
+<p><strong>Overall assessment</strong>
+The work is careful and candid. Limitations are clearly stated, the expectation was written down beforehand, the two-fold threshold is justified and its sensitivity shown, and the leave-one-day-out check is a good model for n = 1 data. The numbers I checked agree with the data. The main problem for this journal is context. The paper is framed as a timing description and is not connected to the ecological literature its results speak to most directly. Its most striking finding (the collapse of Prevotella copri_B) is outside the figures. The manuscript is also still an interactive web page, not a submission. Better framing, rather than new data, could raise its novelty for The ISME Journal.</p>
+<p><strong>Major points</strong></p>
+<ol>
+<li>
+<p><strong>The gap and the novelty are under-argued (Introduction, paragraph 2).</strong> "Rarely resolved day by day" carries no citation. Daily shotgun series already exist (ref. 3). The new elements are genome-resolved timing and gene content that stays level while membership turns over. Please state the gap with citations, and frame the CAZyme result as within-family functional redundancy (e.g. Louca et al. 2018, Nat Ecol Evol).</p>
+</li>
+<li>
+<p><strong>Prior work on the taxa that changed is missing (Discussion).</strong> The direction of change here (Roseburia, Agathobacter/Eubacterium rectale and other Lachnospiraceae down; Bacteroides/Phocaeicola up; Prevotella down on low carbohydrate) has direct precedents. Lower carbohydrate intake reduced Roseburia/E. rectale in Duncan et al. 2007 (PMID 17189447), and Walker et al. 2011 (ISME J, PMID 20686513) describes diet-responsive groups in the human colon. On Prevotella and fibre, see Kovatcheva-Datchary et al. 2015 (PMID 26552345). Ref. 1 links Prevotella to carbohydrate-rich diets, and ref. 2 reports the same Roseburia/E. rectale decline, yet both are cited only for timing. Add a comparison paragraph, and note that Agathobacter rectalis is E. rectale in ref. 2.</p>
+</li>
+<li>
+<p><strong>The Prevotella copri_B result is outside the analysis (Abstract; Results).</strong> These two MAGs are called the "clearest example". They are not among the 35 changing MAGs in data.json or Figures 3-4, presumably because their period means do not differ two-fold, and readers cannot see their curves. In GTDB, Prevotella belongs to Bacteroidaceae. The family fall (25.0% to 9.8%) and the "not changing Bacteroidaceae" group (Figure 5c) may therefore be largely P. copri, and a reader who equates Bacteroidaceae with Bacteroides will misread both. To fix this:
+   - show the P. copri_B trajectories in a figure;
+   - explain why they fail the rule (a useful illustration of period means missing late changes);
+   - state which genera each Bacteroidaceae group contains.</p>
+</li>
+<li>
+<p><strong>The timing story contradicts itself.</strong> The Discussion says "no trend followed on days 9 and 10". The Results say day 10 is farthest from day 1 (0.383), that several taxa were still changing, and that 4 MAGs settled on days 9-10. The abstract omits day 10. Harmonise these, e.g. "most of the move occurred on days 7-8; parts of the community were still changing at day 10".</p>
+</li>
+<li>
+<p><strong>The manuscript is not in journal format.</strong> Remove:
+   - the website navigation, the "Updates" log, "Q13" and "hover over a chart";
+   - the menu-driven panel (Figure 3b);
+   - the placeholders in the Acknowledgements and Author contributions;
+   - the internal remarks ("course's overview analysis", "independent reviewer recomputed").</p>
+</li>
+</ol>
+<p>Figures must be static, with panel letters drawn on the panels. Data availability does not meet ISME policy: deposit host-filtered reads and the MAGs (e.g. ENA), and the code in a public repository with a DOI.</p>
+<p><strong>Minor points</strong></p>
+<ol>
+<li>The title is hard to parse ("level carbohydrate-enzyme gene content"). Consider "...with stable carbohydrate-active enzyme gene content...".</li>
+<li>The abstract (249 words) is within the limit, but its many numbers crowd out the take-home message. Keep 2-3 key values and add the ecological meaning.</li>
+<li>Move the "Why period means are used" box from Results to Methods.</li>
+<li>Colours change meaning within figures. Orange is Bacteroidaceae in 3a but falling MAGs in 3c. In Figure 2, orange is "days 2-5" in panel a and the switch step in panel b. Also, the pink/green pair in 3a is hard to tell apart for colour-blind readers.</li>
+<li>Figure 4 shortens names inconsistently ("B. cellulosilyticus" beside full names), and "ordered as in the report" points to material the reader does not have.</li>
+<li>Several tools have no references: GTDB-Tk, minimap2, MetaBAT2, CoverM, myloasm, HMMER and Prodigal. Give the GTDB and dbCAN database versions.</li>
+<li>Ref. 6 concerns soil and sediment; add a human-gut long-read example.</li>
+<li>Move the untested strain-diversity hypothesis out of the Introduction.</li>
+</ol>
+<p><strong>Checks performed</strong>
+- References (PubMed): refs 1, 2, 3, 4, 5, 6, 8, 9, 11, 15 and 16 exist as cited and support their sentences. For example, the full text of ref. 8 names cut-offs of 1.3-, 1.5-, 2- and 4-fold. Ref. 6 is real but from soil (minor point 7). None is fabricated.
+- Numbers: from the pairwise matrix, Bray-Curtis means of 0.209 / 0.244 / 0.309 match the text. Settled-day counts (12 / 18 / 4 / 1) match. The daily CAZyme values give period means of 27.07 / 27.61, matching 27.1 / 27.6. Day 1 to day 6 = 0.188 matches. P. copri_B is absent from the 35 changing MAGs (major point 3).
+- Figures: Figure 2 agrees with its legend and the text: the crossing at day 7 (0.213 vs 0.248) and the 5-to-6 step (0.196) against the 4-to-5 maximum (0.276). Figure 3c matches the settled-day counts.</p>
+<p><strong>Recommendation to the editor</strong>: major revision. The analysis is sound and openly qualified, but it needs an ecological framing based on the existing diet and taxon literature, the Prevotella result needs to appear in the figures, and the paper needs conversion to a compliant submission with deposited data.</p>
+</section>
