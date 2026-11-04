@@ -60,27 +60,29 @@ function drawTiming() {
     colors: t.stepLabels.map((s) => (s === "5 to 6" ? "var(--c2)" : "var(--c1)")), fmt: (v) => v.toFixed(3), height: 240 });
 }
 
+const st = { mag: null };
+function drawMag() {
+  const m = D.movers.find((x) => x.mag === st.mag) || D.movers[0];
+  lineChart($("g1MagLine"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%", marks: SWITCH, zero: true,
+    series: [{ name: m.name, values: m.share }, { name: "midpoint", values: D.days.map(() => m.mid), color: "var(--faint)" }] });
+}
+
 // Figure 3: log2 change of the changing MAGs (a) and their settled day (b)
 function drawChange() {
   const rows = [...D.movers].sort((a, b) => b.log2 - a.log2);
   barChart($("g1Change"), { labels: rows.map((m) => m.name), values: rows.map((m) => m.log2), horizontal: true,
     colors: rows.map((m) => famColor(m.family)), yLabel: "log2 change, days 6-10 vs days 1-5", fmt: (v) => v.toFixed(1) });
   chartLegend($("g1ChangeLeg"), FAM.map(([name, color]) => ({ name, color })));
+  const sel = $("g1Mag"), sorted = [...D.movers].sort((a, b) => b.log2 - a.log2);
+  sel.innerHTML = sorted.map((m) => `<option value="${esc(m.mag)}">${esc(m.name)} (${m.dir === "up" ? "rises" : "falls"})</option>`).join("");
+  sel.value = st.mag = st.mag || sorted[0].mag;
+  sel.onchange = () => { st.mag = sel.value; drawMag(); };
+  drawMag();
   const s = D.settle;
   const keep = s.labels.map((l, i) => i).filter((i) => i >= 4 || s.up[i] + s.down[i] > 0).filter((i) => s.labels[i] !== "not settled" || s.up[i] + s.down[i] > 0);
   barChart($("g1Settle"), { labels: keep.map((i) => (s.labels[i] === "not settled" ? "not settled" : "day " + s.labels[i])),
     groups: [{ name: "rising MAGs", values: keep.map((i) => s.up[i]) }, { name: "falling MAGs", values: keep.map((i) => s.down[i]) }],
     yLabel: "Number of MAGs", unit: "MAGs", height: 240, fmt: (v) => (Number.isInteger(v) ? String(v) : "") });
-}
-
-// Table 1: robustness of each changing MAG under leave-one-day-out reruns
-function drawRobust() {
-  table($("g1Robust"), {
-    columns: [{ key: "name", label: "MAG" }, { key: "dir", label: "Direction" }, { key: "log2", label: "log2 change", num: true },
-      { key: "kept", label: "Changing in reruns (of 10)", num: true, fmt: (v) => String(v) }, { key: "settled", label: "Settled day", num: true, fmt: (v) => (v === null ? "not settled" : String(v)) },
-      { key: "range", label: "Settled day in reruns" }, { key: "step", label: "Largest step days 1-5 (log2)", num: true }],
-    rows: D.robust, filter: true, sortKey: "kept", maxRows: 35,
-  });
 }
 
 // Figure 4: the changing MAGs (share per day, left) and their degrading CAZyme genes per 1,000 genes (right), same rows
@@ -101,14 +103,18 @@ function drawPair() {
     format: (v) => (v === null ? "–" : v.toFixed(1)) });
 }
 
-// Figure 5: degrading CAZyme genes per 1,000 genes per day (all MAGs, changing MAGs, core MAGs), one common y axis
+// Figure 5: medians per family and group (a), per day for all MAGs (b), family-matched group shares (c), changing MAGs (d), core MAGs (e)
 function drawCazyDays() {
   const c = D.cazy, p = c.perDay, sub = c.perDaySub;
   const opts = { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Genes per 1,000 genes", zero: true, yRange: [0, 36], marks: SWITCH };
+  barChart($("g1CzBars"), { labels: c.cats, groups: c.groups.map((g, i) => ({ name: g, values: c.median.map((row) => row[i]) })),
+    yLabel: "Median genes per 1,000 genes", fmt: (v) => v.toFixed(1), horizontal: true });
+  lineChart($("g1CzGroups"), { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sample's bases (%)", unit: "%", zero: true, marks: SWITCH,
+    series: p.groups.map((name, i) => ({ name, values: p.share[i] })) });
   lineChart($("g1CzAll"), { ...opts, series: p.cats.map((name, i) => ({ name, values: p.values[i] })) });
   sub.panels.forEach((pn, k) => lineChart($(k === 0 ? "g1CzChg" : "g1CzCore"), { ...opts, series: sub.cats.map((name, i) => ({ name, values: pn.values[i] })) }));
 }
 
-function drawAll() { drawHeat(); drawTiming(); drawChange(); drawRobust(); drawPair(); drawCazyDays(); }
+function drawAll() { drawHeat(); drawTiming(); drawChange(); drawPair(); drawCazyDays(); }
 fillNumbers();
 drawAll();
