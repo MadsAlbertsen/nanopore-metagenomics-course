@@ -3,7 +3,7 @@
   <h1>How fast does the gut community follow a diet switch?</h1>
   <p class="lead">Ten daily stool samples from one person, sequenced with Oxford Nanopore long reads</p>
   <p class="who">Group 1 · Claude A. Gent et al. (2026)</p>
-  <aside class="notes"><p>The question in one line. The answer in one line: in this person the community moved with a delay of one to two days.</p></aside>
+  <aside class="notes"><p>This is group 1, and we asked how fast the gut community follows a diet switch. The data are ten daily stool samples from one person, sequenced with Oxford Nanopore long reads. Our answer, in short: in this person the community moved with a delay of one to two days.</p></aside>
 </section>
 
 <section class="slide">
@@ -22,7 +22,7 @@
     <li>Our question: does the community change on day 6, or later?</li>
   </ul>
   <p class="src">[1] David et al. 2014, Nature 505:559. [2] Johnson et al. 2019, Cell Host Microbe 25:789. [3] Roager et al. 2016, Nat Microbiol 1:16093. [4] Asnicar et al. 2021, Gut 70:1665.</p>
-  <aside class="notes"><p>Diet facts come from the data owner, not from our measurements. Carbohydrate and calories changed together.</p></aside>
+  <aside class="notes"><p>We cannot tell in advance when a diet change should show up in stool, because the delay can come from transit time, from the community, or from both. The diet switched between day 5 and day 6, and a similar high-calorie diet ran about a week before day 1; this comes from the data owner. Our question is whether the community changed on day 6 or later.</p></aside>
 </section>
 
 <section class="slide">
@@ -47,7 +47,7 @@
     <div id="th1"></div><div id="th2"></div><div id="th3"></div><div id="th4"></div><div id="th5"></div><div id="th6"></div>
   </div>
   <p class="src">Mini figures: the real data of this study (steps 3-6) or schematics (steps 1-2).</p>
-  <aside class="notes"><p>Top: the study context. Middle: tools and databases per step. Bottom: a very small version of what each step gives.</p></aside>
+  <aside class="notes"><p>The top row shows the study: five days of high-carbohydrate, high-calorie diet, then five days of low-carbohydrate, low-calorie diet, in one person. Below are the steps from sequencing and assembling <span data-n="mags"></span> genomes to the share of each genome per day, the enzyme genes and the comparison between days. The small figures under each step show what it gives. Carbohydrate and calories changed together, so we cannot separate them.</p></aside>
 </section>
 
 <section class="slide">
@@ -58,7 +58,7 @@
     <div class="side"><span>Days 1-6 resemble each other, and so do days 8-10. Day 6, the first day of the new diet, still sat with the early days; the change lies between day 6 and day 8.</span></div>
   </div>
   <p class="src">Bray-Curtis dissimilarity of every pair of days (brighter = more different). One person, n = 10 samples.</p>
-  <aside class="notes"><p>The split at the switch ranks second of <span data-n="permNPart"></span> possible splits (permutation p = <span data-n="permP"></span>); neighbouring days are not independent, so this describes, it does not prove.</p></aside>
+  <aside class="notes"><p>This heatmap compares every pair of days; brighter means more different. Days 1-6 look alike and days 8-10 look alike, so day 6, the first day of the new diet, still sat with the early days. The split at the switch ranks second of <span data-n="permNPart"></span> possible splits (permutation p = <span data-n="permP"></span>), but neighbouring days are not independent, so this describes the pattern and does not prove it.</p></aside>
 </section>
 
 <section class="slide">
@@ -69,7 +69,7 @@
     <div class="side"><span>On day 6 the community was as close to day 1 as the early days were. It moved away from day 1 and towards the late days on days 7 and 8, a delay of one to two days. Days 9 and 10 showed no further clear trend.</span></div>
   </div>
   <p class="src">Bray-Curtis dissimilarity of each day to day 1 and to the mean of days 8-10. One person, n = 10 samples.</p>
-  <aside class="notes"><p>A lag of one to two days fits transit time, but transit time was not measured.</p></aside>
+  <aside class="notes"><p>This shows how far each day is from day 1 and from the late days (mean of days 8-10). On day 6 the community was still as close to day 1 as the early days were, with a dissimilarity of <span data-n="d1to6"></span> to day 1; it moved on days 7 and 8, a delay of one to two days. A delay like that fits transit time, but transit time was not measured.</p></aside>
 </section>
 
 <section class="slide fig4">
@@ -80,7 +80,7 @@
     <p class="cap">Figure 4. Left: share of each day's bases (log colour), days 1-10. Right: enzyme genes per 1,000 genes by substrate group.</p>
   </div>
   <div class="f4charts"><div class="chart" id="g1sPairL"></div><div class="chart" id="g1sPairR"></div></div>
-  <aside class="notes"><p>Figure 4 | The changing genomes and their carbohydrate-degrading enzyme genes. Left: share of each day's bases (log colour); right: enzyme genes per 1,000 genes by substrate group. Rows are the changing genomes, grouped by direction and family (group names at the right edge); the same order in both panels. Gene potential, not activity.</p></aside>
+  <aside class="notes"><p>Of <span data-n="mags"></span> genomes, <span data-n="nChange"></span> changed at least two-fold between the diets: <span data-n="nDown"></span> fell and <span data-n="nUp"></span> rose. The rising Bacteroidaceae carry a median of <span data-n="czBactUpTotal"></span> degrading enzyme genes per 1,000 genes, the falling genomes <span data-n="czFallTotal"></span>. These are genes the genomes carry, so this is potential, not enzyme activity, and the shares are relative, not cell counts.</p></aside>
 </section>
 
 <section class="slide">
@@ -93,7 +93,7 @@
     <div><svg viewBox="0 0 48 48"><path d="M4 30h24v-8l14 10-14 10v-8H4z"/></svg><span>Gene potential, not enzyme activity</span></div>
     <div><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke-width="3"/><path d="M24 12v12l8 6" fill="none" stroke-width="3"/></svg><span>Timing described, not tested; transit time not measured</span></div>
   </div>
-  <aside class="notes"><p>No cause can be named: one person, a similar diet a week before day 1, diet mixed up with time and calories.</p></aside>
+  <aside class="notes"><p>These are the limits of what we can say. It is one person and one diet switch, and diet, time and calories changed together, so no cause can be named. We have no samples before day 1 or after day 10, the timing is described and not tested, and the enzyme result is gene potential, not activity.</p></aside>
 </section>
 
 <section class="slide">
@@ -105,6 +105,7 @@
     <div><div id="tk2"></div><span>Enzyme-gene potential stayed near <b data-n="czDay_total_first"></b> and <b data-n="czDay_total_second"></b> per 1,000 genes (days 1-5, 6-10) while members replaced each other</span></div>
     <div><div id="tk3"></div><span>One person, ten days: a description, not a cause</span></div>
   </div>
+  <aside class="notes"><p>Our main finding: in this person the community followed the diet switch with a delay of one to two days. Day 6 still looked like the old diet and the shift came on days 7 and 8. Enzyme-gene potential stayed near <span data-n="czDay_total_first"></span> and <span data-n="czDay_total_second"></span> per 1,000 genes (days 1-5 and 6-10) while members replaced each other. This is a description from ten days in one person, not a cause.</p></aside>
 </section>
 
 <section class="slide">
@@ -129,5 +130,5 @@
     </div>
   </div>
   <p class="bal">There is a balance between working efficiently while including critical review and checks along the way.</p>
-  <aside class="notes"><p>The group's own points.</p></aside>
+  <aside class="notes"><p>Here we describe our own experience of using Claude in this project. Introduce each pro and con in your own words and give one example from the work; the slide lists the points you chose, so there is nothing new to add. Finish with the balance sentence at the bottom: working efficiently while including critical review and checks along the way.</p></aside>
 </section>
