@@ -16,7 +16,7 @@
 .slide .lo { background: #1f8a70; color: #fff }
 .slide .cnote { font-size: 16px; color: var(--muted) }
 .slide .flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px }
-.slide .flow > div { position: relative; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 6px 7px; font-size: 14px; line-height: 1.2; display: flex; flex-direction: column; gap: 3px; min-height: 112px }
+.slide .flow > div { position: relative; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 6px 7px; font-size: 14px; line-height: 1.2; display: flex; flex-direction: column; gap: 3px; min-height: 120px }
 .slide .flow b { font-size: 15px }
 .slide .flow > div > span { color: var(--ink) }
 .slide .flow > div:not(:last-child)::after { content: "\25B6"; position: absolute; right: -13px; top: 40%; font-size: 14px; color: var(--accent) }
