@@ -25,11 +25,123 @@
  ],
  "numbers": {
   "n_samples": 10,
-  "gbp": 166.5,
+  "gbp": "166.5",
   "n_mags": 421,
   "hq": 257,
   "mq": 164,
-  "gbp_min": 1.67,
-  "gbp_max": 25.62
- }
+  "gbp_min": "1.67",
+  "gbp_max": "25.62",
+  "mag_min": "74.1",
+  "mag_max": "83.4",
+  "mag_pooled": "80.1",
+  "ub_min": "12.8",
+  "ub_max": "21.5",
+  "off_min": "3.4",
+  "off_max": "4.3",
+  "gbp_fold": "15",
+  "hq_min": "49.5",
+  "hq_max": "71.8"
+ },
+ "context": [
+  {
+   "sample": "DNA01",
+   "day": 1,
+   "diet": "high_carb",
+   "gbp": 13.71,
+   "hq": 56.62,
+   "mq": 21.06,
+   "unbinned": 18.52,
+   "off": 3.8
+  },
+  {
+   "sample": "DNA02",
+   "day": 2,
+   "diet": "high_carb",
+   "gbp": 1.67,
+   "hq": 49.47,
+   "mq": 24.67,
+   "unbinned": 21.51,
+   "off": 4.34
+  },
+  {
+   "sample": "DNA03",
+   "day": 3,
+   "diet": "high_carb",
+   "gbp": 11.22,
+   "hq": 53.81,
+   "mq": 22.18,
+   "unbinned": 20.47,
+   "off": 3.55
+  },
+  {
+   "sample": "DNA04",
+   "day": 4,
+   "diet": "high_carb",
+   "gbp": 25.62,
+   "hq": 61.75,
+   "mq": 15.24,
+   "unbinned": 19.42,
+   "off": 3.59
+  },
+  {
+   "sample": "DNA05",
+   "day": 5,
+   "diet": "high_carb",
+   "gbp": 9.82,
+   "hq": 58.11,
+   "mq": 19.47,
+   "unbinned": 18.84,
+   "off": 3.58
+  },
+  {
+   "sample": "DNA06",
+   "day": 6,
+   "diet": "low_carb",
+   "gbp": 22.99,
+   "hq": 58.78,
+   "mq": 21.77,
+   "unbinned": 15.73,
+   "off": 3.72
+  },
+  {
+   "sample": "DNA07",
+   "day": 7,
+   "diet": "low_carb",
+   "gbp": 17.86,
+   "hq": 59.3,
+   "mq": 22.59,
+   "unbinned": 14.56,
+   "off": 3.55
+  },
+  {
+   "sample": "DNA08",
+   "day": 8,
+   "diet": "low_carb",
+   "gbp": 25.26,
+   "hq": 67.21,
+   "mq": 16.23,
+   "unbinned": 12.85,
+   "off": 3.71
+  },
+  {
+   "sample": "DNA09",
+   "day": 9,
+   "diet": "low_carb",
+   "gbp": 14.64,
+   "hq": 66.94,
+   "mq": 14.67,
+   "unbinned": 14.83,
+   "off": 3.55
+  },
+  {
+   "sample": "DNA10",
+   "day": 10,
+   "diet": "low_carb",
+   "gbp": 23.67,
+   "hq": 71.84,
+   "mq": 10.19,
+   "unbinned": 14.55,
+   "off": 3.43
+  }
+ ]
 }
