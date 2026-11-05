@@ -6,11 +6,19 @@
 .slide .rb b { display: block; color: var(--accent); font-size: 15px; margin-bottom: 4px }
 .slide .rb.hyp { border-color: var(--c1); border-width: 2px }
 .slide .ra { align-self: center; color: var(--faint); font-size: 20px }
-.slide .road.lab .rb { font-size: 13px }
-.slide .diet { display: flex; gap: 6px; font-size: 14px; margin-bottom: 14px }
-.slide .diet span { flex: 1; padding: 6px 10px; border-radius: 6px; text-align: center; color: var(--ink) }
-.slide .diet .d1 { background: var(--sel); border: 1px solid var(--c4) }
-.slide .diet .d2 { background: var(--accent-soft); border: 1px solid var(--accent) }
-.slide .big.sm { gap: 36px }
-.slide .big.sm div b { font-size: 34px }
-.slide .big.sm div > span { font-size: 14px }
+.slide .road.lab { margin-top: 30px }
+.slide .road.lab .rb { font-size: 15px }
+/* Sample timeline (Q17) */
+.slide .tl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 6px; margin: 22px 0 10px }
+.slide .tlp span { display: block; text-align: center; padding: 8px 10px; border-radius: 6px; font-size: 15px; font-weight: 600; color: var(--ink) }
+.slide .tlp.p1 span { background: var(--sel); border: 1px solid var(--c4) }
+.slide .tlp.p2 span { background: var(--accent-soft); border: 1px solid var(--accent) }
+.slide .tlm { display: flex; justify-content: space-around; position: relative; padding: 14px 0 0 }
+.slide .tlm::before { content: ""; position: absolute; left: 0; right: 0; top: 24px; height: 3px; background: var(--line) }
+.slide .tlm.m1::before { background: var(--c4) }
+.slide .tlm.m2::before { background: var(--accent) }
+.slide .tlm i { position: relative; font-style: normal; font-size: 14px; font-weight: 600; color: var(--ink); width: 22px; text-align: center; padding-top: 18px }
+.slide .tlm i::before { content: ""; position: absolute; left: 3px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--ink) }
+.slide .tlm.m1 i::before { border-color: var(--c4) }
+.slide .tlm.m2 i::before { border-color: var(--accent) }
+.slide .tlc { grid-column: 1 / -1; text-align: center; font-size: 14px; color: var(--muted) }
