@@ -10,10 +10,11 @@
   <h2>Does a person's butyrate gene potential change within days of eating fewer carbohydrates?</h2>
   <div class="cols">
     <div>
-      <ul>
+      <ul style="font-size:18px">
         <li>Butyrate is the main energy source of the cells lining the colon</li>
-        <li>Gut bacteria make it in a last step, either with a CoA-transferase (<i>but</i>) or with a kinase route (<i>ptb</i> + <i>buk</i>)</li>
-        <li>Question: after a carbohydrate reduction, does the gene potential for the two last steps change, and in which genomes?</li>
+        <li>Last step: a CoA-transferase (<i>but</i>, which uses acetate) or a kinase route (<i>ptb</i> + <i>buk</i>)</li>
+        <li>Our expectation (acetate was not measured): less carbohydrate, less acetate, so the acetate-using <i>but</i> route may lose out</li>
+        <li>Question: after a carbohydrate reduction, does the gene potential for the last step change, and in which genomes?</li>
       </ul>
     </div>
     <div class="chart" id="pathPlain"></div>
@@ -37,7 +38,7 @@
     <div class="arr">→</div>
     <div class="step hl"><b>Butyrate genes per day</b><span>copies per 1,000 genes; <span data-n="q2_calls"></span> calls checked</span></div>
   </div>
-  <p class="lead" style="font-size:18px">Gene potential, not activity. Checks: DNA outside the MAGs, doubtful gene calls, ratios within each sample, dilution.</p>
+  <p class="lead" style="font-size:18px">Gene potential, not activity. Checks: DNA outside the MAGs, doubtful gene calls, and ratios within each sample.</p>
   <aside class="notes"><p>Gene abundance is gene potential, not activity, and relative, not cell counts. The analysis is descriptive: one person, ten days.</p></aside>
 </section>
 
@@ -48,8 +49,7 @@
     <div class="chart" id="g3Cap"></div>
     <div class="chart" id="g3CapGenes"></div>
   </div>
-  <p class="src">Left (Fig 1): share of each day's sequenced bases (%) by genome class. Right (Fig 2): share of each gene's depth-weighted copies (%),
-    mean of the ten days. HQ / MQ: high / medium quality MAGs. Dashed line: diet switch.</p>
+  <p class="src">Left (Fig 1): share of each day's sequenced bases (%) by genome class. HQ / MQ: high / medium quality MAGs. Dashed line: diet switch.</p>
   <aside class="notes"><p>Fig 1: HQ MAGs hold about <span data-n="cap_hq_all"></span>% of the bases, all MAGs <span data-n="cap_mag_hi"></span>-<span data-n="cap_mag_lo"></span>%. Fig 2: <span data-n="gs_but_hq_hi"></span>% of <i>but</i> lies in HQ MAGs. Rare genomes that did not assemble are not seen.</p></aside>
 </section>
 
