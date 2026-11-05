@@ -39,8 +39,11 @@ join();
     const row = CAP.per_bin[g], base = mean(row.slice(0, 5));
     return row.map((v) => (v > 0 && base > 0 ? Math.log2(v / base) : null));
   });
+  const span = Math.ceil(Math.max(...vals.flat().filter((v) => v !== null).map(Math.abs)) * 2) / 2; // colour limit: largest |log2|, rounded up to 0.5
   heatmap($("g3GeneHeat"), { rows: order.map((g) => `${g} · ${step[g]}`), cols: D.days.map(String), values: vals, colLabelHeight: 24, cell: 34,
-    label: "log2 vs days 1-5", diverging: true, format: (v) => (v === null || v === undefined ? "–" : v.toFixed(2)) });
+    label: "log2 vs days 1-5", diverging: true, span, format: (v) => (v === null || v === undefined ? "–" : v.toFixed(2)) });
+  const lg = $("g3GeneHeat").querySelector(".legend");
+  if (lg) lg.innerHTML = `<span>log2 vs days 1-5: −${span.toFixed(1)} <i style="display:inline-block;width:160px;height:10px;vertical-align:-1px;background:linear-gradient(90deg,var(--c1),var(--v4),var(--c2))"></i> +${span.toFixed(1)} (−1 = half)</span>`;
 }
 
 // Simplified Figure 4: the butyrate pathway, without (change = false) or with (change = true) the change of each gene
