@@ -18,24 +18,26 @@
     </div>
     <div class="chart" id="pathPlain"></div>
   </div>
-  <p class="src">Simplified from Figure 4 of our article, without data. Dashed: not searched (upstream genes and the amino-acid routes).</p>
+  <p class="src">Simplified from Figure 4 of our article, without data. Dashed: not searched. Blue ▼: lower, orange ▲: higher on days 6-10.</p>
   <aside class="notes"><p>The pathway is the acetyl-CoA route to butyryl-CoA, then two ways to release butyrate. The CoA-transferase uses acetate; the kinase route makes ATP. We searched bcd and the final-step genes, not thl, hbd, crt or the lysine, glutarate and 4-aminobutyrate routes.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Data and approach</span>
   <h2>What we did with the <span data-n="n_days"></span> samples</h2>
-  <div class="big">
-    <div><b><span data-n="n_days"></span></b><span>daily stool samples, one person</span></div>
-    <div><b><span data-n="n_mags"></span></b><span>genomes (MAGs), <span data-n="n_hq"></span> of high quality</span></div>
-    <div><b><span data-n="q2_calls"></span></b><span>butyrate gene calls checked</span></div>
+  <div class="days" id="dayStrip"></div>
+  <div class="flow">
+    <div class="step"><b>DNA</b><span>from each stool sample</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b>Nanopore long reads</b><span>one run of the ten samples</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b><span data-n="n_mags"></span> genomes</b><span>assembly and binning; <span data-n="n_hq"></span> high quality</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b>Genes</b><span>KOfam profiles; <i>but</i> by its Bakta name</span></div>
+    <div class="arr">→</div>
+    <div class="step hl"><b>Butyrate genes per day</b><span>copies per 1,000 genes; <span data-n="q2_calls"></span> calls checked</span></div>
   </div>
-  <ul>
-    <li>Days 1-5 high-carbohydrate, high-calorie and days 6-10 low-carbohydrate, low-calorie, both vegetarian (information from the data owner)</li>
-    <li>Nanopore long reads, assembled and binned into MAGs; genes found with KOfam profiles, <i>but</i> by its Bakta name</li>
-    <li>Gene abundance: copies per 1,000 genes, each MAG weighted by its share of the DNA times its number of genes</li>
-    <li>Checks: DNA outside the MAGs, doubtful gene calls, ratios within each sample, dilution</li>
-  </ul>
+  <p class="lead" style="font-size:18px">Gene potential, not activity. Checks: DNA outside the MAGs, doubtful gene calls, ratios within each sample, dilution.</p>
   <aside class="notes"><p>Gene abundance is gene potential, not activity, and relative, not cell counts. The analysis is descriptive: one person, ten days.</p></aside>
 </section>
 
@@ -54,6 +56,7 @@
 <section class="slide">
   <span class="kicker">Result 2: when does the community shift?</span>
   <h2>The whole community moves from about day <span data-n="q7_r0_first"></span>, not only the butyrate producers</h2>
+  <p class="lead" style="font-size:18px">Days 6-10 move away from days 1-5 along axis 1; one person, and diet is confounded with time.</p>
   <div class="chart" id="g3DayPcoa"></div>
   <p class="src">Fig 3: PCoA of Bray-Curtis dissimilarity of the MAG composition, one point per day (n = 10 samples, one person); axis 1 holds
     <span data-n="q3_pc1"></span>% and axis 2 <span data-n="q3_pc2"></span>% of the variation. Blue: days 1-5, orange: days 6-10; the line joins the days in order.</p>
