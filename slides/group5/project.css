@@ -28,3 +28,6 @@
 .slide .side ol { margin: 0; padding-left: 20px }
 .slide .side li { margin-bottom: 8px }
 .slide .side b { color: var(--accent); white-space: nowrap }
+/* Slide 2 (Q18): the main question stands out */
+.slide .q { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--ink); margin: 26px 0 0; text-wrap: balance }
+.slide .road:not(.lab) .rb { font-size: 13.5px }
