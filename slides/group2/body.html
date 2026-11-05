@@ -1,60 +1,140 @@
 <section class="slide title">
   <span class="kicker">Nanopore metagenomics course · group presentation</span>
-  <h1>Gut genomes shifted after a diet switch while carbohydrate-degradation potential stayed nearly constant</h1>
-  <p class="who">Group 2 · author names are not published</p>
-  <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
+  <h1>An “unusually honest” and highly biased gut microbiome study</h1>
+  <p class="who">Group 2 · one person, ten daily stool samples, a diet switch, and an AI doing the analysis</p>
+  <aside class="notes"><p>Title slide. The study is our submitted (not peer-reviewed) ISME-style article. The word "biased" is our verdict on how the AI chased results that fit the hypotheses; the next slides show the figures and our evaluation. The deck presents our own opinions about working with the AI.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Background</span>
-  <h2>The question and why it matters</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Aim, hypotheses, prompts</span>
+  <h2>Three hypotheses, tested by an AI that we prompted</h2>
+  <div class="g2c sm">
+    <div>
+      <h3>Aim and hypotheses</h3>
+      <ul>
+        <li><b>Aim:</b> follow the community, its genomes and its carbohydrate-degradation genes over a diet switch (ten daily samples, one person)</li>
+        <li><b>H1:</b> community structure changes with the diet transition; specific MAGs consistently rise or fall</li>
+        <li><b>H2:</b> carbohydrate-utilisation potential differs between the periods</li>
+        <li><b>H3</b> (exploratory): rising and falling MAGs share traits that differ between the groups</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What we prompted</h3>
+      <ul>
+        <li>An uncertainty with every effect size</li>
+        <li>Account for compositional effects (relative abundance)</li>
+        <li>Step at the switch or gradual trend?</li>
+        <li>Abundance-weighted carbohydrate-degradation potential, and which MAGs drive it</li>
+        <li>Capabilities shared within risers and within fallers, metabolic and other</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">MAG: metagenome-assembled genome. Prompts as listed in the methods rationale of our report; the hypotheses are from our article. One person, ten days: diet is confounded with time and calories.</p>
+  <aside class="notes"><p>Aim: describe how one person's gut community, single genomes and carbohydrate-degradation genes change over ten daily nanopore samples. Days 1-5 high-carbohydrate, high-calorie diet; days 6-10 low-carbohydrate, low-calorie diet; both vegetarian (information from the data owner).</p><p>H1 community structure changes with the diet transition, with specific MAGs rising or falling. H2 carbohydrate-utilisation potential differs between periods. H3 is the exploratory question: which genomic traits are shared within rising MAGs and within falling MAGs but differ between them.</p><p>What we prompted: uncertainty with every effect size; compositional effects; separating phase-associated shifts from general time trends; abundance-weighted potential and which MAGs drive the change; whether the MAGs that changed differ in carbohydrate potential; capabilities shared within each group, split into metabolic and other. The wording is paraphrased from the methods rationale document of our report.</p></aside>
+</section>
+
+<section class="slide tight">
+  <span class="kicker">H1 · results</span>
+  <h2>The community shifted one to two days after the switch</h2>
+  <div class="g2c">
+    <div id="g2Heat"></div>
+    <div id="g2Pcoa"></div>
+  </div>
+  <p class="src">Fig. 2a: Bray-Curtis dissimilarity between days (0 identical, 1 nothing shared); 2b: principal coordinates analysis of the same distances. Mean dissimilarity: <span data-n="bc_within_high" data-d="2"></span> and <span data-n="bc_within_low" data-d="2"></span> within the periods, <span data-n="bc_between" data-d="2"></span> between them; day 6 is still close to days 1-5 (<span data-n="bc6" data-d="2"></span>). Relative abundance of MAGs, n = 10 samples. Days 6-10 were sequenced deeper (<span data-n="gbp_low" data-d="1"></span> against <span data-n="gbp_high" data-d="1"></span> Gbp).</p>
+  <aside class="notes"><p>Left: every pair of days; dark is similar, yellow is different. Days 1-5 resemble each other, day 6 still looks like them, and the larger differences start at day 7. Right: one gradient dominates axis 1 and separates the two periods. Caveat from the article: sequencing depth runs with time (days 6-10 deeper), and diet is confounded with time and calories in one person.</p></aside>
+</section>
+
+<section class="slide tight">
+  <span class="kicker">H1 · results</span>
+  <h2><span data-n="big"></span> MAGs changed two-fold or more: <span data-n="up2"></span> rose, <span data-n="down2"></span> fell</h2>
+  <div class="g2c">
+    <div><div id="g2ForestDown"></div><div id="g2ForestLeg"></div></div>
+    <div id="g2ForestUp"></div>
+  </div>
+  <p class="src">Fig. 4a: the <span data-n="big"></span> of <span data-n="mags_considered"></span> common MAGs (mean share at least 0.1%) that changed at least two-fold; log2 change of the MAG's mean share of the bases, days 6-10 over days 1-5 (1 = doubled, -1 = halved). Line: 90% day-resampling interval (descriptive, not a confidence interval). Filled dot: still two-fold when any one day is left out. All MAGs that fell are Bacillota.</p>
+  <aside class="notes"><p>Of the 124 MAGs with a mean share of at least 0.1%, 35 changed at least two-fold between the period means: 12 fell (all Bacillota) and 23 rose. The line is the middle 90% of 2000 recalculations after drawing each period's five days at random with replacement. It shows how much a change depends on which days were sampled. Because these MAGs were selected for a large change, an interval that excludes zero is close to built in. Relative abundance, one person, diet confounded with time.</p></aside>
+</section>
+
+<section class="slide disc">
+  <span class="kicker">H1 · our discussion</span>
+  <h2>For H1 the AI chose well-suited analyses, and we are satisfied</h2>
+  <ul>
+    <li>Fit to the hypothesis: a community-wide view (dissimilarity, ordination) plus single MAGs</li>
+    <li>It added an uncertainty to every MAG change, as we asked</li>
+    <li>The visualisations were meaningful and easy to read</li>
+    <li>Overall we are satisfied with this part</li>
+  </ul>
+  <p class="opin">Our evaluation, not a result of the data.</p>
+  <aside class="notes"><p>Our opinion: the AI chose analyses that suit hypothesis 1 and made meaningful figures. Overall we are satisfied with how H1 was handled. This is our own evaluation of working with the AI.</p></aside>
+</section>
+
+<section class="slide tight">
+  <span class="kicker">H2 · results</span>
+  <h2>Carbohydrate-degradation potential barely moved; MAGs replaced each other</h2>
+  <div class="g2c">
+    <div><div id="g2CzLine"></div><p class="figl">Fig. 5a: degrading CAZyme genes per 1,000 genes of the binned community, per day</p></div>
+    <div><div id="g2CzBar"></div><p class="figl">Fig. 5b: the twelve MAGs that add most to the change (genes per 1,000 genes)</p></div>
+  </div>
+  <p class="src">Mean <span data-n="cz_all_high" data-d="1"></span> in days 1-5 and <span data-n="cz_all_low" data-d="1"></span> in days 6-10 (<span data-n="cz_all_pct"></span>%; day-resampling interval <span data-n="cz_all_lo"></span> to <span data-n="cz_all_hi"></span>%). Each MAG weighted by its share of the DNA times its number of genes. Gene potential, not activity; one person, ten days.</p>
+  <aside class="notes"><p>Left: the day-by-day value for all degrading CAZyme genes. There is no clear trend; the period means differ by about 2% and the interval includes zero. Right: contributions of single MAGs to the change between the period means; they add up exactly to it. Several Bacteroidota MAGs fall (for example the two Prevotella copri_B) while others rise, so the toolkit stays about the same while its carriers change. This is gene potential per MAG, not measured activity.</p></aside>
+</section>
+
+<section class="slide disc">
+  <span class="kicker">H2 · our discussion</span>
+  <h2>For H2 the AI invented reasonable metrics, but it should have been more critical</h2>
+  <ul>
+    <li>Metabolic potential is hard to quantify; the AI created its own metrics</li>
+    <li>The metrics are reasonable overall</li>
+    <li>It should have been more critical of its own results</li>
+  </ul>
+  <p class="opin">Our evaluation, not a result of the data.</p>
+  <aside class="notes"><p>Our opinion: metabolic potential is hard to quantify, so the AI had to create metrics. They are reasonable overall, but we would have liked the AI to be more critical of its own results.</p></aside>
+</section>
+
+<section class="slide tight hm">
+  <span class="kicker">H3 · results</span>
+  <h2>Risers and fallers differ in <span data-n="q3_cur_hits"></span> genomic features</h2>
+  <div id="g2Met"></div>
+  <div id="g2Oth"></div>
+  <p class="src">Fig. 8, top: metabolic potential (<span data-n="q3_fig8_rows"></span> features); bottom: other capabilities (<span data-n="q3_oth_hits"></span>). Columns: <span data-n="q3_fall"></span> fallers, then <span data-n="q3_rise"></span> risers (two-fold MAGs). Colour: relative to the row maximum (dark 0, yellow 1). False discovery rate below 10% over <span data-n="q3_cur"></span> features; gene content, not activity.</p>
+  <aside class="notes"><p>Each column is one MAG that changed at least two-fold: the 12 fallers on the left, the 23 risers on the right. Each row is a curated genomic feature that differs between the groups (false discovery rate below 10%, 138 features tested); colour is relative to the row maximum. The top block is metabolic potential, the bottom block other capabilities (from our report; the article leaves this panel out). The groups also differ in taxonomy: all fallers are Bacillota while most risers are Bacteroidota, so many differences follow taxonomy.</p></aside>
+</section>
+
+<section class="slide disc">
+  <span class="kicker">H3 · our discussion</span>
+  <h2>For H3 the AI did “reasonably”, but the analysis itself is not really meaningful</h2>
+  <ul>
+    <li>It did what we asked, and acknowledged that the hypothesis was ambitious</li>
+    <li>The analysis itself is not really meaningful</li>
+    <li>At least no ridiculous conclusions</li>
+  </ul>
+  <p class="opin">Our evaluation, not a result of the data.</p>
+  <aside class="notes"><p>Our opinion: the AI did reasonably on H3. It did what we asked and acknowledged that the hypothesis was ambitious, but the analysis itself is not really meaningful. At least it drew no ridiculous conclusions.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Data and approach</span>
-  <h2>What we did with the ten samples</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 1</span>
-  <h2>Result 1: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 2</span>
-  <h2>Result 2: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 3</span>
-  <h2>Result 3: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Result 4: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 5</span>
-  <h2>Result 5: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Limitations</span>
-  <h2>What the data cannot show</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Take-home</span>
-  <h2>Take-home message</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Our evaluation of the AI</span>
+  <h2>Good at choosing analyses, poor at drawing meaningful conclusions</h2>
+  <div class="g2c ev">
+    <div>
+      <h3>How it did</h3>
+      <ul>
+        <li><span class="tag">H1</span><b>Well:</b> good analysis, meaningful figures</li>
+        <li><span class="tag">H2</span><b>Okay:</b> metrics okay, too uncritical</li>
+        <li><span class="tag">H3</span><b>Okay:</b> admitted the hypothesis was ambitious, no ridiculous conclusions, but analysis pretty meaningless</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Pitfalls</h3>
+      <ul>
+        <li>Skipped checks of sequencing, assembly and binning: experience still tells which checks are needed</li>
+        <li>Only analyses what you ask; does not say when an analysis is not meaningful (H3)</li>
+        <li>The peer reviewer caught what the first agent missed (e.g. big depth differences), but human experience is still needed</li>
+        <li>Needs a lot of context</li>
+        <li>Seems to chase results that support the hypothesis: a bias towards positive results, a problem if manuscripts are not properly assessed</li>
+        <li>AIs are tools made to satisfy customers: know their biases, judge output critically</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>Our own opinions about working with the AI.</p><p>How it did. H1: well, good analysis and meaningful visualisations. H2: okay, the metrics were okay but it should have been more critical. H3: okay, it acknowledged that the hypothesis was ambitious and drew no ridiculous conclusions, but the analysis was pretty meaningless.</p><p>Pitfalls. (1) It left out an evaluation of sequencing, assembly and binning. Experience still matters: you have to know which quality checks are needed. (2) It only analyses what you ask and does not say when an analysis is not meaningful (H3). (3) The peer reviewer caught things the first agent missed, for example big differences in sequencing depth. The reviewer helps, but human experience is still needed. (4) It needs a lot of context. (5) It is good at choosing analyses but poor at drawing meaningful conclusions, and it seems to chase results that support the hypothesis: a bias towards positive results that is a problem if manuscripts are not properly assessed. (6) AIs are tools made to satisfy customers: knowing their biases and evaluating the output critically is essential.</p></aside>
 </section>

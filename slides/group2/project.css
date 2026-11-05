@@ -1,0 +1,21 @@
+/* Group 2 presentation (5 Nov): two-column layouts, figure captions, evaluation slide */
+.slide .g2c { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; flex: 1; min-height: 0 }
+.slide .g2c.l { grid-template-columns: 5fr 4fr }
+.slide .g2c ul { font-size: 18px; gap: 6px }
+.slide .g2c h3 { font-size: 17px; font-weight: 600; color: var(--accent); margin: 0 0 6px }
+.slide .figl { margin: 2px 0 0; font-size: 12px; color: var(--faint) }
+.slide .ev h3 { font-size: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 4px; margin-bottom: 8px }
+.slide .ev ul { font-size: 15.5px; gap: 5px; line-height: 1.3 }
+.slide .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; color: var(--surface); background: var(--accent); vertical-align: 1px }
+.slide .tag.ok { background: var(--c2) }
+.slide .opin { font-size: 13px; color: var(--muted) }
+.slide.tight { gap: 6px }
+.slide.tight .src { margin-top: auto }
+.slide.hm .legend { display: none }
+.slide.hm .chart text { font-size: 10px }
+.slide.title h1 { font-size: 46px }
+.slide.disc ul { font-size: 26px; gap: 16px; margin-top: 12px }
+.slide.disc .opin { font-size: 15px }
+.slide.hm #g2Oth { margin-top: -16px }
+.slide.hm #g2Met { margin-bottom: -4px }
+.slide .g2c.sm ul { font-size: 18px }
