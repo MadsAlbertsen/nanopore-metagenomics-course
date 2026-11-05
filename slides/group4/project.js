@@ -16,24 +16,17 @@ function drift(host, both) {
     const box = { l: 74, r: W - (both ? 250 : 24), t: 14, b: H - 50 };
     const x = scale(1, 10, box.l + 10, box.r - 10), y = scale(0, 0.42, box.b, box.t);
     axes(svg, x, y, box, { xLabel: "Day", yLabel: "Distance to days 1–5 mean", xTicks: D.days, yTicks: [0, 0.1, 0.2, 0.3, 0.4], yFmt: (v) => v.toFixed(1) });
-    el("line", { x1: x(5.5), x2: x(5.5), y1: box.t, y2: box.b, class: "mark" }, svg);
-    el("text", { x: x(5.5) + 6, y: box.t + 14, class: "note" }, svg).textContent = "diet switch";
+    if (both) {
+      el("line", { x1: x(5.5), x2: x(5.5), y1: box.t, y2: box.b, class: "mark" }, svg);
+      el("text", { x: x(5.5) + 6, y: box.t + 14, class: "note" }, svg).textContent = "diet switch";
+    }
     const line = (vals, color) => {
       el("path", { d: vals.map((v, j) => `${j ? "L" : "M"}${x(D.days[j]).toFixed(1)},${y(v).toFixed(1)}`).join(""), fill: "none", style: `stroke:${color}`, "stroke-width": 3.5 }, svg);
       vals.forEach((v, j) => { const c = el("circle", { cx: x(D.days[j]), cy: y(v), r: 5, style: `fill:${color}` }, svg); tipOn(c, `Day ${D.days[j]}: ${v.toFixed(3)}`); });
     };
     const sp = D.to_first.taxa, fn = D.to_first.functions;
     line(sp, SPECIES);
-    if (!both) {
-      // day 6 callout and the rise on days 7-10
-      el("text", { x: x(5.35), y: y(0.33), "text-anchor": "end", style: `fill:${SPECIES}`, class: "lab" }, svg).textContent = "Day 6 — still like days 1–5";
-      el("line", { x1: x(5.35) - 40, y1: y(0.33) + 8, x2: x(6) - 4, y2: y(sp[5]) - 10, style: `stroke:${SPECIES}`, "stroke-width": 2 }, svg);
-      const ax1 = x(7) + 6, ay1 = y(sp[6]) + 34, ax2 = x(10) - 14, ay2 = y(sp[9]) + 34;
-      el("line", { x1: ax1, y1: ay1, x2: ax2, y2: ay2, style: `stroke:${SPECIES}`, "stroke-width": 4 }, svg);
-      const a = Math.atan2(ay2 - ay1, ax2 - ax1), hx = (k) => [ax2 - 16 * Math.cos(a + k), ay2 - 16 * Math.sin(a + k)];
-      el("polygon", { points: `${ax2},${ay2} ${hx(0.4)} ${hx(-0.4)}`, style: `fill:${SPECIES}` }, svg);
-      el("text", { x: (ax1 + ax2) / 2 + 20, y: (ay1 + ay2) / 2 + 30, "text-anchor": "middle", style: `fill:${SPECIES}`, class: "lab" }, svg).textContent = "rising, days 7–10";
-    } else {
+    if (both) {
       line(fn, CAZ);
       el("text", { x: x(8), y: y(sp[7]) - 14, "text-anchor": "middle", style: `fill:${SPECIES}`, class: "lab" }, svg).textContent = "species";
       el("text", { x: x(8), y: y(fn[7]) - 14, "text-anchor": "middle", style: `fill:${CAZ}`, class: "lab" }, svg).textContent = "CAZyme genes";

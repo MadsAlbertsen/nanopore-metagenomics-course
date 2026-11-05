@@ -1,18 +1,11 @@
-<section class="slide title">
-  <svg class="art" viewBox="0 0 860 190" role="img" aria-label="A simple gut tube with bacteria">
-    <path class="gut" d="M20,95 C90,10 150,10 210,95 S330,180 400,95 S520,10 590,95 S720,180 840,95"/>
-    <g class="rods"><rect x="95" y="38" width="30" height="12" rx="6" transform="rotate(-25 110 44)"/><rect x="236" y="120" width="30" height="12" rx="6" transform="rotate(20 251 126)"/><rect x="345" y="104" width="30" height="12" rx="6" transform="rotate(-10 360 110)"/><rect x="470" y="48" width="30" height="12" rx="6" transform="rotate(30 485 54)"/><rect x="640" y="110" width="30" height="12" rx="6" transform="rotate(-20 655 116)"/></g>
-    <g class="dots"><circle cx="160" cy="52" r="8"/><circle cx="300" cy="150" r="8"/><circle cx="415" cy="85" r="8"/><circle cx="545" cy="42" r="8"/><circle cx="725" cy="148" r="8"/><circle cx="780" cy="100" r="8"/></g>
-  </svg>
-  <h1>Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations</h1>
-  <p class="who">Group 4 · author names are not published</p>
-  <p class="src">Title of the group's first, non-reviewed article. Slides built from Claude's Revision 1 of the article. Figures: Revision 1 (Claude).</p>
-  <aside class="notes"><p>The title is the group's first article, before peer review. The revision tested its main claim against a null model; the next slides show what that test found. One person, ten days.</p></aside>
-</section>
-
 <section class="slide center">
-  <h2 class="q">Diet reshuffles gut microbiome composition within days — but does it also reshuffle the community's ability to digest carbohydrates?</h2>
+  <h2 class="q">Is there a switch of communities and functions between the two diets?</h2>
+  <ul class="qs">
+    <li>Does the gene potential follow the species shift?</li>
+    <li>When does it shift?</li>
+  </ul>
   <p class="sub">One person · 10 consecutive daily stool samples · dietary switch on day 6.</p>
+  <p class="src">Group 4 · Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations · slides built from Claude's Revision 1</p>
   <aside class="notes"><p>Diet information is from the data owner. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. Carbohydrate and calories changed together, and days 6-10 were closer to the habitual diet.</p></aside>
 </section>
 
@@ -26,19 +19,18 @@
     <div class="box"><b>5 · CAZyme annotation</b><span>Pyrodigal gene prediction, dbCAN HMM profiles</span><em><span data-n="n_families"></span> degrading families</em></div>
   </div>
   <div class="row r2">
-    <div class="box"><b>A · Daily abundance</b><span>MAG share = bases mapped per day / bases of the day; Bray-Curtis dissimilarity; drift = distance to days 1–5 mean</span><i>from box 3</i><em>species change <span data-n="taxa_between" data-d="2"></span> (Bray-Curtis)</em></div>
-    <div class="box nul"><b>B · Null models</b><span>carrier-preserving: curveball randomisation keeps each family's carrier count, places families on random MAGs; gene-token: random family labels keeping gene totals</span><i>from box 5</i><em><span data-n="r1_reps" data-c></span> replicates each</em></div>
-    <div class="box nul"><b>C · Synchrony decomposition</b><span>φ/φindep per family; compensation vs synchrony of carriers; tested against the null</span><i>from B</i><em>median <span data-n="r1_syn_rel_med" data-d="2"></span> vs <span data-n="r1_syn_null_med" data-d="2"></span> (null)</em></div>
+    <div class="box"><b>Species and gene profiles</b><span>MAG shares per day, Bray-Curtis dissimilarity</span><em>species change <span data-n="taxa_between" data-d="2"></span> (Bray-Curtis)</em></div>
+    <div class="box nul"><b>Null model</b><span>reshuffle enzyme genes across genomes, <span data-n="r1_reps" data-c></span> replicates — does real stability exceed chance?</span></div>
   </div>
-  <p class="new"><b>New in revision 1:</b> null models, synchrony decomposition, within-period CV for strain analysis, depth subsampling check. Figures: Revision 1 (Claude).</p>
+  <p class="new"><b>New in revision 1:</b> null models, within-period CV for strain analysis, depth subsampling check. Figures: Revision 1 (Claude).</p>
   <aside class="notes"><p>Read the boxes left to right. Box 4: CheckM2 was run on all binned genomes; the 124 common MAGs are those with a mean share of at least 0.1% of the sequenced bases. Box 5 counts families of the degrading classes (glycoside hydrolases, polysaccharide lyases, carbohydrate esterases). All shares are relative abundances and all genes are gene potential, not activity.</p></aside>
 </section>
 
 <section class="slide fig">
   <div class="chart" id="s3chart"></div>
-  <h2 class="cap">Species composition shifted from day 7 — a lag of about one day after the switch (gut transit time was not measured).</h2>
+  <h2 class="cap">Species composition shifted ~1 day after the dietary switch.</h2>
   <p class="src">Figure 1a, Revision 1 (Claude): Bray-Curtis dissimilarity of each day's species profile (MAG shares) to the mean of days 1–5.</p>
-  <aside class="notes"><p>Day 6 is the first day of the new diet, yet its profile is still within the range of days 1-5. The departure starts on day 7. One person; diet is confounded with time.</p></aside>
+  <aside class="notes"><p>Day 6 is the first day of the new diet, yet its profile is still within the range of days 1-5; the departure starts on day 7. Caveats: gut transit time was not measured, so "about one day" is a lag, not a transit time. One person, ten days; diet is confounded with time and calories, and days 6-10 were a return towards the habitual diet.</p></aside>
 </section>
 
 <section class="slide fig">

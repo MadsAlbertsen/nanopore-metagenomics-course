@@ -27,7 +27,9 @@
 .slide.flow h2.cap { font-size: 22px; font-weight: 600 }
 .flow .row { display: grid; gap: 10px }
 .flow .r1 { grid-template-columns: repeat(5, 1fr) }
-.flow .r2 { grid-template-columns: repeat(3, 1fr); margin-top: 4px }
+.flow .r2 { grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 4px }
+.flow .r2 .box:first-child::after { content: "▶"; position: absolute; right: -26px; top: 40%; font-size: 14px; color: var(--muted) }
+.slide ul.qs { font-size: 30px; gap: 12px; list-style: none; padding-left: 0 }
 .flow .box { position: relative; border: 2px solid var(--faint); border-radius: 8px; padding: 7px 8px; display: flex; flex-direction: column; gap: 3px; font-size: 14px; line-height: 1.25; background: var(--surface) }
 .flow .r1 .box:not(:last-child)::after { content: "▶"; position: absolute; right: -13px; top: 40%; font-size: 12px; color: var(--muted) }
 .flow .r2 .box { border-color: var(--c1); font-size: 13.5px }
