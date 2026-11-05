@@ -1,60 +1,82 @@
 <section class="slide title">
-  <span class="kicker">Nanopore metagenomics course · group presentation</span>
-  <h1>Diet periods: genes or species, and stability</h1>
+  <svg class="art" viewBox="0 0 860 190" role="img" aria-label="A simple gut tube with bacteria">
+    <path class="gut" d="M20,95 C90,10 150,10 210,95 S330,180 400,95 S520,10 590,95 S720,180 840,95"/>
+    <g class="rods"><rect x="95" y="38" width="30" height="12" rx="6" transform="rotate(-25 110 44)"/><rect x="236" y="120" width="30" height="12" rx="6" transform="rotate(20 251 126)"/><rect x="345" y="104" width="30" height="12" rx="6" transform="rotate(-10 360 110)"/><rect x="470" y="48" width="30" height="12" rx="6" transform="rotate(30 485 54)"/><rect x="640" y="110" width="30" height="12" rx="6" transform="rotate(-20 655 116)"/></g>
+    <g class="dots"><circle cx="160" cy="52" r="8"/><circle cx="300" cy="150" r="8"/><circle cx="415" cy="85" r="8"/><circle cx="545" cy="42" r="8"/><circle cx="725" cy="148" r="8"/><circle cx="780" cy="100" r="8"/></g>
+  </svg>
+  <h1>Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations</h1>
   <p class="who">Group 4 · author names are not published</p>
-  <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
+  <p class="src">Title of the group's first, non-reviewed article. Slides built from Claude's Revision 1 of the article. Figures: Revision 1 (Claude).</p>
+  <aside class="notes"><p>The title is the group's first article, before peer review. The revision tested its main claim against a null model; the next slides show what that test found. One person, ten days.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Background</span>
-  <h2>The question and why it matters</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide center">
+  <h2 class="q">Diet reshuffles gut microbiome composition within days — but does it also reshuffle the community's ability to digest carbohydrates?</h2>
+  <p class="sub">One person · 10 consecutive daily stool samples · dietary switch on day 6.</p>
+  <aside class="notes"><p>Diet information is from the data owner. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. Carbohydrate and calories changed together, and days 6-10 were closer to the habitual diet.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Data and approach</span>
-  <h2>What we did with the ten samples</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide flow">
+  <h2 class="cap">From ten stool samples to a test against a null model</h2>
+  <div class="row r1">
+    <div class="box"><b>1 · PromethION sequencing</b><span>10 daily samples, R10.4.1, Rapid Barcoding Kit</span><em><span data-n="pipe_raw_gbp" data-d="0"></span> Gbp</em></div>
+    <div class="box"><b>2 · Read QC</b><span>Dorado basecalling, chopper quality filter, Porechop_ABI adapter trimming</span><em><span data-n="pipe_reads_m" data-d="0"></span> M reads kept</em></div>
+    <div class="box"><b>3 · Assembly and binning</b><span>mmlong2, co-assembly of all 10 days</span><em><span data-n="pipe_bins"></span> MAGs</em></div>
+    <div class="box"><b>4 · Genome quality</b><span>CheckM2; common MAGs: mean share ≥0.1%</span><em><span data-n="n_common"></span> common MAGs</em></div>
+    <div class="box"><b>5 · CAZyme annotation</b><span>Pyrodigal gene prediction, dbCAN HMM profiles</span><em><span data-n="n_families"></span> degrading families</em></div>
+  </div>
+  <div class="row r2">
+    <div class="box"><b>A · Daily abundance</b><span>MAG share = bases mapped per day / bases of the day; Bray-Curtis dissimilarity; drift = distance to days 1–5 mean</span><i>from box 3</i><em>species change <span data-n="taxa_between" data-d="2"></span> (Bray-Curtis)</em></div>
+    <div class="box nul"><b>B · Null models</b><span>carrier-preserving: curveball randomisation keeps each family's carrier count, places families on random MAGs; gene-token: random family labels keeping gene totals</span><i>from box 5</i><em><span data-n="r1_reps" data-c></span> replicates each</em></div>
+    <div class="box nul"><b>C · Synchrony decomposition</b><span>φ/φindep per family; compensation vs synchrony of carriers; tested against the null</span><i>from B</i><em>median <span data-n="r1_syn_rel_med" data-d="2"></span> vs <span data-n="r1_syn_null_med" data-d="2"></span> (null)</em></div>
+  </div>
+  <p class="new"><b>New in revision 1:</b> null models, synchrony decomposition, within-period CV for strain analysis, depth subsampling check. Figures: Revision 1 (Claude).</p>
+  <aside class="notes"><p>Read the boxes left to right. Box 4: CheckM2 was run on all binned genomes; the 124 common MAGs are those with a mean share of at least 0.1% of the sequenced bases. Box 5 counts families of the degrading classes (glycoside hydrolases, polysaccharide lyases, carbohydrate esterases). All shares are relative abundances and all genes are gene potential, not activity.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 1</span>
-  <h2>Result 1: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide fig">
+  <div class="chart" id="s3chart"></div>
+  <h2 class="cap">Species composition shifted from day 7 — a lag of about one day after the switch (gut transit time was not measured).</h2>
+  <p class="src">Figure 1a, Revision 1 (Claude): Bray-Curtis dissimilarity of each day's species profile (MAG shares) to the mean of days 1–5.</p>
+  <aside class="notes"><p>Day 6 is the first day of the new diet, yet its profile is still within the range of days 1-5. The departure starts on day 7. One person; diet is confounded with time.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 2</span>
-  <h2>Result 2: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide fig">
+  <div class="chart" id="s4chart"></div>
+  <h2 class="cap">The carbohydrate-degrading gene potential followed the same direction — but compressed.</h2>
+  <p class="src">Figure 1a, Revision 1 (Claude): Bray-Curtis dissimilarity to the mean of days 1–5; green = CAZyme (degrading families) gene potential per 1,000 genes.</p>
+  <aside class="notes"><p>The factor four is the between-period distance of the species profile divided by that of the CAZyme profile. Relative to its own day-to-day variation, the CAZyme profile still separated the two periods.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 3</span>
-  <h2>Result 3: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide center hyp">
+  <h2 class="q">Why does the enzyme toolkit move so much less than the bacteria?</h2>
+  <p class="idea"><b>The idea: functional redundancy</b> — many bacteria carry the same enzyme genes, so when one falls, another covers for it.</p>
+  <p class="nullp"><b>We built a null model:</b> same bacterial abundances each day, but enzyme gene families placed randomly on bacteria.</p>
+  <aside class="notes"><p>The null keeps the real daily abundances of the genomes and each family's number of carrier genomes, and only moves which genome carries which family.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Result 4: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide fig">
+  <div class="two"><div class="chart" id="s6a"></div><div class="chart" id="s6b"></div></div>
+  <h2 class="cap">Random reshuffling of enzyme genes gave a result like ours: our data lie inside the null range — the stability can be explained by averaging.</h2>
+  <p class="below">Summing across many genomes is naturally steadier than any single genome: the averaging effect. No extra compensation between genomes is needed to explain it.</p>
+  <p class="src">Figures 2a and 2b, Revision 1 (Claude): <span data-n="r1_reps" data-c></span> replicates of the carrier-preserving null. The gene-token null was even steadier than our data. Percentiles: 2a <span data-n="r1_B_between_pct" data-d="0"></span>th, 2b <span data-n="r1_B_spearman_pct" data-d="0"></span>th.</p>
+  <aside class="notes"><p>Left: how much the CAZyme profile changed between days 1-5 and days 6-10. Right: how steeply day-to-day variation falls with the number of carrier genomes. Both observed values sit inside the null. Real families did vary slightly more than random ones, because carriers tended to rise and fall together; that is the opposite of compensation.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 5</span>
-  <h2>Result 5: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide fig">
+  <div class="chart" id="s7chart"></div>
+  <h2 class="cap">When dietary carbohydrates dropped, genes for digesting the gut's own mucus layer (host glycans) increased beyond the null — this fits a shift towards host-glycan use, which these data cannot show directly.</h2>
+  <p class="src">Figure 4b, Revision 1 (Claude): gene potential per 1,000 genes (relative), days 6–10 versus days 1–5. One person, ten days; diet is confounded with time and calories.</p>
+  <aside class="notes"><p>Gene potential and relative abundance, not activity. The host-glycan rise came mostly from Bacteroidota genomes. It is the one group of families whose change exceeds what random carriers produce.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Limitations</span>
-  <h2>What the data cannot show</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Take-home</span>
-  <h2>Take-home message</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+<section class="slide center end">
+  <ol>
+    <li>Gut microbiome composition shifted from day 7, about a day after the dietary switch.</li>
+    <li>The apparent stability of gene potential is what averaging across genomes predicts — compensation between genomes was not detected.</li>
+    <li>Host-glycan genes are the exception: their gene potential rose above the null, which fits a diet-related shift (diet and time cannot be separated here).</li>
+  </ol>
+  <p class="close">Claims of functional redundancy from metagenomic data need a null model — otherwise averaging alone can produce the same stability.</p>
+  <p class="src">Based on Claude's Revision 1 of the group's article. One person, ten days: the data cannot separate diet from time.</p>
+  <aside class="notes"><p>Limits: one person, ten days, one switch; carbohydrate and calories changed together; days 6-10 were a return towards the habitual diet. Relative abundance and gene potential only.</p></aside>
 </section>
