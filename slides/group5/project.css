@@ -1,0 +1,2 @@
+/* Group 5 (Q13): slide headings in blue (site categorical blue, light and dark) */
+.slide h1, .slide h2 { color: var(--c1) }
