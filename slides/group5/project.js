@@ -30,3 +30,43 @@ function drawCtx() {
   });
 }
 drawCtx();
+
+// Slide 5: gene map (adapted from articles/group5/project.js drawMap; simplified colours, no labels)
+const MAP = D.map, ML = MAP.length;
+const gFam = (g) => (g[7] >= 0 ? MAP.families[g[7]] : "");
+const gRole = (g) => (g[9] >= 0 ? MAP.roles[g[9]] : "");
+const isGH13 = (g) => gRole(g) === "degrading" && /(^| )GH13( |$)/.test(gFam(g));
+const GC = [
+  ["GH13", "var(--c2)", (g) => isGH13(g)],
+  ["Other degrading enzyme", "var(--c1)", (g) => gRole(g) === "degrading"],
+  ["Other carbohydrate gene", "var(--c3)", (g) => gRole(g) !== ""],
+  ["Other gene", "var(--v4)", () => true],
+];
+const gColor = (g) => GC.find(([, , f]) => f(g))[1];
+const arcP = (cx, cy, r0, r1, a0, a1) => {
+  const p = (r, a) => `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`;
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  return `M${p(r1, a0)}A${r1},${r1} 0 ${large} 1 ${p(r1, a1)}L${p(r0, a1)}A${r0},${r0} 0 ${large} 0 ${p(r0, a0)}Z`;
+};
+function drawMap() {
+  const host = $("g5Map");
+  mountChart(host, () => {
+    const W = Math.min(250, Math.max(220, host.clientWidth || 300)), H = W;
+    host.innerHTML = "";
+    const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Circular gene map" }, host);
+    const cx = W / 2, cy = H / 2, R = W / 2 - 6;
+    const ang = (pos) => (pos / ML) * 2 * Math.PI - Math.PI / 2;
+    el("circle", { cx, cy, r: R - 15, fill: "none", class: "base" }, svg);
+    for (const g of MAP.genes) {
+      const a0 = ang(g[0]), a1 = Math.max(ang(g[1]), a0 + 0.005);
+      const [r0, r1] = g[2] > 0 ? [R - 14, R] : [R - 32, R - 18];
+      const p = el("path", { d: arcP(cx, cy, r0, r1, a0, a1), style: `fill:${gColor(g)}` }, svg);
+      const name = gFam(g) || (g[4] >= 0 ? MAP.products[g[4]] : "");
+      tipOn(p, `<b>${esc(name)}</b><br>position ${g[0].toLocaleString("en-US")}-${g[1].toLocaleString("en-US")}`);
+    }
+    [[D.focus.name.replace(/ \(.*\)$/, "").replace(/^Bifidobacterium /, "B. "), "lab"], [`${(ML / 1e6).toFixed(2)} Mb`, ""]]
+      .forEach(([t, c], i) => { el("text", { x: cx, y: cy - 6 + i * 18, "text-anchor": "middle", class: c }, svg).textContent = t; });
+  });
+}
+drawMap();
+$("g5Legend").innerHTML = GC.map(([name, color, f]) => `<span><i class="sw" style="background:${color}"></i>${esc(name)}${f === GC[3][2] ? "" : " (" + MAP.genes.filter((g) => GC.find(([, , ff]) => ff(g)) === GC.find(([n]) => n === name)).length + ")"}</span>`).join("");
