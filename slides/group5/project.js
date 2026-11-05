@@ -109,8 +109,20 @@ lineChart($("g5Line"), {
     rows, cols: D.days.map(String), values: H.map((h) => h.share.map((v) => Math.log10(v))), cell, colLabelHeight: top,
     label: "share of bases (%)", format: (v) => (10 ** v >= 1 ? (10 ** v).toFixed(1) : (10 ** v).toPrecision(2)) + "%",
   });
-  // mark day 5 (same geometry as shared heatmap())
-  const svg = host.querySelector("svg"), labW = Math.min(240, 10 + 6.4 * Math.max(...rows.map((r) => r.length)));
-  const cw = Math.max(10, Math.min(48, (Math.max(280, host.clientWidth || 640) - labW - 90) / D.days.length));
-  el("rect", { x: labW + cw * 4 - 1, y: top - 2, width: cw + 1, height: cell * rows.length + 2, fill: "none", style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
+  // B. angulatum (row 0) is set apart: rows below it move down by GAP; day 5 marked (same geometry as shared heatmap())
+  const GAP = 10, c = CHARTS.find((x) => x.host === host), base = c.draw;
+  c.draw = () => {
+    base();
+    const svg = host.querySelector("svg"), labW = Math.min(240, 10 + 6.4 * Math.max(...rows.map((r) => r.length)));
+    const cw = Math.max(10, Math.min(48, (Math.max(280, host.clientWidth || 640) - labW - 90) / D.days.length));
+    svg.querySelectorAll("rect, text").forEach((n) => {
+      const y = n.getAttribute("y");
+      if (n.tagName === "text" && n.hasAttribute("transform")) return;
+      if (y !== null && +y >= top + cell - 1) n.setAttribute("y", +y + GAP);
+    });
+    const h = +svg.getAttribute("height") + GAP, w = svg.getAttribute("width");
+    svg.setAttribute("height", h); svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    el("rect", { x: labW + cw * 4 - 1, y: top - 2, width: cw + 1, height: cell * rows.length + GAP + 2, fill: "none", style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
+  };
+  c.draw();
 }
