@@ -1,60 +1,104 @@
 <section class="slide title">
   <span class="kicker">Nanopore metagenomics course · group presentation</span>
-  <h1>Butyrate genes across the two diet periods</h1>
+  <h1>Butyrate gene potential is maintained but redistributed after a carbohydrate reduction: a ten-day long-read metagenomic time series</h1>
   <p class="who">Group 3 · author names are not published</p>
-  <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
+  <aside class="notes"><p>Title is the title of our article. One person, ten daily stool samples, long-read sequencing.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Background</span>
-  <h2>The question and why it matters</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">The question and why it matters</span>
+  <h2>Does a person's butyrate gene potential change within days of eating fewer carbohydrates?</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li>Butyrate is the main energy source of the cells lining the colon</li>
+        <li>Gut bacteria make it in a last step, either with a CoA-transferase (<i>but</i>) or with a kinase route (<i>ptb</i> + <i>buk</i>)</li>
+        <li>Question: after a carbohydrate reduction, does the gene potential for the two last steps change, and in which genomes?</li>
+      </ul>
+    </div>
+    <div class="chart" id="pathPlain"></div>
+  </div>
+  <p class="src">Simplified from Figure 4 of our article, without data. Dashed: not searched (upstream genes and the amino-acid routes).</p>
+  <aside class="notes"><p>The pathway is the acetyl-CoA route to butyryl-CoA, then two ways to release butyrate. The CoA-transferase uses acetate; the kinase route makes ATP. We searched bcd and the final-step genes, not thl, hbd, crt or the lysine, glutarate and 4-aminobutyrate routes.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Data and approach</span>
-  <h2>What we did with the ten samples</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>What we did with the <span data-n="n_days"></span> samples</h2>
+  <div class="big">
+    <div><b><span data-n="n_days"></span></b><span>daily stool samples, one person</span></div>
+    <div><b><span data-n="n_mags"></span></b><span>genomes (MAGs), <span data-n="n_hq"></span> of high quality</span></div>
+    <div><b><span data-n="q2_calls"></span></b><span>butyrate gene calls checked</span></div>
+  </div>
+  <ul>
+    <li>Days 1-5 high-carbohydrate, high-calorie and days 6-10 low-carbohydrate, low-calorie, both vegetarian (information from the data owner)</li>
+    <li>Nanopore long reads, assembled and binned into MAGs; genes found with KOfam profiles, <i>but</i> by its Bakta name</li>
+    <li>Gene abundance: copies per 1,000 genes, each MAG weighted by its share of the DNA times its number of genes</li>
+    <li>Checks: DNA outside the MAGs, doubtful gene calls, ratios within each sample, dilution</li>
+  </ul>
+  <aside class="notes"><p>Gene abundance is gene potential, not activity, and relative, not cell counts. The analysis is descriptive: one person, ten days.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Result 1</span>
-  <h2>Result 1: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 1: quality of the data</span>
+  <h2>High-quality genomes hold <span data-n="cap_hq_all"></span>% of the DNA and most of each butyrate gene</h2>
+  <div class="cols">
+    <div class="chart" id="g3Cap"></div>
+    <div class="chart" id="g3CapGenes"></div>
+  </div>
+  <p class="src">Left (Fig 1): share of each day's sequenced bases (%) by genome class. Right (Fig 2): share of each gene's depth-weighted copies (%),
+    mean of the ten days. HQ / MQ: high / medium quality MAGs. Dashed line: diet switch.</p>
+  <aside class="notes"><p>Fig 1: HQ MAGs hold about <span data-n="cap_hq_all"></span>% of the bases, all MAGs <span data-n="cap_mag_hi"></span>-<span data-n="cap_mag_lo"></span>%. Fig 2: <span data-n="gs_but_hq_hi"></span>% of <i>but</i> lies in HQ MAGs. Rare genomes that did not assemble are not seen.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Result 2</span>
-  <h2>Result 2: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 2: when does the community shift?</span>
+  <h2>The whole community moves from about day <span data-n="q7_r0_first"></span>, not only the butyrate producers</h2>
+  <div class="chart" id="g3DayPcoa"></div>
+  <p class="src">Fig 3: PCoA of Bray-Curtis dissimilarity of the MAG composition, one point per day (n = 10 samples, one person); axis 1 holds
+    <span data-n="q3_pc1"></span>% and axis 2 <span data-n="q3_pc2"></span>% of the variation. Blue: days 1-5, orange: days 6-10; the line joins the days in order.</p>
+  <aside class="notes"><p>Day 6 still lies among days 1-5; days 8-10 lie furthest away. Diet is confounded with time here.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Result 3</span>
-  <h2>Result 3: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Result 4: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 5</span>
-  <h2>Result 5: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 3: do the genes change?</span>
+  <h2>Gene <i>but</i> falls, <i>ptb</i> and <i>buk</i> rise, <i>bcd</i> stays level</h2>
+  <div class="cols">
+    <div class="chart" id="pathChange"></div>
+    <div class="chart" id="g3GeneHeat"></div>
+  </div>
+  <p class="src">Left: change, days 1-5 to 6-10. Right (Fig 6): log2 of each day's gene copies per 1,000 genes vs the mean of days 1-5; columns are days. <i>but</i> <span data-n="but_strict_hi"></span> to <span data-n="but_strict_lo"></span>,
+    <i>ptb</i> <span data-n="pbin_ptb_hi"></span> to <span data-n="pbin_ptb_lo"></span>, <i>buk</i> <span data-n="pbin_buk_hi"></span> to <span data-n="pbin_buk_lo"></span>
+    copies per 1,000 genes. Gene potential, not activity.</p>
+  <aside class="notes"><p>The fall of <i>but</i> is carried mostly by Agathobacter and Roseburia; the rise of <i>ptb</i> and <i>buk</i> by Acetatifactor, with Butyrivibrio (<i>ptb</i>) and Phocaeicola (<i>buk</i>). Phocaeicola has no <i>ptb</i>, so its <i>buk</i> is probably not part of a butyrate route. The ratio <i>but</i> / (<i>ptb</i> + <i>buk</i>) fell by log2 <span data-n="q7_r0_log2"></span>.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <ul>
+    <li>One person, one sample per day, ten days: descriptive, not tested</li>
+    <li>Diet is confounded with time; carbohydrate and calories changed together; protein and fat were not recorded</li>
+    <li>Days 6-10 were closer to the habitual diet, so part of the shift may be a return to the usual community</li>
+    <li>Gene potential and relative abundance, not gene expression, butyrate or cell numbers</li>
+    <li>MAGs hold <span data-n="cap_mag_hi"></span>-<span data-n="cap_mag_lo"></span>% of the DNA; unassembled genomes, upstream genes and the amino-acid routes are not seen</li>
+  </ul>
+  <p class="src">From the Limitations and Discussion of our article.</p>
+</section>
+
+<section class="slide">
+  <span class="kicker">Our take on AI</span>
+  <h2>Our take on AI</h2>
+  <p class="lead">To be filled in by the group: tell us in a new block what you want to say</p>
 </section>
 
 <section class="slide">
   <span class="kicker">Take-home</span>
-  <h2>Take-home message</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Butyrate gene potential was maintained but redistributed</h2>
+  <p class="take">In this gut, <i>but</i> fell and <i>ptb</i> and <i>buk</i> rose from about day <span data-n="q7_r0_first"></span>, while <i>bcd</i> stayed level.</p>
+  <ul>
+    <li>A few genomes carry the change: Agathobacter and Roseburia fall, Acetatifactor rises</li>
+    <li>The whole community shifts at the same time</li>
+    <li>One person, ten days, diet confounded with time: no causal claim</li>
+  </ul>
 </section>
