@@ -8,6 +8,7 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Background</span>
   <h2>The Story Behind the Idea</h2>
@@ -25,6 +26,7 @@
   <p class="q">How does the relative abundance of <i>B. angulatum</i> change when the diet goes from high to low carbohydrate?</p>
   <aside class="notes"><p>The group's own words: Decided to look into one specific organism instead of the entire community. We knew that the sequencing would get us tons of data, so instead of trying to look at all of it, we narrowed it into one specific organism. Deciding for a specific organism was more difficult but from a very quick look in the data we identified the presence of a Bifidobacteria which was described in literature as a common gut microbiome carbohydrate degrading organism. Therefore, we decided to look into how the relative abundance of that specific microbe changed as a result of the change in diet from high carb to low carb. We based our analysis on the hypothesis that the relative abundance of Bifidobacterium angulatum would be high in the beginning of day 1 (because he was carb-loading for a week before) and would continue to be high until day 5, after which it would decrease from day 6-10 as a result of the low carb diet.</p><p>Diet: days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner). The hypothesis is the group's own.</p></aside>
 </section>
+
 
 
 
@@ -52,6 +54,7 @@
 </section>
 
 
+
 <section class="slide">
   <span class="kicker">Result 1 &middot; data quality</span>
   <h2>First check: <span data-n="mag_pooled"></span>% of the sequenced bases are in MAGs</h2>
@@ -70,20 +73,36 @@
   <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. They therefore asked how much of the sequencing data was represented in MAGs, what was missing, and how sequencing depth varied between samples. Percentages are shares of bases (not reads). Depth is the filtered bases per sample, in Gbp. MAG = genome reconstructed from the mixture; HQ and MQ = high and medium quality.</p></aside>
 </section>
 
+
 <section class="slide">
-  <span class="kicker">Result 2</span>
-  <h2>Result 2: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 2 &middot; genes</span>
+  <h2><span data-n="carb_total"></span> carbohydrate-related genes, <span data-n="gh13_genes"></span> of them GH13</h2>
+  <div class="cols wide">
+    <div><div class="chart" id="g5Map"></div><div class="legend g5leg" id="g5Legend"></div></div>
+    <div class="side">
+      <div class="big sm">
+        <div><b data-n="carb_total"></b><span>carbohydrate genes</span></div>
+        <div><b data-n="gh13_genes"></b><span>GH13 genes</span></div>
+        <div><b><span data-n="gh13_pct"></span>%</b><span>of MAGs carry GH13</span></div>
+      </div>
+      <p class="chk"><b>How we checked</b></p>
+      <ul>
+        <li>Gene names: Bakta needs a match of at least <span data-n="bakta_min_id"></span>% identity.</li>
+        <li>GH13 is common: <span data-n="gh13_pct"></span>% of <span data-n="n_mags"></span> MAGs carry it.</li>
+      </ul>
+      <p class="warn">Predicted gene function, not enzyme activity.</p>
+    </div>
+  </div>
+  <p class="src"><i>B. angulatum</i> chromosome, one block per gene (outer ring forward, inner ring reverse strand). Article Figure 2.</p>
+  <aside class="notes"><p>The group asked how reliable the gene annotations were, including Bakta's sequence identity threshold (at least 50% identity to a protein cluster; Bakta v1.11.4, light database), and whether GH13 genes are common across other MAGs (they are: 87% of the 421 MAGs carry at least one). Highlighted: 83 carbohydrate-related genes (39 carbohydrate-degrading enzymes, 21 glycosyltransferases, 12 sugar transporter parts and others) and 9 GH13 genes. Gene names are predictions; they do not show that the enzymes are active.</p></aside>
 </section>
-
-
-
 
 <section class="slide">
   <span class="kicker">Result 3</span>
   <h2>Result 3: the message of this slide</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 
 
@@ -97,6 +116,7 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Result 5</span>
   <h2>Result 5: the message of this slide</h2>
@@ -106,11 +126,13 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 
 

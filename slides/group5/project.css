@@ -31,3 +31,12 @@
 /* Slide 2 (Q18): the main question stands out */
 .slide .q { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--ink); margin: 26px 0 0; text-wrap: balance }
 .slide .road:not(.lab) .rb { font-size: 13.5px }
+/* Slide 5 (Q19) */
+.slide .g5leg { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px 14px; font-size: 13px; margin-top: 6px; max-width: 330px }
+.slide .chk { margin: 18px 0 2px; font-size: 16px }
+.slide .warn { margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--c2); background: var(--sel); font-size: 15px; font-weight: 600 }
+.slide .side .big.sm { flex-wrap: nowrap; gap: 20px; margin-bottom: 0 }
+.slide .side .big.sm div b { font-size: 30px }
+.slide .side .big.sm div > span { font-size: 13px }
+.slide .side ul { margin: 0; padding-left: 20px; font-size: 15px }
+.slide .side li { margin-bottom: 4px }
