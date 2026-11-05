@@ -1,0 +1,10 @@
+/* group 1 deck: every text on the stage at least 14 px (the shared style has 12-13 px for source lines and kickers) */
+.slide .kicker { font-size: 14px }
+.slide .src { font-size: 14px; padding-right: 70px }
+.slide .chart text, .slide svg text { font-size: 14px }
+.slide .big div > span { font-size: 18px }
+.slide ul { font-size: 20px }
+.slide .sugg { font-size: 15px; font-weight: 600; color: var(--surface); background: var(--accent); border-radius: 6px; padding: 4px 10px; align-self: flex-start }
+.slide .side { display: flex; flex-direction: column; gap: 14px; font-size: 20px }
+.slide .side b { color: var(--accent); font-variant-numeric: tabular-nums }
+.slide .cols { flex: 0 0 auto }

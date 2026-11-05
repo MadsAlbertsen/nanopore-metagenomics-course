@@ -1,60 +1,128 @@
 <section class="slide title">
   <span class="kicker">Nanopore metagenomics course · group presentation</span>
   <h1>How fast does the gut community follow a diet switch?</h1>
+  <p class="lead">Ten daily stool samples from one person, sequenced with Oxford Nanopore long reads</p>
   <p class="who">Group 1 · author names are not published</p>
-  <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
+  <aside class="notes"><p>The question in one line. The answer in one line: in this person the community moved with a delay of one to two days.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Background</span>
-  <h2>The question and why it matters</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Stool lags behind food, so the timing of a diet response is not obvious</h2>
+  <ul>
+    <li>In feeding studies the gut community changed within days of a new diet [1, 2]</li>
+    <li>Gut transit time differs between people, so a delay can come from transit, from the community, or both [3, 4]</li>
+    <li>Information from the data owner: days 1-5 high-carbohydrate, high-calorie; days 6-10 low-carbohydrate, low-calorie (both vegetarian); a similar high-calorie diet ran about a week before day 1</li>
+    <li>Our question: does the community change on day 6, the first day of the new diet, or later?</li>
+  </ul>
+  <p class="src">[1] David et al. 2014, Nature 505:559. [2] Johnson et al. 2019, Cell Host Microbe 25:789. [3] Roager et al. 2016, Nat Microbiol 1:16093. [4] Asnicar et al. 2021, Gut 70:1665.</p>
+  <aside class="notes"><p>Diet facts come from the data owner, not from our measurements. Carbohydrate and calories changed together.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Data and approach</span>
-  <h2>What we did with the ten samples</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>One person, ten daily samples, genomes rebuilt from long reads</h2>
+  <div class="big">
+    <div><b>10</b><span>daily stool samples, one person</span></div>
+    <div><b data-n="mags"></b><span>genomes rebuilt (MAGs)</span></div>
+    <div><b><span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>%</b><span>of each day's bases in these MAGs</span></div>
+  </div>
+  <ul>
+    <li>Nanopore long reads, assembled and binned into genomes (mmlong2)</li>
+    <li>Share of a genome = percent of the day's sequenced bases (relative abundance, not cell numbers)</li>
+    <li>Bray-Curtis dissimilarity between days: 0 = same community, 1 = nothing shared</li>
+  </ul>
+  <p class="src">Source: the group's report and article. Sequencing run of the ten samples by the course.</p>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 1</span>
-  <h2>Result 1: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>The ten days form two blocks of similar days</h2>
+  <div class="cols wide">
+    <div class="chart" id="g1sHeat"></div>
+    <div class="side">
+      <span>Dissimilarity within days 1-5: <b data-n="within1"></b></span>
+      <span>Within days 6-10: <b data-n="within2"></b></span>
+      <span>Between the two periods: <b data-n="between"></b></span>
+    </div>
+  </div>
+  <p class="src">Bray-Curtis dissimilarity of every pair of days (brighter = more different). One person, n = 10 samples.</p>
+  <aside class="notes"><p>Days 1-6 look alike and days 8-10 look alike; day 7 lies between. The split at the switch ranks second of <span data-n="permNPart"></span> possible splits (permutation p = <span data-n="permP"></span>); neighbouring days are not independent, so this describes, it does not prove.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 2</span>
-  <h2>Result 2: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Day 6 still looked like the old diet; the community moved on days 7 and 8</h2>
+  <div class="cols wide">
+    <div class="chart" id="g1sTiming"></div>
+    <div class="side">
+      <span>Distance to day 1: <b data-n="d1to6"></b> on day 6, <b data-n="d1to7"></b> on day 7, <b data-n="d1to8"></b> on day 8</span>
+      <span>Distance to days 8-10 fell from <b data-n="late6"></b> (day 6) to <b data-n="late7"></b> (day 7)</span>
+    </div>
+  </div>
+  <p class="src">Bray-Curtis dissimilarity of each day to day 1 and to the mean of days 8-10. One person, n = 10 samples.</p>
+  <aside class="notes"><p>A lag of one to two days fits transit time, but transit time was not measured. Days 9 and 10 show no further clear trend.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 3</span>
-  <h2>Result 3: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Result 4: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 5</span>
-  <h2>Result 5: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Single genomes reached their new level on different days, from day 6 to day 10</h2>
+  <div class="cols wide">
+    <div class="chart" id="g1sSettle"></div>
+    <div class="side">
+      <span><b data-n="nChange"></b> genomes changed at least two-fold (<b data-n="nUp"></b> up, <b data-n="nDown"></b> down)</span>
+      <span>Settled on day 6: <b data-n="nSettle6"></b>; day 7 or 8: <b data-n="nSettle78"></b>; day 9 or 10: <b data-n="nSettle9plus"></b></span>
+      <span>Median settled day: <b data-n="settleMedian"></b></span>
+    </div>
+  </div>
+  <p class="src">Settled day: first day a genome's share stays at its new level. One genome settled on day 5 (not shown).</p>
 </section>
 
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <ul>
+    <li>One person, one diet switch, one sample per day: the timing is described, not tested</li>
+    <li>Diet is mixed up with time and with calories; a similar diet ran a week before day 1, so no cause can be named</li>
+    <li>Relative abundance: a rise of one genome lowers the others; not cell numbers</li>
+    <li>No sample before day 1 or after day 10; transit time was not measured</li>
+    <li>Gene content is potential, not enzyme activity</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <span class="kicker">Working with the AI</span>
+  <h2>How we worked with Claude</h2>
+  <p class="sugg">Suggestion — to be replaced by the group's own text</p>
+  <ul>
+    <li>We sent many short requests; most were answered within minutes</li>
+    <li>Asking for a whole paper in ten minutes gave a draft that still needed our checks</li>
+    <li>A change log on the page showed what was changed after each request</li>
+    <li>Questions about server jobs were unclear to us until the teacher decided</li>
+  </ul>
+  <aside class="notes"><p>Suggestion only, based on the interaction on 4 Nov. Replace with the group's own experience and the teachers' input.</p></aside>
+</section>
+
+<section class="slide">
+  <span class="kicker">Working with the AI</span>
+  <h2>What we noticed</h2>
+  <p class="sugg">Suggestion — to be replaced by the group's own text</p>
+  <ul>
+    <li>Numbers and claims had to be checked against the data; we did not take them as given</li>
+    <li>Wording about cause was softened when we asked for a critical review</li>
+    <li>Clear, specific requests worked better than broad ones</li>
+    <li>The people in the group still decide the question, the story and what is claimed</li>
+  </ul>
+  <aside class="notes"><p>Suggestion only. Replace with what the group noticed and what the teachers add.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Take-home</span>
   <h2>Take-home message</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <p class="take">In this person the community followed the diet switch with a delay of one to two days; single genomes took from day 6 to day 10.</p>
+  <ul>
+    <li>Days 1-6 and days 8-10 form two blocks of similar days</li>
+    <li>Total carbohydrate-enzyme gene potential stayed near <span data-n="czDay_total_first"></span> and <span data-n="czDay_total_second"></span> genes per 1,000 genes (days 1-5 and 6-10) while members replaced each other</li>
+    <li>One person, ten days, diet mixed up with time and calories: a description, not a cause</li>
+  </ul>
 </section>
