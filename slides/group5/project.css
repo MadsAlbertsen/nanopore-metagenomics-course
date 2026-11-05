@@ -31,7 +31,7 @@
 .slide .q { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--ink); margin: 26px 0 0; text-wrap: balance }
 .slide .road:not(.lab) .rb { font-size: 13.5px }
 /* Slide 5 (Q19) */
-.slide .g5leg { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px 14px; font-size: 13px; margin-top: 6px; max-width: 330px }
+.slide .g5leg { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px 14px; font-size: 13px; margin-top: 6px; max-width: 400px }
 .slide .chk { margin: 18px 0 2px; font-size: 16px }
 .slide .warn { margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--c2); background: var(--sel); font-size: 15px; font-weight: 600 }
 .slide .side .big.sm { flex-wrap: nowrap; gap: 20px; margin-bottom: 0 }
@@ -47,7 +47,7 @@
 .slide .figl { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: var(--muted) }
 /* Slide 2 (Q24): larger, bolder box texts and main question (the box 5 outline is already gone, Q20) */
 .slide .road:not(.lab) { margin: 6px 0 4px }
-.slide .road:not(.lab) .rb { font-size: 16.5px; font-weight: 700; line-height: 1.22; padding: 10px 9px; letter-spacing: -0.005em }
+.slide .road:not(.lab) .rb { font-size: 16.5px; font-weight: 400; line-height: 1.22; padding: 10px 9px; letter-spacing: -0.005em }
 .slide .road:not(.lab) .rb b { font-size: 22px; font-weight: 800; margin-bottom: 2px }
 .slide .road:not(.lab) .ra { font-size: 26px; font-weight: 700 }
 .slide .q { font-size: 31px; font-weight: 800; line-height: 1.2; letter-spacing: -0.015em; color: var(--c1); margin: 14px 0 0 }
@@ -66,3 +66,15 @@
 .slide .lc li span.tag, .slide .sug li span.tag { font-size: 14px; font-weight: 600; color: var(--c2); white-space: nowrap }
 .slide .sug { border-left: 4px solid var(--c2); background: var(--sel); padding: 8px 16px; font-size: 17px }
 .slide .sug ul { margin-top: 4px; gap: 4px; padding-left: 1.1em }
+/* Q29: depth finding, final-slide illustration, regular-weight roadmap text */
+.slide .side p.find { font-size: 22px; line-height: 1.3; margin-top: 16px }
+.slide .illu { display: block; width: 100%; height: 150px; margin-top: 10px }
+.slide .illu text { font-family: inherit }
+.slide .illu g > path[stroke="var(--c1)"], .slide .illu g > path[stroke="var(--c3)"] { fill: none }
+.slide .q.long { font-size: 25px; line-height: 1.25 }
+.slide .illu { flex: none; align-self: stretch; width: 100%; height: 118px; margin-top: 6px }
+.slide .lim.two .lc ul { font-size: 16px; gap: 4px }
+.slide .lim.two .lc { padding: 8px 16px }
+.slide .lim.two .lc h3 { margin-bottom: 4px; font-size: 20px }
+.slide .lim.two .lc ul { font-size: 15px; line-height: 1.3 }
+.slide .illu { height: 104px; margin-top: 2px }

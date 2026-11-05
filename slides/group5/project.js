@@ -5,6 +5,7 @@ const D = DATA, N = D.numbers;
   const [ang, ado, lon] = D.mags;
   const peak = (m) => { const v = Math.max(...m.share); return [v, D.days[m.share.indexOf(v)]]; };
   [N.a_peak, N.a_peak_day] = peak(ang); [N.d_peak, N.d_peak_day] = peak(ado); [N.l_peak, N.l_peak_day] = peak(lon);
+  N.a_mean = (ang.share.reduce((p, q) => p + q, 0) / ang.share.length).toFixed(2);
   N.a_high = ang.mean_high; N.a_low = ang.mean_low;
   N.a_peak = N.a_peak.toFixed(2); N.d_peak = N.d_peak.toFixed(2); N.l_peak = N.l_peak.toFixed(3);
   N.a_high = N.a_high.toFixed(2); N.a_low = N.a_low.toFixed(2);
@@ -60,7 +61,7 @@ const arcP = (cx, cy, r0, r1, a0, a1) => {
 function drawMap() {
   const host = $("g5Map");
   mountChart(host, () => {
-    const W = Math.min(250, Math.max(220, host.clientWidth || 300)), H = W;
+    const W = Math.min(285, Math.max(220, host.clientWidth || 300)), H = W;
     host.innerHTML = "";
     const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Circular gene map" }, host);
     const cx = W / 2, cy = H / 2, R = W / 2 - 6;
