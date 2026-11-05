@@ -1,6 +1,6 @@
 <section class="slide title">
   <span class="kicker">Nanopore metagenomics course · group presentation</span>
-  <h1><i>Bifidobacterium angulatum</i>: its genes and its share over ten days</h1>
+  <h1 class="hero"><i>Bifidobacterium angulatum</i>: its genes and its share over ten days</h1>
   <p class="who">Group 5 · author names are not published</p>
   <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
 </section>
@@ -21,7 +21,7 @@
     <div class="ra">&rarr;</div>
     <div class="rb"><b>4</b>Predicting a Dietary Response in <i>B. angulatum</i></div>
     <div class="ra">&rarr;</div>
-    <div class="rb hyp"><b>5</b>Testing the Abundance Pattern Across the Diet Shift</div>
+    <div class="rb"><b>5</b>Testing the Abundance Pattern Across the Diet Shift</div>
   </div>
   <p class="q">How does the relative abundance of <i>B. angulatum</i> change when the diet goes from high to low carbohydrate?</p>
   <aside class="notes"><p>The group's own words: Decided to look into one specific organism instead of the entire community. We knew that the sequencing would get us tons of data, so instead of trying to look at all of it, we narrowed it into one specific organism. Deciding for a specific organism was more difficult but from a very quick look in the data we identified the presence of a Bifidobacteria which was described in literature as a common gut microbiome carbohydrate degrading organism. Therefore, we decided to look into how the relative abundance of that specific microbe changed as a result of the change in diet from high carb to low carb. We based our analysis on the hypothesis that the relative abundance of Bifidobacterium angulatum would be high in the beginning of day 1 (because he was carb-loading for a week before) and would continue to be high until day 5, after which it would decrease from day 6-10 as a result of the low carb diet.</p><p>Diet: days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner). The hypothesis is the group's own.</p></aside>
@@ -56,21 +56,39 @@
 
 
 <section class="slide">
-  <span class="kicker">Result 1 &middot; data quality</span>
-  <h2>First check: <span data-n="mag_pooled"></span>% of the sequenced bases are in MAGs</h2>
+  <span class="kicker">Result 1 &middot; sequencing depth</span>
+  <h2>Sequencing depth: <span data-n="gbp_min"></span> to <span data-n="gbp_max"></span> Gbp per sample</h2>
+  <div class="cols wide">
+    <div><div class="chart" id="g5Depth"></div><p class="figl">Figure: Revision 1 (Claude)</p></div>
+    <div class="side">
+      <p>We first asked the AI agent for abundance and carbohydrate genes. Then we realised that the quality of the data had to come first. One of our questions: how does sequencing depth vary between the samples?</p>
+      <ul>
+        <li>Smallest sample: day <span data-n="gbp_min_day"></span>, <b><span data-n="gbp_min"></span> Gbp</b></li>
+        <li>Largest sample: day <span data-n="gbp_max_day"></span>, <b><span data-n="gbp_max"></span> Gbp</b></li>
+        <li><b><span data-n="gbp_fold"></span>-fold</b> difference between samples</li>
+        <li>Even the smallest sample holds about <b><span data-n="r1_estreads_d2"></span></b> <i>B. angulatum</i> reads (Revision 1)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Filtered bases (Gbp; reads &ge; 1,000 bp, mean Q &ge; 10) of each day's sample. Figure 1 of Revision 1 (Claude), the AI-revised version of the group's article.</p>
+  <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. One of the questions was how sequencing depth varied between samples. The figure is Figure 1 of Revision 1 (Claude): the filtered bases per sample in Gbp. Because the samples differ by 15-fold, a sample with fewer reads has more counting noise in its shares; Revision 1 estimates about 190 B. angulatum reads even in the smallest sample (day 2).</p></aside>
+</section>
+
+<section class="slide">
+  <span class="kicker">Result 2 &middot; data quality</span>
+  <h2>Data quality: <span data-n="mag_pooled"></span>% of the sequenced bases are in MAGs</h2>
   <div class="cols wide">
     <div><div class="chart" id="g5Ctx"></div></div>
     <div class="side">
-      <p>We first asked the AI agent for abundance and carbohydrate genes. Then we saw that the quality of the data had to come first. So we asked:</p>
+      <p>With depth known, we asked the AI agent two more questions:</p>
       <ol>
         <li>How much of the data is in MAGs? <b><span data-n="mag_min"></span>-<span data-n="mag_max"></span>%</b> per sample</li>
         <li>What is missing? Unbinned contigs <b><span data-n="ub_min"></span>-<span data-n="ub_max"></span>%</b>, not on the assembly <b><span data-n="off_min"></span>-<span data-n="off_max"></span>%</b></li>
-        <li>How does depth vary? <b><span data-n="gbp_min"></span>-<span data-n="gbp_max"></span> Gbp</b> per sample, <span data-n="gbp_fold"></span>-fold</li>
       </ol>
     </div>
   </div>
   <p class="src">Share (%) of each day's filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10). Figure 1 of the group's article. Dashed line: diet switch.</p>
-  <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. They therefore asked how much of the sequencing data was represented in MAGs, what was missing, and how sequencing depth varied between samples. Percentages are shares of bases (not reads). Depth is the filtered bases per sample, in Gbp. MAG = genome reconstructed from the mixture; HQ and MQ = high and medium quality.</p></aside>
+  <aside class="notes"><p>Percentages are shares of bases (not reads). HQ and MQ = high and medium quality MAGs (genomes reconstructed from the mixture). Unbinned = on the assembly but in no MAG; not on the assembly = reads that did not map to it.</p></aside>
 </section>
 
 
@@ -98,34 +116,40 @@
 </section>
 
 <section class="slide">
-  <span class="kicker">Result 3</span>
-  <h2>Result 3: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 3 &middot; abundance</span>
+  <h2><i>B. angulatum</i> peaked on day <span data-n="a_peak_day"></span>, close to the other bifidobacteria</h2>
+  <div class="cols wide">
+    <div><div class="chart" id="g5Line"></div></div>
+    <div class="side">
+      <ul>
+        <li><i>B. angulatum</i> peaked on day <span data-n="a_peak_day"></span> at <b><span data-n="a_peak"></span>%</b>, <span data-n="d5_c101_fold"></span>-fold its median of days 1-4.</li>
+        <li>Mean share: <b><span data-n="a_high"></span>%</b> on days 1-5, <b><span data-n="a_low"></span>%</b> on days 6-10.</li>
+        <li>All three <i>Bifidobacterium</i> MAGs are highest on day <span data-n="a_peak_day"></span> or <span data-n="l_peak_day"></span> (<i>B. adolescentis</i> <span data-n="d_peak"></span>%, <i>B. longum</i> <span data-n="l_peak"></span>%).</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Relative abundance: share (%) of each day's sequenced bases. One person, ten days; diet and time are confounded.</p>
+  <aside class="notes"><p>Shares are percent of the filtered bases of each day's sample, from the MAG coverage. Days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner). The three bifidobacteria are the three Bifidobacterium MAGs of the data set. This describes the pattern; it does not show a cause.</p></aside>
 </section>
-
-
-
-
 
 <section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Result 4: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 4 &middot; critical thinking with AI</span>
+  <h2>Day 5 was not unusual: other days had as many or more rising MAGs</h2>
+  <div class="cols wide">
+    <div><div class="chart" id="g5Risers"></div></div>
+    <div class="side">
+      <p class="chk"><b>We challenged the result with three questions to the AI agent</b></p>
+      <ol>
+        <li>Did other MAGs rise on day 5? <b>Yes, <span data-n="d5_risers"></span> of <span data-n="d5_eligible"></span></b></li>
+        <li>Was day 5 unusual? <b>No</b>: <span data-n="d5_risers_other_min"></span>-<span data-n="d5_risers_other_max"></span> rose on days 6-10</li>
+        <li>Did the risers share traits? <b>Not beyond chance</b>: <span data-n="d5_top_phylum_n"></span> of <span data-n="d5_risers"></span> are Bacillota, like <span data-n="d5_top_phylum_pct_others"></span>% of the other MAGs</li>
+      </ol>
+      <p class="warn">The choice of baseline and the two diet periods affect these comparisons.</p>
+    </div>
+  </div>
+  <p class="src">Rising MAG: share at least <span data-n="d5_rise"></span>-fold its median of the four days before and higher than the day before; MAGs with a mean share of at least <span data-n="d5_min_mean"></span>% (<span data-n="d5_eligible"></span> MAGs). Group's report, Figure 7.</p>
+  <aside class="notes"><p>The group did not stop at the rise of B. angulatum. Questions to the AI agent: did other MAGs also rise on day 5, was day 5 unusual compared with other days, and did the rising MAGs share characteristics? Answers from the data: 9 MAGs met the criterion on day 5, but days 6-10 had 12-23 each by the same rule. For days 6-9 the four days before include high-carbohydrate days, so MAGs that respond to the diet count as risers; with each MAG first divided by its own median of its diet period, days 6-10 had 5-16 risers, and day 5 lies in the middle. The risers had no clear shared trait: 7 of 9 are Bacillota (78%), as common as among the other MAGs (74%); they carry no more degrading CAZyme genes than the others (median 15.1 against 17.1 per 1,000 genes).</p></aside>
 </section>
-
-
-
-
-
-<section class="slide">
-  <span class="kicker">Result 5</span>
-  <h2>Result 5: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
-</section>
-
-
-
-
 
 <section class="slide">
   <span class="kicker">Limitations</span>

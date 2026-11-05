@@ -1,5 +1,14 @@
-// Slide 3 numbers and slide 4 chart (Figure 1 of the group's article: articles/group5/project.js drawCtx, adapted to the slide size)
+// Numbers (data-n), slide 4 depth chart (Figure 1 of Revision 1, articles/group5-r1), slide 5 chart (Figure 1 of the group's article: articles/group5/project.js drawCtx, adapted to the slide size)
 const D = DATA, N = D.numbers;
+// numbers for slides 7 (abundance): derived from the three Bifidobacterium MAGs in data.json (shares in %)
+{
+  const [ang, ado, lon] = D.mags;
+  const peak = (m) => { const v = Math.max(...m.share); return [v, D.days[m.share.indexOf(v)]]; };
+  [N.a_peak, N.a_peak_day] = peak(ang); [N.d_peak, N.d_peak_day] = peak(ado); [N.l_peak, N.l_peak_day] = peak(lon);
+  N.a_high = ang.mean_high; N.a_low = ang.mean_low;
+  N.a_peak = N.a_peak.toFixed(2); N.d_peak = N.d_peak.toFixed(2); N.l_peak = N.l_peak.toFixed(3);
+  N.a_high = N.a_high.toFixed(2); N.a_low = N.a_low.toFixed(2);
+}
 document.querySelectorAll("[data-n]").forEach((e) => { e.textContent = N[e.dataset.n] ?? "?"; });
 const CTX = [["hq", "HQ MAGs", "var(--c1)"], ["mq", "MQ MAGs", "var(--c3)"], ["unbinned", "Unbinned contigs", "var(--c4)"], ["off", "Not on the assembly", "var(--c2)"]];
 function drawCtx() {
@@ -31,7 +40,7 @@ function drawCtx() {
 }
 drawCtx();
 
-// Slide 5: gene map (adapted from articles/group5/project.js drawMap; simplified colours, no labels)
+// Slide 6: gene map (adapted from articles/group5/project.js drawMap; simplified colours, no labels)
 const MAP = D.map, ML = MAP.length;
 const gFam = (g) => (g[7] >= 0 ? MAP.families[g[7]] : "");
 const gRole = (g) => (g[9] >= 0 ? MAP.roles[g[9]] : "");
@@ -70,3 +79,22 @@ function drawMap() {
 }
 drawMap();
 $("g5Legend").innerHTML = GC.map(([name, color, f]) => `<span><i class="sw" style="background:${color}"></i>${esc(name)}${f === GC[3][2] ? "" : " (" + MAP.genes.filter((g) => GC.find(([, , ff]) => ff(g)) === GC.find(([n]) => n === name)).length + ")"}</span>`).join("");
+
+// Slide 4: sequencing depth (Figure 1 of Revision 1 (Claude): articles/group5-r1/project.js drawDepth; same numbers as the context table)
+barChart($("g5Depth"), { labels: D.days.map((d) => `Day ${d}`), values: D.context.map((r) => r.gbp), yLabel: "Filtered bases (Gbp)", unit: "Gbp", fmt: (v) => v.toFixed(1), height: 270 });
+
+// Slide 7: share of the three Bifidobacterium MAGs over the ten days, diet periods shaded
+lineChart($("g5Line"), {
+  x: D.days, xLabel: "Day", xName: "Day", yLabel: "Share of the sequenced bases (%)", unit: "%", height: 290, yFmt: (v) => String(+v.toPrecision(2)),
+  series: [
+    { name: "B. angulatum", values: D.mags[0].share, color: "var(--c2)" },
+    { name: "B. adolescentis", values: D.mags[1].share, color: "var(--c1)" },
+    { name: "B. longum", values: D.mags[2].share, color: "var(--c3)" },
+  ],
+  bands: [{ from: 1, to: 5.5, label: "high carbohydrate" }, { from: 5.5, to: 10, label: "low carbohydrate" }], marks: [{ x: 5.5 }],
+});
+
+// Slide 8: number of rising MAGs per day (days 5-10), day 5 highlighted
+barChart($("g5Risers"), { labels: D.day5.counts.map((c) => `Day ${c.day}`), values: D.day5.counts.map((c) => c.risers),
+  yLabel: `Rising MAGs (of ${N.d5_eligible})`, unit: "MAGs", fmt: (v) => String(Math.round(v)), height: 270,
+  colors: D.day5.counts.map((c) => (c.day === 5 ? "var(--c2)" : "var(--v4)")) });
