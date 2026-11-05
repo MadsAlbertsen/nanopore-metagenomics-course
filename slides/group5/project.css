@@ -45,3 +45,9 @@
 .slide.title .who { font-size: 22px; font-weight: 600 }
 /* Slides 4 and 8 */
 .slide .figl { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: var(--muted) }
+/* Slide 2 (Q24): larger, bolder box texts and main question (the box 5 outline is already gone, Q20) */
+.slide .road:not(.lab) { margin: 6px 0 4px }
+.slide .road:not(.lab) .rb { font-size: 16.5px; font-weight: 700; line-height: 1.22; padding: 10px 9px; letter-spacing: -0.005em }
+.slide .road:not(.lab) .rb b { font-size: 22px; font-weight: 800; margin-bottom: 2px }
+.slide .road:not(.lab) .ra { font-size: 26px; font-weight: 700 }
+.slide .q { font-size: 31px; font-weight: 800; line-height: 1.2; letter-spacing: -0.015em; color: var(--c1); margin: 14px 0 0 }
