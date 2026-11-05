@@ -94,7 +94,23 @@ lineChart($("g5Line"), {
   bands: [{ from: 1, to: 5.5, label: "high carbohydrate" }, { from: 5.5, to: 10, label: "low carbohydrate" }], marks: [{ x: 5.5 }],
 });
 
-// Slide 8: number of rising MAGs per day (days 5-10), day 5 highlighted
-barChart($("g5Risers"), { labels: D.day5.counts.map((c) => `Day ${c.day}`), values: D.day5.counts.map((c) => c.risers),
-  yLabel: `Rising MAGs (of ${N.d5_eligible})`, unit: "MAGs", fmt: (v) => String(Math.round(v)), height: 270,
-  colors: D.day5.counts.map((c) => (c.day === 5 ? "var(--c2)" : "var(--v4)")) });
+// Slide 8: heatmap of the share (%) on days 1-10 of the MAGs with the largest rise from day 4 to day 5 (rows from
+// np26 scripts/45_project_group5.py slide_heatmap); log10 colour scale; c.101 added on top when it is not among them
+{
+  const H = D.heatmap, dup = {};
+  H.forEach((h) => { const s = h.name.replace(/ \(.*\)$/, ""); dup[s] = (dup[s] || 0) + 1; });
+  const short = (h) => {
+    const s = h.name.replace(/ \(.*\)$/, "").replace(/^Bifidobacterium /, "B. ");
+    return h.id === D.focus.id ? `${s} (rank ${h.rank})` : dup[h.name.replace(/ \(.*\)$/, "")] > 1 ? `${s} (${h.id})` : s;
+  };
+  const rows = H.map(short), cell = 15, top = 30;
+  const host = $("g5Heat");
+  heatmap(host, {
+    rows, cols: D.days.map(String), values: H.map((h) => h.share.map((v) => Math.log10(v))), cell, colLabelHeight: top,
+    label: "share of bases (%)", format: (v) => (10 ** v >= 1 ? (10 ** v).toFixed(1) : (10 ** v).toPrecision(2)) + "%",
+  });
+  // mark day 5 (same geometry as shared heatmap())
+  const svg = host.querySelector("svg"), labW = Math.min(240, 10 + 6.4 * Math.max(...rows.map((r) => r.length)));
+  const cw = Math.max(10, Math.min(48, (Math.max(280, host.clientWidth || 640) - labW - 90) / D.days.length));
+  el("rect", { x: labW + cw * 4 - 1, y: top - 2, width: cw + 1, height: cell * rows.length + 2, fill: "none", style: "stroke:var(--ink)", "stroke-width": 2 }, svg);
+}

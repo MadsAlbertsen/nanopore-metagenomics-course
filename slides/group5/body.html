@@ -134,20 +134,20 @@
 
 <section class="slide">
   <span class="kicker">Result 4 &middot; critical thinking with AI</span>
-  <h2>Day 5 was not unusual: other days had as many or more rising MAGs</h2>
-  <div class="cols wide">
-    <div><div class="chart" id="g5Risers"></div></div>
+  <h2>Day 5 was not unusual: other days had more rising MAGs</h2>
+  <div class="cols hm">
+    <div><div class="chart" id="g5Heat"></div></div>
     <div class="side">
       <p class="chk"><b>We challenged the result with three questions to the AI agent</b></p>
       <ol>
-        <li>Did other MAGs rise on day 5? <b>Yes, <span data-n="d5_risers"></span> of <span data-n="d5_eligible"></span></b></li>
+        <li>Did other MAGs rise on day 5? <b>Yes</b>: <span data-n="d5_risers"></span> of <span data-n="d5_eligible"></span> MAGs met our rising criterion</li>
         <li>Was day 5 unusual? <b>No</b>: <span data-n="d5_risers_other_min"></span>-<span data-n="d5_risers_other_max"></span> rose on days 6-10</li>
         <li>Did the risers share traits? <b>Not beyond chance</b>: <span data-n="d5_top_phylum_n"></span> of <span data-n="d5_risers"></span> are Bacillota, like <span data-n="d5_top_phylum_pct_others"></span>% of the other MAGs</li>
       </ol>
       <p class="warn">The choice of baseline and the two diet periods affect these comparisons.</p>
     </div>
   </div>
-  <p class="src">Rising MAG: share at least <span data-n="d5_rise"></span>-fold its median of the four days before and higher than the day before; MAGs with a mean share of at least <span data-n="d5_min_mean"></span>% (<span data-n="d5_eligible"></span> MAGs). Group's report, Figure 7.</p>
+  <p class="src">Columns: days 1-10 (box: day 5). Share (%) of each day's sequenced bases, log colour scale. Rows: the <span data-n="hm_k"></span> MAGs with the largest fold rise from day 4 to day 5 (share on day 5 / share on day 4) among <span data-n="hm_eligible"></span> MAGs with a mean share of at least <span data-n="d5_min_mean"></span>%; <i>B. angulatum</i> (<span data-n="hm_c101_fold"></span>-fold) added on top. Rising criterion: at least <span data-n="d5_rise"></span>-fold the median of the four days before and higher than the day before.</p>
   <aside class="notes"><p>The group did not stop at the rise of B. angulatum. Questions to the AI agent: did other MAGs also rise on day 5, was day 5 unusual compared with other days, and did the rising MAGs share characteristics? Answers from the data: 9 MAGs met the criterion on day 5, but days 6-10 had 12-23 each by the same rule. For days 6-9 the four days before include high-carbohydrate days, so MAGs that respond to the diet count as risers; with each MAG first divided by its own median of its diet period, days 6-10 had 5-16 risers, and day 5 lies in the middle. The risers had no clear shared trait: 7 of 9 are Bacillota (78%), as common as among the other MAGs (74%); they carry no more degrading CAZyme genes than the others (median 15.1 against 17.1 per 1,000 genes).</p></aside>
 </section>
 
