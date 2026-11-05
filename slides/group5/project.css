@@ -51,3 +51,7 @@
 .slide .road:not(.lab) .rb b { font-size: 22px; font-weight: 800; margin-bottom: 2px }
 .slide .road:not(.lab) .ra { font-size: 26px; font-weight: 700 }
 .slide .q { font-size: 31px; font-weight: 800; line-height: 1.2; letter-spacing: -0.015em; color: var(--c1); margin: 14px 0 0 }
+.slide .cols.hm { grid-template-columns: 1fr 330px }
+.slide .cols.hm .side { font-size: 15px }
+.slide .cols.hm .chk { margin-top: 0; font-size: 15px }
+.slide .cols.hm .warn { font-size: 14px }
