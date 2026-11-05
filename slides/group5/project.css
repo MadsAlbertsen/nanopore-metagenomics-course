@@ -55,3 +55,14 @@
 .slide .cols.hm .side { font-size: 15px }
 .slide .cols.hm .chk { margin-top: 0; font-size: 15px }
 .slide .cols.hm .warn { font-size: 14px }
+/* Slides 9 and 10 (Q26, Q27) */
+.slide .lim { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 8px }
+.slide .lim.two { grid-template-columns: 1fr 1fr; margin-top: 0 }
+.slide .lim.two .lc ul { font-size: 17px; gap: 6px }
+.slide .lc { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--c1); border-radius: 8px; padding: 12px 16px }
+.slide .lc h3 { margin: 0 0 8px; font-size: 22px; color: var(--c1); font-weight: 700 }
+.slide .lc ul { font-size: 18px; gap: 8px; padding-left: 1.1em }
+.slide .lc li.add { color: var(--muted) }
+.slide .lc li span.tag, .slide .sug li span.tag { font-size: 14px; font-weight: 600; color: var(--c2); white-space: nowrap }
+.slide .sug { border-left: 4px solid var(--c2); background: var(--sel); padding: 8px 16px; font-size: 17px }
+.slide .sug ul { margin-top: 4px; gap: 4px; padding-left: 1.1em }
