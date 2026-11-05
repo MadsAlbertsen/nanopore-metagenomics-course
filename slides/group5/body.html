@@ -7,6 +7,7 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Background</span>
   <h2>The Story Behind the Idea</h2>
@@ -25,6 +26,7 @@
   <p class="src">The group's hypothesis. Days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner).</p>
   <aside class="notes"><p>The group's own words: Decided to look into one specific organism instead of the entire community. We knew that the sequencing would get us tons of data, so instead of trying to look at all of it, we narrowed it into one specific organism. Deciding for a specific organism was more difficult but from a very quick look in the data we identified the presence of a Bifidobacteria which was described in literature as a common gut microbiome carbohydrate degrading organism. Therefore, we decided to look into how the relative abundance of that specific microbe changed as a result of the change in diet from high carb to low carb. We based our analysis on the hypothesis that the relative abundance of Bifidobacterium angulatum would be high in the beginning of day 1 (because he was carb-loading for a week before) and would continue to be high until day 5, after which it would decrease from day 6-10 as a result of the low carb diet.</p></aside>
 </section>
+
 
 
 <section class="slide">
@@ -50,19 +52,31 @@
   <aside class="notes"><p>One stool sample per day for ten days from one person. Days 1-5 high in carbohydrate and calories, days 6-10 low in both; both periods vegetarian (information from the data owner). Lab workflow: DNA extraction, library with the Rapid Barcoding Kit (SQK-RBK114.24), all ten samples on one PromethION flow cell (R10.4.1). Reads were then basecalled, assembled together and binned into MAGs (genomes reconstructed from the mixture).</p></aside>
 </section>
 
+
 <section class="slide">
-  <span class="kicker">Result 1</span>
-  <h2>Result 1: the message of this slide</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <span class="kicker">Result 1 &middot; data quality</span>
+  <h2>First check: <span data-n="mag_pooled"></span>% of the sequenced bases are in MAGs</h2>
+  <div class="cols wide">
+    <div><div class="chart" id="g5Ctx"></div></div>
+    <div class="side">
+      <p>We first asked the AI agent for abundance and carbohydrate genes. Then we saw that the quality of the data had to come first. So we asked:</p>
+      <ol>
+        <li>How much of the data is in MAGs? <b><span data-n="mag_min"></span>-<span data-n="mag_max"></span>%</b> per sample</li>
+        <li>What is missing? Unbinned contigs <b><span data-n="ub_min"></span>-<span data-n="ub_max"></span>%</b>, not on the assembly <b><span data-n="off_min"></span>-<span data-n="off_max"></span>%</b></li>
+        <li>How does depth vary? <b><span data-n="gbp_min"></span>-<span data-n="gbp_max"></span> Gbp</b> per sample, <span data-n="gbp_fold"></span>-fold</li>
+      </ol>
+    </div>
+  </div>
+  <p class="src">Share (%) of each day's filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10). Figure 1 of the group's article. Dashed line: diet switch.</p>
+  <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. They therefore asked how much of the sequencing data was represented in MAGs, what was missing, and how sequencing depth varied between samples. Percentages are shares of bases (not reads). Depth is the filtered bases per sample, in Gbp. MAG = genome reconstructed from the mixture; HQ and MQ = high and medium quality.</p></aside>
 </section>
-
-
 
 <section class="slide">
   <span class="kicker">Result 2</span>
   <h2>Result 2: the message of this slide</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 
 
@@ -74,11 +88,13 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Result 4</span>
   <h2>Result 4: the message of this slide</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 
 
@@ -90,11 +106,13 @@
 
 
 
+
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 
 
