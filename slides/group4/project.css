@@ -1,0 +1,41 @@
+/* group 4 deck: white stage, blue = species, green = CAZyme / gene potential, purple = null distributions */
+.slide .chart text { font-size: 16px }
+.slide .chart text.lab, .slide .chart text.dlab { font-size: 18px }
+.slide .chart text.note { font-size: 16px }
+.slide .chart .legend { font-size: 17px }
+.slide.title h1 { font-size: 30px }
+.slide.title .art { width: 100%; height: 150px; flex: none }
+.art .gut { fill: none; stroke: var(--faint); stroke-width: 26; stroke-linecap: round; opacity: 0.35 }
+.art .rods rect { fill: var(--c1) }
+.art .dots circle { fill: var(--c3) }
+.slide.center { justify-content: center; gap: 28px }
+.slide h2.q { font-size: 36px; line-height: 1.25 }
+.slide .sub { font-size: 26px; color: var(--muted) }
+.slide h2.cap { font-size: 26px; font-weight: 500; line-height: 1.25 }
+.slide.fig { gap: 10px }
+.slide.fig .src, .slide.title .src, .slide.end .src { padding-right: 0 }
+.slide .below { font-size: 21px; color: var(--muted) }
+.slide .hyp, .slide.hyp p { font-size: 28px; line-height: 1.35 }
+.slide.hyp p { padding-left: 16px; border-left: 5px solid var(--c3) }
+.slide.hyp p.nullp { border-left-color: var(--c7) }
+.slide.hyp h2.q { font-size: 38px }
+.slide.end ol { font-size: 25px; gap: 14px; padding-left: 1.4em }
+.slide.end .close { font-size: 26px; font-weight: 600; border-left: 5px solid var(--c7); padding-left: 16px }
+.slide .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px }
+/* pipeline slide */
+.slide.flow { gap: 8px; padding-top: 28px }
+.slide.flow h2.cap { font-size: 22px; font-weight: 600 }
+.flow .row { display: grid; gap: 10px }
+.flow .r1 { grid-template-columns: repeat(5, 1fr) }
+.flow .r2 { grid-template-columns: repeat(3, 1fr); margin-top: 4px }
+.flow .box { position: relative; border: 2px solid var(--faint); border-radius: 8px; padding: 7px 8px; display: flex; flex-direction: column; gap: 3px; font-size: 14px; line-height: 1.25; background: var(--surface) }
+.flow .r1 .box:not(:last-child)::after { content: "▶"; position: absolute; right: -13px; top: 40%; font-size: 12px; color: var(--muted) }
+.flow .r2 .box { border-color: var(--c1); font-size: 13.5px }
+.flow .r2 .box.nul { border-color: var(--c7) }
+.flow .box b { font-size: 16px }
+.flow .box span { color: var(--muted) }
+.flow .box i { font-style: normal; font-size: 12px; color: var(--faint) }
+.flow .box em { font-style: normal; font-weight: 700; font-size: 17px; color: var(--ink); margin-top: auto }
+.flow .r2 .box { padding-bottom: 6px }
+.flow .new { font-size: 15px; color: var(--muted); margin-top: 2px }
+.flow .box em span { color: inherit }
