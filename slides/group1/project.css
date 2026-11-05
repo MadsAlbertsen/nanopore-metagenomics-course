@@ -67,3 +67,6 @@
 .slide.fig4 svg text { font-size: 11px }
 .slide.fig4 .chart .legend { font-size: 12px }
 .slide .bal { padding-right: 110px }
+.slide.fig4 .f4charts { grid-template-columns: 420px 1fr }
+.slide.fig4 .chart svg { overflow: visible }
+.slide.fig4 .f4charts > div:last-child svg text:not([text-anchor]) { font-size: 10.5px }
