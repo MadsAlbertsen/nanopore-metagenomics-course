@@ -154,15 +154,52 @@
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <div class="lim">
+    <div class="lc"><h3>Study design</h3>
+      <ul>
+        <li>One individual, only 10 days</li>
+        <li>Carbohydrates and calories changed together</li>
+        <li>Variable sequencing depth</li>
+        <li class="add">No replicate: one sample per day <span class="tag">(our addition)</span></li>
+      </ul></div>
+    <div class="lc"><h3>Research question</h3>
+      <ul>
+        <li>Predicted genes do not confirm enzyme activity</li>
+        <li>Relative abundance is not absolute abundance</li>
+        <li>No causal link to diet can be established</li>
+        <li class="add">The species was chosen after we looked at the data <span class="tag">(our addition)</span></li>
+      </ul></div>
+    <div class="lc"><h3>AI collaboration</h3>
+      <ul>
+        <li>The AI can overinterpret results</li>
+        <li>Analyses depend on the questions we ask</li>
+        <li>Outputs need critical evaluation</li>
+      </ul></div>
+  </div>
+  <p class="src">Diet facts: information from the data owner. Items marked "our addition" were added by the AI from the group's workflow; the group decides whether to keep them.</p>
+  <aside class="notes"><p>The three columns are the group's own. Two additions are on the slide, marked as such; more are possible, all from the group's actual analyses:</p><p>(our addition) No replicate: each day is one sample, so the day-5 peak rests on one sample per day and one DNA extraction and library. Revision 1 (Claude) added a second library of each day's DNA as a technical replicate.</p><p>(our addition) Selection: the species was chosen after a first look at the data, from the literature on bifidobacteria as carbohydrate degraders; a pattern in a species picked this way is easier to over-read.</p><p>(our addition) Diet is confounded with time: days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner), so the diet did not change at the start, and the second period is closer to the habitual diet of the person.</p><p>(our addition) GH13 is common: 87% of the 421 MAGs carry at least one GH13 gene, so having GH13 genes is not specific to B. angulatum.</p><p>(our addition) Day 5 is not unusual: other days had as many or more rising MAGs (slide 8).</p></aside>
 </section>
-
-
-
-
 
 <section class="slide">
   <span class="kicker">Take-home</span>
-  <h2>Take-home message</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Take-home messages</h2>
+  <div class="lim two">
+    <div class="lc"><h3>Biology</h3>
+      <ul>
+        <li><i>B. angulatum</i> carries many carbohydrate genes (<span data-n="carb_total"></span>, <span data-n="gh13_genes"></span> of them GH13), but what they mean for function is uncertain</li>
+        <li>Its share peaked on day 5, but one person and ten days cannot explain why</li>
+      </ul></div>
+    <div class="lc"><h3>AI collaboration</h3>
+      <ul>
+        <li>The AI helped us explore the data and test alternatives</li>
+        <li>Critical thinking is essential</li>
+        <li>In hindsight: explore the whole community first, then choose a species by its change over time or its metabolic potential</li>
+      </ul></div>
+  </div>
+  <div class="sug"><b>Suggestions</b>
+    <ul>
+      <li><span class="tag">(our suggestion)</span> Write down what you expect before asking the AI.</li>
+      <li><span class="tag">(our suggestion)</span> Ask for a replicate or a control before trusting a single-day peak.</li>
+    </ul></div>
+  <aside class="notes"><p>The four points are the group's own, shortened. Check on the wording: B. angulatum is not the most abundant species. Its mean share is 0.10% of the sequenced bases, rank 114 of 360 species; the most abundant, Prevotella copri_B, has 8.65%. The group chose it after a quick look at the data, because bifidobacteria are described in the literature as carbohydrate degraders. So the slide says "by change over time or metabolic potential", not "not by highest abundance". The suggestions are the AI's, not the group's.</p></aside>
 </section>
