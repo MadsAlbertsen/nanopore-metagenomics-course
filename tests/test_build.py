@@ -11,7 +11,7 @@ import build  # noqa: E402
 
 
 def test_every_page_builds(tmp_path):
-    pages = build.build(tmp_path)
+    pages = build.build(tmp_path, student_pages=True)
     mods = build.read_modules()
     built = {f"{m['slug']}.html" for m in mods if m["status"] != "planned"}
     built |= {"projects.html"} | {f"{p['slug']}.html" for p in build.read_projects()}
@@ -34,10 +34,11 @@ def test_every_page_builds(tmp_path):
 def test_unpublished_projects_stay_out(tmp_path):
     hidden = {p["slug"] for p in build.read_projects(unpublished=True) if not p.get("publish", True)}
     assert "project-example" in hidden
-    names = {p.name for p in build.build(tmp_path)}
+    names = {p.name for p in build.build(tmp_path, student_pages=True)}
     assert not names & {f"{s}.html" for s in hidden}
     assert not any(f'href="{s}.html"' in (tmp_path / "projects.html").read_text() for s in hidden)
-    assert {f"{s}.html" for s in hidden} <= {p.name for p in build.build(tmp_path / "all", unpublished=True)} | {
+    built_all = build.build(tmp_path / "all", unpublished=True, student_pages=True)
+    assert {f"{s}.html" for s in hidden} <= {p.name for p in built_all} | {
         q.name for q in (tmp_path / "all").glob("*.html")
     }
 
@@ -64,7 +65,7 @@ def test_modules_are_numbered_once():
 
 
 def test_overview_glossary_and_closing(tmp_path):
-    build.build(tmp_path)
+    build.build(tmp_path, student_pages=True)
     index = (tmp_path / "index.html").read_text()
     for step in json.loads((build.SHARED / "overview.json").read_text()):
         for fact in step["facts"]:
@@ -97,7 +98,7 @@ def test_extra_project_page(tmp_path):
 
 
 def test_extra_pages_are_built_and_zipped(tmp_path):
-    names = {q.name for q in build.build(tmp_path)}
+    names = {q.name for q in build.build(tmp_path, student_pages=True)}
     with zipfile.ZipFile(tmp_path / build.ZIP_NAME) as z:
         zipped = set(z.namelist())
     for p in build.read_projects():
@@ -108,7 +109,7 @@ def test_extra_pages_are_built_and_zipped(tmp_path):
 
 def test_versions_and_articles(tmp_path):
     """Frozen version 1 reports are linked from their group card, not listed; articles get their own index."""
-    build.build(tmp_path)
+    build.build(tmp_path, student_pages=True)
     idx = (tmp_path / "projects.html").read_text()
     for g in range(1, 6):
         assert f'href="project-group{g}-v1.html"' in idx
@@ -120,7 +121,7 @@ def test_versions_and_articles(tmp_path):
 def test_slide_decks(tmp_path):
     """A deck builds as a full-window presentation with its slides, the chart kit and the navigation; at most
     MAX_SLIDES slides; unpublished decks (the template) stay off presentations.html."""
-    build.build(tmp_path, unpublished=True)
+    build.build(tmp_path, unpublished=True, student_pages=True)
     html = (tmp_path / "slides-example.html").read_text()
     assert html.count('<section class="slide') == 4 and "function lineChart" in html and "grid(true)" in html
     assert "slides-example" not in (tmp_path / "presentations.html").read_text()
@@ -133,3 +134,16 @@ def test_slide_decks(tmp_path):
         build.build_deck(p, base)
     (d / "body.html").write_text('<section class="slide"><h2>x</h2></section>\n' * build.MAX_SLIDES)
     assert "{{" not in build.build_deck(p, base)
+
+
+def test_student_pages_off_by_default(tmp_path):
+    """After the course the site leaves out the student pages; their sources stay in the repository."""
+    assert build.STUDENT_PAGES is False
+    names = {p.name for p in build.build(tmp_path)}
+    student = {"projects.html", "articles.html", "presentations.html"}
+    assert not names & student
+    assert not any(n.startswith(("project-", "article-", "slides-")) for n in names)
+    for n in names - {build.ZIP_NAME}:
+        html = (tmp_path / n).read_text()
+        assert not any(f'href="{s}"' in html for s in student), n
+    assert (build.PROJECTS / "group1" / "body.html").exists() and (build.SLIDES / "group1" / "body.html").exists()

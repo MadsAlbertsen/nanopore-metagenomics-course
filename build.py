@@ -44,6 +44,10 @@ PROJECTS = ROOT / "projects"
 ARTICLES = ROOT / "articles"
 SLIDES = ROOT / "slides"
 MAX_SLIDES = 10
+# The students' reports, articles and presentations stay in the repository (projects/, articles/, slides/; tags
+# articles-submitted-2026-11-04 and presentations-2026-11-05) but are not published on the site after the course.
+STUDENT_PAGES = False
+_show_student = STUDENT_PAGES
 PROJECT_KEYS = {"number", "slug", "title", "nav", "question", "status"}
 PAGE_KEYS = {"slug", "title", "body"}
 
@@ -103,12 +107,10 @@ def nav(mods: list[dict], current: str | None) -> str:
         else:
             cur = ' aria-current="page"' if m["slug"] == current else ""
             items.append(f'<a href="{m["slug"]}.html"{cur}>{label}</a>')
-    cur = ' aria-current="page"' if current == "projects" else ""
-    items.append(f'<a href="projects.html"{cur}>Projects</a>')
-    cur = ' aria-current="page"' if current == "articles" else ""
-    items.append(f'<a href="articles.html"{cur}>Articles</a>')
-    cur = ' aria-current="page"' if current == "presentations" else ""
-    items.append(f'<a href="presentations.html"{cur}>Presentations</a>')
+    for key, label in (("projects", "Projects"), ("articles", "Articles"), ("presentations", "Presentations")):
+        if _show_student:
+            cur = ' aria-current="page"' if current == key else ""
+            items.append(f'<a href="{key}.html"{cur}>{label}</a>')
     cur = ' aria-current="page"' if current == "glossary" else ""
     items.append(f'<a class="gloss" href="glossary.html"{cur}>Glossary</a>')
     cur = ' aria-current="page"' if current == "teachers" else ""
@@ -571,14 +573,17 @@ def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-def build(out: Path, unpublished: bool = False) -> list[Path]:
-    """Write the site; unpublished=True also builds projects marked publish: false (for the tests)."""
+def build(out: Path, unpublished: bool = False, student_pages: bool | None = None) -> list[Path]:
+    """Write the site; unpublished=True also builds projects marked publish: false (for the tests). The student pages
+    (projects, articles, presentations) are built only with student_pages=True (default STUDENT_PAGES)."""
+    global _show_student
+    _show_student = STUDENT_PAGES if student_pages is None else student_pages
     mods = read_modules()
-    projs = read_projects(unpublished)
-    arts = read_projects(unpublished, ARTICLES)
+    projs = read_projects(unpublished) if _show_student else []
+    arts = read_projects(unpublished, ARTICLES) if _show_student else []
     for a in arts:
         a["section"] = "articles"
-    decks = read_projects(unpublished, SLIDES)
+    decks = read_projects(unpublished, SLIDES) if _show_student else []
     page = (SHARED / "page.html").read_text()
     base = {
         "BASE_CSS": (SHARED / "base.css").read_text(),
@@ -590,12 +595,14 @@ def build(out: Path, unpublished: bool = False) -> list[Path]:
     written[0].write_text(build_index(mods, page, base))
     written[1].write_text(build_glossary(mods, page, base))
     written[2].write_text(build_teachers(mods, page, base))
-    written.append(out / "projects.html")
-    written[-1].write_text(build_projects_index([p for p in projs if p.get("publish", True)], mods, page, base))
-    written.append(out / "articles.html")
-    written[-1].write_text(build_articles_index([a for a in arts if a.get("publish", True)], mods, page, base))
-    written.append(out / "presentations.html")
-    written[-1].write_text(build_presentations_index([p for p in decks if p.get("publish", True)], mods, page, base))
+    if _show_student:
+        written.append(out / "projects.html")
+        written[-1].write_text(build_projects_index([p for p in projs if p.get("publish", True)], mods, page, base))
+        written.append(out / "articles.html")
+        written[-1].write_text(build_articles_index([a for a in arts if a.get("publish", True)], mods, page, base))
+        written.append(out / "presentations.html")
+        shown = [p for p in decks if p.get("publish", True)]
+        written[-1].write_text(build_presentations_index(shown, mods, page, base))
     for p in decks:
         path = out / f"{p['slug']}.html"
         path.write_text(build_deck(p, base))
