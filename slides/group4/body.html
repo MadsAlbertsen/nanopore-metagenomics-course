@@ -4,7 +4,6 @@
     <li>Does the gene potential follow the species shift?</li>
     <li>When does it shift?</li>
   </ul>
-  <p class="sub">One person · 10 consecutive daily stool samples · dietary switch on day 6.</p>
   <p class="src">Group 4 · Functional stability despite taxonomic turnover: a gut microbiome buffered by redundancy across genomes and within populations · slides built from Claude's Revision 1</p>
   <aside class="notes"><p>Diet information is from the data owner. Days 1-5: high-carbohydrate, high-calorie diet; days 6-10: low-carbohydrate, low-calorie diet. Carbohydrate and calories changed together, and days 6-10 were closer to the habitual diet.</p></aside>
 </section>
@@ -40,19 +39,32 @@
   <aside class="notes"><p>The factor four is the between-period distance of the species profile divided by that of the CAZyme profile. Relative to its own day-to-day variation, the CAZyme profile still separated the two periods.</p></aside>
 </section>
 
-<section class="slide center hyp">
-  <h2 class="q">Why does the enzyme toolkit move so much less than the bacteria?</h2>
-  <p class="idea"><b>The idea: functional redundancy</b> — many bacteria carry the same enzyme genes, so when one falls, another covers for it.</p>
-  <p class="nullp"><b>We built a null model:</b> same bacterial abundances each day, but enzyme gene families placed randomly on bacteria.</p>
-  <aside class="notes"><p>The null keeps the real daily abundances of the genomes and each family's number of carrier genomes, and only moves which genome carries which family.</p></aside>
+<section class="slide fig">
+  <div class="chart" id="s5chart"></div>
+  <h2 class="cap">The bacteria that reshuffled most carry the fewest enzyme genes.</h2>
+  <p class="src">Figure 5a, Revision 1 (Claude): each family's share of the change between days 1–5 and days 6–10, for the species profile (Bray-Curtis) and for the summed change of the CAZyme families. Relative abundance and gene potential.</p>
+  <aside class="notes"><p>Six bacterial families with the largest part of the species change are shown. The parts are exact splits of the change; they show how much a family accounts for, not why. Common Bacteroidota carried a median of <span data-n="caz_bct_med" data-d="0"></span> degrading CAZyme genes per 1,000 genes and common Bacillota <span data-n="caz_bac_med" data-d="0"></span>, so a Bacillota MAG that changes a lot moves the CAZyme profile little.</p></aside>
 </section>
 
 <section class="slide fig">
-  <div class="two"><div class="chart" id="s6a"></div><div class="chart" id="s6b"></div></div>
-  <h2 class="cap">Random reshuffling of enzyme genes gave a result like ours: our data lie inside the null range — the stability can be explained by averaging.</h2>
-  <p class="below">Summing across many genomes is naturally steadier than any single genome: the averaging effect. No extra compensation between genomes is needed to explain it.</p>
-  <p class="src">Figures 2a and 2b, Revision 1 (Claude): <span data-n="r1_reps" data-c></span> replicates of the carrier-preserving null. The gene-token null was even steadier than our data. Percentiles: 2a <span data-n="r1_B_between_pct" data-d="0"></span>th, 2b <span data-n="r1_B_spearman_pct" data-d="0"></span>th.</p>
-  <aside class="notes"><p>Left: how much the CAZyme profile changed between days 1-5 and days 6-10. Right: how steeply day-to-day variation falls with the number of carrier genomes. Both observed values sit inside the null. Real families did vary slightly more than random ones, because carriers tended to rise and fall together; that is the opposite of compensation.</p></aside>
+  <div class="chart" id="s6chart"></div>
+  <h2 class="cap">The volatile taxa were functionally thin — their departure left little gap in enzyme potential.</h2>
+  <p class="src">Figure from the group's article (Figure 2c; not Revision 1; the per-MAG gene counts agree with Revision 1). Bubble area: degrading CAZyme genes per 1,000 genes of the MAG; bar: log2 change of the MAG's share, days 6–10 over days 1–5.</p>
+  <aside class="notes"><p>Rows are the seven MAGs that fell most (six Lachnospiraceae and one UBA1381 MAG) and the five Bacteroidota MAGs among those that rose at least two-fold. All are common MAGs. Median degrading CAZyme genes per 1,000 genes: Lachnospiraceae (common MAGs) <span id="nLachn"></span>, Bacteroidota <span data-n="caz_bct_med" data-d="0"></span>, Bacillota <span data-n="caz_bac_med" data-d="0"></span>. <span id="s6list"></span></p></aside>
+</section>
+
+<section class="slide fig merged">
+  <div class="cols7">
+    <div class="left">
+      <p><b>The Lachnospiraceae story is compelling — but is it more than statistics?</b></p>
+      <p><b>Hypothesis:</b> many bacteria share the same enzyme genes — losing one doesn't matter.</p>
+      <p class="t"><b>Test:</b> randomly reshuffle enzyme genes across bacteria <span data-n="r1_reps" data-c></span> times.</p>
+    </div>
+    <div class="two"><div class="chart" id="s6a"></div><div class="chart" id="s6b"></div></div>
+  </div>
+  <h2 class="cap">Our data lie inside the null range (<span data-n="r1_B_between_pct" data-d="0"></span>th and <span data-n="r1_B_spearman_pct" data-d="0"></span>th percentile) — averaging explains it, no extra redundancy needed.</h2>
+  <p class="src">Figures 2a and 2b, Revision 1 (Claude): <span data-n="r1_reps" data-c></span> replicates of the carrier-preserving null; left, change of the CAZyme profile between the periods; right, carrier number against day-to-day variation (Spearman). The gene-token null was even steadier than our data.</p>
+  <aside class="notes"><p>The null keeps the real daily abundances of the genomes and each family's number of carrier genomes, and only moves which genome carries which family. Summing across many genomes is naturally steadier than any single genome (the averaging effect). Real families varied slightly more than random ones, because carriers tended to rise and fall together; compensation between genomes was not detected.</p></aside>
 </section>
 
 <section class="slide fig">
@@ -62,13 +74,21 @@
   <aside class="notes"><p>Gene potential and relative abundance, not activity. The host-glycan rise came mostly from Bacteroidota genomes. It is the one group of families whose change exceeds what random carriers produce.</p></aside>
 </section>
 
+<section class="slide limits">
+  <div class="lim"><h3>Study design</h3><ul><li>n=1 — description, not a test</li><li>Diet and time fully confounded</li><li>No baseline before the intervention</li><li>Calories and carbohydrates changed together</li></ul></div>
+  <div class="lim"><h3>Data</h3><ul><li>Relative abundance only — not cell counts</li><li>Gene potential only — not activity or expression</li></ul></div>
+  <div class="lim"><h3>The null model</h3><ul><li>Built after seeing the result, not pre-registered</li><li>Keeps carrier counts fixed — may be too well matched to detect a real signal</li></ul></div>
+  <aside class="notes"><p>The data come from one person over ten days with one switch. Days 6-10 were a return towards the habitual diet, and a similar high-calorie diet ran about a week before day 1.</p></aside>
+</section>
+
 <section class="slide center end">
   <ol>
-    <li>Gut microbiome composition shifted from day 7, about a day after the dietary switch.</li>
-    <li>The apparent stability of gene potential is what averaging across genomes predicts — compensation between genomes was not detected.</li>
-    <li>Host-glycan genes are the exception: their gene potential rose above the null, which fits a diet-related shift (diet and time cannot be separated here).</li>
+    <li>Gut microbiome composition shifted ~1 day after a dietary switch.</li>
+    <li>Apparent stability of gene potential is explained by averaging across genomes — no redundancy beyond averaging was needed.</li>
+    <li>Host glycan genes are the exception — above the null, worth following up (diet and time cannot be separated).</li>
+    <li>Redundancy claims from metagenomic data need a null model — otherwise averaging can look like biology.</li>
   </ol>
-  <p class="close">Claims of functional redundancy from metagenomic data need a null model — otherwise averaging alone can produce the same stability.</p>
-  <p class="src">Based on Claude's Revision 1 of the group's article. One person, ten days: the data cannot separate diet from time.</p>
+  <p class="close">One person, ten days — a pilot that generated testable predictions, not a test of them.</p>
+  <p class="src">Based on Claude's Revision 1 of the group's article.</p>
   <aside class="notes"><p>Limits: one person, ten days, one switch; carbohydrate and calories changed together; days 6-10 were a return towards the habitual diet. Relative abundance and gene potential only.</p></aside>
 </section>
