@@ -1,19 +1,29 @@
 <section class="slide title">
-  <span class="kicker">Nanopore metagenomics course · group presentation</span>
+  <span class="kicker">Nanopore metagenomics course · Group 1</span>
   <h1>How fast does the gut community follow a diet switch?</h1>
   <p class="lead">Ten daily stool samples from one person, sequenced with Oxford Nanopore long reads</p>
-  <p class="who">Group 1 · author names are not published</p>
+  <div class="strip">
+    <div class="hi">Day 1</div><div class="hi">2</div><div class="hi">3</div><div class="hi">4</div><div class="hi">5</div><div class="lo">Day 6</div><div class="lo">7</div><div class="lo">8</div><div class="lo">9</div><div class="lo">10</div>
+  </div>
+  <p class="stripnote"><span class="dot hi"></span> days 1-5 high-carbohydrate <span class="dot lo"></span> days 6-10 low-carbohydrate (information from the data owner)</p>
+  <p class="who">Claude A. Gent et al. (2026)</p>
   <aside class="notes"><p>The question in one line. The answer in one line: in this person the community moved with a delay of one to two days.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Background</span>
   <h2>Why the timing is not obvious</h2>
+  <div class="chain">
+    <div>Food<small>a new diet starts</small></div>
+    <div class="gap">transit time varies [3, 4]</div>
+    <div>Gut community<small>responds in days [1, 2]</small></div>
+    <div class="gap">time to the stool</div>
+    <div>Stool sample<small>what we sequence</small></div>
+  </div>
   <ul>
-    <li>In feeding studies the gut community changed within days of a new diet [1, 2]</li>
-    <li>Gut transit time differs between people, so a delay can come from transit, from the community, or both [3, 4]</li>
-    <li>Information from the data owner: days 1-5 high-carbohydrate, high-calorie; days 6-10 low-carbohydrate, low-calorie (both vegetarian); a similar high-calorie diet ran about a week before day 1</li>
-    <li>Our question: does the community change on day 6, the first day of the new diet, or later?</li>
+    <li>A delay between diet and stool can come from transit, from the community, or both</li>
+    <li>Diet switch between day 5 and day 6; a similar high-calorie diet ran about a week before day 1 (data owner)</li>
+    <li>Our question: does the community change on day 6, or later?</li>
   </ul>
   <p class="src">[1] David et al. 2014, Nature 505:559. [2] Johnson et al. 2019, Cell Host Microbe 25:789. [3] Roager et al. 2016, Nat Microbiol 1:16093. [4] Asnicar et al. 2021, Gut 70:1665.</p>
   <aside class="notes"><p>Diet facts come from the data owner, not from our measurements. Carbohydrate and calories changed together.</p></aside>
@@ -23,16 +33,25 @@
   <span class="kicker">Data and approach</span>
   <h2>From stool to the question</h2>
   <div class="ctx">
-    <div class="pre"><b>About 1 week before</b><span>similar high-calorie diet</span></div>
-    <div class="days hi"><b>Days 1-5</b><span>high-carbohydrate, high-calorie</span><i>samples 1-5</i></div>
-    <div class="days lo"><b>Days 6-10</b><span>low-carbohydrate, low-calorie</span><i>samples 6-10</i></div>
+    <div class="pre"><b>~1 week before</b><span>similar high-calorie diet</span></div>
+    <div class="hi"><b>Days 1-5 · samples 1-5</b><span>high-carbohydrate, high-calorie</span></div>
+    <div class="lo"><b>Days 6-10 · samples 6-10</b><span>low-carbohydrate, low-calorie</span></div>
   </div>
-  <p class="cnote">One person, 10 daily stool samples, both diets vegetarian; <span data-n="mags"></span> genomes (MAGs) rebuilt. Diet information from the data owner.</p>
+  <p class="cnote">One person, both diets vegetarian; diet information from the data owner.</p>
   <div class="flow">
-    <div>Stool, DNA</div><div>Nanopore long reads</div><div>Assembly into genomes (MAGs)</div><div>Share of each genome per day</div><div>Compare days, genomes, enzymes</div><div class="q">How fast does the community follow the switch?</div>
+    <div><b>Sequencing</b><span>PromethION, R10.4.1; Dorado (sup) basecalling; chopper filter</span></div>
+    <div><b>Assembly and binning genomes (MAGs)</b><span>mmlong2 (myloasm); GTDB-Tk, GTDB r226</span></div>
+    <div><b>Share per day</b><span>minimap2 read mapping; MetaBAT2 depth tool</span></div>
+    <div><b>Enzyme genes</b><span>Pyrodigal; PyHMMER with dbCAN HMMs</span></div>
+    <div><b>Compare</b><span>Bray-Curtis; two-fold rule</span></div>
+    <div class="q"><b>How fast does the community follow the switch?</b></div>
   </div>
-  <p class="src">Share = percent of the day's sequenced bases (relative abundance). Gene content is potential, not activity.</p>
-  <aside class="notes"><p>Top: the study context. Bottom: the workflow from sample to answer. Diet facts are from the data owner.</p></aside>
+  <div class="arrows"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="thumbs">
+    <div id="th1"></div><div id="th2"></div><div id="th3"></div><div id="th4"></div><div id="th5"></div><div id="th6"></div>
+  </div>
+  <p class="src">Mini figures: the real data of this study (steps 3-6) or schematics (steps 1-2).</p>
+  <aside class="notes"><p>Top: the study context. Middle: tools and databases per step. Bottom: a very small version of what each step gives.</p></aside>
 </section>
 
 <section class="slide">
@@ -59,6 +78,18 @@
 
 <section class="slide">
   <span class="kicker">Result 3</span>
+  <h2>Changing genomes carry different enzyme sets</h2>
+  <div class="pair">
+    <div><div class="chart" id="g1sPairL"></div></div>
+    <div><div class="chart" id="g1sPairR"></div></div>
+  </div>
+  <p class="side1"><b data-n="nChange"></b> genomes changed at least two-fold. The <b data-n="czRiseBactN"></b> rising Bacteroidaceae carry a median of <b data-n="czBactUpTotal"></b> degrading enzyme genes per 1,000 genes, the falling genomes <b data-n="czFallTotal"></b>.</p>
+  <p class="src">Figure 4 | The changing genomes and their carbohydrate-degrading enzyme genes. Left: share of each day's bases (log colour); right: enzyme genes per 1,000 genes by substrate group.</p>
+  <aside class="notes"><p>Rows are the changing genomes, grouped by direction and family (header rows); the same order in both panels. Gene potential, not activity.</p></aside>
+</section>
+
+<section class="slide">
+  <span class="kicker">Result 4</span>
   <h2>Enzyme potential stayed level</h2>
   <div class="cols wide">
     <div class="chart" id="g1sCz"></div>
@@ -71,36 +102,49 @@
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
-  <ul>
-    <li>One person, one diet switch, one sample per day: the timing is described, not tested</li>
-    <li>Diet is mixed up with time and with calories; a similar diet ran a week before day 1, so no cause can be named</li>
-    <li>Relative abundance: a rise of one genome lowers the others; not cell numbers</li>
-    <li>No sample before day 1 or after day 10; transit time was not measured</li>
-    <li>Gene content is potential, not enzyme activity</li>
-  </ul>
+  <div class="cards">
+    <div><svg viewBox="0 0 48 48"><circle cx="24" cy="14" r="8"/><path d="M8 44c0-12 7-18 16-18s16 6 16 18z"/></svg><span>One person, one diet switch</span></div>
+    <div><svg viewBox="0 0 48 48" class="venn"><circle cx="18" cy="18" r="12"/><circle cx="30" cy="18" r="12"/><circle cx="24" cy="30" r="12"/></svg><span>Diet, time and calories changed together</span></div>
+    <div><svg viewBox="0 0 48 48"><rect x="4" y="16" width="40" height="16" fill="none" stroke-width="3"/><rect x="4" y="16" width="22" height="16"/><rect x="26" y="16" width="10" height="16" opacity=".5"/></svg><span>Relative shares, not cell numbers</span></div>
+    <div><svg viewBox="0 0 48 48"><path d="M4 24h40" fill="none" stroke-width="3"/><circle cx="14" cy="24" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="34" cy="24" r="4"/><path d="M4 12v24M44 12v24" fill="none" stroke-width="3" stroke-dasharray="3 3"/></svg><span>No samples before day 1 or after day 10</span></div>
+    <div><svg viewBox="0 0 48 48"><path d="M4 30h24v-8l14 10-14 10v-8H4z"/></svg><span>Gene potential, not enzyme activity</span></div>
+    <div><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke-width="3"/><path d="M24 12v12l8 6" fill="none" stroke-width="3"/></svg><span>Timing described, not tested; transit time not measured</span></div>
+  </div>
+  <aside class="notes"><p>No cause can be named: one person, a similar diet a week before day 1, diet mixed up with time and calories.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Working with the AI</span>
-  <h2>Working with the AI</h2>
-  <p class="sugg">Suggestion — to be replaced by the group's own text</p>
-  <ul>
-    <li>Many short requests, most answered within minutes</li>
-    <li>A whole paper "in ten minutes" still needed our checks</li>
-    <li>Numbers and claims had to be checked against the data</li>
-    <li>Cause wording was softened when we asked for a critical review</li>
-    <li>We decide the question, the story and what is claimed</li>
-  </ul>
-  <aside class="notes"><p>Suggestion only, based on the interaction on 4 Nov. Replace with the group's own experience and the teachers' input.</p></aside>
+  <span class="kicker">Our feelings about working with Claude</span>
+  <h2>Working with AI</h2>
+  <div class="proscons">
+    <div class="pro">
+      <h3>Pros</h3>
+      <ul>
+        <li>AI has great potential to assist researchers for coding</li>
+        <li>Rapid proof of concept testing, with subsequent refinement and testing</li>
+        <li>Highly efficient for generating figures, tables, data organization, etc.</li>
+      </ul>
+    </div>
+    <div class="con">
+      <h3>Cons</h3>
+      <ul>
+        <li>Needs ample guidance and checks to ensure proper analyses and interpretation are completed</li>
+        <li>Wording often doesn't make sense (either hallucinations or grammatically incorrect)</li>
+        <li>Risk of trusting the interpretation and/or assumptions AI makes</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>The group's own points.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Take-home</span>
   <h2>Take-home message</h2>
   <p class="take">In this person the community followed the diet switch with a delay of one to two days.</p>
-  <ul>
-    <li>Day 6 still looked like the old diet; the shift came on days 7 and 8</li>
-    <li>Enzyme-gene potential stayed near <span data-n="czDay_total_first"></span> and <span data-n="czDay_total_second"></span> genes per 1,000 genes (days 1-5 and 6-10) while members replaced each other</li>
-    <li>One person, ten days, diet mixed up with time and calories: a description, not a cause</li>
-  </ul>
+  <div class="tcards">
+    <div><div id="tk1"></div><span>Day 6 still looked like the old diet; the shift came on days 7 and 8</span></div>
+    <div><div id="tk2"></div><span>Enzyme-gene potential stayed near <b data-n="czDay_total_first"></b> and <b data-n="czDay_total_second"></b> per 1,000 genes (days 1-5, 6-10) while members replaced each other</span></div>
+    <div><div id="tk3"></div><span>One person, ten days: a description, not a cause</span></div>
+  </div>
+  <p class="bal">There is a balance between working efficiently while including critical review and checks along the way.</p>
 </section>
