@@ -1,12 +1,8 @@
 <section class="slide title">
-  <span class="kicker">Nanopore metagenomics course · Group 1</span>
+  <span class="kicker">Nanopore metagenomics course · group presentation</span>
   <h1>How fast does the gut community follow a diet switch?</h1>
   <p class="lead">Ten daily stool samples from one person, sequenced with Oxford Nanopore long reads</p>
-  <div class="strip">
-    <div class="hi">Day 1</div><div class="hi">2</div><div class="hi">3</div><div class="hi">4</div><div class="hi">5</div><div class="lo">Day 6</div><div class="lo">7</div><div class="lo">8</div><div class="lo">9</div><div class="lo">10</div>
-  </div>
-  <p class="stripnote"><span class="dot hi"></span> days 1-5 high-carbohydrate <span class="dot lo"></span> days 6-10 low-carbohydrate (information from the data owner)</p>
-  <p class="who">Claude A. Gent et al. (2026)</p>
+  <p class="who">Group 1 · Claude A. Gent et al. (2026)</p>
   <aside class="notes"><p>The question in one line. The answer in one line: in this person the community moved with a delay of one to two days.</p></aside>
 </section>
 
@@ -76,27 +72,15 @@
   <aside class="notes"><p>A lag of one to two days fits transit time, but transit time was not measured.</p></aside>
 </section>
 
-<section class="slide">
-  <span class="kicker">Result 3</span>
-  <h2>Changing genomes carry different enzyme sets</h2>
-  <div class="pair">
-    <div><div class="chart" id="g1sPairL"></div></div>
-    <div><div class="chart" id="g1sPairR"></div></div>
+<section class="slide fig4">
+  <div class="f4side">
+    <span class="kicker">Result 3</span>
+    <h2>Changing genomes carry different enzyme sets</h2>
+    <p><b data-n="nChange"></b> genomes changed at least two-fold. The <b data-n="czRiseBactN"></b> rising Bacteroidaceae carry a median of <b data-n="czBactUpTotal"></b> degrading enzyme genes per 1,000 genes, the falling genomes <b data-n="czFallTotal"></b>.</p>
+    <p class="cap">Figure 4. Left: share of each day's bases (log colour), days 1-10. Right: enzyme genes per 1,000 genes by substrate group.</p>
   </div>
-  <p class="side1"><b data-n="nChange"></b> genomes changed at least two-fold. The <b data-n="czRiseBactN"></b> rising Bacteroidaceae carry a median of <b data-n="czBactUpTotal"></b> degrading enzyme genes per 1,000 genes, the falling genomes <b data-n="czFallTotal"></b>.</p>
-  <p class="src">Figure 4 | The changing genomes and their carbohydrate-degrading enzyme genes. Left: share of each day's bases (log colour); right: enzyme genes per 1,000 genes by substrate group.</p>
-  <aside class="notes"><p>Rows are the changing genomes, grouped by direction and family (header rows); the same order in both panels. Gene potential, not activity.</p></aside>
-</section>
-
-<section class="slide">
-  <span class="kicker">Result 4</span>
-  <h2>Enzyme potential stayed level</h2>
-  <div class="cols wide">
-    <div class="chart" id="g1sCz"></div>
-    <div class="side"><span>Carbohydrate-degrading enzyme genes of the community stayed between <b data-n="czDay_total_min"></b> and <b data-n="czDay_total_max"></b> per 1,000 genes on every day, although <b data-n="nChange"></b> genomes changed: genomes with large and small enzyme sets replaced each other.</span></div>
-  </div>
-  <p class="src">Degrading CAZyme genes per 1,000 genes of the community (each genome weighted by its DNA share times its number of genes). Gene potential, not activity.</p>
-  <aside class="notes"><p>Rising Bacteroidaceae carry many such genes and falling Lachnospiraceae fewer; the sum stays level. Host-glycan genes did not track the Bacteroidaceae share.</p></aside>
+  <div class="f4charts"><div class="chart" id="g1sPairL"></div><div class="chart" id="g1sPairR"></div></div>
+  <aside class="notes"><p>Figure 4 | The changing genomes and their carbohydrate-degrading enzyme genes. Left: share of each day's bases (log colour); right: enzyme genes per 1,000 genes by substrate group. Rows are the changing genomes, grouped by direction and family (group names at the right edge); the same order in both panels. Gene potential, not activity.</p></aside>
 </section>
 
 <section class="slide">
@@ -105,12 +89,22 @@
   <div class="cards">
     <div><svg viewBox="0 0 48 48"><circle cx="24" cy="14" r="8"/><path d="M8 44c0-12 7-18 16-18s16 6 16 18z"/></svg><span>One person, one diet switch</span></div>
     <div><svg viewBox="0 0 48 48" class="venn"><circle cx="18" cy="18" r="12"/><circle cx="30" cy="18" r="12"/><circle cx="24" cy="30" r="12"/></svg><span>Diet, time and calories changed together</span></div>
-    <div><svg viewBox="0 0 48 48"><rect x="4" y="16" width="40" height="16" fill="none" stroke-width="3"/><rect x="4" y="16" width="22" height="16"/><rect x="26" y="16" width="10" height="16" opacity=".5"/></svg><span>Relative shares, not cell numbers</span></div>
     <div><svg viewBox="0 0 48 48"><path d="M4 24h40" fill="none" stroke-width="3"/><circle cx="14" cy="24" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="34" cy="24" r="4"/><path d="M4 12v24M44 12v24" fill="none" stroke-width="3" stroke-dasharray="3 3"/></svg><span>No samples before day 1 or after day 10</span></div>
     <div><svg viewBox="0 0 48 48"><path d="M4 30h24v-8l14 10-14 10v-8H4z"/></svg><span>Gene potential, not enzyme activity</span></div>
     <div><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke-width="3"/><path d="M24 12v12l8 6" fill="none" stroke-width="3"/></svg><span>Timing described, not tested; transit time not measured</span></div>
   </div>
   <aside class="notes"><p>No cause can be named: one person, a similar diet a week before day 1, diet mixed up with time and calories.</p></aside>
+</section>
+
+<section class="slide">
+  <span class="kicker">Conclusions</span>
+  <h2>Conclusions</h2>
+  <p class="take">In this person the community followed the diet switch with a delay of one to two days.</p>
+  <div class="tcards">
+    <div><div id="tk1"></div><span>Day 6 still looked like the old diet; the shift came on days 7 and 8</span></div>
+    <div><div id="tk2"></div><span>Enzyme-gene potential stayed near <b data-n="czDay_total_first"></b> and <b data-n="czDay_total_second"></b> per 1,000 genes (days 1-5, 6-10) while members replaced each other</span></div>
+    <div><div id="tk3"></div><span>One person, ten days: a description, not a cause</span></div>
+  </div>
 </section>
 
 <section class="slide">
@@ -134,17 +128,6 @@
       </ul>
     </div>
   </div>
-  <aside class="notes"><p>The group's own points.</p></aside>
-</section>
-
-<section class="slide">
-  <span class="kicker">Take-home</span>
-  <h2>Take-home message</h2>
-  <p class="take">In this person the community followed the diet switch with a delay of one to two days.</p>
-  <div class="tcards">
-    <div><div id="tk1"></div><span>Day 6 still looked like the old diet; the shift came on days 7 and 8</span></div>
-    <div><div id="tk2"></div><span>Enzyme-gene potential stayed near <b data-n="czDay_total_first"></b> and <b data-n="czDay_total_second"></b> per 1,000 genes (days 1-5, 6-10) while members replaced each other</span></div>
-    <div><div id="tk3"></div><span>One person, ten days: a description, not a cause</span></div>
-  </div>
   <p class="bal">There is a balance between working efficiently while including critical review and checks along the way.</p>
+  <aside class="notes"><p>The group's own points.</p></aside>
 </section>
