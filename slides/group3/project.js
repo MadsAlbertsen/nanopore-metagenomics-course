@@ -17,7 +17,7 @@ barChart($("g3CapGenes"), { labels: D.genes, height: 270, groups: FR.map((q) => 
 // Fig 3
 const CS = D.community_shift, P = CS.pcoa;
 const pts = D.days.map((d, i) => ({ x: P.x[i], y: P.y[i], label: `day ${d}`, group: i < 5 ? "days 1-5" : "days 6-10", color: i < 5 ? "var(--c1)" : "var(--c2)", size: 6 }));
-scatter($("g3DayPcoa"), { points: pts, xLabel: `PCoA axis 1 (${N.q3_pc1}%)`, yLabel: `PCoA axis 2 (${N.q3_pc2}%)`, labelled: true, height: 255 });
+scatter($("g3DayPcoa"), { points: pts, xLabel: `PCoA axis 1 (${N.q3_pc1}%)`, yLabel: `PCoA axis 2 (${N.q3_pc2}%)`, labelled: true, height: 225 });
 const join = () => {
   const svg = $("g3DayPcoa").querySelector("svg");
   if (!svg || svg.querySelector("polyline.g3join")) return;
@@ -49,7 +49,7 @@ join();
 // Simplified Figure 4: the butyrate pathway, gene symbols only, without (change = false) or with (change = true) the change of each gene
 function pathway(host, change) {
   const G = Object.fromEntries(D.pathway.map((g) => [g.gene, g]));
-  const X = 100, sym = { up: "▲", down: "▼", level: "●" }, mk = change ? 1 : 0;
+  const X = 100, sym = { up: "▲", down: "▼", level: "●" }, mk = change === true ? 1 : change === "mark" ? 2 : 0;
   const col = (g) => (change && g.dir === "down" ? "var(--c1)" : change && g.dir === "up" ? "var(--c2)" : "var(--muted)");
   const fmt = (v) => `${v > 0 ? "+" : "−"}${Math.abs(v).toFixed(2)}`;
   const t = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" text-anchor="${o.anchor || "start"}" fill="${o.fill || "var(--ink)"}"${o.bold ? ' font-weight="600"' : ""}>${esc(s)}</text>`;
@@ -58,7 +58,7 @@ function pathway(host, change) {
   const box = (x, y, w, ids) => {
     const g = G[ids[0]], searched = !!g.dir, ch = change && searched && g.dir !== "level";
     const label = ids.length > 1 ? ids.join(", ") : ids[0];
-    const extra = change && searched ? `  ${sym[g.dir]} ${fmt(g.log2)}` : "";
+    const extra = change && searched ? (change === true ? `  ${sym[g.dir]} ${fmt(g.log2)}` : g.dir === "level" ? "" : `  ${sym[g.dir]}`) : "";
     return `<rect x="${x}" y="${y}" width="${w}" height="24" rx="6" fill="var(--surface)" stroke="${ch ? col(g) : "var(--line)"}" stroke-width="${ch ? 2 : 1.2}"${searched ? "" : ' stroke-dasharray="4 3"'}/>`
       + t(x + 8, y + 16, label, { size: 12, bold: searched, fill: searched ? "var(--ink)" : "var(--muted)" }) + (extra ? t(x + w - 8, y + 16, extra.trim(), { anchor: "end", size: 12, bold: true, fill: col(g) }) : "");
   };
@@ -77,5 +77,7 @@ function pathway(host, change) {
   svg += arrow(79, Y + 108, 200, Y + 126) + arrow(346, Y + 108, 260, Y + 126) + t(230, Y + 142, "butyrate", { anchor: "middle", bold: true, size: 13 });
   host.innerHTML = `<svg viewBox="0 0 440 ${Y + 150}" width="100%" style="max-height:310px;display:block;margin:0 auto" role="img" aria-label="Butyrate pathway">${svg}</svg>`;
 }
-pathway($("pathPlain"), false);
+const grp = (cls, from, to, txt) => `<div class="grp"><div class="dots">${D.days.filter((d) => d >= from && d <= to).map((d) => `<i class="${cls}">${d}</i>`).join("")}</div><span class="dl ${cls}">${txt}</span></div>`;
+$("dayStrip").innerHTML = grp("hi", 1, 5, "days 1-5: high carbohydrate, high calorie") + grp("lo", 6, 10, "days 6-10: low carbohydrate, low calorie");
+pathway($("pathPlain"), "mark");
 pathway($("pathChange"), true);
