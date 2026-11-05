@@ -56,3 +56,17 @@
 .slide .bal { font-size: 20px; font-weight: 600; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px }
 .slide.title .lead { font-size: 20px }
 .slide.title .who { font-size: 20px }
+/* Figure 4 slide: text column on the left, both heat maps over the full slide height so that every genome name shows */
+.slide.fig4 { flex-direction: row; padding: 14px 24px 12px; gap: 16px }
+.slide.fig4 .f4side { flex: 0 0 188px; display: flex; flex-direction: column; gap: 12px }
+.slide.fig4 .f4side h2 { font-size: 24px }
+.slide.fig4 .f4side p { font-size: 15px; line-height: 1.35 }
+.slide.fig4 .f4side b { color: var(--accent) }
+.slide.fig4 .f4side .cap { font-size: 13px; color: var(--muted); margin-top: auto }
+.slide.fig4 .f4charts { flex: 1; display: grid; grid-template-columns: 455px 1fr; gap: 0; align-items: start; min-width: 0 }
+.slide.fig4 svg text { font-size: 11px }
+.slide.fig4 .chart .legend { font-size: 12px }
+.slide .bal { padding-right: 110px }
+.slide.fig4 .f4charts { grid-template-columns: 420px 1fr }
+.slide.fig4 .chart svg { overflow: visible }
+.slide.fig4 .f4charts > div:last-child svg text:not([text-anchor]) { font-size: 10.5px }

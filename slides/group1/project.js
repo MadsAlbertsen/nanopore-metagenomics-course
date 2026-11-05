@@ -19,22 +19,38 @@ if (cz) {
     series: D.cazy.cats.map((name, k) => ({ name: name === "all degrading" ? "all degrading" : name, values: D.cazy.values[k] })) });
 }
 
-// ---- Figure 4 (changing genomes: share per day, enzyme genes per 1,000 genes), grouped, no row names except group headers
+// ---- Figure 4 (changing genomes: share per day, enzyme genes per 1,000 genes), every genome name on its row, groups marked
 const pl = $("g1sPairL");
 if (pl) {
   const byName = Object.fromEntries(D.heatChange.map((r) => [r.name, r]));
   const lg = (v) => Math.log10(Math.max(v, N.heatFloor));
   const pct = (v) => (v === null ? "–" : 10 ** v <= N.heatFloor * 1.0001 ? `< ${N.heatFloor}%` : `${fmtNum(+(10 ** v).toPrecision(3))}%`);
-  const labels = [], left = [], right = [], names = [];
-  let grp = null;
+  const labels = [], left = [], right = [], grps = [];
   for (const r of D.cazyRows.rows) {
-    if (r.grp !== grp) { grp = r.grp; labels.push(grp); names.push(grp); left.push(D.days.map(() => null)); right.push(D.cazyRows.cats.map(() => null)); }
-    labels.push(""); left.push(byName[r.name].share.map(lg)); right.push(r.per);
+    labels.push(r.name); left.push(byName[r.name].share.map(lg)); right.push(r.per); grps.push(r.grp);
   }
   const short = { "plant fibre": "fibre", "host glycan": "host", "all degrading": "total" };
-  heatmap(pl, { rows: labels, cols: D.days.map(String), values: left, label: "Share of the bases", format: pct, cell: 5, colLabelHeight: 44 });
-  heatmap($("g1sPairR"), { rows: labels.map(() => ""), cols: D.cazyRows.cats.map((x) => short[x] || x), values: right, label: "Genes per 1,000 genes", cell: 5, colLabelHeight: 44,
+  const CELL = 12, TOP = 36;
+  heatmap(pl, { rows: labels, cols: D.days.map(String), values: left, label: "Share of the bases", format: pct, cell: CELL, colLabelHeight: TOP });
+  heatmap($("g1sPairR"), { rows: labels.map(() => ""), cols: D.cazyRows.cats.map((x) => short[x] || x), values: right, label: "Genes per 1,000 genes", cell: CELL, colLabelHeight: TOP,
     format: (v) => (v === null ? "–" : v.toFixed(1)) });
+  // group separators in both panels; group name at the right edge of the right panel (all names stay on the rows)
+  const L = pl.querySelector("svg"), R = $("g1sPairR").querySelector("svg");
+  const rects = R.querySelectorAll("rect"), nc = D.cazyRows.cats.length;
+  const x0 = +rects[0].getAttribute("x"), x1 = +rects[nc - 1].getAttribute("x") + +rects[nc - 1].getAttribute("width");
+  const mkEl = (svg, tag, a, txt) => { const e = document.createElementNS(NS0, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt !== undefined) e.textContent = txt; svg.appendChild(e); return e; };
+  const NS0 = "http://www.w3.org/2000/svg";
+  const lx0 = +L.querySelector("rect").getAttribute("x"), lrects = L.querySelectorAll("rect"), lx1 = +lrects[D.days.length - 1].getAttribute("x") + +lrects[D.days.length - 1].getAttribute("width");
+  let start = 0;
+  for (let i = 1; i <= grps.length; i++) {
+    if (i < grps.length && grps[i] === grps[start]) continue;
+    const yTop = TOP + CELL * start, yBot = TOP + CELL * i, [dir, fam] = grps[start].split(" · ");
+    if (start > 0) { mkEl(L, "line", { x1: 0, x2: lx1, y1: yTop - 0.5, y2: yTop - 0.5, stroke: "var(--ink)", "stroke-width": 1.2 }); mkEl(R, "line", { x1: x0, x2: x1 + 4, y1: yTop - 0.5, y2: yTop - 0.5, stroke: "var(--ink)", "stroke-width": 1.2 }); }
+    const yc = (yTop + yBot) / 2, two = yBot - yTop >= 24;
+    mkEl(R, "text", { x: x1 + 8, y: two ? yc - 2 : yc + 4, "font-weight": 600, fill: dir === "rising" ? "#1f6f8b" : "#c2571a" }, dir);
+    if (two) mkEl(R, "text", { x: x1 + 8, y: yc + 11 }, fam);
+    start = i;
+  }
 }
 
 // ---- mini figures (slide 3 outputs, take-home cards)
