@@ -1,10 +1,37 @@
 <section class="slide title">
   <span class="kicker">Nanopore metagenomics course · group presentation</span>
   <h1 class="hero"><i>Bifidobacterium angulatum</i>: its genes and its share over ten days</h1>
-  <p class="who">Group 5 · author names are not published</p>
-  <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
+  <p class="who">Group 5</p>
 </section>
 
+
+
+
+
+
+
+<section class="slide">
+  <span class="kicker">Experimental setup</span>
+  <h2>Ten daily stool samples, one sequencing run</h2>
+  <div class="tl">
+    <div class="tlp p1"><span>Days 1-5: high carbohydrate, high calories</span></div>
+    <div class="tlp p2"><span>Days 6-10: low carbohydrate, low calories</span></div>
+    <div class="tlm m1"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div>
+    <div class="tlm m2"><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i></div>
+    <div class="tlc">Day of sampling, one stool sample per day. Both diets vegetarian.</div>
+  </div>
+  <div class="road lab">
+    <div class="rb"><b>Sample Collection</b></div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>DNA extraction</b></div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Library Preparation</b>Rapid Barcoding Kit SQK-RBK114.24</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Nanopore sequencing</b>One PromethION flow cell, R10.4.1</div>
+  </div>
+  <p class="src">Diet: Information from the data owner. Result: <span data-n="n_samples"></span> samples, <span data-n="gbp"></span> Gbp of filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10).</p>
+  <aside class="notes"><p>One stool sample per day for ten days from one person. Days 1-5 high in carbohydrate and calories, days 6-10 low in both; both periods vegetarian (information from the data owner). Lab workflow: DNA extraction, library with the Rapid Barcoding Kit (SQK-RBK114.24), all ten samples on one PromethION flow cell (R10.4.1). Reads were then basecalled, assembled together and binned into MAGs (genomes reconstructed from the mixture).</p></aside>
+</section>
 
 
 
@@ -23,60 +50,32 @@
     <div class="ra">&rarr;</div>
     <div class="rb"><b>5</b>Testing the Abundance Pattern Across the Diet Shift</div>
   </div>
-  <p class="q">How does the relative abundance of <i>B. angulatum</i> change when the diet goes from high to low carbohydrate?</p>
+  <p class="q long">What functions are predicted for the genes of <i>Bifidobacterium angulatum</i>, and how does its relative abundance vary over 10 days of a diet change from high to low carbohydrate and calories?</p>
   <aside class="notes"><p>The group's own words: Decided to look into one specific organism instead of the entire community. We knew that the sequencing would get us tons of data, so instead of trying to look at all of it, we narrowed it into one specific organism. Deciding for a specific organism was more difficult but from a very quick look in the data we identified the presence of a Bifidobacteria which was described in literature as a common gut microbiome carbohydrate degrading organism. Therefore, we decided to look into how the relative abundance of that specific microbe changed as a result of the change in diet from high carb to low carb. We based our analysis on the hypothesis that the relative abundance of Bifidobacterium angulatum would be high in the beginning of day 1 (because he was carb-loading for a week before) and would continue to be high until day 5, after which it would decrease from day 6-10 as a result of the low carb diet.</p><p>Diet: days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner). The hypothesis is the group's own.</p></aside>
 </section>
 
 
 
 
-<section class="slide">
-  <span class="kicker">Methods</span>
-  <h2>Ten daily stool samples, one sequencing run</h2>
-  <div class="tl">
-    <div class="tlp p1"><span>Days 1-5: high carbohydrate, high calories</span></div>
-    <div class="tlp p2"><span>Days 6-10: low carbohydrate, low calories</span></div>
-    <div class="tlm m1"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div>
-    <div class="tlm m2"><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i></div>
-    <div class="tlc">Day of sampling, one stool sample per day. Both diets vegetarian.</div>
-  </div>
-  <div class="road lab">
-    <div class="rb"><b>Sample</b>stool</div>
-    <div class="ra">&rarr;</div>
-    <div class="rb"><b>DNA extraction</b></div>
-    <div class="ra">&rarr;</div>
-    <div class="rb"><b>Library</b>Rapid Barcoding Kit SQK-RBK114.24</div>
-    <div class="ra">&rarr;</div>
-    <div class="rb"><b>Nanopore sequencing</b>one PromethION flow cell, R10.4.1</div>
-  </div>
-  <p class="src">Diet: information from the data owner. Result: <span data-n="n_samples"></span> samples, <span data-n="gbp"></span> Gbp of filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10).</p>
-  <aside class="notes"><p>One stool sample per day for ten days from one person. Days 1-5 high in carbohydrate and calories, days 6-10 low in both; both periods vegetarian (information from the data owner). Lab workflow: DNA extraction, library with the Rapid Barcoding Kit (SQK-RBK114.24), all ten samples on one PromethION flow cell (R10.4.1). Reads were then basecalled, assembled together and binned into MAGs (genomes reconstructed from the mixture).</p></aside>
-</section>
-
-
 
 <section class="slide">
   <span class="kicker">Result 1 &middot; sequencing depth</span>
-  <h2>Sequencing depth: <span data-n="gbp_min"></span> to <span data-n="gbp_max"></span> Gbp per sample</h2>
+  <h2>How much sequencing data did we obtain?</h2>
   <div class="cols wide">
-    <div><div class="chart" id="g5Depth"></div><p class="figl">Figure: Revision 1 (Claude)</p></div>
+    <div><div class="chart" id="g5Depth"></div><p class="figl">Figure 1</p></div>
     <div class="side">
-      <p>We first asked the AI agent for abundance and carbohydrate genes. Then we realised that the quality of the data had to come first. One of our questions: how does sequencing depth vary between the samples?</p>
-      <ul>
-        <li>Smallest sample: day <span data-n="gbp_min_day"></span>, <b><span data-n="gbp_min"></span> Gbp</b></li>
-        <li>Largest sample: day <span data-n="gbp_max_day"></span>, <b><span data-n="gbp_max"></span> Gbp</b></li>
-        <li><b><span data-n="gbp_fold"></span>-fold</b> difference between samples</li>
-        <li>Even the smallest sample holds about <b><span data-n="r1_estreads_d2"></span></b> <i>B. angulatum</i> reads (Revision 1)</li>
-      </ul>
+      <p>We realised we first needed to understand the quality of our data.</p>
+      <p class="find"><b>Finding:</b> a <b><span data-n="gbp_fold"></span>-fold</b> difference in sequencing depth between samples.</p>
     </div>
   </div>
-  <p class="src">Filtered bases (Gbp; reads &ge; 1,000 bp, mean Q &ge; 10) of each day's sample. Figure 1 of Revision 1 (Claude), the AI-revised version of the group's article.</p>
-  <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. One of the questions was how sequencing depth varied between samples. The figure is Figure 1 of Revision 1 (Claude): the filtered bases per sample in Gbp. Because the samples differ by 15-fold, a sample with fewer reads has more counting noise in its shares; Revision 1 estimates about 190 B. angulatum reads even in the smallest sample (day 2).</p></aside>
+  <p class="src">Data: Revision 1 (Claude)</p>
+  <aside class="notes"><p>The group first asked the AI agent to analyse abundance and carbohydrate-related genes, but realised they first needed to assess the quality of the data. One of the questions was how sequencing depth varied between samples. The figure is Figure 1 is from Revision 1 (Claude): the filtered bases per sample in Gbp (reads of at least 1,000 bp with mean Q of at least 10); smallest sample day 2 (1.67 Gbp), largest day 4 (25.62 Gbp). Because the samples differ by 15-fold, a sample with fewer reads has more counting noise in its shares; Revision 1 estimates about 190 B. angulatum reads even in the smallest sample (day 2).</p></aside>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Result 2 &middot; data quality</span>
-  <h2>Data quality: <span data-n="mag_pooled"></span>% of the sequenced bases are in MAGs</h2>
+  <h2>How much of our sequencing data is represented in MAGs?</h2>
   <div class="cols wide">
     <div><div class="chart" id="g5Ctx"></div></div>
     <div class="side">
@@ -87,9 +86,9 @@
       </ol>
     </div>
   </div>
-  <p class="src">Share (%) of each day's filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10). Figure 1 of the group's article. Dashed line: diet switch.</p>
-  <aside class="notes"><p>Percentages are shares of bases (not reads). HQ and MQ = high and medium quality MAGs (genomes reconstructed from the mixture). Unbinned = on the assembly but in no MAG; not on the assembly = reads that did not map to it.</p></aside>
+  <aside class="notes"><p>Percentages are shares of each day's filtered bases (reads of at least 1,000 bp with mean Q of at least 10), not reads. The figure is Figure 1 of the group's article; the dashed line marks the diet switch between day 5 and day 6. HQ and MQ = high and medium quality MAGs (genomes reconstructed from the mixture). Unbinned = on the assembly but in no MAG; not on the assembly = reads that did not map to it.</p></aside>
 </section>
+
 
 
 <section class="slide">
@@ -115,6 +114,7 @@
   <aside class="notes"><p>The group asked how reliable the gene annotations were, including Bakta's sequence identity threshold (at least 50% identity to a protein cluster; Bakta v1.11.4, light database), and whether GH13 genes are common across other MAGs (they are: 87% of the 421 MAGs carry at least one). Highlighted: 83 carbohydrate-related genes (39 carbohydrate-degrading enzymes, 21 glycosyltransferases, 12 sugar transporter parts and others) and 9 GH13 genes. Gene names are predictions; they do not show that the enzymes are active.</p></aside>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Result 3 &middot; abundance</span>
   <h2><i>B. angulatum</i> peaked on day <span data-n="a_peak_day"></span>, close to the other bifidobacteria</h2>
@@ -131,6 +131,7 @@
   <p class="src">Relative abundance: share (%) of each day's sequenced bases. One person, ten days; diet and time are confounded.</p>
   <aside class="notes"><p>Shares are percent of the filtered bases of each day's sample, from the MAG coverage. Days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner). The three bifidobacteria are the three Bifidobacterium MAGs of the data set. This describes the pattern; it does not show a cause.</p></aside>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Result 4 &middot; critical thinking with AI</span>
@@ -150,23 +151,24 @@
   <aside class="notes"><p>The group did not stop at the rise of B. angulatum. Questions to the AI agent: did other MAGs also rise on day 5, was day 5 unusual compared with other days, and did the rising MAGs share characteristics? Caveat: the choice of baseline and the two diet periods affect these comparisons. Answers from the data: 9 MAGs met the criterion on day 5, but days 6-10 had 12-23 each by the same rule. For days 6-9 the four days before include high-carbohydrate days, so MAGs that respond to the diet count as risers; with each MAG first divided by its own median of its diet period, days 6-10 had 5-16 risers, and day 5 lies in the middle. The risers had no clear shared trait: 7 of 9 are Bacillota (78%), as common as among the other MAGs (74%); they carry no more degrading CAZyme genes than the others (median 15.1 against 17.1 per 1,000 genes).</p></aside>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Limitations</span>
-  <h2>What the data cannot show</h2>
+  <h2>Limitations and lessons learned</h2>
   <div class="lim">
     <div class="lc"><h3>Study design</h3>
       <ul>
         <li>One individual, only 10 days</li>
         <li>Carbohydrates and calories changed together</li>
         <li>Variable sequencing depth</li>
-        <li class="add">No replicate: one sample per day <span class="tag">(our addition)</span></li>
+        <li>No replicate: one sample per day</li>
       </ul></div>
     <div class="lc"><h3>Research question</h3>
       <ul>
         <li>Predicted genes do not confirm enzyme activity</li>
         <li>Relative abundance is not absolute abundance</li>
-        <li>No causal link to diet can be established</li>
-        <li class="add">The species was chosen after we looked at the data <span class="tag">(our addition)</span></li>
+        <li>No significant link to diet has been identified</li>
+        <li>Our focus on one species may have limited what we discovered in the wider community</li>
       </ul></div>
     <div class="lc"><h3>AI collaboration</h3>
       <ul>
@@ -175,9 +177,9 @@
         <li>Outputs need critical evaluation</li>
       </ul></div>
   </div>
-  <p class="src">Diet facts: information from the data owner. Items marked "our addition" were added by the AI from the group's workflow; the group decides whether to keep them.</p>
-  <aside class="notes"><p>The three columns are the group's own. Two additions are on the slide, marked as such; more are possible, all from the group's actual analyses:</p><p>(our addition) No replicate: each day is one sample, so the day-5 peak rests on one sample per day and one DNA extraction and library. Revision 1 (Claude) added a second library of each day's DNA as a technical replicate.</p><p>(our addition) Selection: the species was chosen after a first look at the data, from the literature on bifidobacteria as carbohydrate degraders; a pattern in a species picked this way is easier to over-read.</p><p>(our addition) Diet is confounded with time: days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner), so the diet did not change at the start, and the second period is closer to the habitual diet of the person.</p><p>(our addition) GH13 is common: 87% of the 421 MAGs carry at least one GH13 gene, so having GH13 genes is not specific to B. angulatum.</p><p>(our addition) Day 5 is not unusual: other days had as many or more rising MAGs (slide 8).</p></aside>
+  <aside class="notes"><p>Study design: one person, ten days, carbohydrates and calories changed together (diet facts: information from the data owner), sequencing depth varied between samples, and there is no replicate: one sample per day.</p><p>Research question: predicted genes do not confirm enzyme activity; relative abundance is not absolute abundance; we found no significant link to diet; and by focusing on one species we may have missed things in the wider community.</p><p>AI collaboration: the AI can overinterpret results, the answers depend on the questions we ask, and outputs need critical evaluation.</p></aside>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Take-home</span>
@@ -185,20 +187,58 @@
   <div class="lim two">
     <div class="lc"><h3>Biology</h3>
       <ul>
-        <li><i>B. angulatum</i> carries many carbohydrate genes (<span data-n="carb_total"></span>, <span data-n="gh13_genes"></span> of them GH13), but what they mean for function is uncertain</li>
+        <li><i>B. angulatum</i> carries many carbohydrate genes (<span data-n="carb_total"></span>, <span data-n="gh13_genes"></span> of them GH13), but its relative abundance is very low (mean <span data-n="a_mean"></span>% of the sequenced bases, peak <span data-n="a_peak"></span>% on day <span data-n="a_peak_day"></span>), so it is unlikely to be a main contributor to carbohydrate degradation in this person's gut</li>
         <li>Its share peaked on day 5, but one person and ten days cannot explain why</li>
+        <li>Functional genes show only potential; further analysis is needed to see the phenotype</li>
       </ul></div>
     <div class="lc"><h3>AI collaboration</h3>
       <ul>
-        <li>The AI helped us explore the data and test alternatives</li>
-        <li>Critical thinking is essential</li>
+        <li>AI helped us explore the data and challenge our findings, but critical scientific thinking remained essential</li>
         <li>In hindsight: explore the whole community first, then choose a species by its change over time or its metabolic potential</li>
       </ul></div>
   </div>
-  <div class="sug"><b>Suggestions</b>
-    <ul>
-      <li><span class="tag">(our suggestion)</span> Write down what you expect before asking the AI.</li>
-      <li><span class="tag">(our suggestion)</span> Ask for a replicate or a control before trusting a single-day peak.</li>
-    </ul></div>
-  <aside class="notes"><p>The four points are the group's own, shortened. Check on the wording: B. angulatum is not the most abundant species. Its mean share is 0.10% of the sequenced bases, rank 114 of 360 species; the most abundant, Prevotella copri_B, has 8.65%. The group chose it after a quick look at the data, because bifidobacteria are described in the literature as carbohydrate degraders. So the slide says "by change over time or metabolic potential", not "not by highest abundance". The suggestions are the AI's, not the group's.</p></aside>
+  <svg class="illu" viewBox="0 0 900 150" role="img" aria-label="Cartoon: a researcher with a question mark, a bar chart, a DNA helix, a rod-shaped bacterium and a small robot that says it found something">
+    <line x1="20" y1="136" x2="880" y2="136" stroke="var(--line)" stroke-width="2"/>
+    <!-- researcher -->
+    <g stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M44 136 L50 84 Q50 74 62 74 L98 74 Q110 74 110 84 L116 136 Z" fill="var(--surface)"/>
+      <circle cx="80" cy="54" r="19" fill="var(--v3)"/>
+      <circle cx="73" cy="52" r="5" fill="var(--surface)"/><circle cx="87" cy="52" r="5" fill="var(--surface)"/>
+      <path d="M72 64 Q80 68 88 64" fill="none"/>
+      <path d="M62 44 Q80 28 98 44" fill="none"/>
+      <path d="M108 86 L138 66" fill="none"/>
+      <circle cx="146" cy="58" r="10" fill="none"/><path d="M153 65 L160 72" fill="none"/>
+    </g>
+    <g><path d="M118 20 Q118 6 138 6 L176 6 Q196 6 196 20 Q196 34 176 34 L150 34 L140 44 L142 34 Q118 34 118 20 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="157" y="28" text-anchor="middle" font-size="22" font-weight="800" fill="var(--c2)">?!</text></g>
+    <!-- bar chart -->
+    <g>
+      <rect x="205" y="30" width="110" height="106" rx="6" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+      <rect x="216" y="108" width="12" height="20" fill="var(--c2)"/><rect x="233" y="104" width="12" height="24" fill="var(--c2)"/><rect x="250" y="100" width="12" height="28" fill="var(--c2)"/>
+      <rect x="267" y="64" width="12" height="64" fill="var(--c2)"/><rect x="284" y="84" width="12" height="44" fill="var(--c2)"/><rect x="301" y="116" width="8" height="12" fill="var(--c2)"/>
+      <line x1="212" y1="128" x2="312" y2="128" stroke="var(--faint)" stroke-width="2"/>
+    </g>
+    <!-- DNA -->
+    <g transform="translate(20 6)"><g fill="none" stroke-width="4" stroke-linecap="round"><g stroke="var(--faint)" stroke-width="2"><line x1="334.0" y1="108.9" x2="334.0" y2="91.1"/><line x1="340.0" y1="119.1" x2="340.0" y2="80.9"/><line x1="346.0" y1="121.9" x2="346.0" y2="78.1"/><line x1="352.0" y1="116.3" x2="352.0" y2="83.7"/><line x1="358.0" y1="104.6" x2="358.0" y2="95.4"/><line x1="364.0" y1="91.1" x2="364.0" y2="108.9"/><line x1="370.0" y1="80.9" x2="370.0" y2="119.1"/><line x1="376.0" y1="78.1" x2="376.0" y2="121.9"/><line x1="382.0" y1="83.7" x2="382.0" y2="116.3"/><line x1="388.0" y1="95.4" x2="388.0" y2="104.6"/><line x1="394.0" y1="108.9" x2="394.0" y2="91.1"/><line x1="400.0" y1="119.1" x2="400.0" y2="80.9"/><line x1="406.0" y1="121.9" x2="406.0" y2="78.1"/><line x1="412.0" y1="116.3" x2="412.0" y2="83.7"/><line x1="418.0" y1="104.6" x2="418.0" y2="95.4"/><line x1="424.0" y1="91.1" x2="424.0" y2="108.9"/><line x1="430.0" y1="80.9" x2="430.0" y2="119.1"/><line x1="436.0" y1="78.1" x2="436.0" y2="121.9"/><line x1="442.0" y1="83.7" x2="442.0" y2="116.3"/><line x1="448.0" y1="95.4" x2="448.0" y2="104.6"/></g><path d="M330.0,100.0 L332.0,104.6 L334.0,108.9 L336.0,112.9 L338.0,116.3 L340.0,119.1 L342.0,120.9 L344.0,121.9 L346.0,121.9 L348.0,120.9 L350.0,119.1 L352.0,116.3 L354.0,112.9 L356.0,108.9 L358.0,104.6 L360.0,100.0 L362.0,95.4 L364.0,91.1 L366.0,87.1 L368.0,83.7 L370.0,80.9 L372.0,79.1 L374.0,78.1 L376.0,78.1 L378.0,79.1 L380.0,80.9 L382.0,83.7 L384.0,87.1 L386.0,91.1 L388.0,95.4 L390.0,100.0 L392.0,104.6 L394.0,108.9 L396.0,112.9 L398.0,116.3 L400.0,119.1 L402.0,120.9 L404.0,121.9 L406.0,121.9 L408.0,120.9 L410.0,119.1 L412.0,116.3 L414.0,112.9 L416.0,108.9 L418.0,104.6 L420.0,100.0 L422.0,95.4 L424.0,91.1 L426.0,87.1 L428.0,83.7 L430.0,80.9 L432.0,79.1 L434.0,78.1 L436.0,78.1 L438.0,79.1 L440.0,80.9 L442.0,83.7 L444.0,87.1 L446.0,91.1 L448.0,95.4 L450.0,100.0" stroke="var(--c1)"/><path d="M330.0,100.0 L332.0,95.4 L334.0,91.1 L336.0,87.1 L338.0,83.7 L340.0,80.9 L342.0,79.1 L344.0,78.1 L346.0,78.1 L348.0,79.1 L350.0,80.9 L352.0,83.7 L354.0,87.1 L356.0,91.1 L358.0,95.4 L360.0,100.0 L362.0,104.6 L364.0,108.9 L366.0,112.9 L368.0,116.3 L370.0,119.1 L372.0,120.9 L374.0,121.9 L376.0,121.9 L378.0,120.9 L380.0,119.1 L382.0,116.3 L384.0,112.9 L386.0,108.9 L388.0,104.6 L390.0,100.0 L392.0,95.4 L394.0,91.1 L396.0,87.1 L398.0,83.7 L400.0,80.9 L402.0,79.1 L404.0,78.1 L406.0,78.1 L408.0,79.1 L410.0,80.9 L412.0,83.7 L414.0,87.1 L416.0,91.1 L418.0,95.4 L420.0,100.0 L422.0,104.6 L424.0,108.9 L426.0,112.9 L428.0,116.3 L430.0,119.1 L432.0,120.9 L434.0,121.9 L436.0,121.9 L438.0,120.9 L440.0,119.1 L442.0,116.3 L444.0,112.9 L446.0,108.9 L448.0,104.6 L450.0,100.0" stroke="var(--c3)"/></g></g>
+    <!-- bacterium -->
+    <g transform="rotate(-12 560 96)">
+      <rect x="490" y="72" width="140" height="48" rx="24" fill="var(--c2)" stroke="var(--ink)" stroke-width="2.5"/>
+      <circle cx="545" cy="92" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="575" cy="92" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+      <circle cx="546" cy="93" r="2" fill="var(--ink)"/><circle cx="576" cy="93" r="2" fill="var(--ink)"/>
+      <path d="M548 104 Q560 112 572 104" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+    <text x="560" y="62" text-anchor="middle" font-size="15" font-style="italic" font-weight="600" fill="var(--muted)">B. angulatum</text>
+    <!-- robot -->
+    <g stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+      <line x1="770" y1="52" x2="770" y2="38"/><circle cx="770" cy="34" r="5" fill="var(--c2)"/>
+      <rect x="744" y="52" width="52" height="38" rx="8" fill="var(--c1)"/>
+      <circle cx="759" cy="70" r="6" fill="var(--surface)"/><circle cx="781" cy="70" r="6" fill="var(--surface)"/>
+      <rect x="738" y="94" width="64" height="42" rx="8" fill="var(--surface)"/>
+      <path d="M738 104 L722 120 M802 104 L822 90" fill="none"/>
+      <path d="M758 112 H782" fill="none"/>
+    </g>
+    <g><path d="M812 36 Q812 14 840 14 L868 14 Q890 14 890 30 Q890 46 868 46 L848 46 L830 58 L834 46 Q812 46 812 36 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="851" y="36" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">Found it!</text></g>
+  </svg>
+  <aside class="notes"><p>Biology: B. angulatum carries 83 carbohydrate-related genes, 9 of them GH13. Its relative abundance is very low: a mean of 0.10% of the sequenced bases over the ten days (peak 0.29% on day 5; shares of the filtered bases of each day's sample). With such a low share it is unlikely to be a main contributor to carbohydrate degradation in this person's gut. Gene predictions show potential, not activity; further analysis is needed to see the phenotype. Its share peaked on day 5, but one person and ten days cannot explain why.</p><p>AI collaboration: the AI helped us explore the data and challenge our findings, but critical scientific thinking remained essential. In hindsight: explore the whole community first, then choose a species by its change over time or its metabolic potential.</p></aside>
 </section>
