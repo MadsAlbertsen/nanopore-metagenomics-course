@@ -48,8 +48,8 @@
 .slide.merged .left p { font-size: 21px; line-height: 1.3; padding-left: 12px; border-left: 5px solid var(--c1) }
 .slide.merged .left p.t { border-left-color: var(--c7) }
 .slide.merged .two { gap: 10px }
-.slide.limits { gap: 20px; justify-content: center }
-.slide .lim h3 { font-size: 27px; font-weight: 700; margin-bottom: 6px }
-.slide .lim ul { font-size: 23px; gap: 4px; list-style: none; padding-left: 0 }
+.slide.limits { gap: 14px; justify-content: flex-start }
+.slide .lim h3 { font-size: 24px; font-weight: 700; margin-bottom: 6px }
+.slide .lim ul { font-size: 21px; gap: 4px; list-style: none; padding-left: 0 }
 .slide.end ol { font-size: 25px }
 .slide.end .close { color: var(--muted); font-weight: 400; border-left: none; padding-left: 0; font-size: 24px }
