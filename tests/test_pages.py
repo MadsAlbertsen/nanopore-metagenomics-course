@@ -44,7 +44,7 @@ setTimeout(probe, 1500);
 @pytest.fixture(scope="module")
 def site():
     out = Path(tempfile.mkdtemp(prefix="course-site-"))
-    build.build(out, unpublished=True)
+    build.build(out, unpublished=True, student_pages=True)
     for page in out.glob("*.html"):
         html = page.read_text()
         page.write_text(html.replace("<head>", "<head>" + PROBE, 1))
