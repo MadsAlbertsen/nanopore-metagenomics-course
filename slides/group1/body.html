@@ -8,7 +8,7 @@
 
 <section class="slide">
   <span class="kicker">Background</span>
-  <h2>Stool lags behind food, so the timing of a diet response is not obvious</h2>
+  <h2>Why the timing is not obvious</h2>
   <ul>
     <li>In feeding studies the gut community changed within days of a new diet [1, 2]</li>
     <li>Gut transit time differs between people, so a delay can come from transit, from the community, or both [3, 4]</li>
@@ -21,61 +21,51 @@
 
 <section class="slide">
   <span class="kicker">Data and approach</span>
-  <h2>One person, ten daily samples, genomes rebuilt from long reads</h2>
-  <div class="big">
-    <div><b>10</b><span>daily stool samples, one person</span></div>
-    <div><b data-n="mags"></b><span>genomes rebuilt (MAGs)</span></div>
-    <div><b><span data-n="binnedMin"></span>-<span data-n="binnedMax"></span>%</b><span>of each day's bases in these MAGs</span></div>
+  <h2>From stool to the question</h2>
+  <div class="ctx">
+    <div class="pre"><b>About 1 week before</b><span>similar high-calorie diet</span></div>
+    <div class="days hi"><b>Days 1-5</b><span>high-carbohydrate, high-calorie</span><i>samples 1-5</i></div>
+    <div class="days lo"><b>Days 6-10</b><span>low-carbohydrate, low-calorie</span><i>samples 6-10</i></div>
   </div>
-  <ul>
-    <li>Nanopore long reads, assembled and binned into genomes (mmlong2)</li>
-    <li>Share of a genome = percent of the day's sequenced bases (relative abundance, not cell numbers)</li>
-    <li>Bray-Curtis dissimilarity between days: 0 = same community, 1 = nothing shared</li>
-  </ul>
-  <p class="src">Source: the group's report and article. Sequencing run of the ten samples by the course.</p>
+  <p class="cnote">One person, 10 daily stool samples, both diets vegetarian; <span data-n="mags"></span> genomes (MAGs) rebuilt. Diet information from the data owner.</p>
+  <div class="flow">
+    <div>Stool, DNA</div><div>Nanopore long reads</div><div>Assembly into genomes (MAGs)</div><div>Share of each genome per day</div><div>Compare days, genomes, enzymes</div><div class="q">How fast does the community follow the switch?</div>
+  </div>
+  <p class="src">Share = percent of the day's sequenced bases (relative abundance). Gene content is potential, not activity.</p>
+  <aside class="notes"><p>Top: the study context. Bottom: the workflow from sample to answer. Diet facts are from the data owner.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 1</span>
-  <h2>The ten days form two blocks of similar days</h2>
+  <h2>Two blocks of similar days</h2>
   <div class="cols wide">
     <div class="chart" id="g1sHeat"></div>
-    <div class="side">
-      <span>Dissimilarity within days 1-5: <b data-n="within1"></b></span>
-      <span>Within days 6-10: <b data-n="within2"></b></span>
-      <span>Between the two periods: <b data-n="between"></b></span>
-    </div>
+    <div class="side"><span>Days 1-6 resemble each other, and so do days 8-10. Day 6, the first day of the new diet, still sat with the early days; the change lies between day 6 and day 8.</span></div>
   </div>
   <p class="src">Bray-Curtis dissimilarity of every pair of days (brighter = more different). One person, n = 10 samples.</p>
-  <aside class="notes"><p>Days 1-6 look alike and days 8-10 look alike; day 7 lies between. The split at the switch ranks second of <span data-n="permNPart"></span> possible splits (permutation p = <span data-n="permP"></span>); neighbouring days are not independent, so this describes, it does not prove.</p></aside>
+  <aside class="notes"><p>The split at the switch ranks second of <span data-n="permNPart"></span> possible splits (permutation p = <span data-n="permP"></span>); neighbouring days are not independent, so this describes, it does not prove.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 2</span>
-  <h2>Day 6 still looked like the old diet; the community moved on days 7 and 8</h2>
+  <h2>Day 6 still old; the shift began on day 7</h2>
   <div class="cols wide">
     <div class="chart" id="g1sTiming"></div>
-    <div class="side">
-      <span>Distance to day 1: <b data-n="d1to6"></b> on day 6, <b data-n="d1to7"></b> on day 7, <b data-n="d1to8"></b> on day 8</span>
-      <span>Distance to days 8-10 fell from <b data-n="late6"></b> (day 6) to <b data-n="late7"></b> (day 7)</span>
-    </div>
+    <div class="side"><span>On day 6 the community was as close to day 1 as the early days were. It moved away from day 1 and towards the late days on days 7 and 8, a delay of one to two days. Days 9 and 10 showed no further clear trend.</span></div>
   </div>
   <p class="src">Bray-Curtis dissimilarity of each day to day 1 and to the mean of days 8-10. One person, n = 10 samples.</p>
-  <aside class="notes"><p>A lag of one to two days fits transit time, but transit time was not measured. Days 9 and 10 show no further clear trend.</p></aside>
+  <aside class="notes"><p>A lag of one to two days fits transit time, but transit time was not measured.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Result 3</span>
-  <h2>Single genomes reached their new level on different days, from day 6 to day 10</h2>
+  <h2>Enzyme potential stayed level</h2>
   <div class="cols wide">
-    <div class="chart" id="g1sSettle"></div>
-    <div class="side">
-      <span><b data-n="nChange"></b> genomes changed at least two-fold (<b data-n="nUp"></b> up, <b data-n="nDown"></b> down)</span>
-      <span>Settled on day 6: <b data-n="nSettle6"></b>; day 7 or 8: <b data-n="nSettle78"></b>; day 9 or 10: <b data-n="nSettle9plus"></b></span>
-      <span>Median settled day: <b data-n="settleMedian"></b></span>
-    </div>
+    <div class="chart" id="g1sCz"></div>
+    <div class="side"><span>Carbohydrate-degrading enzyme genes of the community stayed between <b data-n="czDay_total_min"></b> and <b data-n="czDay_total_max"></b> per 1,000 genes on every day, although <b data-n="nChange"></b> genomes changed: genomes with large and small enzyme sets replaced each other.</span></div>
   </div>
-  <p class="src">Settled day: first day a genome's share stays at its new level. One genome settled on day 5 (not shown).</p>
+  <p class="src">Degrading CAZyme genes per 1,000 genes of the community (each genome weighted by its DNA share times its number of genes). Gene potential, not activity.</p>
+  <aside class="notes"><p>Rising Bacteroidaceae carry many such genes and falling Lachnospiraceae fewer; the sum stays level. Host-glycan genes did not track the Bacteroidaceae share.</p></aside>
 </section>
 
 <section class="slide">
@@ -92,37 +82,25 @@
 
 <section class="slide">
   <span class="kicker">Working with the AI</span>
-  <h2>How we worked with Claude</h2>
+  <h2>Working with the AI</h2>
   <p class="sugg">Suggestion — to be replaced by the group's own text</p>
   <ul>
-    <li>We sent many short requests; most were answered within minutes</li>
-    <li>Asking for a whole paper in ten minutes gave a draft that still needed our checks</li>
-    <li>A change log on the page showed what was changed after each request</li>
-    <li>Questions about server jobs were unclear to us until the teacher decided</li>
+    <li>Many short requests, most answered within minutes</li>
+    <li>A whole paper "in ten minutes" still needed our checks</li>
+    <li>Numbers and claims had to be checked against the data</li>
+    <li>Cause wording was softened when we asked for a critical review</li>
+    <li>We decide the question, the story and what is claimed</li>
   </ul>
   <aside class="notes"><p>Suggestion only, based on the interaction on 4 Nov. Replace with the group's own experience and the teachers' input.</p></aside>
 </section>
 
 <section class="slide">
-  <span class="kicker">Working with the AI</span>
-  <h2>What we noticed</h2>
-  <p class="sugg">Suggestion — to be replaced by the group's own text</p>
-  <ul>
-    <li>Numbers and claims had to be checked against the data; we did not take them as given</li>
-    <li>Wording about cause was softened when we asked for a critical review</li>
-    <li>Clear, specific requests worked better than broad ones</li>
-    <li>The people in the group still decide the question, the story and what is claimed</li>
-  </ul>
-  <aside class="notes"><p>Suggestion only. Replace with what the group noticed and what the teachers add.</p></aside>
-</section>
-
-<section class="slide">
   <span class="kicker">Take-home</span>
   <h2>Take-home message</h2>
-  <p class="take">In this person the community followed the diet switch with a delay of one to two days; single genomes took from day 6 to day 10.</p>
+  <p class="take">In this person the community followed the diet switch with a delay of one to two days.</p>
   <ul>
-    <li>Days 1-6 and days 8-10 form two blocks of similar days</li>
-    <li>Total carbohydrate-enzyme gene potential stayed near <span data-n="czDay_total_first"></span> and <span data-n="czDay_total_second"></span> genes per 1,000 genes (days 1-5 and 6-10) while members replaced each other</li>
+    <li>Day 6 still looked like the old diet; the shift came on days 7 and 8</li>
+    <li>Enzyme-gene potential stayed near <span data-n="czDay_total_first"></span> and <span data-n="czDay_total_second"></span> genes per 1,000 genes (days 1-5 and 6-10) while members replaced each other</li>
     <li>One person, ten days, diet mixed up with time and calories: a description, not a cause</li>
   </ul>
 </section>

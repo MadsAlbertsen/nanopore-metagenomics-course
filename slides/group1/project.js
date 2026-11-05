@@ -1,4 +1,4 @@
-// Group 1 deck: data from articles/group1/data.json (Bray-Curtis table, distances to reference days, settled days).
+// Group 1 deck: data from articles/group1/data.json (Bray-Curtis table, distances to reference days, enzyme genes per day).
 const D = DATA, N = D.numbers;
 document.querySelectorAll("[data-n]").forEach((e) => { e.textContent = N[e.dataset.n] ?? "?"; });
 const SWITCH = [{ x: 5.5, label: "diet switch" }];
@@ -13,10 +13,8 @@ if (tim) {
   lineChart(tim, { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Bray-Curtis dissimilarity", zero: true, marks: SWITCH, height: 240,
     series: [{ name: "to day 1", values: D.timing.toDay1 }, { name: "to days 8-10", values: D.timing.toLate }] });
 }
-const set = $("g1sSettle");
-if (set) {
-  const s = D.settle, keep = [5, 6, 7, 8, 9];
-  barChart(set, { labels: keep.map((i) => "day " + s.labels[i]),
-    groups: [{ name: "rising MAGs", values: keep.map((i) => s.up[i]) }, { name: "falling MAGs", values: keep.map((i) => s.down[i]) }],
-    yLabel: "Number of MAGs", unit: "MAGs", height: 240, fmt: (v) => (Number.isInteger(v) ? String(v) : "") });
+const cz = $("g1sCz");
+if (cz) {
+  lineChart(cz, { x: D.days, xLabel: "Day", xName: "Day", yLabel: "Genes per 1,000 genes", zero: true, yRange: [0, 36], marks: SWITCH, height: 270,
+    series: D.cazy.cats.map((name, k) => ({ name: name === "all degrading" ? "all degrading" : name, values: D.cazy.values[k] })) });
 }
