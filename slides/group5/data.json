@@ -1,0 +1,35 @@
+{
+ "days": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "diet": [
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "high_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb",
+  "low_carb"
+ ],
+ "numbers": {
+  "n_samples": 10,
+  "gbp": 166.5,
+  "n_mags": 421,
+  "hq": 257,
+  "mq": 164,
+  "gbp_min": 1.67,
+  "gbp_max": 25.62
+ }
+}

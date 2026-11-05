@@ -5,16 +5,50 @@
   <p class="src">Placeholder: the group chooses the title and every slide's content on presentation day.</p>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Background</span>
-  <h2>The question and why it matters</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>The Story Behind the Idea</h2>
+  <div class="road">
+    <div class="rb"><b>1</b>Annotated metagenome from ten stool samples</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>2</b>Far too much data to look at everything</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>3</b>Narrow down to one organism</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>4</b>A <i>Bifidobacterium</i>: in the literature a gut carbohydrate degrader</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb hyp"><b>5</b>Hypothesis: <i>B. angulatum</i> stays high on days 1-5, falls on days 6-10</div>
+  </div>
+  <p class="lead">Question: how does the relative abundance of <i>B. angulatum</i> change when the diet goes from high to low carbohydrate?</p>
+  <p class="src">The group's hypothesis. Days 1-5 followed about a week of a similar high-carbohydrate diet (information from the data owner).</p>
+  <aside class="notes"><p>The group's own words: Decided to look into one specific organism instead of the entire community. We knew that the sequencing would get us tons of data, so instead of trying to look at all of it, we narrowed it into one specific organism. Deciding for a specific organism was more difficult but from a very quick look in the data we identified the presence of a Bifidobacteria which was described in literature as a common gut microbiome carbohydrate degrading organism. Therefore, we decided to look into how the relative abundance of that specific microbe changed as a result of the change in diet from high carb to low carb. We based our analysis on the hypothesis that the relative abundance of Bifidobacterium angulatum would be high in the beginning of day 1 (because he was carb-loading for a week before) and would continue to be high until day 5, after which it would decrease from day 6-10 as a result of the low carb diet.</p></aside>
 </section>
 
 <section class="slide">
   <span class="kicker">Data and approach</span>
-  <h2>What we did with the ten samples</h2>
-  <p class="lead">Placeholder: the group decides what goes on this slide.</p>
+  <h2>Ten daily stool samples, one sequencing run</h2>
+  <div class="road lab">
+    <div class="rb"><b>Samples</b>10 daily stool samples, one person; both diets vegetarian</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>DNA extraction</b></div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Library</b>Rapid Barcoding Kit SQK-RBK114.24</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Sequencing</b>one PromethION flow cell, R10.4.1</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Basecalling</b>Dorado, sup model</div>
+    <div class="ra">&rarr;</div>
+    <div class="rb"><b>Assembly and binning</b>mmlong2, all samples together</div>
+  </div>
+  <div class="diet"><span class="d1">Days 1-5: high carbohydrate, high calories</span><span class="d2">Days 6-10: low carbohydrate, low calories</span></div>
+  <div class="big sm">
+    <div><b><span data-n="n_samples"></span></b><span>samples</span></div>
+    <div><b><span data-n="gbp"></span> Gbp</b><span>filtered bases (reads &ge; 1,000 bp, mean Q &ge; 10)</span></div>
+    <div><b><span data-n="n_mags"></span></b><span>MAGs (<span data-n="hq"></span> high quality)</span></div>
+  </div>
+  <p class="src">Diet information from the data owner. Bases per sample: <span data-n="gbp_min"></span>-<span data-n="gbp_max"></span> Gbp.</p>
+  <aside class="notes"><p>Ten stool samples, one per day. Days 1-5 high in carbohydrate and calories, days 6-10 low in both; both periods vegetarian. Library with the Rapid Barcoding Kit (SQK-RBK114.24), all ten samples on one PromethION flow cell (R10.4.1), basecalled with Dorado (sup model), then assembled together and binned with mmlong2. MAG = genome reconstructed from the mixture. Share = relative abundance (percent of a sample's bases).</p></aside>
 </section>
 
 <section class="slide">
@@ -23,11 +57,13 @@
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Result 2</span>
   <h2>Result 2: the message of this slide</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Result 3</span>
@@ -35,11 +71,13 @@
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Result 4</span>
   <h2>Result 4: the message of this slide</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Result 5</span>
@@ -47,11 +85,13 @@
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
 
+
 <section class="slide">
   <span class="kicker">Limitations</span>
   <h2>What the data cannot show</h2>
   <p class="lead">Placeholder: the group decides what goes on this slide.</p>
 </section>
+
 
 <section class="slide">
   <span class="kicker">Take-home</span>

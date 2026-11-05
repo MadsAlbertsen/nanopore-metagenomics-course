@@ -1,2 +1,16 @@
 /* Group 5 (Q13): slide headings in blue (site categorical blue, light and dark) */
 .slide h1, .slide h2 { color: var(--c1) }
+/* Roadmap and lab-flow boxes (Q14, Q15) */
+.slide .road { display: flex; align-items: stretch; gap: 6px; margin: 18px 0 14px }
+.slide .rb { flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 9px; font-size: 14px; line-height: 1.3; min-width: 0 }
+.slide .rb b { display: block; color: var(--accent); font-size: 15px; margin-bottom: 4px }
+.slide .rb.hyp { border-color: var(--c1); border-width: 2px }
+.slide .ra { align-self: center; color: var(--faint); font-size: 20px }
+.slide .road.lab .rb { font-size: 13px }
+.slide .diet { display: flex; gap: 6px; font-size: 14px; margin-bottom: 14px }
+.slide .diet span { flex: 1; padding: 6px 10px; border-radius: 6px; text-align: center; color: var(--ink) }
+.slide .diet .d1 { background: var(--sel); border: 1px solid var(--c4) }
+.slide .diet .d2 { background: var(--accent-soft); border: 1px solid var(--accent) }
+.slide .big.sm { gap: 36px }
+.slide .big.sm div b { font-size: 34px }
+.slide .big.sm div > span { font-size: 14px }
