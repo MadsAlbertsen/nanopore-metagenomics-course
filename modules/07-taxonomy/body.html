@@ -56,6 +56,8 @@
   <label>Test MAG <select id="txLo" aria-label="Test MAG"></select></label>
   <label>Tool <select id="txTool" aria-label="Classifier"></select></label>
   <label>Query <select id="txQ" aria-label="Query"><option value="window">5 kb windows of the contig</option><option value="read">simulated reads</option></select></label>
+  <label>Kraken2 confidence <select id="txConfSel" aria-label="Kraken2 confidence threshold"></select></label>
+  <label>Level (sections 8, 9) <select id="txLv" aria-label="Leave-out level for sections 8 and 9"></select></label>
   <span class="count" id="txLoInfo"></span>
 </section>
 
@@ -84,14 +86,37 @@
 </section>
 
 <section class="panel">
-  <h2>8. The nearest relative by ANI</h2>
+  <h2>8. Kraken2's confidence setting</h2>
+  <p>Kraken2 can be told to name a sequence only as deep as a share of its k-mers supports: with a confidence of 0.1, the called taxon and the taxa below it must hold at least 10% of the sequence's k-mers, or Kraken2 moves up the tree until they do, and leaves the sequence unclassified if not even the root qualifies (Kraken2 manual). The chart re-scores the saved calls of the chosen test MAG, level and query at each threshold. <span id="txConfText"></span> The threshold in the control bar also applies to the bars in section 5.</p>
+  <div id="txConf"></div>
+  <p class="note" id="txConfNote"></p>
+  <div class="exslot" data-at="confidence"></div>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>9. Read length</h2>
+    <p>Longer reads carry more k-mers. The simulated reads of 10 kb or more were cut to their first 1, 2, 5 and 10 kb, so every bar holds the same reads, and named with Kraken2 at the chosen level. <span id="txLenText"></span></p>
+    <div id="txLen"></div>
+    <p class="note" id="txLenNote"></p>
+  </section>
+  <section class="panel">
+    <h2>10. More genomes of the species</h2>
+    <p>The reference sets above hold six genomes of each test species. Here, with nothing removed, every good GTDB genome of the species was added (<span data-n="allspGenomes"></span>). <span id="txAllspText"></span> The genome track in section 6 shows these calls in its second-last row.</p>
+    <div id="txAllsp"></div>
+    <p class="note">Query as chosen in the control bar; confidence 0 for Kraken2. Good genomes: CheckM2 completeness 90% or more and contamination 5% or less, as for the rest of the reference set.</p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>11. The nearest relative by ANI</h2>
   <p>Sylph gives the ANI between the MAG and the closest genome left in the database; skani (Shaw and Yu 2023, Nature Methods), a second method that aligns the genomes, gives the ANI and the share of the MAG that aligns. The species boundary is about 95% ANI. With the species removed, the closest genome belongs to a sister species near that boundary, and the two methods differ by up to <span data-n="aniGap"></span>: a single ANI estimate near 95% does not settle whether two genomes are one species. For contigs Sylph's ANI without its coverage correction is shown, as one contig is a sample at 1x depth, where the correction is not meant to work.</p>
   <div class="scroll" id="txAniTable"></div>
 </section>
 
 <div class="antwo">
   <section class="panel">
-    <h2>9. Contigs against their MAG in our data</h2>
+    <h2>12. Contigs against their MAG in our data</h2>
     <p>In the real data there is no known answer, but the contigs of one MAG should come from one organism. The assembly pipeline named every contig with Metabuli, using a GTDB-based database whose release the pipeline output does not record, and GTDB-Tk named every MAG. Of <span data-n="ctgN"></span> binned contigs, <span data-n="ctgAgree"></span> agree with their MAG down to species. Disagreement falls with contig length (chart). Most disagreements are at species level, between sister species of the same genus (table). A disagreeing contig is not proof of a binning error: the leave-out experiment shows that a strain's own DNA can carry a relative's name. Module 6's methylation and module 5's marker genes are the better tests of whether a contig belongs.</p>
   </section>
   <section class="panel">
@@ -104,6 +129,6 @@
 </div>
 
 <section class="panel">
-  <h2>10. Where naming goes wrong</h2>
+  <h2>13. Where naming goes wrong</h2>
   <p>A taxonomic name is a statement about the reference set as much as about the organism. A k-mer classifier names the closest thing in its database, so an organism that is missing gets a relative's name, often with no sign of doubt: with the species removed, almost every window and read here named a sister species, and Kraken2 named whole contigs to species from a handful of matching k-mers. Even with the right species present, regions that the species' reference genomes lack take a relative's name. A deeper name is not a better one; check how much of a sequence supports it, whether other tools and the MAG's own name agree, and how close the nearest reference really is. The leave-out reference sets here are reduced, so the exact shares depend on the design; the direction of the changes is the point.</p>
 </section>

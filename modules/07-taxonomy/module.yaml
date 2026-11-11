@@ -25,7 +25,7 @@ discussion: >-
   What would you check before believing that these species are present, and what could a read with a species name
   mean when the true species is not in the database?
 teacher:
-  time: About 70 minutes (an estimate, not yet tried with students).
+  time: About 75 minutes (an estimate, not yet tried with students).
   before: What a MAG is (module 4) and MAG quality (module 5); no background in taxonomy tools needed.
   flow:
     - "15 min: how GTDB-Tk names a MAG and what a placeholder or genus-only name means (sections 1 and 2; examples 1
@@ -33,8 +33,9 @@ teacher:
     - "10 min: how read and contig classifiers work, and the leave-out design (sections 3 and 4)."
     - "20 min: the leave-out results: what happens at each level, along the genome and for whole contigs (sections 5
       to 7; examples 4 to 6)."
-    - "10 min: nearest relatives by ANI and the 95% boundary (section 8)."
-    - "15 min: contigs against their MAG in the real data; take-home points and the discussion question."
+    - "15 min: what helps: the confidence setting, longer reads, more genomes of the species (sections 8 to 10);
+      nearest relatives by ANI and the 95% boundary (section 11)."
+    - "15 min: contigs against their MAG in the real data (section 12); take-home points and the discussion question."
   discussion_points:
     - "A species name from a k-mer classifier does not show the species is there: with the species missing from the
       database, nearly every read got a sister species' name (section 5)."

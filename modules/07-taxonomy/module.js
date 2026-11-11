@@ -28,8 +28,8 @@ const CTG = {
 };
 const pct = (a, b, d = 1) => !b ? "–" : `${((100 * a) / b).toFixed(d)}%`;
 const num = (n) => Number(n).toLocaleString("en");
-const DEFAULTS = { mag: "1.308", lo: "c.62", tool: "kraken2", q: "window" };
-const st = { mag: 0, lo: DEFAULTS.lo, tool: DEFAULTS.tool, q: DEFAULTS.q };
+const DEFAULTS = { mag: "1.308", lo: "c.62", tool: "kraken2", q: "window", conf: 0, lv: "species" };
+const st = { mag: 0, lo: DEFAULTS.lo, tool: DEFAULTS.tool, q: DEFAULTS.q, conf: DEFAULTS.conf, lv: DEFAULTS.lv };
 const target = () => LO.targets.find((t) => t.id === st.lo);
 
 // --- numbers in the text, all from the data
@@ -48,6 +48,7 @@ function fillNumbers() {
     refRange: `${Math.min(...sizes)}-${Math.max(...sizes)} genomes with nothing removed`,
     aniGap: `${Math.max(...gaps).toFixed(1)} ANI points`,
     ctgN: num(ctgN), ctgAgree: `${num(agree)} (${pct(agree, ctgN)})`,
+    allspGenomes: LO.targets.map((t) => `${t.lineage[6]} ${LO.allsp.genomes[t.id]}`).join(", "),
   };
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
   $("txStats").innerHTML = [[NUM.mags, "MAGs"], [NUM.species, "named to species"], [LO.targets.length, "test MAGs, 5 leave-out levels"], [LO.tools.length, "read and contig classifiers, plus Sylph"], [ctgN, "binned contigs compared with their MAG"]]
@@ -104,30 +105,58 @@ function drawCard() {
 
 // --- leave-out: bars per level, genome track, whole contig, ANI
 function counts(tool, t, lv, q) { const r = LO.shares.find((x) => x[0] === tool && x[1] === t && x[2] === lv && x[3] === q); return r ? r.slice(4) : null; }
-function drawBars() {
-  const t = target(), host = $("txBars"), W = Math.max(320, host.clientWidth || 320), lab = 210, rowH = 30, H = LO.levels.length * rowH + 30, r = 12;
+// Kraken2 counts re-scored at a confidence threshold (threshold 0: the saved calls)
+function confCounts(t, lv, q, th) { const c = LO.status.map(() => 0); for (const r of LO.confidence) if (r[0] === t && r[1] === lv && r[2] === q && r[3] === th) c[r[4]] += r[5]; return c; }
+const callCounts = (t, lv, q) => st.tool === "kraken2" && st.conf > 0 ? confCounts(t, lv, q, st.conf) : counts(st.tool, t, lv, q);
+// rows: [{label, sub, counts}] -> one stacked bar per row, shares of LO.status
+function stackRows(host, rows, aria) {
+  const W = Math.max(320, host.clientWidth || 320), lab = 210, rowH = 30, H = rows.length * rowH + 30, r = 12;
   const X = (v) => lab + v * (W - lab - r);
-  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Share of calls of each kind per leave-out level" });
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": aria });
   for (let f = 0; f <= 1.001; f += 0.25) { el("line", { class: "grid", x1: X(f), x2: X(f), y1: 2, y2: H - 24 }, svg); el("text", { x: X(f), y: H - 10, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${Math.round(f * 100)}%`; }
-  LO.levels.forEach((lv, i) => {
-    const c = counts(st.tool, t.id, lv, st.q), y = 4 + i * rowH, tot = c.reduce((a, b) => a + b, 0);
-    el("text", { x: lab - 8, y: y + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = LEVEL[lv];
-    el("text", { x: lab - 8, y: y + 24, "text-anchor": "end", class: "lbl" }, svg).textContent = `${t.genomes[lv]} genomes · best: ${t.best[lv]}`;
+  rows.forEach((row, i) => {
+    const c = row.counts, y = 4 + i * rowH, tot = c.reduce((a, b) => a + b, 0);
+    el("text", { x: lab - 8, y: row.sub ? y + 12 : y + 16, "text-anchor": "end", class: "mlbl" }, svg).textContent = row.label;
+    if (row.sub) el("text", { x: lab - 8, y: y + 24, "text-anchor": "end", class: "lbl" }, svg).textContent = row.sub;
     let x0 = 0;
     LO.status.forEach((s, j) => {
       if (!c[j]) return;
       const w = c[j] / tot, rect = el("rect", { x: X(x0) + 1, y, width: Math.max(0, X(x0 + w) - X(x0) - 2), height: rowH - 8, rx: 3, fill: ST[s].c }, svg);
-      rect.addEventListener("mousemove", (ev) => showTip(ev, `${LEVEL[lv]}<br>${esc(ST[s].t)}: ${num(c[j])} of ${num(tot)} (${pct(c[j], tot)})`)); rect.addEventListener("mouseleave", hideTip);
+      rect.addEventListener("mousemove", (ev) => showTip(ev, `${esc(row.label)}<br>${esc(ST[s].t)}: ${num(c[j])} of ${num(tot)} (${pct(c[j], tot)})`)); rect.addEventListener("mouseleave", hideTip);
       x0 += w;
     });
   });
   host.innerHTML = ""; host.appendChild(svg);
-  const c0 = counts(st.tool, t.id, "none", st.q), tot = c0.reduce((a, b) => a + b, 0);
-  $("txBarsNote").textContent = `${t.id}: ${t.lineage[6]}, ${fmtBp(t.length)}. ${TOOL[st.tool]}, ${st.q === "window" ? `${num(tot)} windows of 5 kb` : `${num(tot)} simulated reads`}. "best": the lowest rank of the MAG's lineage still in the database at that level, the deepest correct answer.`;
+}
+function drawBars() {
+  const t = target();
+  stackRows($("txBars"), LO.levels.map((lv) => ({ label: LEVEL[lv], sub: `${t.genomes[lv]} genomes · best: ${t.best[lv]}`, counts: callCounts(t.id, lv, st.q) })), "Share of calls of each kind per leave-out level");
+  const tot = counts(st.tool, t.id, "none", st.q).reduce((a, b) => a + b, 0);
+  $("txBarsNote").textContent = `${t.id}: ${t.lineage[6]}, ${fmtBp(t.length)}. ${TOOL[st.tool]}${st.tool === "kraken2" ? `, confidence ${st.conf}` : ""}, ${st.q === "window" ? `${num(tot)} windows of 5 kb` : `${num(tot)} simulated reads`}. "best": the lowest rank of the MAG's lineage still in the database at that level, the deepest correct answer.`;
+}
+function drawConfidence() {
+  const t = target(), ths = [...new Set(LO.confidence.map((r) => r[3]))].sort((a, b) => a - b);
+  stackRows($("txConf"), ths.map((th) => ({ label: `confidence ${th}`, sub: th === 0 ? "Kraken2's default" : "", counts: confCounts(t.id, st.lv, st.q, th) })), "Kraken2 calls at each confidence threshold");
+  $("txConfNote").textContent = `${t.id} (${t.lineage[6]}), ${LEVEL[st.lv]}, ${st.q === "window" ? "5 kb windows" : "simulated reads"}; best possible: ${t.best[st.lv]}. Re-scored from Kraken2's saved k-mer hits; at 0 every call equals Kraken2's own.`;
+}
+function drawLengths() {
+  const t = target();
+  stackRows($("txLen"), LO.cut_lengths.map((n) => { const r = LO.lengths.find((x) => x[0] === t.id && x[1] === st.lv && x[2] === n); return { label: `first ${n / 1000} kb of each read`, counts: r.slice(3) }; }), "Kraken2 calls by read length");
+  const r = LO.lengths.find((x) => x[0] === t.id && x[1] === st.lv && x[2] === LO.cut_lengths[0]);
+  $("txLenNote").textContent = `${t.id} (${t.lineage[6]}), Kraken2 at confidence 0, ${LEVEL[st.lv]}: the same ${num(r.slice(3).reduce((a, b) => a + b, 0))} simulated reads of 10 kb or more, each cut to its first 1, 2, 5 or 10 kb.`;
+}
+function drawAllsp() {
+  const A = LO.allsp, rows = [];
+  for (const t of LO.targets) for (const tool of LO.tools) {
+    const six = counts(tool, t.id, "none", st.q), all = A.shares.find((x) => x[0] === tool && x[1] === t.id && x[2] === st.q).slice(3);
+    rows.push({ label: `${t.id} ${TOOL[tool]}`, sub: `${t.genomes.none - t.genomes.species} genomes of the species`, counts: six });
+    rows.push({ label: `${t.id} ${TOOL[tool]}`, sub: `all ${A.genomes[t.id]} genomes of the species`, counts: all });
+  }
+  stackRows($("txAllsp"), rows, "Calls with nothing removed: six genomes of the species against all of them");
 }
 function drawTrack() {
   const t = target(), host = $("txTrack"), n = t.support.own_species.length, lab = 150, rowH = 18;
-  const W = Math.max(520, host.clientWidth || 520), bw = (W - lab - 8) / n, rows = LO.levels.length, H = (rows + 2) * rowH + 52;
+  const W = Math.max(520, host.clientWidth || 520), bw = (W - lab - 8) / n, rows = LO.levels.length + 1, H = (rows + 2) * rowH + 52;
   const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Calls along the genome, one row per leave-out level" });
   LO.levels.forEach((lv, i) => {
     const tr = LO.tracks[`${st.tool}|${t.id}|${lv}`], y = 4 + i * rowH;
@@ -138,6 +167,13 @@ function drawTrack() {
       r.addEventListener("mouseleave", hideTip);
     });
   });
+  const all = LO.allsp.tracks[`${st.tool}|${t.id}`], ya = 4 + LO.levels.length * rowH;
+  el("text", { x: lab - 8, y: ya + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = `all ${LO.allsp.genomes[t.id]} of species`;
+  all.forEach(([s, nm], k) => {
+    const r = el("rect", { x: lab + k * bw, y: ya, width: Math.max(bw, 0.6), height: rowH - 4, fill: ST[LO.status[s]].c }, svg);
+    r.addEventListener("mousemove", (ev) => showTip(ev, `nothing removed, all ${LO.allsp.genomes[t.id]} genomes of the species · ${num(k * LO.window / 1000)}-${num((k + 1) * LO.window / 1000)} kb<br>${esc(ST[LO.status[s]].t)}${LO.names[nm] ? `<br>called: <i>${esc(LO.names[nm])}</i>` : ""}`));
+    r.addEventListener("mouseleave", hideTip);
+  });
   [["own_species", "aligned: own species"], ["genus_other", "aligned: rest of genus"]].forEach(([key, label], i) => {
     const y = 10 + (rows + i) * rowH;
     el("text", { x: lab - 8, y: y + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = label;
@@ -146,7 +182,7 @@ function drawTrack() {
   const yAx = 14 + (rows + 2) * rowH, step = t.length > 4e6 ? 1e6 : 5e5;
   for (let p = 0; p <= t.length; p += step) { const x = lab + (p / LO.window) * bw; el("line", { class: "grid", x1: x, x2: x, y1: yAx - 4, y2: yAx }, svg); el("text", { x, y: yAx + 12, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${p / 1e6} Mb`; }
   host.innerHTML = ""; host.appendChild(svg);
-  $("txTrackNote").textContent = `${t.id} (${t.lineage[6]}), ${TOOL[st.tool]}, ${num(n)} windows of 5 kb; colours as in section 5. Alignment rows: the largest share of a window that aligns to one genome (viridis, dark 0% to yellow 100%); own species: ${LO.targets.find((x) => x.id === t.id).genomes.none - LO.targets.find((x) => x.id === t.id).genomes.species} genomes.`;
+  $("txTrackNote").textContent = `${t.id} (${t.lineage[6]}), ${TOOL[st.tool]}, ${num(n)} windows of 5 kb; colours as in section 5, confidence 0. Second-last call row: nothing removed, with all of the species' good GTDB genomes instead of six (section 10). Alignment rows: the largest share of a window that aligns to one genome (viridis, dark 0% to yellow 100%); own species: ${LO.targets.find((x) => x.id === t.id).genomes.none - LO.targets.find((x) => x.id === t.id).genomes.species} genomes.`;
 }
 function drawContig() {
   const t = target(), rows = LO.levels.map((lv) => [lv, ...LO.tools.map((tool) => LO.contigs.find((c) => c.tool === tool && c.target === t.id && c.level === lv))]);
@@ -156,7 +192,11 @@ function drawAniTable() {
   const t = target(), rows = LO.levels.map((lv) => [lv, LO.ani.find((a) => a.target === t.id && a.level === lv && a.query === "contig"), LO.ani.find((a) => a.target === t.id && a.level === lv && a.query === "read")]);
   $("txAniTable").innerHTML = `<table class="ct gt"><thead><tr><th>Level</th><th>Closest genome left (species)</th><th class="r">Sylph, contig</th><th class="r">Sylph, reads</th><th class="r">skani ANI</th><th class="r">skani: share of MAG aligned</th></tr></thead><tbody>${rows.map(([lv, c, r]) => `<tr><td>${LEVEL[lv]}</td><td>${c && c.species ? `<i>${esc(c.species)}</i>` : '<span class="muted">none at 80% ANI or more</span>'}</td><td class="r">${c && c.sylph !== null ? c.sylph.toFixed(2) + "%" : ""}</td><td class="r">${r && r.sylph !== null ? r.sylph.toFixed(2) + "%" : ""}</td><td class="r">${c && c.skani.length ? c.skani[0].toFixed(2) + "%" : c && c.species ? '<span class="muted">too far to align</span>' : ""}</td><td class="r">${c && c.skani.length ? c.skani[1].toFixed(1) + "%" : ""}</td></tr>`).join("")}</tbody></table>`;
 }
-function drawLeaveout() { drawBars(); drawTrack(); drawContig(); drawAniTable(); $("txLo").value = st.lo; $("txTool").value = st.tool; $("txQ").value = st.q; }
+function drawLeaveout() {
+  drawBars(); drawTrack(); drawContig(); drawConfidence(); drawLengths(); drawAllsp(); drawAniTable();
+  $("txLo").value = st.lo; $("txTool").value = st.tool; $("txQ").value = st.q; $("txConfSel").value = String(st.conf); $("txLv").value = st.lv;
+  $("txConfSel").disabled = st.tool !== "kraken2";
+}
 
 // --- contigs against their MAG
 function drawContigsVsMags() {
@@ -188,7 +228,7 @@ function drawContigTables() {
 // --- state
 function params() {
   const p = { mag: B[st.mag].id };
-  for (const k of ["lo", "tool", "q"]) if (st[k] !== DEFAULTS[k]) p[k] = st[k];
+  for (const k of ["lo", "tool", "q", "conf", "lv"]) if (st[k] !== DEFAULTS[k]) p[k] = st[k];
   if (examples.current >= 0) p.ex = examples.current + 1;
   return p;
 }
@@ -198,6 +238,8 @@ function applyState(s) {
   st.lo = LO.targets.some((t) => t.id === s.lo) ? s.lo : DEFAULTS.lo;
   st.tool = LO.tools.includes(s.tool) ? s.tool : DEFAULTS.tool;
   st.q = ["window", "read"].includes(s.q) ? s.q : DEFAULTS.q;
+  st.conf = LO.confidence.some((r) => r[3] === +s.conf) ? +s.conf : DEFAULTS.conf;
+  st.lv = LO.levels.includes(s.lv) ? s.lv : DEFAULTS.lv;
 }
 function drawMagViews() { drawCard(); drawAni(); }
 function drawAll(push = true) { drawMagViews(); drawLeaveout(); if (push) write(); }
@@ -214,6 +256,10 @@ function setup() {
   $("txLo").addEventListener("input", (e) => { st.lo = e.target.value; drawLeaveout(); write(); });
   $("txTool").addEventListener("input", (e) => { st.tool = e.target.value; drawLeaveout(); write(); });
   $("txQ").addEventListener("input", (e) => { st.q = e.target.value; drawLeaveout(); write(); });
+  $("txConfSel").innerHTML = [...new Set(LO.confidence.map((r) => r[3]))].sort((a, b) => a - b).map((th) => `<option value="${th}">${th}${th === 0 ? " (default)" : ""}</option>`).join("");
+  $("txLv").innerHTML = LO.levels.map((lv) => `<option value="${lv}">${LEVEL[lv]}</option>`).join("");
+  $("txConfSel").addEventListener("input", (e) => { st.conf = +e.target.value; drawLeaveout(); write(); });
+  $("txLv").addEventListener("input", (e) => { st.lv = e.target.value; drawLeaveout(); write(); });
   $("txCopy").addEventListener("click", async () => {
     write();
     let ok = true; try { await navigator.clipboard.writeText(location.href); } catch (e) { ok = false; }
