@@ -18,7 +18,11 @@ takeaways:
   - "Kraken2 names a whole contig to species even when almost nothing matches: with the order removed, 99.1% of one
     contig's k-mers had no hit, and it was still named as a Corynebacterium species."
   - "Even with the right species in the database, some windows get a sister species' name: stretches of DNA this
-    strain shares with relatives but the species' reference genomes lack."
+    strain shares with relatives but the species' reference genomes lack. With every good GTDB genome of the species
+    in the database (360-421 instead of 6), 99-100% of the windows were named correctly."
+  - "Neither a stricter Kraken2 confidence nor longer reads repairs a missing species: a higher threshold turns most
+    too-deep names into unclassified rather than right ones, and longer reads name the sister species more often
+    (87% of 1 kb pieces, 97% of 10 kb pieces)."
   - "Short contigs disagree with their MAG's name more often: 34% of binned contigs under 10 kb, 4% over 1 Mb."
 discussion: >-
   A colleague classified all reads of a new gut sample with Kraken2 and reports 40 species that are not in any MAG.

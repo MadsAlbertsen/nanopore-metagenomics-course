@@ -52,7 +52,8 @@
     455 of 461 windows (98.7%) still get a species name, and 6 are unclassified. None names B. adolescentis, which is
     no longer in the database; they name sister species of the genus, mostly Bifidobacterium sp959020145 (229
     windows) and B. ruminantium (164). The genus is right, the species is not: the database decides which names are
-    possible. Of the simulated reads, 1,963 of 2,015 (97.4%) get a sister species' name in the same way.
+    possible. Of the simulated reads, 1,963 of 2,015 (97.4%) get a sister species' name in the same way. Switch the
+    tool to Metabuli: it stops at the right genus for 18 windows, and 441 (95.7%) still name a sister species.
 
 - title: Wrong with the right species in the database
   at: track
@@ -65,7 +66,8 @@
     and 2,315-2,350 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
     rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
     Agathobacter species. This is DNA the strain shares with relatives but the species' reference genomes lack, such
-    as genes that move between genomes. More reference genomes per species would name some of these windows right.
+    as genes that move between genomes. With all 360 good A. rectalis genomes in the database (section 10), 67 of the
+    69 are named correctly: the added genomes carry this DNA.
 
 - title: A species name from almost nothing
   at: contigs
@@ -77,5 +79,20 @@
     It names the contig Corynebacterium sp002994655, a species of another order, although 99.1% of the contig's
     k-mers have no match in the database. Kraken2 follows the path from the root with the most k-mer hits, and with
     its default confidence of 0 it accepts that path however few k-mers support it. The call is right down to the
-    class (Actinomycetes) and wrong below. Kraken2 has a confidence setting for this (section 8); a call resting on 0.9% of
-    the k-mers should be read as "Actinomycetes at most".
+    class (Actinomycetes) and wrong below. Kraken2 has a confidence setting for this (section 8): already at 0.05 the
+    contig is unclassified. Metabuli, which also compares translated protein, names the same contig Actinomycetes,
+    the deepest rank still in the database.
+
+- title: Does a stricter threshold help?
+  at: confidence
+  state: {lo: "c.62", tool: "kraken2", q: "window", conf: 0.1, lv: "species"}
+  question: >-
+    Same test MAG (c.62, B. adolescentis) with its species removed, now at a Kraken2 confidence of 0.1. Compare the
+    bars in section 8. How many windows reach the right answer (the genus), and what happens to the rest as the
+    threshold rises?
+  answer: >-
+    At 0.1, 122 of 461 windows (26%) are named Bifidobacterium at genus level, 288 (62%) still name a sister species
+    and 51 are unclassified; at 0 it was 0, 455 and 6. Raising the threshold further does not give more right answers:
+    at 0.5, 101 windows are right, 142 still name a sister species and 202 are unclassified. Many windows share most
+    of their k-mers with one sister species, so even half the k-mers support a wrong species name. A threshold makes
+    names less deep, not more often right.
