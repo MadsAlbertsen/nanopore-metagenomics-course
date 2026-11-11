@@ -1,0 +1,52 @@
+number: 7
+slug: taxonomy
+title: "Taxonomy: naming genomes, contigs and reads, and how names go wrong"
+nav: Taxonomy
+summary: >-
+  How GTDB-Tk names the 421 MAGs, and what happens when contigs and reads are named against a reference database
+  that lacks their species, genus, family or order: a leave-out experiment with Kraken2, Metabuli and Sylph.
+status: draft
+mag_link: "#?mag={id}"
+takeaways:
+  - "GTDB-Tk names a species only when the closest reference genome is within the species' ANI radius (95% for most
+    species) and the alignment fraction is 0.5 or more: 407 of 421 MAGs here, at a median ANI of 98.3%. The other 14
+    stop at genus."
+  - "A species name can be a placeholder (217 MAGs, such as CAG-417 sp000432835): a species without a published
+    Latin name, often known only from MAGs."
+  - "A read or contig classifier can only name what is in its database. With the true species removed, Kraken2 named
+    a sister species for 89-99% of the 5 kb windows and reads: a confident name, one rank too deep."
+  - "Kraken2 names a whole contig to species even when almost nothing matches: with the order removed, 99.1% of one
+    contig's k-mers had no hit, and it was still named as a Corynebacterium species."
+  - "Even with the right species in the database, some windows get a sister species' name: stretches of DNA this
+    strain shares with relatives but the species' reference genomes lack."
+  - "Short contigs disagree with their MAG's name more often: 34% of binned contigs under 10 kb, 4% over 1 Mb."
+discussion: >-
+  A colleague classified all reads of a new gut sample with Kraken2 and reports 40 species that are not in any MAG.
+  What would you check before believing that these species are present, and what could a read with a species name
+  mean when the true species is not in the database?
+teacher:
+  time: About 70 minutes (an estimate, not yet tried with students).
+  before: What a MAG is (module 4) and MAG quality (module 5); no background in taxonomy tools needed.
+  flow:
+    - "15 min: how GTDB-Tk names a MAG and what a placeholder or genus-only name means (sections 1 and 2; examples 1
+      to 3)."
+    - "10 min: how read and contig classifiers work, and the leave-out design (sections 3 and 4)."
+    - "20 min: the leave-out results: what happens at each level, along the genome and for whole contigs (sections 5
+      to 7; examples 4 to 6)."
+    - "10 min: nearest relatives by ANI and the 95% boundary (section 8)."
+    - "15 min: contigs against their MAG in the real data; take-home points and the discussion question."
+  discussion_points:
+    - "A species name from a k-mer classifier does not show the species is there: with the species missing from the
+      database, nearly every read got a sister species' name (section 5)."
+    - "Checks: the share of a read's k-mers that support the call (Kraken2's confidence), whether the reads cover the
+      claimed genome evenly (mapping), and whether other tools agree."
+    - "Reads from a species not in the database are named after its closest relative, or as unclassified when the
+      relative is far; both happen in section 5."
+  pitfalls:
+    - "ANI and AF together decide a species: a high ANI over a small share of the genome (example 2) is not enough."
+    - "Placeholder names such as CAG-417 sp000432835 are valid GTDB species without a published Latin name, not errors
+      or missing names."
+    - "'Correct' in the leave-out charts means right as far as the database allows: with the genus removed, the best
+      possible answer is the family."
+    - "The leave-out references are reduced (300-706 genomes per MAG, 6 genomes of each test species), so absolute
+      numbers depend on this design; the direction of the changes is the point."

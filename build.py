@@ -289,7 +289,7 @@ def place_updates(body: str, block: str) -> str:
 PROJECTS_INTRO = (
     '<section class="intro"><span class="kicker">Group projects</span><h1>Projects: the students\' own questions</h1>'
     "<p>Each group of students asked its own question about the same ten stool samples. The reports below answer them "
-    "with the data from this course, as listed in module 8, worked out on the course's analysis computer. Like the "
+    "with the data from this course, worked out on the course's analysis computer. Like the "
     "modules, every report is interactive: hover over a chart for its numbers, and open the guided examples. A draft "
     "is still being checked; the groups' feedback can lead to changes and new questions.</p></section>"
 )

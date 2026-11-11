@@ -1,0 +1,81 @@
+# Guided examples for module 7 (taxonomy). Each example sets the page up (state) and asks one question; the answer
+# stays hidden until clicked. Examples 1-3: GTDB-Tk data (np26 scripts/29_course_annotation.py, 2026-11-01, checked by an
+# independent review then). Examples 4-6: the leave-out experiment (np26 scripts/60_taxonomy_leaveout.py and
+# 61_course_taxonomy.py, 2026-11-11). check.py rejects names not in data.json.
+# state keys: mag = MAG in the card; lo = test MAG of the leave-out charts; tool = kraken2 or metabuli;
+#   q = window or read (query of the leave-out bars).
+
+- title: How sure is a species name?
+  at: names
+  state: {mag: "1.308"}
+  question: >-
+    Open: Bacteroides caccae (MAG 1.308), also shown in modules 4 and 6. Find it in the ANI and AF chart and read
+    its card. Why does GTDB-Tk give it a species name?
+  answer: >-
+    Its closest reference genome is Bacteroides caccae at 99.22% ANI with an alignment fraction of 0.867: above the
+    species radius of 95% and above the AF limit of 0.5, and the tree placement agrees ("congruent species
+    assignments"). Both limits are met with a wide margin; module 8 shows its genes.
+
+- title: Close, but too little aligned
+  at: names
+  state: {mag: "2.255"}
+  question: >-
+    Open MAG 2.255 (Muricoprocola sp.), one contig of 2.64 Mb. Its closest reference is more than 95% identical. Why
+    does it get no species name?
+  answer: >-
+    The closest reference, Muricoprocola shaoxingensis, is 97.85% identical by ANI, but only 0.329 of the genomes
+    align (AF), below GTDB-Tk's limit of 0.5. ANI is measured only over the aligned part, so a high ANI over a third
+    of a genome does not make the same species. GTDB-Tk stops at genus. Why so little aligns, the data here do not
+    show.
+
+- title: Close to many species
+  at: names
+  state: {mag: "3.2807"}
+  question: >-
+    Open MAG 3.2807 (Collinsella sp.). Read the warning in its card, its closest reference and its placement
+    reference. Why does it get no species name?
+  answer: >-
+    GTDB-Tk places it next to Collinsella sp902494715 (94.51% ANI, AF 0.687), below that species' 95% radius; the
+    warning ("falls outside its pre-defined ANI radius") refers to this placement reference. Its highest ANI to any
+    reference is 94.97% (Collinsella sp902465465, radius 95.0%, AF 0.623), and the 99 other Collinsella references GTDB-Tk
+    lists are 92.6-94.97% identical, 17 of them within 0.5 points of their own radius. GTDB-Tk cannot assign it to an
+    existing species; a fixed ANI boundary cannot separate genomes this close to it. Section 8 shows the same boundary
+    problem in the leave-out experiment.
+
+- title: The species is missing from the database
+  at: leaveout
+  state: {lo: "c.62", tool: "kraken2", q: "window"}
+  question: >-
+    Test MAG c.62 is Bifidobacterium adolescentis. Look at the bar for "species removed" and at the same row of the
+    genome track below. What does Kraken2 call the 5 kb windows when no B. adolescentis genome is in its database?
+  answer: >-
+    455 of 461 windows (98.7%) still get a species name, and 6 are unclassified. None names B. adolescentis, which is
+    no longer in the database; they name sister species of the genus, mostly Bifidobacterium sp959020145 (229
+    windows) and B. ruminantium (164). The genus is right, the species is not: the database decides which names are
+    possible. Of the simulated reads, 1,963 of 2,015 (97.4%) get a sister species' name in the same way.
+
+- title: Wrong with the right species in the database
+  at: track
+  state: {lo: "c.38", tool: "kraken2", q: "window"}
+  question: >-
+    Test MAG c.38 is Agathobacter rectalis. In the top row of the genome track (nothing removed), where are the windows
+    that Kraken2 names wrongly, and what does the alignment row under the track show for them?
+  answer: >-
+    69 of 690 windows (10%) name another Agathobacter species, in runs of neighbouring windows (for example 55-90 kb
+    and 2,315-2,350 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
+    rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
+    Agathobacter species. This is DNA the strain shares with relatives but the species' reference genomes lack, such
+    as genes that move between genomes. More reference genomes per species would name some of these windows right.
+
+- title: A species name from almost nothing
+  at: contigs
+  state: {lo: "c.62", tool: "kraken2", q: "window"}
+  question: >-
+    Look at the whole-contig table for c.62. What does Kraken2 call the 2.3 Mb contig when its whole order
+    (Actinomycetales in GTDB) is removed, and what share of its k-mers found any match?
+  answer: >-
+    It names the contig Corynebacterium sp002994655, a species of another order, although 99.1% of the contig's
+    k-mers have no match in the database. Kraken2 follows the path from the root with the most k-mer hits, and with
+    its default confidence of 0 it accepts that path however few k-mers support it. The call is right down to the
+    class (Actinomycetes) and wrong below. Kraken2 has a confidence setting for this; a call resting on 0.9% of
+    the k-mers should be read as "Actinomycetes at most".
