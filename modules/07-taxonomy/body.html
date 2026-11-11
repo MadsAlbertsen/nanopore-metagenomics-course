@@ -1,0 +1,134 @@
+<div class="intro">
+  <span class="kicker">Module 7</span>
+  <h1>Taxonomy: naming genomes, contigs and reads, and how names go wrong</h1>
+  <p>Which organism is a MAG, a contig or a read from? Every answer comes from a comparison with reference genomes whose names are known, so it can only be as good as that reference set. A whole MAG is named by GTDB-Tk (<span data-n="gtdbVersion"></span>) from marker genes and its similarity to the reference genomes of the Genome Taxonomy Database (GTDB). Single contigs and reads are named by faster tools that look up short pieces of DNA in a database. This page first shows how the MAGs were named and how sure each name is. It then asks what happens when the right organism is not in the database: four of our MAGs were named again after removing their species, genus, family or order from the reference set.</p>
+  <div class="stats" id="txStats"></div>
+</div>
+<section class="panel" id="txExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>1. How GTDB-Tk names a MAG</h2>
+    <p>GTDB-Tk finds 120 bacterial (or 53 archaeal) marker genes in a MAG, places the MAG in a tree of reference genomes from GTDB, and compares it with the closest reference genomes by average nucleotide identity (ANI) (Chaumeil et al. 2022, Bioinformatics). A MAG gets a species name when its ANI to that species' reference genome is within the species' radius (95% for most species) and enough of the genomes align: an alignment fraction (AF) of 0.5 or more, where GTDB-Tk takes the larger of the two genomes' aligned shares (GTDB-Tk documentation, version 2.5: --min_af and summary.tsv). Here <span data-n="species"></span> MAGs got a species name, at a median ANI of <span data-n="spAni"></span> and a median AF of <span data-n="spAf"></span>. When no reference is close enough, the name stops at a higher rank, chosen from the MAG's position in the tree, and GTDB-Tk reports the relative evolutionary divergence (RED), a scaled depth in the tree that GTDB uses to set ranks (Parks et al. 2018, Nature Biotechnology). The chart shows each MAG's closest reference.</p>
+  </section>
+  <section class="panel">
+    <h2>2. Latin names, placeholder names and genus only</h2>
+    <p>A species name is not always a Latin name. GTDB gives a species without a published Latin name, often one known only from MAGs, a placeholder name such as CAG-417 sp000432835, after the genome that defines the species. Here <span data-n="latin"></span> MAGs have a Latin species name, <span data-n="placeholder"></span> a placeholder name and <span data-n="genusOnly"></span> are named only to genus; no MAG stops above genus. Of those <span data-n="genusOnly"></span>, <span data-n="byTree"></span> were named from the tree alone, <span data-n="byRed"></span> by RED, and <span data-n="byAni"></span> had a close reference genome but missed its radius or the AF limit (examples 2 and 3). <span data-n="archaea"></span> is an archaeon. A placeholder name or a missing species says the organism is little studied; module 8 shows what that means for its genes.</p>
+    <div class="scroll" id="txNovel"></div>
+    <p class="note">MAGs without a species name. Closest reference: the highest ANI GTDB-Tk reports for the MAG (blank: none close enough to compute). Click a row to open the MAG.</p>
+  </section>
+</div>
+
+<section class="spctl panel" aria-label="MAG">
+  <label>MAG <input id="txFind" list="txMags" placeholder="find a MAG" aria-label="Find a MAG" style="width:240px"></label>
+  <datalist id="txMags"></datalist>
+  <button class="link" id="txCopy" type="button">Copy link to this view</button>
+  <span class="count" id="txCopied" aria-live="polite"></span>
+</section>
+<div class="spgrid">
+  <div class="detail">
+    <section class="panel">
+      <h2>Closest reference genome of each MAG</h2>
+      <div class="plotwrap" id="txAni"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>species name</span><span><i class="sw" style="background:var(--c2)"></i>no species name</span><span>· dashed: ANI 95% (most species' radius) and AF 0.5 · ring: the open MAG</span></div>
+      <p class="note" id="txAniNote"></p>
+      <div class="exslot" data-at="names"></div>
+    </section>
+  </div>
+  <aside><section class="panel" id="txCard" aria-live="polite"></section></aside>
+</div>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>3. Naming contigs and reads</h2>
+    <p>Reads and single contigs are too short for marker genes, so other tools name them, and each answers a slightly different question. <b>Kraken2</b> (Wood et al. 2019, Genome Biology) looks up every 35-base piece (k-mer) of a sequence in a table that stores, for each k-mer, the lowest taxon shared by all reference genomes that contain it. It then follows the path from the root of the tree that collects the most k-mer hits and names the sequence at the end of that path; by default (confidence 0) it does so however few k-mers support the path. <b>Metabuli</b> (Kim and Steinegger 2024, Nature Methods) matches pieces of the sequence both as DNA and as translated protein, so it also finds relatives whose DNA has drifted apart; it scores the reference genomes and names the lowest taxon shared by those that score about as well as the best. <b>Sylph</b> (Shaw and Yu 2024, Nature Biotechnology) does not name single reads: it estimates the ANI between a whole set of sequences and every reference genome, and the closest genome gives the name.</p>
+  </section>
+  <section class="panel">
+    <h2>4. The leave-out experiment</h2>
+    <p>Our sample holds organisms that no reference genome represents well. To see what the tools do then, four complete, circular MAGs whose species is in GTDB were named again with parts of the reference set removed. Each MAG has its own reference set of GTDB genomes (<span data-n="refRange"></span>): six genomes of its own species, the species representatives of its family (all of its genus, up to 150 in all), samples of its order and class, and 300 random genomes from across the bacteria. At each level, every genome sharing the MAG's species, genus, family or order is removed and the database built again. Three kinds of query were named: the whole contig, the contig cut into 5 kb windows, and about 2,000 nanopore reads simulated from the MAG with Badread (Wick 2019, Journal of Open Source Software; read N50 about 8 kb, about 98.5% identity). A call counts as correct when it names the lowest rank still in the database (with the genus removed: the right family) and nothing deeper.</p>
+  </section>
+</div>
+
+<section class="spctl panel" aria-label="Leave-out view">
+  <label>Test MAG <select id="txLo" aria-label="Test MAG"></select></label>
+  <label>Tool <select id="txTool" aria-label="Classifier"></select></label>
+  <label>Query <select id="txQ" aria-label="Query"><option value="window">5 kb windows of the contig</option><option value="read">simulated reads</option></select></label>
+  <label>Kraken2 confidence <select id="txConfSel" aria-label="Kraken2 confidence threshold"></select></label>
+  <label>Level (sections 8, 9) <select id="txLv" aria-label="Leave-out level for sections 8 and 9"></select></label>
+  <span class="count" id="txLoInfo"></span>
+</section>
+
+<section class="panel">
+  <h2>5. What the tool calls at each level</h2>
+  <p>Each bar is one leave-out level of the chosen test MAG: the share of windows or reads in each kind of call. "Too deep" means the call is right as far as the database allows but then names a lower taxon that cannot be right, such as a sister species once the true species is removed. "Wrong" disagrees with the true lineage at a rank the database still holds.</p>
+  <div id="txBars"></div>
+  <div class="legend" id="txLegend"></div>
+  <p class="note" id="txBarsNote"></p>
+  <div class="exslot" data-at="leaveout"></div>
+</section>
+
+<section class="panel">
+  <h2>6. Along the genome</h2>
+  <p>The same calls for each 5 kb window, in genome order, one row per level. Runs of neighbouring windows with the same kind of call show regions, not random errors. The two rows under the track show how much of each window aligns to one reference genome of the MAG's own species, and to one genome of another species in its genus (minimap2; Li 2018, Bioinformatics): a window that the own species' genomes lack but a relative carries is easily named after the relative. Hover over a window for its call.</p>
+  <div class="scroll" id="txTrack"></div>
+  <p class="note" id="txTrackNote"></p>
+  <div class="exslot" data-at="track"></div>
+</section>
+
+<section class="panel">
+  <h2>7. The whole contig</h2>
+  <p>The complete MAG contig, named as one sequence. The table gives the tool's call at each level and, for Kraken2, the share of the contig's k-mers that found no match in the database at all.</p>
+  <div class="scroll" id="txContig"></div>
+  <div class="exslot" data-at="contigs"></div>
+</section>
+
+<section class="panel">
+  <h2>8. Kraken2's confidence setting</h2>
+  <p>Kraken2 can be told to name a sequence only as deep as a share of its k-mers supports: with a confidence of 0.1, the called taxon and the taxa below it must hold at least 10% of the sequence's k-mers, or Kraken2 moves up the tree until they do, and leaves the sequence unclassified if not even the root qualifies (Kraken2 manual). The chart re-scores the saved calls of the chosen test MAG, level and query at each threshold. Pooled over the four test MAGs, a threshold trades one error for another rather than removing it. With the species removed, the share of windows named too deep falls from 94% at 0 to 43% at 0.2, but at best 42% (at 0.3) reach the right genus, while 28% still name a sister species and 24% are unclassified. With the genus or more removed, most k-mers have no hit at all, and as unmatched k-mers count in the total, 81-98% of windows are already unclassified at 0.05, as are the whole contigs by 0.1. With nothing removed, correct species calls fall from 93% of windows at 0 to 85% at 0.1 and 37% at 0.5, and for reads, which carry more errors, from 93% to 78% and 14%. The threshold in the control bar also applies to the bars in section 5.</p>
+  <div id="txConf"></div>
+  <p class="note" id="txConfNote"></p>
+  <div class="exslot" data-at="confidence"></div>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>9. Read length</h2>
+    <p>Longer reads carry more k-mers. The simulated reads of 10 kb or more were cut to their first 1, 2, 5 and 10 kb, so every bar holds the same reads, and named with Kraken2 at the chosen level. Pooled over the four MAGs, with nothing removed, correct species calls rise from 89% at 1 kb to 94.5% at 10 kb. With the species removed, length does not help: 87% of the 1 kb pieces and 97% of the 10 kb pieces name a sister species. With the genus removed, 54% of 1 kb pieces stay unclassified but only 5% of 10 kb pieces; the extra k-mers mostly lead to a confident wrong species (35% too deep at 1 kb, 83% at 10 kb).</p>
+    <div id="txLen"></div>
+    <p class="note" id="txLenNote"></p>
+  </section>
+  <section class="panel">
+    <h2>10. More genomes of the species</h2>
+    <p>The reference sets above hold six genomes of each test species. Here, with nothing removed, every good GTDB genome of the species was added (<span data-n="allspGenomes"></span>). For the three species with hundreds of genomes, Kraken2 named 99-100% of the windows correctly, against 88-94% with six genomes; Metabuli rose from 85-92% to 93-100%. Almost all windows that were wrong with six genomes became correct, and aligning them shows why: a median 99-100% of each such window aligns to one of the added genomes, against a median 0-25% to the best of the original six. The wrong names came from DNA that this strain carries and the six reference genomes lack. D. piger_A, with only ten good genomes, changed little (Kraken2 97% to 98%). The genome track in section 6 shows these calls in its second-last row.</p>
+    <div id="txAllsp"></div>
+    <p class="note">Query as chosen in the control bar; confidence 0 for Kraken2. Good genomes: CheckM2 completeness 90% or more and contamination 5% or less, as for the rest of the reference set.</p>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>11. The nearest relative by ANI</h2>
+  <p>Sylph gives the ANI between the MAG and the closest genome left in the database; skani (Shaw and Yu 2023, Nature Methods), a second method that aligns the genomes, gives the ANI and the share of the MAG that aligns. The species boundary is about 95% ANI. With the species removed, the closest genome belongs to a sister species near that boundary, and the two methods differ by up to <span data-n="aniGap"></span>: a single ANI estimate near 95% does not settle whether two genomes are one species. For contigs Sylph's ANI without its coverage correction is shown, as one contig is a sample at 1x depth, where the correction is not meant to work.</p>
+  <div class="scroll" id="txAniTable"></div>
+</section>
+
+<div class="antwo">
+  <section class="panel">
+    <h2>12. Contigs against their MAG in our data</h2>
+    <p>In the real data there is no known answer, but the contigs of one MAG should come from one organism. The assembly pipeline named every contig with Metabuli, using a GTDB-based database whose release the pipeline output does not record, and GTDB-Tk named every MAG. Of <span data-n="ctgN"></span> binned contigs, <span data-n="ctgAgree"></span> agree with their MAG down to species. Disagreement falls with contig length (chart). Most disagreements are at species level, between sister species of the same genus (table). A disagreeing contig is not proof of a binning error: the leave-out experiment shows that a strain's own DNA can carry a relative's name. Module 6's methylation and module 5's marker genes are the better tests of whether a contig belongs.</p>
+  </section>
+  <section class="panel">
+    <h2>Agreement by contig length</h2>
+    <div id="txCtg"></div>
+    <div class="legend" id="txCtgLegend"></div>
+    <h3 class="anh3">The largest disagreeing contigs</h3>
+    <div class="scroll antable" id="txCtgBig"></div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>13. Where naming goes wrong</h2>
+  <p>A taxonomic name is a statement about the reference set as much as about the organism. A k-mer classifier names the closest thing in its database, so an organism that is missing gets a relative's name, often with no sign of doubt: with the species removed, almost every window and read here named a sister species, and Kraken2 named whole contigs to species from a small share of their k-mers (under 1% with the order removed). Metabuli stopped at the right genus more often, and left fewer sequences unclassified when the family or order was removed, at the cost of more wrong calls. Raising Kraken2's confidence moves some too-deep names to the right genus, but many stay too deep or become unclassified, and with more than the species missing almost everything becomes unclassified; and longer reads make a missing species' relative look more certain, not less. Even with the right species present, regions that the species' reference genomes lack take a relative's name. More genomes of the species fixed almost all of these. A deeper name is not a better one; check how much of a sequence supports it, whether other tools and the MAG's own name agree, and how close the nearest reference really is. The leave-out reference sets here are reduced, so the exact shares depend on the design; the direction of the changes is the point.</p>
+</section>

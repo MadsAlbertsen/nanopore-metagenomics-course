@@ -1,4 +1,4 @@
-// Module 7: annotation. DATA from the example analysis (np26 scripts/29_course_annotation.py):
+// Module 8: function (genes). DATA from the example analysis (np26 scripts/29_course_annotation.py):
 // numbers (headline counts), evidence (evidence class names), amr (AMRFinderPlus protein matches by product),
 // bins (per MAG: GTDB-Tk ranks, method, closest reference [species, ANI, AF], RED, gene evidence counts),
 // maps (gene maps for a few MAGs: contigs [id, length, circular, module-6 verdict] and genes
@@ -19,8 +19,6 @@ const EV = {
   rna: { c: "var(--v2)", t: "tRNA or rRNA gene", s: "RNA gene" },
 };
 const EV_ORDER = Object.keys(EV);
-const METHOD_SHORT = { topology_ani: "tree + ANI", topology: "tree alone", red: "tree + RED", ani_screen: "ANI screen" };
-const METHOD = { topology_ani: "tree placement and ANI", topology: "tree placement alone", red: "tree placement and RED", ani_screen: "ANI screen" };
 const KIND = { latin: "Latin species name", placeholder: "Placeholder species name", none: "Genus only" };
 const VERDICT = { missing_motif: "flagged in module 6: lacks a motif of the rest", extra_motif: "flagged in module 6: extra motif" };
 const pct = (a, b, d = 1) => !b ? "–" : a && (100 * a) / b < 10 ** -d ? `<${10 ** -d}%` : `${((100 * a) / b).toFixed(d)}%`;
@@ -56,39 +54,8 @@ function fillNumbers() {
     amrGenes: NUM.amr_genes, amrMags: NUM.amr_mags, amrFam: NUM.amr_family_genes, amrFamMags: NUM.amr_family_mags,
   };
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
-  $("anStats").innerHTML = [[NUM.mags, "MAGs"], [NUM.species, "with a species name"], [NUM.cds, "protein-coding genes"], [`${(100 * NUM.hyp / NUM.cds).toFixed(1)}%`, "without a name (hypothetical)"], [NUM.amr_genes, "matches to a resistance protein"]]
+  $("anStats").innerHTML = [[NUM.mags, "MAGs"], [NUM.cds, "protein-coding genes"], [`${(100 * NUM.hyp / NUM.cds).toFixed(1)}%`, "without a name (hypothetical)"], [NUM.amr_genes, "matches to a resistance protein"]]
     .map(([n, t]) => `<div class="stat"><b>${typeof n === "number" ? num(n) : n}</b><span>${t}</span></div>`).join("");
-}
-
-// --- MAGs without a species name
-function drawNovel() {
-  const rows = B.filter((b) => b.kind === "none").sort((a, b) => (b.ref ? b.ref[1] : 0) - (a.ref ? a.ref[1] : 0));
-  $("anNovel").innerHTML = `<table class="ct"><thead><tr><th>MAG</th><th>Named as</th><th>Named by</th><th>Closest reference</th><th class="r">ANI</th><th class="r">AF</th><th class="r">RED</th></tr></thead><tbody>${rows.map((b) => `<tr class="click" data-mag="${b.id}"><td class="mono">${b.id}</td><td><i>${esc(b.name)}</i></td><td>${METHOD_SHORT[b.method]}</td><td>${b.ref ? `<i>${esc(b.ref[0])}</i>` : ""}</td><td class="r">${b.ref ? b.ref[1].toFixed(2) + "%" : ""}</td><td class="r">${b.ref ? b.ref[2].toFixed(2) : ""}</td><td class="r">${b.red ?? ""}</td></tr>`).join("")}</tbody></table>`;
-}
-
-// --- ANI / AF scatter of each MAG's closest reference
-function drawAni() {
-  const host = $("anAni"), pts = B.filter((b) => b.ref);
-  const W = Math.max(300, host.clientWidth || 300), H = 300, mg = { l: 46, r: 12, t: 10, b: 38 };
-  const lo = Math.floor(Math.min(...pts.map((b) => b.ref[1]))), X = (v) => mg.l + ((v - lo) / (100 - lo)) * (W - mg.l - mg.r);
-  const Y = (v) => H - mg.b - v * (H - mg.t - mg.b);
-  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "ANI and alignment fraction of each MAG's closest reference genome" });
-  for (let a = lo; a <= 100; a++) { el("line", { class: "grid", x1: X(a), x2: X(a), y1: mg.t, y2: H - mg.b }, svg); el("text", { x: X(a), y: H - mg.b + 14, "text-anchor": "middle", class: "lbl" }, svg).textContent = a; }
-  for (let f = 0; f <= 1.001; f += 0.25) { el("line", { class: "grid", x1: mg.l, x2: W - mg.r, y1: Y(f), y2: Y(f) }, svg); el("text", { x: mg.l - 6, y: Y(f) + 4, "text-anchor": "end", class: "lbl" }, svg).textContent = f.toFixed(2); }
-  el("line", { x1: X(95), x2: X(95), y1: mg.t, y2: H - mg.b, stroke: "var(--muted)", "stroke-dasharray": "4 3" }, svg);
-  el("line", { x1: mg.l, x2: W - mg.r, y1: Y(0.5), y2: Y(0.5), stroke: "var(--muted)", "stroke-dasharray": "4 3" }, svg);
-  el("text", { x: (mg.l + W - mg.r) / 2, y: H - 4, "text-anchor": "middle", class: "lbl" }, svg).textContent = "ANI to the closest reference genome (%)";
-  const yt = el("text", { x: 12, y: (mg.t + H - mg.b) / 2, "text-anchor": "middle", class: "lbl", transform: `rotate(-90 12 ${(mg.t + H - mg.b) / 2})` }, svg); yt.textContent = "Alignment fraction";
-  const cur = B[st.mag];
-  for (const b of pts) {
-    const c = el("circle", { class: "pt", cx: X(b.ref[1]), cy: Y(b.ref[2]), r: 3.5, fill: b.kind === "none" ? "var(--c2)" : "var(--c1)", "fill-opacity": 0.75, "data-mag": b.id }, svg);
-    c.addEventListener("mousemove", (ev) => showTip(ev, `<i>${esc(b.name)}</i> <span class="mono">${b.id}</span><br>closest: <i>${esc(b.ref[0])}</i><br>ANI ${b.ref[1]}% · AF ${b.ref[2]}${b.radius ? ` · radius ${b.radius}%` : ""}`));
-    c.addEventListener("mouseleave", hideTip);
-  }
-  if (cur.ref) el("circle", { cx: X(cur.ref[1]), cy: Y(cur.ref[2]), r: 7, fill: "none", stroke: "var(--ink)", "stroke-width": 2 }, svg);
-  host.innerHTML = ""; host.appendChild(svg);
-  const radii = B.filter((b) => b.radius && b.radius !== 95).length;
-  $("anAniNote").textContent = `${pts.length} of ${B.length} MAGs; ${B.length - pts.length} have no reference close enough for GTDB-Tk to report an ANI. ${radii} MAGs with a species name have a species radius other than 95% (shown in the card).`;
 }
 
 // --- hypothetical share per MAG, by name kind and by phylum
@@ -142,24 +109,19 @@ function drawEvidence() {
 function drawCard() {
   const b = B[st.mag], ev = Object.fromEntries(EVN.filter((k) => k !== "rna").map((k, i) => [k, b.ev[i]]));
   const ranks = ["domain", "phylum", "class", "order", "family", "genus", "species"].map((r, i) => b.ranks[i] ? `<span>${r}: <i>${esc(b.ranks[i])}</i></span>` : `<span class="muted">${r}: –</span>`).join(" · ");
-  const ref = b.ref ? `<i>${esc(b.ref[0])}</i>: ANI ${b.ref[1]}%, AF ${b.ref[2]}${b.radius ? ` (species radius ${b.radius}%)` : ""}` : "none close enough to report an ANI";
   const named = b.cds - b.hyp;
   $("anCard").innerHTML = `<div class="head"><span class="kicker">MAG <span class="mono">${b.id}</span> · ${b.q === "HQ" ? "high quality" : "medium quality"}</span><h3><i>${esc(b.name)}</i></h3>
     <div class="facts"><span><b>${fmtBp(b.size)}</b> in ${b.n} contig${b.n === 1 ? "" : "s"}</span><span><b>${b.cov}x</b> depth</span><span>${KIND[b.kind]}</span></div>
     <p class="tax">${ranks}</p></div>
     <table class="chk"><tbody>
-      <tr><th>Named by</th><td>${METHOD[b.method]}${b.note ? `<div class="muted">${esc(b.note)}</div>` : ""}${b.warn ? `<div class="muted">Warning: ${esc(b.warn)}</div>` : ""}</td></tr>
-      <tr><th>Closest reference</th><td>${ref}${b.related ? `<div class="muted">GTDB-Tk's other related references: ${b.related[0]}, at ${b.related[1]}-${b.related[2]}% ANI</div>` : ""}</td></tr>
-      ${b.place && !b.radius ? `<tr><th>Placement reference</th><td><i>${esc(b.place[0])}</i>: ANI ${b.place[1]}%, AF ${b.place[2]} (radius ${b.place[3]}%) <span class="muted">· the reference on the MAG's branch of the tree</span></td></tr>` : ""}
-      ${b.red !== null ? `<tr><th>RED</th><td>${b.red} <span class="muted">(GTDB-Tk reports it when it was needed for the classification)</span></td></tr>` : ""}
-      <tr><th>Marker alignment</th><td>${b.msa}% of the marker-gene alignment covered</td></tr>
+      <tr><th>Name</th><td>${KIND[b.kind]} from GTDB-Tk${b.ref ? `: ANI ${b.ref[1]}% to <i>${esc(b.ref[0])}</i>` : ""} <span class="muted">· the evidence for the name is in module 7</span></td></tr>
       <tr><th>Genes (CDS)</th><td>${num(b.cds)}: ${num(named)} named (${pct(named, b.cds)}), ${num(b.hyp)} hypothetical (${pct(b.hyp, b.cds)}); ${num(b.vague)} names are DUF or "uncharacterized"</td></tr>
       <tr><th>Resistance protein matches</th><td>${b.amr.length ? b.amr.map((a) => `<code>${esc(a)}</code>`).join(" ") : "none"}${ev.amr_family ? ` <span class="muted">· ${ev.amr_family} family-model match${ev.amr_family === 1 ? "" : "es"}</span>` : ""}</td></tr>
     </tbody></table>
     <div id="anCardEv"></div>
     <div class="legend">${EV_ORDER.filter((k) => ev[k]).map((k) => `<span><i class="sw" style="background:${EV[k].c}"></i>${esc(EV[k].t)}: ${num(ev[k])}</span>`).join("")}</div>
     ${MAPS.mags[b.id] ? `<button class="link" id="anToMap" type="button">Show its gene map</button>` : `<p class="note">Gene map available for: ${MAP_IDS.join(", ")}.</p>`}
-    ${magLinks(b.id, "annotation")}`;
+    ${magLinks(b.id, "function")}`;
   evBar($("anCardEv"), ev, b.cds);
   const go = $("anToMap");
   if (go) go.addEventListener("click", () => { setMap(b.id); drawMapAll(); write(); $("anMap").scrollIntoView({ behavior: "smooth", block: "start" }); });
@@ -271,16 +233,16 @@ function applyState(s) {
   if (st.q && s.pos === undefined) { const g = M().genes.find((g) => g[0] === st.ctg && matches(g, st.q)) || M().genes.find((g) => matches(g, st.q)); if (g) { st.ctg = g[0]; st.pos = Math.round((g[1] + g[2]) / 2 - winBp() / 2); } }
   clampPos();
 }
-function drawMagViews() { drawCard(); drawAni(); drawHyp(); }
+function drawMagViews() { drawCard(); drawHyp(); }
 function drawAll(push = true) { drawMagViews(); drawMapAll(); drawAmr(); if (push) write(); }
 function openMag(id) { if (!magIdx.has(id)) return; st.mag = magIdx.get(id); drawMagViews(); write(); }
 
 function setup() {
-  fillNumbers(); drawNovel(); drawEvidence();
+  fillNumbers(); drawEvidence();
   $("anMags").innerHTML = B.map((b) => `<option value="${b.id} ${esc(b.name)}">`).join("");
   $("anMapLegend").innerHTML = EV_ORDER.map((k) => `<span><i class="sw" style="background:${EV[k].c}"></i>${esc(EV[k].t)}</span>`).join("");
   $("anFind").addEventListener("change", (e) => openMag(e.target.value.split(" ")[0]));
-  for (const id of ["anAni", "anHyp", "anNovel", "anAmrMags"]) $(id).addEventListener("click", (e) => { const t = e.target.closest("[data-mag]"); if (t) { hideTip(); openMag(t.dataset.mag); $("anCard").scrollIntoView({ behavior: "smooth", block: "nearest" }); } });
+  for (const id of ["anHyp", "anAmrMags"]) $(id).addEventListener("click", (e) => { const t = e.target.closest("[data-mag]"); if (t) { hideTip(); openMag(t.dataset.mag); $("anCard").scrollIntoView({ behavior: "smooth", block: "nearest" }); } });
   $("anAmr").addEventListener("click", (e) => { const t = e.target.closest("[data-amr]"); if (t) { st.amr = st.amr === t.dataset.amr ? "" : t.dataset.amr; drawAmr(); write(); } });
   $("anMapMag").addEventListener("input", (e) => { setMap(e.target.value); drawMapAll(); write(); });
   $("anCtg").addEventListener("input", (e) => { st.ctg = +e.target.value; st.pos = 0; drawMapAll(); write(); });

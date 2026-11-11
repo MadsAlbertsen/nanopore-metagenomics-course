@@ -1,47 +1,9 @@
-# Guided examples for module 7 (annotation). Each example sets the page up (state) and asks one question; the answer
+# Guided examples for module 8 (function: genes and what they may do). Each example sets the page up (state) and asks one question; the answer
 # stays hidden until clicked. Every number was computed from the example analysis (np26 scripts/29_course_annotation.py
 # data: GTDB-Tk summaries and Bakta tables; 2026-11-01) and recomputed by an independent review (2026-11-01). check.py rejects names
 # not in data.json.
 # state keys: mag = MAG in the card; map = MAG in the gene map; ctg = contig; pos = window start (bp); win = window
 #   width in kb (10, 20, 50); q = search text (product, gene symbol or Pfam domain); amr = resistance gene in the table.
-
-- title: How sure is a species name?
-  at: names
-  state: {mag: "1.308", map: "1.308"}
-  question: >-
-    Open: Bacteroides caccae (MAG 1.308), also shown in modules 4 and 6. Find it in the ANI and AF chart and read
-    its card. Why does GTDB-Tk give it a species name, and how many of its genes have a name?
-  answer: >-
-    Its closest reference genome is Bacteroides caccae at 99.22% ANI with an alignment fraction of 0.867: above the
-    species radius of 95% and above the AF limit of 0.5, and the tree placement agrees ("congruent species
-    assignments"). Of its 4,265 CDS, 717 (16.8%) are hypothetical, the 23rd lowest share of the 421 MAGs; 3,542 are
-    named from a protein cluster. Bacteroides is well studied, and its proteins find many relatives.
-
-- title: Close, but too little aligned
-  at: names
-  state: {mag: "2.255"}
-  question: >-
-    Open MAG 2.255 (Muricoprocola sp.), one contig of 2.64 Mb. Its closest reference is more than 95% identical. Why
-    does it get no species name?
-  answer: >-
-    The closest reference, Muricoprocola shaoxingensis, is 97.85% identical by ANI, but only 0.329 of the genomes
-    align (AF), below GTDB-Tk's limit of 0.5. ANI is measured only over the aligned part, so a high ANI over a third
-    of a genome does not make the same species. GTDB-Tk stops at genus. Why so little aligns, the data here do not
-    show. 755 of its 2,428 CDS (31%) are hypothetical.
-
-- title: Close to many species
-  at: names
-  state: {mag: "3.2807", map: "3.2807"}
-  question: >-
-    Open MAG 3.2807 (Collinsella sp.). Read the warning in its card, its closest reference and its placement
-    reference. Why does it get no species name?
-  answer: >-
-    GTDB-Tk places it next to Collinsella sp902494715 (94.51% ANI, AF 0.687), below that species' 95% radius; the
-    warning ("falls outside its pre-defined ANI radius") refers to this placement reference. Its highest ANI to any
-    reference is 94.97% (Collinsella sp902465465, radius 95.0%, AF 0.623), and the 99 other Collinsella references GTDB-Tk
-    lists are 92.6-94.97% identical, 17 of them within 0.5 points of their own radius. GTDB-Tk cannot assign it to an
-    existing species; a fixed ANI boundary cannot separate genomes this close to it. Its genes are well named (15.0%
-    hypothetical), so missing a species name does not mean its genes are unknown.
 
 - title: An archaeon in a bacterial annotation tool
   at: genemap
@@ -59,13 +21,13 @@
     ANI.
 
 - title: A placeholder species
-  at: names
+  at: hyp
   state: {mag: "c.100", map: "c.100"}
   question: >-
-    Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome. How sure is its name,
-    and how much of its gene content is known? Compare with Bacteroides caccae (example 1).
+    Open MAG c.100 (CAG-417 sp000432835), a circular 1.31 Mb genome. Its species name is well supported (module 7).
+    How much of its gene content is known? Compare with Bacteroides caccae (MAG 1.308).
   answer: >-
-    The name is as solid as B. caccae's: 98.36% ANI and AF 0.896 to the species' reference genome. But the species
+    Its name rests on 98.36% ANI and AF 0.896 to the species' reference genome. But the species
     has no published Latin name, hence the placeholder name, and 907 of its 1,347 CDS (67.3%) are hypothetical
     against 16.8% in B. caccae. Its order RF39 has a placeholder name too. MAGs with a placeholder name have a median
     of 45% hypothetical, those with a Latin name 24% (the chart's first rows).

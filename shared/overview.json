@@ -48,8 +48,8 @@
   ]
  },
  {
-  "module": "annotation",
-  "step": "Annotation",
+  "module": "taxonomy",
+  "step": "Taxonomy",
   "facts": [
    "407 MAGs named to a GTDB species, 346 different species",
    "49 species with more than one MAG"
