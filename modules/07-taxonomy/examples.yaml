@@ -59,14 +59,15 @@
 
 - title: Wrong with the right species in the database
   at: track
-  state: {lo: "c.38", tool: "kraken2", q: "window"}
+  state: {lo: "c.38", tool: "kraken2", q: "window", ow: 1}
   question: >-
-    Test MAG c.38 is Agathobacter rectalis. In the top row of the genome track (nothing removed), where are the windows
-    that Kraken2 names wrongly, and what does the alignment row under the track show for them?
+    Test MAG c.38 is Agathobacter rectalis. The genome track now shows only the windows that Kraken2 names wrongly
+    with nothing removed, and the table under it lists them. Where are they, what are they named, and what do the
+    alignment rows show for them? What happens to them in the row with all A. rectalis genomes?
   answer: >-
     69 of 690 windows (10%) are named wrongly, 60 of them as another Agathobacter species and 9 as species of other
-    genera, mostly in runs of neighbouring windows (for example 55-90 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
-    rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
+    genera. 48 of the 69 lie in runs of two or more neighbouring windows (the longest 55-90 kb), not scattered. For these windows the
+    median share that aligns to one of the six A. rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
     Agathobacter species. This is DNA the strain shares with relatives but the species' reference genomes lack, such
     as genes that move between genomes. With all 360 good A. rectalis genomes in the database (section 11), 67 of the
     69 are named correctly: the added genomes carry this DNA.

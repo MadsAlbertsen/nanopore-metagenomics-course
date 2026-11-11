@@ -28,8 +28,8 @@ const CTG = {
 };
 const pct = (a, b, d = 1) => !b ? "–" : `${((100 * a) / b).toFixed(d)}%`;
 const num = (n) => Number(n).toLocaleString("en");
-const DEFAULTS = { mag: "1.308", lo: "c.62", tool: "kraken2", q: "window", lv: "species" };
-const st = { mag: 0, lo: DEFAULTS.lo, tool: DEFAULTS.tool, q: DEFAULTS.q, lv: DEFAULTS.lv };
+const DEFAULTS = { mag: "1.308", lo: "c.62", tool: "kraken2", q: "window", lv: "species", ow: 0 };
+const st = { mag: 0, lo: DEFAULTS.lo, tool: DEFAULTS.tool, q: DEFAULTS.q, lv: DEFAULTS.lv, ow: DEFAULTS.ow };
 const target = () => LO.targets.find((t) => t.id === st.lo);
 
 // --- numbers in the text, all from the data
@@ -149,6 +149,8 @@ function drawConfidence() {
   const t = target(), ths = [...new Set(LO.confidence.map((r) => r[3]))].sort((a, b) => a - b);
   stackRows($("txConf"), ths.map((th) => ({ label: `confidence ${th}`, sub: th === 0 ? "Kraken2's default" : "", counts: confCounts(t.id, st.lv, st.q, th) })), "Kraken2 calls at each confidence threshold");
   $("txConfNote").textContent = `${t.id} (${t.lineage[6]}), ${LEVEL[st.lv]}, ${st.q === "window" ? "5 kb windows" : "simulated reads"}; best possible: ${t.best[st.lv]}. Re-scored from Kraken2's saved k-mer hits; at 0 every call equals Kraken2's own.`;
+  const kind = (th) => { const c = confCounts(t.id, st.lv, "contig", th), j = c.findIndex((x) => x > 0); return j < 0 ? "–" : ST[LO.status[j]].t.split(":")[0]; };
+  $("txConfContig").textContent = `The whole contig, as one sequence, at the same level: ${ths.map((th) => `${th}: ${kind(th)}`).join(" · ")}.`;
 }
 function drawLengths() {
   const t = target();
@@ -167,13 +169,16 @@ function drawAllsp() {
 }
 function drawTrack() {
   const t = target(), host = $("txTrack"), n = t.support.own_species.length, lab = 170, rowH = 18;
+  const wrongIdx = LO.status.indexOf("wrong"), base = LO.tracks[`${st.tool}|${t.id}|none`];
+  const hit = (k) => base[k][0] === wrongIdx, op = (k) => !st.ow || hit(k) ? 1 : 0.12;
+  const wdt = (k) => st.ow && hit(k) ? Math.max(bw, 3) : Math.max(bw, 0.6);
   const W = Math.max(520, host.clientWidth || 520), bw = (W - lab - 8) / n, rows = LO.levels.length + 1, H = (rows + 2) * rowH + 52;
   const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Calls along the genome, one row per leave-out level" });
   LO.levels.forEach((lv, i) => {
     const tr = LO.tracks[`${st.tool}|${t.id}|${lv}`], y = 4 + i * rowH;
     el("text", { x: lab - 8, y: y + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = LEVEL[lv];
     tr.forEach(([s, nm], k) => {
-      const r = el("rect", { x: lab + k * bw, y, width: Math.max(bw, 0.6), height: rowH - 4, fill: ST[LO.status[s]].c }, svg);
+      const r = el("rect", { x: lab + k * bw, y, width: wdt(k), height: rowH - 4, fill: ST[LO.status[s]].c, opacity: op(k) }, svg);
       r.addEventListener("mousemove", (ev) => showTip(ev, `${LEVEL[lv]} · ${num(k * LO.window / 1000)}-${num((k + 1) * LO.window / 1000)} kb<br>${esc(ST[LO.status[s]].t)}${LO.names[nm] ? `<br>called: <i>${esc(LO.names[nm])}</i>` : ""}<br>aligned to own species: ${Math.round(100 * t.support.own_species[k])}% · to another species of the genus: ${Math.round(100 * t.support.genus_other[k])}%`));
       r.addEventListener("mouseleave", hideTip);
     });
@@ -181,19 +186,35 @@ function drawTrack() {
   const all = LO.allsp.tracks[`${st.tool}|${t.id}`], ya = 4 + LO.levels.length * rowH;
   el("text", { x: lab - 8, y: ya + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = `all ${LO.allsp.genomes[t.id]} of species`;
   all.forEach(([s, nm], k) => {
-    const r = el("rect", { x: lab + k * bw, y: ya, width: Math.max(bw, 0.6), height: rowH - 4, fill: ST[LO.status[s]].c }, svg);
+    const r = el("rect", { x: lab + k * bw, y: ya, width: wdt(k), height: rowH - 4, fill: ST[LO.status[s]].c, opacity: op(k) }, svg);
     r.addEventListener("mousemove", (ev) => showTip(ev, `nothing removed, all ${LO.allsp.genomes[t.id]} genomes of the species · ${num(k * LO.window / 1000)}-${num((k + 1) * LO.window / 1000)} kb<br>${esc(ST[LO.status[s]].t)}${LO.names[nm] ? `<br>called: <i>${esc(LO.names[nm])}</i>` : ""}`));
     r.addEventListener("mouseleave", hideTip);
   });
   [["own_species", "aligned: own species"], ["genus_other", "aligned: other species"]].forEach(([key, label], i) => {
     const y = 10 + (rows + i) * rowH;
     el("text", { x: lab - 8, y: y + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = label;
-    t.support[key].forEach((v, k) => el("rect", { x: lab + k * bw, y, width: Math.max(bw, 0.6), height: rowH - 4, fill: viridis(v) }, svg));
+    t.support[key].forEach((v, k) => el("rect", { x: lab + k * bw, y, width: wdt(k), height: rowH - 4, fill: viridis(v), opacity: op(k) }, svg));
   });
+  drawWrongRuns(t, base, wrongIdx);
   const yAx = 14 + (rows + 2) * rowH, step = t.length > 4e6 ? 1e6 : 5e5;
   for (let p = 0; p <= t.length; p += step) { const x = lab + (p / LO.window) * bw; el("line", { class: "grid", x1: x, x2: x, y1: yAx - 4, y2: yAx }, svg); el("text", { x, y: yAx + 12, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${p / 1e6} Mb`; }
   host.innerHTML = ""; host.appendChild(svg);
   $("txTrackNote").textContent = `${t.id} (${t.lineage[6]}), ${TOOL[st.tool]}, ${num(n)} windows of 5 kb; colours as in section 5, confidence 0. Second-last call row: nothing removed, with all of the species' good GTDB genomes instead of six (section 11). Alignment rows: the largest share of a window that aligns to one genome (viridis, dark 0% to yellow 100%); own species: ${LO.targets.find((x) => x.id === t.id).genomes.none - LO.targets.find((x) => x.id === t.id).genomes.species} genomes.`;
+}
+// runs of neighbouring windows named wrongly with nothing removed, with the names and alignment shares
+function drawWrongRuns(t, base, wrongIdx) {
+  const box = $("txWrongRuns"); box.hidden = !st.ow;
+  if (!st.ow) return;
+  const runs = [], med = (a) => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+  base.forEach(([s], k) => { if (s !== wrongIdx) return; const last = runs[runs.length - 1]; if (last && last.end === k - 1) last.end = k; else runs.push({ start: k, end: k }); });
+  const total = runs.reduce((a, r) => a + r.end - r.start + 1, 0);
+  const rows = runs.map((r) => {
+    const ks = Array.from({ length: r.end - r.start + 1 }, (_, i) => r.start + i);
+    const names = [...new Set(ks.map((k) => LO.names[base[k][1]]).filter(Boolean))];
+    return `<tr><td class="r">${num(r.start * LO.window / 1000)}-${num((r.end + 1) * LO.window / 1000)} kb</td><td class="r">${ks.length}</td><td>${names.map((x) => `<i>${esc(x)}</i>`).join(", ")}</td><td class="r">${Math.round(100 * med(ks.map((k) => t.support.own_species[k])))}%</td><td class="r">${Math.round(100 * med(ks.map((k) => t.support.genus_other[k])))}%</td></tr>`;
+  });
+  box.innerHTML = `<table class="ct gt"><thead><tr><th class="r">Region</th><th class="r">Windows</th><th>Named as</th><th class="r">Aligned: own species</th><th class="r">Aligned: other species of the genus</th></tr></thead><tbody>${rows.join("")}</tbody></table>
+    <p class="note">${num(total)} of ${num(base.length)} windows named wrongly with nothing removed (${TOOL[st.tool]}), in ${num(runs.length)} runs of neighbouring windows. Aligned: the median, over the run's windows, of the largest share of a window that aligns to one genome of the MAG's own species, or of another species of its genus.</p>`;
 }
 function drawContig() {
   const t = target(), rows = LO.levels.map((lv) => [lv, ...LO.tools.map((tool) => LO.contigs.find((c) => c.tool === tool && c.target === t.id && c.level === lv))]);
@@ -205,7 +226,7 @@ function drawAniTable() {
 }
 function drawLeaveout() {
   drawDesign(); drawBars(); drawTrack(); drawContig(); drawConfidence(); drawLengths(); drawAllsp(); drawAniTable();
-  $("txLo").value = st.lo; $("txTool").value = st.tool; $("txQ").value = st.q;
+  $("txLo").value = st.lo; $("txTool").value = st.tool; $("txQ").value = st.q; $("txOw").checked = !!st.ow;
   for (const e of document.querySelectorAll(".txLvSel")) e.value = st.lv;
 }
 
@@ -239,7 +260,7 @@ function drawContigTables() {
 // --- state
 function params() {
   const p = { mag: B[st.mag].id };
-  for (const k of ["lo", "tool", "q", "lv"]) if (st[k] !== DEFAULTS[k]) p[k] = st[k];
+  for (const k of ["lo", "tool", "q", "lv", "ow"]) if (st[k] !== DEFAULTS[k]) p[k] = st[k];
   if (examples.current >= 0) p.ex = examples.current + 1;
   return p;
 }
@@ -250,6 +271,7 @@ function applyState(s) {
   st.tool = LO.tools.includes(s.tool) ? s.tool : DEFAULTS.tool;
   st.q = ["window", "read"].includes(s.q) ? s.q : DEFAULTS.q;
   st.lv = LO.levels.includes(s.lv) ? s.lv : DEFAULTS.lv;
+  st.ow = +s.ow === 1 ? 1 : 0;
 }
 function drawMagViews() { drawCard(); drawAni(); }
 function drawAll(push = true) { drawMagViews(); drawLeaveout(); if (push) write(); }
@@ -266,6 +288,7 @@ function setup() {
   $("txLo").addEventListener("input", (e) => { st.lo = e.target.value; drawLeaveout(); write(); });
   $("txTool").addEventListener("input", (e) => { st.tool = e.target.value; drawLeaveout(); write(); });
   $("txQ").addEventListener("input", (e) => { st.q = e.target.value; drawLeaveout(); write(); });
+  $("txOw").addEventListener("change", (e) => { st.ow = e.target.checked ? 1 : 0; drawTrack(); write(); });
   for (const e of document.querySelectorAll(".txLvSel")) {
     e.innerHTML = LO.levels.map((lv) => `<option value="${lv}">${LEVEL[lv]}</option>`).join("");
     e.addEventListener("input", () => { st.lv = e.value; drawLeaveout(); write(); });
