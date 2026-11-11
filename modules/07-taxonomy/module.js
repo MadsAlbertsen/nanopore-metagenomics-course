@@ -122,6 +122,7 @@ function stackRows(host, rows, aria) {
       if (!c[j]) return;
       const w = c[j] / tot, rect = el("rect", { x: X(x0) + 1, y, width: Math.max(0, X(x0 + w) - X(x0) - 2), height: rowH - 8, rx: 3, fill: ST[s].c }, svg);
       rect.addEventListener("mousemove", (ev) => showTip(ev, `${esc(row.label)}<br>${esc(ST[s].t)}: ${num(c[j])} of ${num(tot)} (${pct(c[j], tot)})`)); rect.addEventListener("mouseleave", hideTip);
+      if (w >= 0.08) el("text", { x: X(x0 + w / 2), y: y + (rowH - 8) / 2 + 4, "text-anchor": "middle", class: "seg", style: `fill:${["correct", "wrong", "unclassified"].includes(s) ? "#fff" : "#15212b"}` }, svg).textContent = `${Math.round(100 * w)}%`;
       x0 += w;
     });
   });
@@ -139,11 +140,15 @@ function drawDesign() {
     <tr class="sum"><th>Best possible answer</th>${LO.levels.map((lv) => `<td>${t.best[lv]}: <i>${esc(t.lineage[ranks.indexOf(t.best[lv])] || "")}</i></td>`).join("")}</tr></tbody></table>`;
   $("txDesignNote").textContent = `For the chosen test MAG, ${t.id} (${t.lineage[6]}). Hatched: removed at that level. The database holds six genomes of the MAG's own species and one representative genome of each other species.${t.id === "c.62" ? " In GTDB, the family Bifidobacteriaceae belongs to the order Actinomycetales, in the class Actinomycetes." : ""}`;
 }
+function topNames(track, n = 3) {
+  const c = new Map(); for (const [, nm] of track) if (LO.names[nm]) c.set(nm, (c.get(nm) || 0) + 1);
+  return [...c.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([nm, k]) => `${LO.names[nm]} (${num(k)} windows)`).join(", ");
+}
 function drawBars() {
   const t = target();
   stackRows($("txBars"), LO.levels.map((lv) => ({ label: LEVEL[lv], sub: `${t.genomes[lv]} genomes · best: ${t.best[lv]}`, counts: counts(st.tool, t.id, lv, st.q) })), "Share of calls of each kind per leave-out level");
   const tot = counts(st.tool, t.id, "none", st.q).reduce((a, b) => a + b, 0);
-  $("txBarsNote").textContent = `${t.id}: ${t.lineage[6]}, ${fmtBp(t.length)}. ${TOOL[st.tool]}${st.tool === "kraken2" ? ", default confidence 0" : ""}, ${st.q === "window" ? `${num(tot)} windows of 5 kb` : `${num(tot)} simulated reads`}. "best": the lowest rank of the MAG's lineage still in the database at that level, the deepest correct answer.`;
+  $("txBarsNote").textContent = `${t.id}: ${t.lineage[6]}, ${fmtBp(t.length)}. ${TOOL[st.tool]}${st.tool === "kraken2" ? ", default confidence 0" : ""}, ${st.q === "window" ? `${num(tot)} windows of 5 kb` : `${num(tot)} simulated reads`}. "best": the lowest rank of the MAG's lineage still in the database at that level, the deepest correct answer.${st.q === "window" ? ` Most frequent names with the species removed: ${topNames(LO.tracks[`${st.tool}|${t.id}|species`])}.` : ""}`;
 }
 function drawConfidence() {
   const t = target(), ths = [...new Set(LO.confidence.map((r) => r[3]))].sort((a, b) => a - b);
@@ -184,7 +189,7 @@ function drawTrack() {
     });
   });
   const all = LO.allsp.tracks[`${st.tool}|${t.id}`], ya = 4 + LO.levels.length * rowH;
-  el("text", { x: lab - 8, y: ya + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = `all ${LO.allsp.genomes[t.id]} of species`;
+  el("text", { x: lab - 8, y: ya + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = `all ${LO.allsp.genomes[t.id]} species genomes`;
   all.forEach(([s, nm], k) => {
     const r = el("rect", { x: lab + k * bw, y: ya, width: wdt(k), height: rowH - 4, fill: ST[LO.status[s]].c, opacity: op(k) }, svg);
     r.addEventListener("mousemove", (ev) => showTip(ev, `nothing removed, all ${LO.allsp.genomes[t.id]} genomes of the species · ${num(k * LO.window / 1000)}-${num((k + 1) * LO.window / 1000)} kb<br>${esc(ST[LO.status[s]].t)}${LO.names[nm] ? `<br>called: <i>${esc(LO.names[nm])}</i>` : ""}`));
@@ -213,8 +218,7 @@ function drawWrongRuns(t, base, wrongIdx) {
     const names = [...new Set(ks.map((k) => LO.names[base[k][1]]).filter(Boolean))];
     return `<tr><td class="r">${num(r.start * LO.window / 1000)}-${num((r.end + 1) * LO.window / 1000)} kb</td><td class="r">${ks.length}</td><td>${names.map((x) => `<i>${esc(x)}</i>`).join(", ")}</td><td class="r">${Math.round(100 * med(ks.map((k) => t.support.own_species[k])))}%</td><td class="r">${Math.round(100 * med(ks.map((k) => t.support.genus_other[k])))}%</td></tr>`;
   });
-  box.innerHTML = `<table class="ct gt"><thead><tr><th class="r">Region</th><th class="r">Windows</th><th>Named as</th><th class="r">Aligned: own species</th><th class="r">Aligned: other species of the genus</th></tr></thead><tbody>${rows.join("")}</tbody></table>
-    <p class="note">${num(total)} of ${num(base.length)} windows named wrongly with nothing removed (${TOOL[st.tool]}), in ${num(runs.length)} runs of neighbouring windows. Aligned: the median, over the run's windows, of the largest share of a window that aligns to one genome of the MAG's own species, or of another species of its genus.</p>`;
+  box.innerHTML = `<p class="note"><b>${num(total)} of ${num(base.length)} windows</b> named wrongly with nothing removed (${TOOL[st.tool]}), in ${num(runs.length)} runs of neighbouring windows. Aligned: the median, over the run's windows, of the largest share of a window that aligns to one genome of the MAG's own species, or of another species of its genus. The alignment looks at one genome at a time, Kraken2 at k-mers from all genomes, so a window may be named after a relative it barely aligns to.</p><table class="ct gt"><thead><tr><th class="r">Region</th><th class="r">Windows</th><th>Named as</th><th class="r">Aligned: own species</th><th class="r">Aligned: other species of the genus</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
 }
 function drawContig() {
   const t = target(), rows = LO.levels.map((lv) => [lv, ...LO.tools.map((tool) => LO.contigs.find((c) => c.tool === tool && c.target === t.id && c.level === lv))]);
