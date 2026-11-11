@@ -92,7 +92,7 @@ function drawCard() {
     <p class="tax">${ranks}</p></div>
     <table class="chk"><tbody>
       <tr><th>Named by</th><td>${METHOD[b.method]}${b.note ? `<div class="muted">${esc(b.note)}</div>` : ""}${b.warn ? `<div class="muted">Warning: ${esc(b.warn)}</div>` : ""}</td></tr>
-      <tr><th>Closest reference</th><td>${ref}${b.related ? `<div class="muted">GTDB-Tk's other related references: ${b.related[0]}, at ${b.related[1]}-${b.related[2]}% ANI</div>` : ""}</td></tr>
+      <tr><th>Closest reference</th><td>${ref}<div class="muted">the reference genome with the highest ANI to the MAG</div>${b.related ? `<div class="muted">GTDB-Tk's other related references: ${b.related[0]}, at ${b.related[1]}-${b.related[2]}% ANI</div>` : ""}</td></tr>
       ${b.place && !b.radius ? `<tr><th>Placement reference</th><td><i>${esc(b.place[0])}</i>: ANI ${b.place[1]}%, AF ${b.place[2]} (radius ${b.place[3]}%) <span class="muted">· the reference on the MAG's branch of the tree</span></td></tr>` : ""}
       ${b.red !== null ? `<tr><th>RED</th><td>${b.red} <span class="muted">(GTDB-Tk reports it when it was needed for the classification)</span></td></tr>` : ""}
       <tr><th>Marker alignment</th><td>${b.msa}% of the marker-gene alignment covered</td></tr>
@@ -137,7 +137,7 @@ function drawDesign() {
     ${DESIGN.map(([label, rm]) => `<tr><th>${label}</th>${LO.levels.map((lv) => cell(rm, lv)).join("")}</tr>`).join("")}
     <tr class="sum"><th>Genomes in the database</th>${LO.levels.map((lv) => `<td>${num(t.genomes[lv])}</td>`).join("")}</tr>
     <tr class="sum"><th>Best possible answer</th>${LO.levels.map((lv) => `<td>${t.best[lv]}: <i>${esc(t.lineage[ranks.indexOf(t.best[lv])] || "")}</i></td>`).join("")}</tr></tbody></table>`;
-  $("txDesignNote").textContent = `For the chosen test MAG, ${t.id} (${t.lineage[6]}). A tool that names a lower rank than the best possible answer is "too deep": the right name is not in the database, so a deeper name can only be a relative's.`;
+  $("txDesignNote").textContent = `For the chosen test MAG, ${t.id} (${t.lineage[6]}). Hatched: removed at that level. The database holds six genomes of the MAG's own species and one representative genome of each other species.${t.id === "c.62" ? " In GTDB, the family Bifidobacteriaceae belongs to the order Actinomycetales, in the class Actinomycetes." : ""}`;
 }
 function drawBars() {
   const t = target();
@@ -185,7 +185,7 @@ function drawTrack() {
     r.addEventListener("mousemove", (ev) => showTip(ev, `nothing removed, all ${LO.allsp.genomes[t.id]} genomes of the species · ${num(k * LO.window / 1000)}-${num((k + 1) * LO.window / 1000)} kb<br>${esc(ST[LO.status[s]].t)}${LO.names[nm] ? `<br>called: <i>${esc(LO.names[nm])}</i>` : ""}`));
     r.addEventListener("mouseleave", hideTip);
   });
-  [["own_species", "aligned: own species"], ["genus_other", "aligned: rest of genus"]].forEach(([key, label], i) => {
+  [["own_species", "aligned: own species"], ["genus_other", "aligned: other species"]].forEach(([key, label], i) => {
     const y = 10 + (rows + i) * rowH;
     el("text", { x: lab - 8, y: y + 12, "text-anchor": "end", class: "mlbl" }, svg).textContent = label;
     t.support[key].forEach((v, k) => el("rect", { x: lab + k * bw, y, width: Math.max(bw, 0.6), height: rowH - 4, fill: viridis(v) }, svg));

@@ -49,7 +49,7 @@
     Test MAG c.62 is Bifidobacterium adolescentis. Predict first, before you look at the bars: when no B.
     adolescentis genome is in Kraken2's database, will its 5 kb windows be unclassified, named Bifidobacterium (the
     genus), or named something else? Then look at the bar for "species removed" and the same row of the genome track
-    below.
+    below (hover over a bar or a window for the names).
   answer: >-
     455 of 461 windows (98.7%) still get a species name, and 6 are unclassified. None names B. adolescentis, which is
     no longer in the database; they name sister species of the genus, mostly Bifidobacterium sp959020145 (229
@@ -81,7 +81,7 @@
     It names the contig Corynebacterium sp002994655, a species of another order, although 99.1% of the contig's
     k-mers have no match in the database. Kraken2 follows the path from the root with the most k-mer hits, and with
     its default confidence of 0 it accepts that path however few k-mers support it. The call is right down to the
-    class (Actinomycetes) and wrong below. Kraken2 has a confidence setting for this (section 9): already at 0.05 the
+    class (Actinomycetes), the deepest rank left, and too deep below it. Kraken2 has a confidence setting for this (section 9): already at 0.05 the
     contig is unclassified. Metabuli, which also compares translated protein, names the same contig Actinomycetes,
     the deepest rank still in the database.
 
