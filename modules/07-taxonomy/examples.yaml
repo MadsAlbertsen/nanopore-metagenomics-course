@@ -62,8 +62,8 @@
     Test MAG c.38 is Agathobacter rectalis. In the top row of the genome track (nothing removed), where are the windows
     that Kraken2 names wrongly, and what does the alignment row under the track show for them?
   answer: >-
-    69 of 690 windows (10%) name another Agathobacter species, in runs of neighbouring windows (for example 55-90 kb
-    and 2,315-2,350 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
+    69 of 690 windows (10%) are named wrongly, 60 of them as another Agathobacter species and 9 as species of other
+    genera, mostly in runs of neighbouring windows (for example 55-90 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
     rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
     Agathobacter species. This is DNA the strain shares with relatives but the species' reference genomes lack, such
     as genes that move between genomes. With all 360 good A. rectalis genomes in the database (section 10), 67 of the
@@ -93,6 +93,7 @@
   answer: >-
     At 0.1, 122 of 461 windows (26%) are named Bifidobacterium at genus level, 288 (62%) still name a sister species
     and 51 are unclassified; at 0 it was 0, 455 and 6. Raising the threshold further does not give more right answers:
-    at 0.5, 101 windows are right, 142 still name a sister species and 202 are unclassified. Many windows share most
-    of their k-mers with one sister species, so even half the k-mers support a wrong species name. A threshold makes
-    names less deep, not more often right.
+    at 0.5, 101 windows are right, 16 are named above the genus, 142 still name a sister species and 202 are
+    unclassified. Many windows share most
+    of their k-mers with one sister species, so even half the k-mers support a wrong species name. Beyond 0.1 a stricter
+    threshold gives fewer deep names, not more right ones.

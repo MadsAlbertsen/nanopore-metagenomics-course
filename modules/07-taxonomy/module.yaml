@@ -20,8 +20,8 @@ takeaways:
   - "Even with the right species in the database, some windows get a sister species' name: stretches of DNA this
     strain shares with relatives but the species' reference genomes lack. With every good GTDB genome of the species
     in the database (360-421 instead of 6), 99-100% of the windows were named correctly."
-  - "Neither a stricter Kraken2 confidence nor longer reads repairs a missing species: a higher threshold turns most
-    too-deep names into unclassified rather than right ones, and longer reads name the sister species more often
+  - "Neither a stricter Kraken2 confidence nor longer reads repairs a missing species: at best (threshold 0.3) 42% of
+    windows reach the right genus while the rest stay too deep or become unclassified, and longer reads name the sister species more often
     (87% of 1 kb pieces, 97% of 10 kb pieces)."
   - "Short contigs disagree with their MAG's name more often: 34% of binned contigs under 10 kb, 4% over 1 Mb."
 discussion: >-
