@@ -29,17 +29,19 @@ discussion: >-
   What would you check before believing that these species are present, and what could a read with a species name
   mean when the true species is not in the database?
 teacher:
-  time: About 75 minutes (an estimate, not yet tried with students).
+  time: About 50 minutes for the core (sections 1 to 8), 25 more for the optional sections 9 to 13 (an estimate, not
+    yet tried with students).
   before: What a MAG is (module 4) and MAG quality (module 5); no background in taxonomy tools needed.
   flow:
-    - "15 min: how GTDB-Tk names a MAG and what a placeholder or genus-only name means (sections 1 and 2; examples 1
-      to 3)."
-    - "10 min: how read and contig classifiers work, and the leave-out design (sections 3 and 4)."
-    - "20 min: the leave-out results: what happens at each level, along the genome and for whole contigs (sections 5
-      to 7; examples 4 to 6)."
-    - "15 min: what helps: the confidence setting, longer reads, more genomes of the species (sections 8 to 10);
-      nearest relatives by ANI and the 95% boundary (section 11)."
-    - "15 min: contigs against their MAG in the real data (section 12); take-home points and the discussion question."
+    - "10 min: how GTDB-Tk names a MAG and what a placeholder or genus-only name means (sections 1 and 2; examples 1
+      and 2)."
+    - "10 min: how read and contig classifiers work, and the leave-out design with its table (sections 3 and 4)."
+    - "20 min: let students predict before they look (example 4), then the leave-out results at each level, along the
+      genome and for whole contigs (sections 5 to 7; examples 4 to 6)."
+    - "10 min: where naming goes wrong (section 8), take-home points and the discussion question."
+    - "Optional, 25 min: what could help, the confidence setting, longer reads, more genomes of the species (sections 9
+      to 11; example 7); nearest relatives by ANI (section 12; example 3); contigs against their MAG in the real data
+      (section 13)."
   discussion_points:
     - "A species name from a k-mer classifier does not show the species is there: with the species missing from the
       database, nearly every read got a sister species' name (section 5)."
