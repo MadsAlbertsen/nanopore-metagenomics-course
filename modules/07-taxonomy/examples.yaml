@@ -39,15 +39,17 @@
     warning ("falls outside its pre-defined ANI radius") refers to this placement reference. Its highest ANI to any
     reference is 94.97% (Collinsella sp902465465, radius 95.0%, AF 0.623), and the 99 other Collinsella references GTDB-Tk
     lists are 92.6-94.97% identical, 17 of them within 0.5 points of their own radius. GTDB-Tk cannot assign it to an
-    existing species; a fixed ANI boundary cannot separate genomes this close to it. Section 11 shows the same boundary
+    existing species; a fixed ANI boundary cannot separate genomes this close to it. Section 12 shows the same boundary
     problem in the leave-out experiment.
 
 - title: The species is missing from the database
   at: leaveout
   state: {lo: "c.62", tool: "kraken2", q: "window"}
   question: >-
-    Test MAG c.62 is Bifidobacterium adolescentis. Look at the bar for "species removed" and at the same row of the
-    genome track below. What does Kraken2 call the 5 kb windows when no B. adolescentis genome is in its database?
+    Test MAG c.62 is Bifidobacterium adolescentis. Predict first, before you look at the bars: when no B.
+    adolescentis genome is in Kraken2's database, will its 5 kb windows be unclassified, named Bifidobacterium (the
+    genus), or named something else? Then look at the bar for "species removed" and the same row of the genome track
+    below (hover over a bar or a window for the names).
   answer: >-
     455 of 461 windows (98.7%) still get a species name, and 6 are unclassified. None names B. adolescentis, which is
     no longer in the database; they name sister species of the genus, mostly Bifidobacterium sp959020145 (229
@@ -66,7 +68,7 @@
     genera, mostly in runs of neighbouring windows (for example 55-90 kb) rather than scattered. For these windows the median share that aligns to one of the six A.
     rectalis reference genomes is 5%, against 88% for correctly named windows; 61 of the 69 align better to another
     Agathobacter species. This is DNA the strain shares with relatives but the species' reference genomes lack, such
-    as genes that move between genomes. With all 360 good A. rectalis genomes in the database (section 10), 67 of the
+    as genes that move between genomes. With all 360 good A. rectalis genomes in the database (section 11), 67 of the
     69 are named correctly: the added genomes carry this DNA.
 
 - title: A species name from almost nothing
@@ -79,17 +81,17 @@
     It names the contig Corynebacterium sp002994655, a species of another order, although 99.1% of the contig's
     k-mers have no match in the database. Kraken2 follows the path from the root with the most k-mer hits, and with
     its default confidence of 0 it accepts that path however few k-mers support it. The call is right down to the
-    class (Actinomycetes) and wrong below. Kraken2 has a confidence setting for this (section 8): already at 0.05 the
+    class (Actinomycetes), the deepest rank left, and too deep below it. Kraken2 has a confidence setting for this (section 9): already at 0.05 the
     contig is unclassified. Metabuli, which also compares translated protein, names the same contig Actinomycetes,
     the deepest rank still in the database.
 
 - title: Does a stricter threshold help?
   at: confidence
-  state: {lo: "c.62", tool: "kraken2", q: "window", conf: 0.1, lv: "species"}
+  state: {lo: "c.62", tool: "kraken2", q: "window", lv: "species"}
   question: >-
-    Same test MAG (c.62, B. adolescentis) with its species removed, now at a Kraken2 confidence of 0.1. Compare the
-    bars in section 8. How many windows reach the right answer (the genus), and what happens to the rest as the
-    threshold rises?
+    Same test MAG (c.62, B. adolescentis) with its species removed. Predict first: if Kraken2 only names as deep as
+    10% of the k-mers support (confidence 0.1), will most windows now be named right, at genus? Then read the bars in
+    section 9: how many windows reach the genus at 0.1, and what happens to the rest as the threshold rises?
   answer: >-
     At 0.1, 122 of 461 windows (26%) are named Bifidobacterium at genus level, 288 (62%) still name a sister species
     and 51 are unclassified; at 0 it was 0, 455 and 6. Raising the threshold further does not give more right answers:
