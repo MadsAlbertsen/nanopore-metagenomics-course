@@ -40,3 +40,4 @@ ul.kinds li { margin: 3px 0 }
 ul.kinds .sw { margin-right: 6px }
 #txNovel table.ct td { white-space: normal }
 label.inl { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); margin: 6px 0 }
+svg text.seg { font-size: 10.5px; font-family: var(--mono); pointer-events: none }
