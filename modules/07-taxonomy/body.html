@@ -81,8 +81,10 @@
 <section class="panel">
   <h2>6. Along the genome</h2>
   <p>The same calls for each 5 kb window, in genome order, one row per level. Runs of neighbouring windows with the same kind of call show regions, not random errors. The two rows under the track show how much of each window aligns to one reference genome of the MAG's own species, and to one genome of another species in its genus (minimap2; Li 2018, Bioinformatics): a window that the own species' genomes lack but a relative carries is easily named after the relative. Hover over a window for its call.</p>
+  <label class="inl"><input type="checkbox" id="txOw"> Show only the windows named wrongly with nothing removed (top row)</label>
   <div class="scroll" id="txTrack"></div>
   <p class="note" id="txTrackNote"></p>
+  <div class="scroll antable" id="txWrongRuns" hidden></div>
   <div class="exslot" data-at="track"></div>
 </section>
 
@@ -109,6 +111,7 @@
   <div id="txConf"></div>
     <div class="legend txLeg"></div>
   <p class="note" id="txConfNote"></p>
+  <p class="note" id="txConfContig"></p>
   <div class="exslot" data-at="confidence"></div>
 </section>
 

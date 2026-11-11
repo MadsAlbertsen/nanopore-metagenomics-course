@@ -1,6 +1,6 @@
 """Every MAG, test MAG and setting an example names must exist in data.json."""
 
-KEYS = {"mag", "lo", "tool", "q", "lv"}
+KEYS = {"mag", "lo", "tool", "q", "lv", "ow"}
 QUERIES = {"window", "read"}
 
 
