@@ -100,8 +100,8 @@
     6-10. Is that a change between the periods? Look at the single days and the split count in the table.
   answer: >-
     On seven days it is at 0.010-0.025% (depth 0.3-2.6x); on days 4, 9 and 10 it jumps to 0.10%, 0.17% and 0.24%
-    (depth 19x, 19x and 44x). Those jumps are far larger than counting noise: the genome really took a larger share in
-    those samples. But days 9 and 10 alone make 91% of the second period's mean, the periods overlap, and 54 of 126
+    (depth 19x, 19x and 44x). Those jumps are far larger than counting noise: on those days many more read bases aligned to this
+    genome (from it, or from a close relative). But days 9 and 10 alone make 91% of the second period's mean, the periods overlap, and 54 of 126
     splits give a larger change. A few days can carry a whole period's mean, so check the days, not only the means.
     (The chart shows 2.2-fold because it adds 0.01% to both means.)
 
@@ -150,8 +150,8 @@
     Five of the six fallers carry 4.6-16.6 plant-fibre CAZyme genes per 1,000 genes (Dorea_A longicatena, c.76, only
     1.0), and all six have 14-40 CAZyme genes per 1,000. Five of the six risers have few or none (at most 1.0 per
     1,000) and 4-9 CAZyme genes per 1,000 in all. Diet studies found fewer plant-polysaccharide degrading Firmicutes
-    (Roseburia, Eubacterium rectale) on diets with little carbohydrate (Duncan et al. 2007, Appl Environ Microbiol;
-    David et al. 2014, Nature), so the direction fits. But the sixth riser, Bacteroides cellulosilyticus (c.119), has the
+    (Roseburia, Eubacterium rectale) on a diet with little carbohydrate (Duncan et al. 2007, Appl Environ Microbiol) and on an
+    animal-based diet (David et al. 2014, Nature), so the direction fits. But the sixth riser, Bacteroides cellulosilyticus (c.119), has the
     most CAZyme genes of all 17 (94 per 1,000, 43 of them plant fibre). And look at the phylum column: all six fallers
     are Bacillota, five of the six risers are not, so the contrast largely follows phylum. Six against six MAGs from one
     person, with the diet changed together with time: a pattern worth testing, not a result.

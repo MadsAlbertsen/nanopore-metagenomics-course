@@ -189,7 +189,7 @@ function drawComp() {
   host.innerHTML = ""; host.appendChild(svg);
   $("ipCompLegend").innerHTML = cs.map((c) => `<span><i class="sw" style="background:${c.colour}"></i>${c.id ? `<i>${esc(c.name)}</i> <span class="mono">${c.id}</span>` : esc(c.name)}</span>`).join("") + `<span>· shaded: second group of days</span>`;
   const note = {
-    share: `Each bar is one day's read bases (100%). The MAG parts are the read bases on each MAG's contigs; "on contigs not in a MAG" are read bases counted on contigs that were assembled but not binned, "not counted on any contig" the rest: reads that did not align, and the parts of reads the depth count leaves out (contig ends, poor alignments). mmlong2's read mapping aligned 97.6-98.0% of reads.`,
+    share: `Each bar is one day's read bases (100%). The MAG parts are the read bases on each MAG's contigs; "on contigs not in a MAG" are read bases counted on contigs that were assembled but not binned, "not counted on any contig" the rest: reads that did not align, and alignments below the 95% identity the depth count requires. mmlong2's read mapping aligned 97.6-98.0% of reads.`,
     binned: `Each bar is only the read bases that land on MAGs, scaled to 100%. This is how most tables of relative abundance are made. A day with more unbinned reads looks the same here: the MAG shares are larger than in "share of all read bases" by the factor 100 / (share in MAGs that day).`,
     gb: `Bars are read bases, not divided by how much was sequenced (${Math.min(...D.gb)} Gb on day 2 to ${Math.max(...D.gb)} Gb on day 4). Their height follows sequencing effort, not the gut: compare with the share views before reading anything into a tall or short bar.`,
   }[ms];
