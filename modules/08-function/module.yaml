@@ -3,43 +3,56 @@ slug: function
 title: "Function: what the genes may do, and how sure we are"
 nav: Function
 summary: >-
-  The genes of all 421 MAGs, the evidence behind each gene name, resistance genes, and a gene map for eight MAGs.
+  What a gene name rests on, how Bakta and KOfam compare on the same genes, what happens to function calls when the
+  reference database lacks a gene's relatives or a MAG is incomplete, and a tree for two related enzymes (bile salt
+  hydrolase or penicillin V acylase). Optional: a gene map and resistance genes.
 status: draft
 mag_link: "#?mag={id}"
 takeaways:
-  - "Little-studied lineages have more genes without a name: median 45% hypothetical in MAGs with a placeholder
-    species name (module 7), 24% with a Latin name."
-  - "About a third of all genes (34.9%) have no name. 70% of the cluster matches are only 50-70%
-    identical, so a name often says the protein family more than its exact role."
-  - "Every gene name has an evidence level: an expert match to a curated reference protein, a cluster match, only a
-    Pfam domain, or nothing. Check it before building on a name."
-  - "A tool built for bacteria leaves 90% of the archaeon's genes hypothetical, even its elongation factors, RNA
-    polymerase and methyl-coenzyme M reductase, whose Pfam domains are found."
-  - "A resistance-gene match (169 genes in 112 MAGs) says a gene is there, not that it is active or that the
-    bacterium survives the drug."
+  - "About a third of all genes (34.9%) have no name, and most names come from a related protein, not an identical one:
+    70% of the cluster matches are only 50-70% identical."
+  - "Two tools on the four test MAGs: Bakta names 80.6% of the genes (vague names included), KOfam gives 46.9% a KO.
+    Where both name a gene they mostly agree (94% of EC numbers; 189 of 200 by hand), but about one in twenty gets two
+    different functions, often related proteins."
+  - "With the gene's whole order removed from the reference database, 96.0% of the genes with a KO still got their KO
+    from the best remaining match, at a median 50-57% identity: function is shared far more widely than a species name
+    (module 7). Without score thresholds, three quarters would take another KO when their own model is missing."
+  - "A pathway call needs every step: in the four test MAGs (28-47 complete KEGG modules each), removing 5% of the genome
+    at random made 13-14% of the complete modules look incomplete, removing 30% made 59-61% (10 kb blocks; 53-56% when
+    whole pieces are dropped). A missing pathway in an incomplete MAG is weak evidence."
+  - "379 genes in 257 MAGs carry the BSH / PVA domain. A tree with 15 measured enzymes puts 275 of 319 next to BSH, but
+    247 of these calls rest on two references at about 60% identity, and Bacteroidales genes stay unresolved: a name or
+    a tree placement is a prediction; only an assay shows the activity."
 discussion: >-
-  A collaborator wants to report that this person's gut bacteria are tetracycline resistant, because 97 genes named
-  after tetracycline resistance proteins were found in the MAGs. What does this page's evidence support, what would you
-  need to make the claim, and how would you word it?
+  A colleague reports that a MAG at 70% completeness "cannot make" a vitamin because one KEGG module is incomplete, and
+  that 191 MAGs "deconjugate bile acids" because Bakta names a bile salt hydrolase in them (244 genes). What does this page's
+  evidence support for each claim, what would you check first, and how would you word the results?
 teacher:
-  time: About 50 minutes (an estimate, not yet tried with students).
-  before: What a MAG is (module 4), MAG quality (module 5) and how MAGs are named (module 7).
+  time: About 60 minutes for the core (sections 1 to 6), 20 more for the optional sections 7 and 8 (an estimate, not
+    yet tried with students).
+  before: What a MAG is (module 4), MAG quality (module 5) and the leave-out experiment of module 7.
   flow:
-    - "15 min: how many genes get a name and what the name rests on (sections 1 and 2; examples 1 and 2)."
-    - "15 min: the gene map: examples 3 to 5 (a name from a distant relative, a resistance gene, module 6's flagged
-      contigs)."
-    - "10 min: where annotation falls short; take-home points and the discussion question."
+    - "10 min: how many genes get a name and what a name rests on (sections 1 and 2; example 2)."
+    - "10 min: two tools on the same genes (section 3; example 3): let students guess the agreement first."
+    - "15 min: missing references and missing models (section 4; examples 4 and 5), compared with module 7."
+    - "10 min: incomplete MAGs and pathway calls (section 5; example 6)."
+    - "15 min: BSH or PVA, what a tree can and cannot show (section 6; examples 7 and 8); take-home points and the
+      discussion question."
+    - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 1 and 9 to 11)."
   discussion_points:
-    - "The page supports: genes that match tetracycline resistance proteins sit in many MAGs (tet(W) alone in 42).
-      It does not show expression, resistance or how much of the community carries them; a match is not a trait."
-    - "To claim resistance one needs growth tests of isolates or of the community with the drug; expression data
-      (RNA) would show whether the genes are active."
-    - "Wording: 'genes similar to known tetracycline resistance genes were found in N MAGs', with the evidence level
-      (AMRFinderPlus protein match) and that plasmids outside MAGs were not annotated."
-    - "97 is a gene count, not a count of bacteria or of cells; some tet genes sit next to genes named after
-      mobile-element functions (example 4). One person's data cannot say whether this is typical."
+    - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs 59-61% of the complete modules
+      looked incomplete at 70% (section 5). Check the MAG's completeness, which steps are missing, and whether the
+      genes could sit on unbinned contigs."
+    - "A Bakta name 'bile salt hydrolase' does not show the activity: BSH and PVA share the domain, and the tree places
+      most genes only next to BSH references at about 60% identity (section 6). Wording: 'genes similar to bile salt
+      hydrolases were found in N MAGs'."
+    - "Two tools that agree are more convincing than one; where they disagree, look at what each name rests on."
+    - "Activity needs other data: expression (RNA), enzyme assays, or measured bile acids."
   pitfalls:
-    - "The identity on this page is to the UniRef50 cluster's representative, not to the reference resistance protein
-      AMRFinderPlus matched."
+    - "'Same KO' in section 4 means both proteins pass the same KOfam profile; it is not a measured function, and it
+      covers only the 47% of genes KOfam can label."
+    - "The identity in sections 1 and 2 is to a UniRef50 cluster's representative; in section 4 it is to the best
+      DIAMOND match; in section 6 to the nearest measured enzyme."
+    - "The tree is unrooted and drawn from an arbitrary point: 'next to' a reference is not 'inside' a group of it."
     - "'Hypothetical' means no match in this database, not no function; a Pfam domain often hints at one (example 1)."
     - "A gene missing from a MAG may be in the unbinned part of the genome; most MAGs are less than 100% complete."

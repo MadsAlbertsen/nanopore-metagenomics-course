@@ -2,7 +2,8 @@
 // numbers (headline counts), evidence (evidence class names), amr (AMRFinderPlus protein matches by product),
 // bins (per MAG: GTDB-Tk ranks, method, closest reference [species, ANI, AF], RED, gene evidence counts),
 // maps (gene maps for a few MAGs: contigs [id, length, circular, module-6 verdict] and genes
-// [contig, start, stop, strand, product, symbol, evidence, identity %, Pfam]; products, symbols and pfam are lookups).
+// [contig, start, stop, strand, product, symbol, evidence, identity %, Pfam]; products, symbols and pfam are lookups);
+// fn (np26 scripts/66_course_function.py): two tools, leave-out, incomplete MAGs and the BSH / PVA tree.
 const NUM = DATA.numbers, B = DATA.bins, MAPS = DATA.maps, EVN = DATA.evidence;
 const magIdx = new Map(B.map((b, i) => [b.id, i]));
 const MAP_IDS = Object.keys(MAPS.mags);
@@ -25,7 +26,7 @@ const pct = (a, b, d = 1) => !b ? "–" : a && (100 * a) / b < 10 ** -d ? `<${10
 const num = (n) => Number(n).toLocaleString("en");
 const hypShare = (b) => b.hyp / b.cds;
 const DEFAULTS = { mag: "1.308", map: "1.308", win: "20" };
-const st = { mag: 0, map: "1.308", ctg: 0, pos: 0, q: "", amr: "" };
+const st = { mag: 0, map: "1.308", ctg: 0, pos: 0, q: "", amr: "", lv: "", inc: "c.38", meth: "blocks", col: "clade", tq: "", prod: "" };
 
 // --- numbers in the text, all from the data
 function fillNumbers() {
@@ -53,6 +54,7 @@ function fillNumbers() {
     clusterHits: num(NUM.cluster_hits),
     amrGenes: NUM.amr_genes, amrMags: NUM.amr_mags, amrFam: NUM.amr_family_genes, amrFamMags: NUM.amr_family_mags,
   };
+  Object.assign(N, fnNumbers());
   for (const e of document.querySelectorAll("[data-n]")) e.textContent = N[e.dataset.n] ?? "?";
   $("anStats").innerHTML = [[NUM.mags, "MAGs"], [NUM.cds, "protein-coding genes"], [`${(100 * NUM.hyp / NUM.cds).toFixed(1)}%`, "without a name (hypothetical)"], [NUM.amr_genes, "matches to a resistance protein"]]
     .map(([n, t]) => `<div class="stat"><b>${typeof n === "number" ? num(n) : n}</b><span>${t}</span></div>`).join("");
@@ -209,6 +211,187 @@ function drawAmr() {
   $("anAmrMags").innerHTML = st.amr ? `<p class="note">MAGs with <code>${esc(st.amr)}</code>: ${mags.map((b) => `<button class="link" data-mag="${b.id}">${b.id} <i>${esc(b.name)}</i></button>`).join(", ")}</p>` : "";
 }
 
+
+// --- new parts (np26 scripts/66_course_function.py, key "fn"): two tools, leave-out, incomplete MAGs, BSH/PVA tree
+const FN = DATA.fn;
+const TCLS = [["both", "Both name it", "var(--c1)"], ["bakta_only", "Bakta only", "var(--c2)"], ["kofam_only", "KOfam only", "var(--c3)"], ["neither", "Neither", "var(--v4)"]];
+const GRD = [["same", "Same function", "var(--c1)"], ["bakta_vaguer", "Bakta's name vaguer", "var(--c3)"], ["kofam_vaguer", "KOfam's KO vaguer", "var(--c4)"], ["different", "Different function", "var(--c2)"]];
+const LVG = [["Same KO", "var(--c1)"], ["Another KO", "var(--c2)"], ["Match without a KO", "var(--c4)"], ["No match", "var(--v4)"]];
+const LVN = { none: "Nothing removed", species: "Species removed", genus: "Genus removed", family: "Family removed", order: "Order removed" };
+const TMAG = (id) => FN.tools.mags.find((m) => m.id === id);
+const sum = (xs) => xs.reduce((a, b) => a + b, 0);
+const mean = (xs) => sum(xs) / xs.length;
+const legendHtml = (items) => items.map(([t, c]) => `<span><i class="sw" style="background:${c}"></i>${esc(t)}</span>`).join("");
+function hbars(host, rows, colors, opts = {}) {
+  // rows: [label, [counts...], right label]; horizontal stacked bars of shares
+  const W = Math.max(300, host.clientWidth || 300), lab = Math.min(opts.lab ?? 150, W * 0.4), right = opts.right ?? 0, rowH = 28, H = rows.length * rowH + 22;
+  const X = (f) => lab + f * (W - lab - right - 6);
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": opts.aria || "Bar chart" });
+  for (let f = 0; f <= 1.001; f += 0.25) { el("line", { class: "grid", x1: X(f), x2: X(f), y1: 0, y2: H - 18 }, svg); el("text", { x: X(f), y: H - 4, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${Math.round(f * 100)}%`; }
+  rows.forEach(([label, counts, rlab, names], i) => {
+    const y = i * rowH + 4, tot = sum(counts);
+    el("text", { x: lab - 8, y: y + 15, "text-anchor": "end", class: "mlbl" }, svg).textContent = label;
+    let acc = 0;
+    counts.forEach((c, j) => {
+      if (!c) return;
+      const x1 = X(acc / tot), x2 = X((acc + c) / tot);
+      const r = el("rect", { x: x1, y, width: Math.max(0.5, x2 - x1 - 1), height: 20, fill: colors[j], rx: 2 }, svg);
+      r.addEventListener("mousemove", (ev) => showTip(ev, `${esc(label)}<br>${esc(names[j])}: ${num(c)} of ${num(tot)} (${pct(c, tot)})`)); r.addEventListener("mouseleave", hideTip);
+      if (x2 - x1 > 38) el("text", { x: (x1 + x2) / 2, y: y + 14, "text-anchor": "middle", class: "glbl", style: j === counts.length - 1 && colors[j] === "var(--v4)" ? "fill:var(--ink)" : "" }, svg).textContent = `${Math.round((100 * c) / tot)}%`;
+      acc += c;
+    });
+    if (rlab) el("text", { x: W - 2, y: y + 15, "text-anchor": "end", class: "mlbl" }, svg).textContent = rlab;
+  });
+  host.innerHTML = ""; host.appendChild(svg);
+}
+function fnNumbers() {
+  const t = FN.tools, P = t.pooled, lv = FN.leave, inc = FN.incomplete, cb = FN.cbah, rec = FN.recoded;
+  const pooledLv = (level) => [0, 1, 2, 3].map((j) => sum(lv.mags.map((m) => lv.grades[level][m][j])));
+  const share = (level, j) => { const c = pooledLv(level); return c[j] / sum(c); };
+  const p1 = (x) => `${(100 * x).toFixed(1)}%`;
+  const rng = (xs, u = "%") => { const a = Math.min(...xs), b = Math.max(...xs); return a === b ? `${a}${u}` : `${a}-${b}${u}`; };
+  const incShare = (k) => mean(inc.mags.map((m) => 1 - mean(inc.draws[m.id].blocks[k]) / m.full));
+  const ords = Object.entries(rec.orders).sort((a, b) => b[1] - a[1]);
+  const big = ords.filter(([, n]) => n > 1), small = ords.filter(([, n]) => n === 1);
+  const pa = cb.pa_bt2086;
+  const BSH = cb.leaves.filter((l) => l.clade === "BSH").length, UNR = cb.leaves.filter((l) => l.clade === "unresolved").length;
+  const words = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+  return {
+    tCds: num(t.cds), tBakta: `${num(P.both + P.bakta_only)} (${pct(P.both + P.bakta_only, t.cds)})`, tKofam: `${num(P.both + P.kofam_only)} (${pct(P.both + P.kofam_only, t.cds)})`,
+    tNeither: `${num(P.neither)} (${pct(P.neither, t.cds)})`, tEcN: num(t.ec_n), tEc: `${num(t.ec_agree)} (${pct(t.ec_agree, t.ec_n)})`, tGradeN: t.grade_n,
+    recContigs: rec.contigs, recMags: rec.mags,
+    recOrders: `${big.map(([o, n]) => `${n} in the order ${o}`).join(", ")}${small.length ? ` and ${words[small.length] || small.length} in other orders` : ""}`,
+    lvN: num(lv.n), lvSpecies: p1(share("species", 0)), lvOrder: p1(share("order", 0)), lvOrderId: rng(lv.mags.map((m) => lv.median_id.order[m])),
+    lvOther: p1(Math.max(...lv.levels.map((l) => share(l, 1)))),
+    mmN: num(lv.models.n), mmAbove: `${num(lv.models.other_ko_above)} (${pct(lv.models.other_ko_above, lv.models.n)})`,
+    mmBelow: `${num(lv.models.other_ko_no_threshold)} (${pct(lv.models.other_ko_no_threshold, lv.models.n)})`, mmNone: `${num(lv.models.none)} (${pct(lv.models.none, lv.models.n)})`,
+    incFull: `${inc.mags.map((m) => m.full).slice(0, -1).join(", ")} and ${inc.mags[inc.mags.length - 1].full} modules in the four MAGs`,
+    incKo: `${inc.keeps.map((k) => p1(inc.ko_lost[k])).join(", ")} of them at ${inc.keeps.map((k) => Math.round(k * 100)).join(", ")}% complete`,
+    inc95: p1(incShare(String(inc.keeps[0]))), inc70: p1(incShare(String(inc.keeps[inc.keeps.length - 1]))),
+    cbGenes: num(cb.genes), cbMags: num(cb.mags), cbKo: num(cb.k01442), cbFull: num(cb.full), cbRefs: cb.refs.length, cbBsh: BSH, cbUnres: UNR,
+    cbPa: pa[0] < words.length ? words[pa[0]][0].toUpperCase() + words[pa[0]].slice(1) : pa[0], cbPaId: `${pa[1]}-${pa[2]}%`, cbBig: `${cb.big_split.bsh} of the ${BSH}`, cbBigSize: cb.big_split.size,
+  };
+}
+function drawTools() {
+  const t = FN.tools, rows = t.mags.map((m) => [`${m.id} ${m.name}`, TCLS.map(([k]) => m[k] || 0), "", TCLS.map((c) => c[1])]);
+  rows.push(["All four", TCLS.map(([k]) => t.pooled[k] || 0), "", TCLS.map((c) => c[1])]);
+  hbars($("fnToolBars"), rows, TCLS.map((c) => c[2]), { lab: 240, right: 14, aria: "Which tool names the gene, per test MAG" });
+  $("fnToolLegend").innerHTML = legendHtml(TCLS.map(([, n, c]) => [n, c]));
+  hbars($("fnGradeBar"), [[`${t.grade_n} genes`, GRD.map(([k]) => t.grade[k] || 0), "", GRD.map((g) => g[1])]], GRD.map((g) => g[2]), { lab: 70, right: 14, aria: "Hand grading of genes named by both tools" });
+  $("fnGradeLegend").innerHTML = legendHtml(GRD.map(([k, n, c]) => [`${n}: ${t.grade[k] || 0}`, c]));
+  $("fnDiff").innerHTML = `<table class="ct gt"><thead><tr><th>Bakta</th><th>KO</th><th>KEGG name</th></tr></thead><tbody>${t.different.map(([p, k, d]) => `<tr><td>${esc(p)}</td><td class="mono">${k}</td><td>${esc(d)}</td></tr>`).join("")}</tbody></table>`;
+}
+function drawLeave() {
+  const lv = FN.leave, mags = st.lv ? [st.lv] : lv.mags;
+  const rows = lv.levels.map((l) => {
+    const c = [0, 1, 2, 3].map((j) => sum(mags.map((m) => lv.grades[l][m][j])));
+    const ids = mags.map((m) => lv.median_id[l][m]);
+    return [LVN[l], c, mags.length === 1 ? `${ids[0]}%` : `${Math.min(...ids)}-${Math.max(...ids)}%`, LVG.map((g) => g[0])];
+  });
+  hbars($("fnLvBars"), rows, LVG.map((g) => g[1]), { lab: 120, right: 84, aria: "KO of the best remaining match by what was removed" });
+  $("fnLvLegend").innerHTML = legendHtml(LVG);
+  // same KO by identity
+  const b = lv.by_id, host = $("fnById"), W = Math.max(280, host.clientWidth || 280), H = 200, mg = { l: 44, r: 10, t: 22, b: 34 };
+  const n = b.n.length, bw = (W - mg.l - mg.r) / n, Y = (f) => H - mg.b - f * (H - mg.t - mg.b);
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Share with the same KO by identity of the best match" });
+  for (let f = 0; f <= 1.001; f += 0.25) { el("line", { class: "grid", x1: mg.l, x2: W - mg.r, y1: Y(f), y2: Y(f) }, svg); el("text", { x: mg.l - 6, y: Y(f) + 4, "text-anchor": "end", class: "lbl" }, svg).textContent = `${Math.round(f * 100)}%`; }
+  b.n.forEach((tot, i) => {
+    const f = tot ? b.same[i] / tot : 0, x = mg.l + i * bw;
+    const r = el("rect", { x: x + 2, y: Y(f), width: bw - 4, height: H - mg.b - Y(f), fill: "var(--c1)", rx: 2 }, svg);
+    r.addEventListener("mousemove", (ev) => showTip(ev, `${b.edges[i]}-${b.edges[i + 1]}% identity: ${num(b.same[i])} of ${num(tot)} genes keep their KO (${pct(b.same[i], tot)})`)); r.addEventListener("mouseleave", hideTip);
+    el("text", { x: x + bw / 2, y: Y(f) - 4, "text-anchor": "middle", class: "lbl" }, svg).textContent = num(tot);
+    el("text", { x: x + bw / 2, y: H - mg.b + 14, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${b.edges[i]}-${b.edges[i + 1]}`;
+  });
+  el("text", { x: (mg.l + W - mg.r) / 2, y: H - 4, "text-anchor": "middle", class: "lbl" }, svg).textContent = "Identity of the best match (%)";
+  host.innerHTML = ""; host.appendChild(svg);
+}
+function drawIncomplete() {
+  const inc = FN.incomplete, m = inc.mags.find((x) => x.id === st.inc) || inc.mags[0], meth = st.meth;
+  const host = $("fnIncDots"), W = Math.max(300, host.clientWidth || 300), lab = 110, rowH = 46, H = inc.keeps.length * rowH + 34, X = (f) => lab + f * (W - lab - 12);
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Complete modules that look incomplete per draw" });
+  for (let f = 0; f <= 1.001; f += 0.2) { el("line", { class: "grid", x1: X(f), x2: X(f), y1: 0, y2: H - 30 }, svg); el("text", { x: X(f), y: H - 16, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${Math.round(f * 100)}%`; }
+  el("text", { x: (lab + W) / 2, y: H - 2, "text-anchor": "middle", class: "lbl" }, svg).textContent = `Share of the ${m.full} complete modules that look incomplete`;
+  inc.keeps.forEach((k, i) => {
+    const vals = inc.draws[m.id][meth][String(k)].map((v) => 1 - v / m.full), y = i * rowH + rowH / 2;
+    el("text", { x: lab - 8, y: y + 4, "text-anchor": "end", class: "mlbl" }, svg).textContent = `${Math.round(k * 100)}% kept`;
+    vals.forEach((v, j) => {
+      const c = el("circle", { cx: X(v), cy: y + (((j * 7919) % 13) - 6) * 1.3, r: 3, fill: "var(--c1)", "fill-opacity": 0.45 }, svg);
+      c.addEventListener("mousemove", (ev) => showTip(ev, `Draw ${j + 1}: ${Math.round(v * m.full)} of ${m.full} modules look incomplete (${pct(v * m.full, m.full)})`)); c.addEventListener("mouseleave", hideTip);
+    });
+    const mu = mean(vals);
+    el("line", { x1: X(mu), x2: X(mu), y1: y - 13, y2: y + 13, stroke: "var(--ink)", "stroke-width": 2.5 }, svg);
+    el("text", { x: X(mu) + 6, y: y - 9, class: "lbl" }, svg).textContent = `mean ${(100 * mu).toFixed(1)}%`;
+  });
+  host.innerHTML = ""; host.appendChild(svg);
+  $("fnIncLost").innerHTML = `<table class="ct gt"><thead><tr><th>Module</th><th>Name</th><th class="r">Draws</th></tr></thead><tbody>${inc.lost[m.id].map(([id, n, k]) => `<tr><td class="mono">${id}</td><td>${esc(n)}</td><td class="r">${k}</td></tr>`).join("")}</tbody></table>`;
+}
+// tree
+const CLADE_C = { BSH: "var(--c1)", PVA: "var(--c2)", unresolved: "var(--faint)" };
+function treeColors() {
+  const L = FN.cbah.leaves.filter((l) => !l.ref);
+  if (st.col === "clade") {
+    const n = (k) => L.filter((l) => l.clade === k).length;
+    return { of: (l) => CLADE_C[l.clade], legend: [["BSH", "BSH (tree)"], ["PVA", "PVA (tree)"], ["unresolved", "Unresolved"]].filter(([k]) => n(k)).map(([k, t]) => [`${t}: ${n(k)}`, CLADE_C[k]]) };
+  }
+  const key = st.col === "product" ? (l) => FN.cbah.products[l.p] : (l) => l.phylum;
+  const counts = {}; for (const l of L) counts[key(l)] = (counts[key(l)] || 0) + 1;
+  const order = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  const col = Object.fromEntries(order.map((k, i) => [k, i < 6 ? `var(--c${i + 1})` : "var(--faint)"]));
+  return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (grey)"}: ${counts[k]}`, col[k]]) };
+}
+function drawTree() {
+  const cb = FN.cbah, T = cb.tree, n = T.length, kids = T.map(() => []);
+  T.forEach((r, i) => { if (r[0] >= 0) kids[r[0]].push(i); });
+  const depth = new Array(n).fill(0), yy = new Array(n).fill(0);
+  let leafNo = 0;
+  for (let i = 0; i < n; i++) if (T[i][0] >= 0) depth[i] = depth[T[i][0]] + T[i][1];
+  (function place(i) { if (!kids[i].length) { yy[i] = leafNo++; return; } kids[i].forEach(place); yy[i] = (yy[kids[i][0]] + yy[kids[i][kids[i].length - 1]]) / 2; })(0);
+  const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), lab = Math.min(250, W * 0.45), step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
+  const X = (d) => 8 + (d / maxD) * (W - lab - 16), Y = (k) => 12 + k * step;
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Tree of the choloylglycine hydrolase genes and reference enzymes" });
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const p = T[i][0];
+    if (p >= 0) d += `M${X(depth[p])} ${Y(yy[i])}H${X(depth[i])}`;
+    if (kids[i].length > 1) d += `M${X(depth[i])} ${Y(yy[kids[i][0]])}V${Y(yy[kids[i][kids[i].length - 1]])}`;
+  }
+  el("path", { d, fill: "none", stroke: "var(--muted)", "stroke-width": 0.8 }, svg);
+  for (let i = 0; i < n; i++) if (kids[i].length && T[i][2] >= 95 && T[i][0] >= 0) el("circle", { cx: X(depth[i]), cy: Y(yy[i]), r: 1.4, fill: "var(--ink)" }, svg);
+  const cc = treeColors(), q = st.tq.toLowerCase(), prod = st.prod;
+  const refs = [];
+  let marked = 0;
+  for (let i = 0; i < n; i++) {
+    const li = T[i][3];
+    if (li < 0) continue;
+    const l = cb.leaves[li], x = X(depth[i]), y = Y(yy[i]);
+    if (l.ref) {
+      el("path", { d: `M${x} ${y - 4} l4 4 l-4 4 l-4 -4 z`, fill: l.kind === "BSH" ? "var(--ink)" : "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.2 }, svg);
+      refs.push([x, y, `${l.kind === "no BSH" ? "no BSH activity" : l.kind}: ${l.label}`]);
+      continue;
+    }
+    const hit = (q && [l.id, l.bin, l.family, l.name, l.phylum].some((s) => String(s).toLowerCase().includes(q))) || (prod && cb.products[l.p] === prod);
+    if (hit) marked++;
+    const c = el("circle", { cx: x + 2, cy: y, r: hit ? 3.4 : 2, fill: cc.of(l), stroke: hit ? "var(--ink)" : "none", "stroke-width": 1.2 }, svg);
+    c.addEventListener("mousemove", (ev) => showTip(ev, `<span class="mono">${l.id}</span> · MAG <span class="mono">${l.bin}</span> <i>${esc(l.name)}</i><br>${esc(l.phylum)}, ${esc(l.family)}<br>Bakta: ${esc(cb.products[l.p])}<br>Tree: ${esc(l.clade)} · nearest reference ${esc(cb.refs.find((r) => r[0] === l.near)?.[1] || l.near)} (${l.nid}% identity)`));
+    c.addEventListener("mouseleave", hideTip);
+  }
+  // reference labels in a column at the right, spread so they do not overlap, with a leader line to the leaf
+  let last = -1e9;
+  for (const [x, y, t] of refs.sort((a, b) => a[1] - b[1])) {
+    const ly = Math.max(y, last + 12);
+    last = ly;
+    el("path", { d: `M${x + 5} ${y}H${W - lab - 6}L${W - lab + 2} ${ly}`, fill: "none", stroke: "var(--faint)", "stroke-dasharray": "2 2" }, svg);
+    el("text", { x: W - lab + 6, y: ly + 3.5, class: "mlbl", style: "font-size:10.5px" }, svg).textContent = t;
+  }
+  host.innerHTML = ""; host.appendChild(svg);
+  $("fnTreeLegend").innerHTML = legendHtml(cc.legend) + `<span><i class="sw" style="background:var(--ink);transform:rotate(45deg)"></i>Reference: BSH</span><span><i class="sw" style="border:1.5px solid var(--ink);transform:rotate(45deg)"></i>Reference: PVA, or no BSH activity</span>`;
+  $("fnTreeInfo").textContent = q || prod ? `${marked} gene${marked === 1 ? "" : "s"} marked` : `${leafNo - cb.refs.length} MAG genes and ${cb.refs.length} references`;
+  const tab = cb.table;
+  $("fnTreeTable").innerHTML = `<table class="ct"><thead><tr><th>Bakta's name</th>${tab.clades.map((c) => `<th class="r">${esc(c)}</th>`).join("")}</tr></thead><tbody>${tab.rows.map(([p, ...v]) => `<tr class="click${p === prod ? " hl" : ""}" data-prod="${esc(p)}"><td>${esc(p)}</td>${v.map((x) => `<td class="r">${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  $("fnRefs").innerHTML = `<table class="ct gt"><thead><tr><th>Enzyme</th><th>Activity</th><th>UniProt</th></tr></thead><tbody>${cb.refs.map(([a, l, k]) => `<tr><td>${esc(l)}</td><td>${esc(k)}</td><td class="mono">${a}</td></tr>`).join("")}</tbody></table>`;
+}
+function drawFn() { drawTools(); drawLeave(); drawIncomplete(); drawTree(); }
+
 // --- state
 function params() {
   const p = { mag: B[st.mag].id, map: st.map };
@@ -217,6 +400,12 @@ function params() {
   if ($("anWin").value !== DEFAULTS.win) p.win = $("anWin").value;
   if (st.q) p.q = st.q;
   if (st.amr) p.amr = st.amr;
+  if (st.lv) p.lv = st.lv;
+  if (st.inc !== "c.38") p.inc = st.inc;
+  if (st.meth !== "blocks") p.meth = st.meth;
+  if (st.col !== "clade") p.col = st.col;
+  if (st.tq) p.tq = st.tq;
+  if (st.prod) p.prod = st.prod;
   if (examples.current >= 0) p.ex = examples.current + 1;
   return p;
 }
@@ -230,11 +419,19 @@ function applyState(s) {
   st.pos = Number.isFinite(+s.pos) ? Math.round(+s.pos) : 0;
   st.q = s.q || "";
   st.amr = DATA.amr.some((r) => r[0] === s.amr) ? s.amr : "";
+  st.lv = FN.leave.mags.includes(s.lv) ? s.lv : "";
+  st.inc = FN.incomplete.mags.some((m) => m.id === s.inc) ? s.inc : "c.38";
+  st.meth = s.meth === "pieces" ? "pieces" : "blocks";
+  st.col = ["clade", "product", "phylum"].includes(s.col) ? s.col : "clade";
+  st.tq = s.tq || "";
+  st.prod = FN.cbah.table.rows.some((r) => r[0] === s.prod) ? s.prod : "";
+  fnControls();
   if (st.q && s.pos === undefined) { const g = M().genes.find((g) => g[0] === st.ctg && matches(g, st.q)) || M().genes.find((g) => matches(g, st.q)); if (g) { st.ctg = g[0]; st.pos = Math.round((g[1] + g[2]) / 2 - winBp() / 2); } }
   clampPos();
 }
 function drawMagViews() { drawCard(); drawHyp(); }
-function drawAll(push = true) { drawMagViews(); drawMapAll(); drawAmr(); if (push) write(); }
+function drawAll(push = true) { drawMagViews(); drawMapAll(); drawAmr(); drawFn(); if (push) write(); }
+function fnControls() { $("fnLvMag").value = st.lv; $("fnIncMag").value = st.inc; $("fnIncMeth").value = st.meth; $("fnTreeCol").value = st.col; $("fnTreeQ").value = st.tq; }
 function openMag(id) { if (!magIdx.has(id)) return; st.mag = magIdx.get(id); drawMagViews(); write(); }
 
 function setup() {
@@ -252,6 +449,16 @@ function setup() {
   let qTimer;
   $("anQ").addEventListener("input", (e) => { clearTimeout(qTimer); qTimer = setTimeout(() => { st.q = e.target.value.trim(); drawOverview(); drawWindow(); drawHits(); write(); }, 200); });
   $("anHits").addEventListener("click", (e) => { const r = e.target.closest("[data-c]"); if (r) { st.ctg = +r.dataset.c; st.pos = Math.round(+r.dataset.p - winBp() / 2); $("anCtg").value = st.ctg; clampPos(); drawOverview(); drawWindow(); write(); } });
+  const tname = (id) => `${id} ${TMAG(id).name}`;
+  $("fnLvMag").innerHTML = `<option value="">all four</option>` + FN.leave.mags.map((m) => `<option value="${m}">${esc(tname(m))}</option>`).join("");
+  $("fnIncMag").innerHTML = FN.incomplete.mags.map((m) => `<option value="${m.id}">${esc(`${m.id} ${m.name}`)}</option>`).join("");
+  $("fnLvMag").addEventListener("input", (e) => { st.lv = e.target.value; drawLeave(); write(); });
+  $("fnIncMag").addEventListener("input", (e) => { st.inc = e.target.value; drawIncomplete(); write(); });
+  $("fnIncMeth").addEventListener("input", (e) => { st.meth = e.target.value; drawIncomplete(); write(); });
+  $("fnTreeCol").addEventListener("input", (e) => { st.col = e.target.value; drawTree(); write(); });
+  let tqTimer;
+  $("fnTreeQ").addEventListener("input", (e) => { clearTimeout(tqTimer); tqTimer = setTimeout(() => { st.tq = e.target.value.trim(); drawTree(); write(); }, 200); });
+  $("fnTreeTable").addEventListener("click", (e) => { const r = e.target.closest("[data-prod]"); if (r) { st.prod = st.prod === r.dataset.prod ? "" : r.dataset.prod; drawTree(); write(); } });
   $("anCopy").addEventListener("click", async () => {
     write();
     let ok = true; try { await navigator.clipboard.writeText(location.href); } catch (e) { ok = false; }

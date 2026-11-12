@@ -1,7 +1,7 @@
 <div class="intro">
   <span class="kicker">Module 8</span>
   <h1>Function: what the genes may do, and how sure we are</h1>
-  <p>Which organism a MAG is, module 7 shows. This module asks what it can do. Bakta (<span data-n="baktaVersion"></span>) finds the genes in each MAG and names them by similarity to known proteins. A gene name is a prediction, and its evidence differs from gene to gene: a close match to a studied protein, a match to a cluster of distant relatives, only a protein domain, or nothing. For each gene this page shows which database match gave it its name, or that nothing did, and how far the match was.</p>
+  <p>Module 7 names the organism a MAG comes from. This module asks what it can do. Bakta (<span data-n="baktaVersion"></span>) finds the genes in each MAG and names them by similarity to known proteins. Every gene name is a prediction. This page shows what a name rests on, how two tools compare on the same genes, what happens when the reference database lacks a gene's relatives or a genome is incomplete, and how a family tree can help tell apart two related enzymes that one name lumps together.</p>
   <div class="stats" id="anStats"></div>
 </div>
 <section class="panel" id="anExamples" hidden>
@@ -30,11 +30,11 @@
 <div class="antwo">
   <section class="panel">
     <h2>1. How many genes get a name</h2>
-    <p>Bakta finds the protein-coding genes (CDS) of a MAG and compares each predicted protein with known proteins. Of <span data-n="cds"></span> CDS in the 421 MAGs, <span data-n="hyp"></span> stay "hypothetical protein": no match gave them a name. Per MAG the share runs from <span data-n="hypRange"></span> (median <span data-n="hypMedian"></span>, half of the MAGs between <span data-n="hypIqr"></span>). It goes with how well the lineage is known: the median is <span data-n="hypLatin"></span> for MAGs with a Latin species name, <span data-n="hypPlaceholder"></span> with a placeholder name and <span data-n="hypNone"></span> for those named to genus only; Bacteroidota have a median of <span data-n="hypBact"></span>, Bacillota <span data-n="hypBaci"></span>. The highest share is the one archaeon, <i>Methanocatella smithii</i> (<span data-n="hypArch"></span>). Bakta "was designed to annotate bacteria (isolates &amp; MAGs) and plasmids, only" (Bakta documentation), and its database is built from bacterial and phage proteins (Schwengers et al. 2021), so an archaeal genome finds few matches (example 1).</p>
+    <p>Bakta finds the protein-coding genes (CDS) and compares each protein with known proteins. Of <span data-n="cds"></span> CDS in the 421 MAGs, <span data-n="hyp"></span> stay "hypothetical protein": nothing gave them a name. Per MAG the share runs from <span data-n="hypRange"></span> (median <span data-n="hypMedian"></span>). It follows how well the lineage is known: the median is <span data-n="hypLatin"></span> for MAGs with a Latin species name and <span data-n="hypPlaceholder"></span> for those with a placeholder name. The highest share is the one archaeon, <i>Methanocatella smithii</i> (<span data-n="hypArch"></span>): Bakta is built for bacteria (Schwengers et al. 2021), so an archaeal genome finds few matches (example 1).</p>
   </section>
   <section class="panel">
     <h2>2. What a gene name rests on</h2>
-    <p>Bakta looks for evidence in steps (Schwengers et al. 2021, Microbial Genomics). With the light database used here, the main evidence for a protein is a match to a UniRef50 cluster: a group of known proteins that are at least 50% identical to its representative (Suzek et al. 2015, Bioinformatics). A match counts when the two proteins align over at least 80% of both and are at least 50% identical; the cluster's name becomes the gene's name. The median identity of the matches is <span data-n="idMedian"></span>, and <span data-n="idHigh"></span> are 90% identical or more: most names are carried over from a related protein, not an identical one. Some names say little: <span data-n="vague"></span> named proteins are a domain of unknown function (DUF) or "uncharacterized". Hypothetical proteins are searched for Pfam domains (Mistry et al. 2021, Nucleic Acids Research); <span data-n="pfam"></span> have one, a hint at their function that Bakta does not turn into a name (the bar below counts in "Pfam domain only" those without a cluster match).</p>
+    <p>With the light database used here, most names come from a match to a UniRef50 cluster: known proteins at least 50% identical to the cluster's representative (Suzek et al. 2015). A match counts when the proteins align over at least 80% of both and are at least 50% identical. The median identity is <span data-n="idMedian"></span>; <span data-n="idHigh"></span> are 90% identical or more. So most names are carried over from a related protein, not an identical one. <span data-n="vague"></span> named proteins are only a domain of unknown function (DUF) or "uncharacterized". Of the hypothetical proteins, <span data-n="pfam"></span> carry a Pfam domain (Mistry et al. 2021): a hint at their function that Bakta does not turn into a name.</p>
   </section>
 </div>
 <div class="antwo">
@@ -46,12 +46,107 @@
   <section class="panel">
     <h2>Identity to the cluster's representative</h2>
     <div id="anIdHist"></div>
-    <p class="note">Named and unnamed cluster matches (<span data-n="clusterHits"></span> CDS), in 5% steps of amino-acid identity. Bakta's light database holds only UniRef50 clusters, so 50% is the floor.</p>
+    <p class="note">All CDS with a cluster match (<span data-n="clusterHits"></span>), in 5% steps of amino-acid identity. Bakta's light database holds only UniRef50 clusters, so 50% is the floor.</p>
   </section>
 </div>
 
+<section class="panel" id="fnTools">
+  <h2>3. Two tools, one gene</h2>
+  <p>A second tool gives a check. KOfam (Aramaki et al. 2020) holds one profile per KEGG orthology group (KO), each with its own score threshold, and gives a gene a KO only above that threshold. We ran it on all <span data-n="tCds"></span> CDS of the four complete, single-contig test MAGs of module 7. Bakta gives <span data-n="tBakta"></span> of these genes a name other than "hypothetical protein" (vague, domain-only names included), KOfam gives <span data-n="tKofam"></span> a KO, and <span data-n="tNeither"></span> get neither. Where both name a gene, do they agree? For <span data-n="tEcN"></span> such genes both sides carry an EC number (the enzyme code), and <span data-n="tEc"></span> share one; the rest mix renumbered EC codes with related enzymes. Genes without EC numbers need another check: <span data-n="tGradeN"></span> random genes named by both were graded by hand, by a reviewer who saw only the two names (chart, right).</p>
+  <div class="antwo">
+    <div>
+      <h3 class="anh3">Which tool names the gene, per test MAG</h3>
+      <div id="fnToolBars"></div>
+      <div class="legend" id="fnToolLegend"></div>
+      <p class="note">Share of each MAG's CDS. "Bakta" counts every name other than "hypothetical protein"; "KOfam" counts genes with a KO above its threshold.</p>
+    </div>
+    <div>
+      <h3 class="anh3">Same function? Genes named by both, graded by hand</h3>
+      <div id="fnGradeBar"></div>
+      <div class="legend" id="fnGradeLegend"></div>
+      <div class="scroll antable" id="fnDiff"></div>
+      <p class="note">The "different" cases: Bakta's product, then the KO and its KEGG name.</p>
+    </div>
+  </div>
+  <p class="note">Proteins were translated from Bakta's gene positions. On <span data-n="recContigs"></span> contigs of <span data-n="recMags"></span> MAGs (<span data-n="recOrders"></span>) Bakta's gene finder read the stop codon TGA as tryptophan (genetic code 4), so these contigs were translated the same way; whether every one of them truly uses that code was not checked.</p>
+  <div class="exslot" data-at="tools"></div>
+</section>
+
+<section class="panel" id="fnLeave">
+  <h2>4. When relatives are missing from the database</h2>
+  <p>Module 7 removed a test MAG's species, genus, family or order from the reference database, and the classifiers then gave confident names one rank too deep. Here the same was done for function. The proteins of module 7's reference genomes were predicted, and each test-MAG gene took the KO of its best remaining match (DIAMOND, Buchfink et al. 2021), scored against the gene's own KOfam KO (<span data-n="lvN"></span> genes with a KO). Function holds up far better than names do: with the species removed <span data-n="lvSpecies"></span> keep their KO, with the whole order removed still <span data-n="lvOrder"></span>, from best matches only <span data-n="lvOrderId"></span> identical (median). A wrong KO stays rare (at most <span data-n="lvOther"></span>); the rest find a match without a KO or none. This counts only the genes KOfam can label at all, mostly conserved, well-studied families, and "same KO" means both proteins pass the same profile, not that their activity was measured.</p>
+  <div class="spctl">
+    <label>Test MAG <select id="fnLvMag" aria-label="Test MAG"></select></label>
+  </div>
+  <div class="antwo">
+    <div>
+      <h3 class="anh3">KO of the best remaining match, by what was removed</h3>
+      <div id="fnLvBars"></div>
+      <div class="legend" id="fnLvLegend"></div>
+      <p class="note">Share of the genes with a KOfam KO. Number at the right: median amino-acid identity of their best match.</p>
+    </div>
+    <div>
+      <h3 class="anh3">Same KO by identity of the best match</h3>
+      <div id="fnById"></div>
+      <p class="note">All four test MAGs and the four removal levels pooled; genes with a KO and a match, in 10% steps of identity. Number above a bar: genes in it.</p>
+    </div>
+  </div>
+  <p>A model can be missing too. For each of the <span data-n="mmN"></span> genes with a KO, its own profile was set aside. <span data-n="mmAbove"></span> still get a KO above threshold: genes that two profiles claim. <span data-n="mmBelow"></span> match another profile only below its threshold, and <span data-n="mmNone"></span> match nothing. So the thresholds are what stop a gene from taking a relative's KO when its own model is missing: taking the best match regardless of threshold would give three quarters of these genes another KO.</p>
+  <div class="exslot" data-at="leave"></div>
+</section>
+
+<section class="panel" id="fnInc">
+  <h2>5. Incomplete MAGs and pathway calls</h2>
+  <p>A pathway is often called present when all its steps are found. KEGG modules (Kanehisa et al. 2023) define such pathways as steps, some with alternative genes. In each test MAG we counted the modules that are complete with the KOfam KOs (<span data-n="incFull"></span>), then removed parts of the genome at random, as if the MAG were 95%, 85% or 70% complete, and counted again (100 draws each). Two ways of removing DNA were used: 10 kb blocks, or random cuts into pieces (mean 50 kb, like MAG contigs) of which whole pieces are dropped. Keeping 100% kept every module, as a control. The genes with a KO that are lost follow the DNA removed (<span data-n="incKo"></span>), but a pathway needs all its steps: at 95% complete <span data-n="inc95"></span> of the complete modules already look incomplete, at 70% <span data-n="inc70"></span> (mean over draws and MAGs, 10 kb blocks). Long pathways look incomplete in most draws (table). A missing pathway in an incomplete MAG is weak evidence that the organism lacks it.</p>
+  <div class="spctl">
+    <label>Test MAG <select id="fnIncMag" aria-label="Test MAG"></select></label>
+    <label>Removal <select id="fnIncMeth" aria-label="Way of removing DNA"><option value="blocks">10 kb blocks</option><option value="pieces">whole pieces (mean 50 kb)</option></select></label>
+  </div>
+  <div class="antwo">
+    <div>
+      <h3 class="anh3">Complete modules that look incomplete, per draw</h3>
+      <div id="fnIncDots"></div>
+      <p class="note">One dot per draw (100 per level); bar: mean. Share of the modules that are complete in the full genome.</p>
+    </div>
+    <div>
+      <h3 class="anh3">Modules most often lost at 70% complete (10 kb blocks)</h3>
+      <div class="scroll" id="fnIncLost"></div>
+      <p class="note">Draws (of 100) in which the module looks incomplete. Names from KEGG.</p>
+    </div>
+  </div>
+  <div class="exslot" data-at="incomplete"></div>
+</section>
+
+<section class="panel" id="fnTree">
+  <h2>6. Related enzymes: bile salt hydrolase or penicillin V acylase?</h2>
+  <p>Bile salt hydrolases (BSH) cut the amino acid off bile acids in the gut; penicillin V acylases (PVA) act on other substrates. They are related, share the Pfam domain CBAH and are often mixed up in annotations (O'Flaherty et al. 2018). <span data-n="cbGenes"></span> genes in <span data-n="cbMags"></span> of the 421 MAGs carry the domain; KOfam's choloylglycine hydrolase profile (K01442) finds <span data-n="cbKo"></span>, all among them. A name does not settle which enzyme a gene is. A tree can help: the <span data-n="cbFull"></span> full-length genes were aligned (MAFFT, Katoh and Standley 2013) with <span data-n="cbRefs"></span> enzymes whose activity was measured, and a tree built (IQ-TREE with ModelFinder and 1,000 ultrafast bootstraps; Kalyaanamoorthy et al. 2017, Hoang et al. 2018). A gene takes the kind of the references in the smallest well-supported group (bootstrap 95 or more) that holds it and any reference; mixed groups stay unresolved. By this rule <span data-n="cbBsh"></span> genes come out as BSH, none as PVA, and <span data-n="cbUnres"></span> stay unresolved.</p>
+  <div class="spctl">
+    <label>Colour genes by <select id="fnTreeCol" aria-label="Colour genes by"><option value="clade">kind from the tree</option><option value="product">Bakta's name</option><option value="phylum">phylum</option></select></label>
+    <label>Find <input id="fnTreeQ" type="search" placeholder="gene, MAG or family" aria-label="Find a gene, MAG or family" style="width:200px"></label>
+    <span class="count" id="fnTreeInfo"></span>
+  </div>
+  <div class="anmapgrid">
+    <div>
+      <div class="scroll fntree" id="fnTreeSvg"></div>
+      <div class="legend" id="fnTreeLegend"></div>
+      <p class="note">Unrooted maximum-likelihood tree, drawn from an arbitrary point; branch lengths in substitutions per site. Labels: the reference enzymes. Dots on branches: bootstrap 95 or more. Hover a gene for its MAG, Bakta's name and its nearest reference by identity.</p>
+    </div>
+    <div>
+      <h3 class="anh3">Bakta's name against the tree</h3>
+      <div class="scroll" id="fnTreeTable"></div>
+      <p class="note">Full-length genes in the tree. Click a row to mark its genes in the tree.</p>
+      <h3 class="anh3">Reference enzymes</h3>
+      <div class="scroll" id="fnRefs"></div>
+    </div>
+  </div>
+  <p>The three <i>Lactobacillus plantarum</i> genes without BSH activity (Bsh2-4) fall in a well-supported group with the three PVAs (and BT2086, a measured BSH), in line with Lambert et al. (2008). <span data-n="cbPa"></span> <i>Bacteroides</i> genes that Bakta names "penicillin amidase" are <span data-n="cbPaId"></span> identical to <i>B. thetaiotaomicron</i> BT2086, a measured BSH: here the name is likely misleading. But the tree also shows its limits. BT2086 sits in one well-supported group with a PVA from <i>Pectobacterium</i>, so the other Bacteroidales genes near it stay unresolved. And <span data-n="cbBig"></span> of the BSH calls come from one split: a group of <span data-n="cbBigSize"></span> sequences that holds the MAG genes and only two references, <i>Enterococcus faecalis</i> BSH and <i>L. plantarum</i> Bsh1, at about 60% identity. In an unrooted tree, sitting next to two BSH references does not place these genes inside a BSH group: their closest characterised relatives are BSH, but the tree cannot show that they share the activity. Only an assay shows what an enzyme does.</p>
+  <div class="exslot" data-at="tree"></div>
+</section>
+
+<h2 class="anopt">Optional: the genes in place, and resistance genes</h2>
+
 <section class="panel" id="anMap">
-  <h2>3. Gene map</h2>
+  <h2>7. Gene map</h2>
   <p>Eight MAGs, several of them also shown in other modules, with every gene in place. Each arrow is one gene on its strand, coloured by the evidence behind its name; hover for the product, the identity to the cluster's representative and any Pfam domains. Click the contig overview to move the window, or search for a product, gene symbol or Pfam domain.</p>
   <div class="spctl">
     <label>MAG <select id="anMapMag" aria-label="MAG shown in the gene map"></select></label>
@@ -74,8 +169,8 @@
 
 <div class="antwo">
   <section class="panel">
-    <h2>4. Resistance genes: a name is not a trait</h2>
-    <p>Bakta runs AMRFinderPlus, NCBI's tool for resistance genes (Feldgarden et al. 2021, Scientific Reports). It named <span data-n="amrGenes"></span> genes in <span data-n="amrMags"></span> MAGs by a match to a reference resistance protein, most often tetracycline ribosomal protection proteins (table). A further <span data-n="amrFam"></span> genes in <span data-n="amrFamMags"></span> MAGs matched only a resistance-protein family model; these include regulators and sensors such as VanR- and BlaR1-family proteins, which do not give resistance on their own. A match says that a gene like a known resistance gene is there. It does not say that the gene is active or that the bacterium survives the drug; that needs growth tests. Only the MAGs were annotated, so plasmids and other contigs outside the MAGs are missing here. The data are from one person and have no drug tests, so these genes say nothing about the diet or about how this person would respond to antibiotics.</p>
+    <h2>8. Resistance genes: a name is not a trait</h2>
+    <p>Bakta runs AMRFinderPlus, NCBI's tool for resistance genes (Feldgarden et al. 2021). It named <span data-n="amrGenes"></span> genes in <span data-n="amrMags"></span> MAGs by a match to a reference resistance protein, most often tetracycline ribosomal protection proteins (table). A further <span data-n="amrFam"></span> genes in <span data-n="amrFamMags"></span> MAGs matched only a resistance-protein family model, including regulators that do not give resistance on their own. A match says that a gene like a known resistance gene is there, not that it is active or that the bacterium survives the drug; that needs growth tests. Only the MAGs were annotated, so plasmids outside them are missing here.</p>
   </section>
   <section class="panel">
     <h2>Genes named by a reference resistance protein</h2>
@@ -86,6 +181,24 @@
 </div>
 
 <section class="panel">
-  <h2>5. Where annotation falls short</h2>
-  <p>Every name on this page is a prediction from similarity, and its strength depends on the reference data. Lineages known mainly from genomes have few studied proteins, so most of their genes stay hypothetical, and a database built for bacteria leaves an archaeon's key genes unnamed even where a Pfam domain shows what they are (example 1). The light database matches proteins to clusters at 50% identity or more, so a name often comes from a distant relative and says the protein family more than its exact role. A gene missing from a MAG may sit in the part of the genome that was not binned (most MAGs here are less than 100% complete, module 5), and genes on plasmids or phages outside the MAG are not annotated at all.</p>
+  <h2>9. Where annotation falls short</h2>
+  <p>Every name on this page is a prediction from similarity. Lineages known mainly from genomes have few studied proteins, so many of their genes stay hypothetical, and a tool built for bacteria leaves an archaeon's key genes unnamed (example 1). Two tools mostly agree where both name a gene, but about one in twenty such genes gets two different functions, often related proteins in other systems (section 3). A missing reference costs few KOs, and the thresholds keep wrong calls rare (section 4), but a missing pathway in an incomplete MAG means little (section 5). Related enzymes need more than a name: a tree with measured references helps, and only an assay settles it (section 6).</p>
+</section>
+
+<section class="panel">
+  <h2>Sources</h2>
+  <ul class="refs">
+    <li>Schwengers O, et al. (2021). Bakta: rapid and standardized annotation of bacterial genomes via alignment-free sequence identification. Microbial Genomics 7: 000685. <a href="https://doi.org/10.1099/mgen.0.000685">doi:10.1099/mgen.0.000685</a>.</li>
+    <li>Suzek BE, et al. (2015). UniRef clusters: a comprehensive and scalable alternative for improving sequence similarity searches. Bioinformatics 31: 926-932. <a href="https://doi.org/10.1093/bioinformatics/btu739">doi:10.1093/bioinformatics/btu739</a>.</li>
+    <li>Mistry J, et al. (2021). Pfam: the protein families database in 2021. Nucleic Acids Research 49: D412-D419. <a href="https://doi.org/10.1093/nar/gkaa913">doi:10.1093/nar/gkaa913</a>.</li>
+    <li>Feldgarden M, et al. (2021). AMRFinderPlus and the Reference Gene Catalog facilitate examination of the genomic links among antimicrobial resistance, stress response, and virulence. Scientific Reports 11: 12728. <a href="https://doi.org/10.1038/s41598-021-91456-0">doi:10.1038/s41598-021-91456-0</a>.</li>
+    <li>Aramaki T, et al. (2020). KofamKOALA: KEGG Ortholog assignment based on profile HMM and adaptive score threshold. Bioinformatics 36: 2251-2252. <a href="https://doi.org/10.1093/bioinformatics/btz859">doi:10.1093/bioinformatics/btz859</a> (KOfam profiles and thresholds; run here with PyHMMER: Larralde M, Zeller G (2023), Bioinformatics 39: btad214, <a href="https://doi.org/10.1093/bioinformatics/btad214">doi:10.1093/bioinformatics/btad214</a>).</li>
+    <li>Kanehisa M, et al. (2023). KEGG for taxonomy-based analysis of pathways and genomes. Nucleic Acids Research 51: D587-D592. <a href="https://doi.org/10.1093/nar/gkac963">doi:10.1093/nar/gkac963</a> (KEGG modules and KO names, from rest.kegg.jp).</li>
+    <li>Buchfink B, Reuter K, Drost HG (2021). Sensitive protein alignments at tree-of-life scale using DIAMOND. Nature Methods 18: 366-368. <a href="https://doi.org/10.1038/s41592-021-01101-x">doi:10.1038/s41592-021-01101-x</a>.</li>
+    <li>Katoh K, Standley DM (2013). MAFFT multiple sequence alignment software version 7: improvements in performance and usability. Molecular Biology and Evolution 30: 772-780. <a href="https://doi.org/10.1093/molbev/mst010">doi:10.1093/molbev/mst010</a>.</li>
+    <li>Kalyaanamoorthy S, et al. (2017). ModelFinder: fast model selection for accurate phylogenetic estimates. Nature Methods 14: 587-589. <a href="https://doi.org/10.1038/nmeth.4285">doi:10.1038/nmeth.4285</a>. Hoang DT, et al. (2018). UFBoot2: improving the ultrafast bootstrap approximation. Molecular Biology and Evolution 35: 518-522. <a href="https://doi.org/10.1093/molbev/msx281">doi:10.1093/molbev/msx281</a>. Both run in IQ-TREE 3.1.4.</li>
+    <li>O'Flaherty S, Briner Crawley A, Theriot CM, Barrangou R (2018). The <i>Lactobacillus</i> bile salt hydrolase repertoire reveals niche-specific adaptation. mSphere 3: e00140-18. <a href="https://doi.org/10.1128/mSphere.00140-18">doi:10.1128/mSphere.00140-18</a> (BSH and PVA are similar in sequence and often misannotated).</li>
+    <li>Lambert JM, Bongers RS, de Vos WM, Kleerebezem M (2008). Functional analysis of four bile salt hydrolase and penicillin acylase family members in <i>Lactobacillus plantarum</i> WCFS1. Applied and Environmental Microbiology 74: 4719-4726. <a href="https://doi.org/10.1128/AEM.00137-08">doi:10.1128/AEM.00137-08</a> (Bsh1 gives most of the BSH activity; Bsh2-4 may be penicillin acylases).</li>
+    <li>Reference enzymes with measured activity, from UniProt / Swiss-Prot, and: Kumar RS, et al. (2006), <i>Bifidobacterium longum</i> BSH, Journal of Biological Chemistry, <a href="https://doi.org/10.1074/jbc.M604172200">doi:10.1074/jbc.M604172200</a>; Chand D, et al. (2018), <i>Enterococcus faecalis</i> BSH, Biochimica et Biophysica Acta, <a href="https://doi.org/10.1016/j.bbapap.2018.01.003">doi:10.1016/j.bbapap.2018.01.003</a>; Avinash VS, et al. (2015), <i>Pectobacterium atrosepticum</i> PVA, International Journal of Biological Macromolecules, <a href="https://doi.org/10.1016/j.ijbiomac.2015.04.036">doi:10.1016/j.ijbiomac.2015.04.036</a>.</li>
+  </ul>
 </section>
