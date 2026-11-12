@@ -259,7 +259,10 @@ function fnNumbers() {
   return {
     tCds: num(t.cds), tBakta: `${num(P.both + P.bakta_only)} (${pct(P.both + P.bakta_only, t.cds)})`, tKofam: `${num(P.both + P.kofam_only)} (${pct(P.both + P.kofam_only, t.cds)})`,
     tNeither: `${num(P.neither)} (${pct(P.neither, t.cds)})`, tEcN: num(t.ec_n), tEc: `${num(t.ec_agree)} (${pct(t.ec_agree, t.ec_n)})`, tGradeN: t.grade_n,
-    recContigs: rec.contigs, recMags: rec.mags,
+    recContigs: rec.contigs, recMags: rec.mags, recRt: num(rec.readthrough),
+    recGainMag: rec.gain_mag_max, recGainCtrl: rec.gain_ctrl_min,
+    recTgaMag: rng(rec.tga_mag.map((x) => Math.round(100 * x))), recTgaCtrl: rng(rec.tga_ctrl.map((x) => Math.round(100 * x))),
+    recOutMag: p1(rec.outside_mag), recOutCtrl: p1(rec.outside_ctrl),
     recOrders: `${big.map(([o, n]) => `${n} in the order ${o}`).join(", ")}${small.length ? ` and ${words[small.length] || small.length} in other orders` : ""}`,
     lvN: num(lv.n), lvSpecies: p1(share("species", 0)), lvOrder: p1(share("order", 0)), lvOrderId: rng(lv.mags.map((m) => lv.median_id.order[m])),
     lvOther: p1(Math.max(...lv.levels.map((l) => share(l, 1)))),
