@@ -224,7 +224,7 @@ const mean = (xs) => sum(xs) / xs.length;
 const legendHtml = (items) => items.map(([t, c]) => `<span><i class="sw" style="background:${c}"></i>${esc(t)}</span>`).join("");
 function hbars(host, rows, colors, opts = {}) {
   // rows: [label, [counts...], right label]; horizontal stacked bars of shares
-  const W = Math.max(300, host.clientWidth || 300), lab = opts.lab ?? 150, right = opts.right ?? 0, rowH = 28, H = rows.length * rowH + 22;
+  const W = Math.max(300, host.clientWidth || 300), lab = Math.min(opts.lab ?? 150, W * 0.4), right = opts.right ?? 0, rowH = 28, H = rows.length * rowH + 22;
   const X = (f) => lab + f * (W - lab - right - 6);
   const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": opts.aria || "Bar chart" });
   for (let f = 0; f <= 1.001; f += 0.25) { el("line", { class: "grid", x1: X(f), x2: X(f), y1: 0, y2: H - 18 }, svg); el("text", { x: X(f), y: H - 4, "text-anchor": "middle", class: "lbl" }, svg).textContent = `${Math.round(f * 100)}%`; }
@@ -329,7 +329,10 @@ function drawIncomplete() {
 const CLADE_C = { BSH: "var(--c1)", PVA: "var(--c2)", unresolved: "var(--faint)" };
 function treeColors() {
   const L = FN.cbah.leaves.filter((l) => !l.ref);
-  if (st.col === "clade") return { of: (l) => CLADE_C[l.clade], legend: [["BSH (tree)", CLADE_C.BSH], ["PVA (tree)", CLADE_C.PVA], ["Unresolved", CLADE_C.unresolved]] };
+  if (st.col === "clade") {
+    const n = (k) => L.filter((l) => l.clade === k).length;
+    return { of: (l) => CLADE_C[l.clade], legend: [["BSH", "BSH (tree)"], ["PVA", "PVA (tree)"], ["unresolved", "Unresolved"]].filter(([k]) => n(k)).map(([k, t]) => [`${t}: ${n(k)}`, CLADE_C[k]]) };
+  }
   const key = st.col === "product" ? (l) => FN.cbah.products[l.p] : (l) => l.phylum;
   const counts = {}; for (const l of L) counts[key(l)] = (counts[key(l)] || 0) + 1;
   const order = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
@@ -343,7 +346,7 @@ function drawTree() {
   let leafNo = 0;
   for (let i = 0; i < n; i++) if (T[i][0] >= 0) depth[i] = depth[T[i][0]] + T[i][1];
   (function place(i) { if (!kids[i].length) { yy[i] = leafNo++; return; } kids[i].forEach(place); yy[i] = (yy[kids[i][0]] + yy[kids[i][kids[i].length - 1]]) / 2; })(0);
-  const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), lab = 250, step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
+  const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), lab = Math.min(250, W * 0.45), step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
   const X = (d) => 8 + (d / maxD) * (W - lab - 16), Y = (k) => 12 + k * step;
   const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Tree of the choloylglycine hydrolase genes and reference enzymes" });
   let d = "";

@@ -72,6 +72,18 @@
     the same KO here, but these are genes KOfam can label at all, mostly conserved families, pooled over all removal
     levels. A low identity is no guarantee: 31 of the 235 lost their KO.
 
+- title: A pathway in a 70% complete genome
+  at: incomplete
+  state: {inc: "c.62"}
+  question: >-
+    Choose Bifidobacterium adolescentis (MAG c.62). With 30% of its genome removed in 10 kb blocks, how many of its 28
+    complete modules look incomplete, and which pathway is lost most often? Then switch to whole pieces.
+  answer: >-
+    On average 58.9% of them, from 39.3% to 78.6% over the 100 draws (11 to 22 of the 28 modules). The pentose phosphate
+    pathway (M00004) looks incomplete in 94 of 100 draws: it has many steps, and the rule needs all of them. With whole
+    pieces removed the mean is 53.1% (32.1-75.0%). So in a 70% complete MAG, a missing pathway is expected even when the
+    organism has it.
+
 - title: Named penicillin amidase, closest to a bile salt hydrolase
   at: tree
   state: {col: "product", prod: "Penicillin amidase Cysteine peptidase MEROPS family C59"}

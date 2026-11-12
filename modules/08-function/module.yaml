@@ -17,7 +17,9 @@ takeaways:
   - "With the gene's whole order removed from the reference database, 96.0% of the genes with a KO still got their KO
     from the best remaining match, at about 50% identity: function is shared far more widely than a species name
     (module 7). Without score thresholds, three quarters would take another KO when their own model is missing."
-  - "INCOMPLETE_TAKEAWAY"
+  - "A pathway call needs every step: in the four test MAGs (28-47 complete KEGG modules each), removing 5% of the genome
+    at random made 13-14% of the complete modules look incomplete, removing 30% made 59-61% (10 kb blocks; 53-56% when
+    whole pieces are dropped). A missing pathway in an incomplete MAG is weak evidence."
   - "379 genes in 257 MAGs carry the BSH / PVA domain. A tree with 15 measured enzymes puts 275 of 319 next to BSH, but
     247 of these calls rest on two references at about 60% identity, and Bacteroidales genes stay unresolved: a name or
     a tree placement is a prediction; only an assay shows the activity."
@@ -38,7 +40,7 @@ teacher:
       discussion question."
     - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 9 to 11)."
   discussion_points:
-    - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs about half of the complete modules
+    - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs 59-61% of the complete modules
       looked incomplete at 70% (section 5). Check the MAG's completeness, which steps are missing, and whether the
       genes could sit on unbinned contigs."
     - "A Bakta name 'bile salt hydrolase' does not show the activity: BSH and PVA share the domain, and the tree places
