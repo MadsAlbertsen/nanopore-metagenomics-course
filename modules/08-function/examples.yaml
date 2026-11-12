@@ -88,7 +88,7 @@
   at: tree
   state: {col: "product", prod: "Penicillin amidase Cysteine peptidase MEROPS family C59"}
   question: >-
-    Bakta names 27 of the full-length genes "Penicillin amidase". Where do they sit in the tree, and what does the tree
+    Bakta names 27 of the genes in the tree "Penicillin amidase". Where do they sit in the tree, and what does the tree
     call them? Hover the marked genes.
   answer: >-
     All 27 are from Bacteroidota MAGs. 14 come out as BSH: Bacteroides and Phocaeicola genes 74.3-99.7% identical to
