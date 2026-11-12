@@ -275,13 +275,13 @@ function fnNumbers() {
     cbNameBsh: num(cb.names.bsh), cbNamePen: num(cb.names.pen), cbKoPva: num(cb.kofam.K24041), cbKoNone: num(cb.kofam.none),
     cbRefNoKo: `${cb.refs_noko} of the ${cb.refs.length} without a KO, ${cb.refs_noko_bsh} of them measured BSH`,
     cbOut: num(cb.genes - cb.full), cbOutPartial: num(cb.not_tree.partial_match), cbOutCov: `${Math.round(100 * cb.not_tree.partial_cov)}% of it`, cbOutLen: num(cb.not_tree.other_length),
-    cbRefKinds: `${cb.refs_kinds.BSH} BSH and ${cb.refs_kinds.PVA} PVA whose activity was measured, and the three Lactobacillus plantarum genes Bsh2-4, which showed no BSH activity and which Lambert et al. (2008) suggest are penicillin acylases; here they count as PVA-like`,
+    cbRefKinds: `${cb.refs_kinds.BSH} BSH and ${cb.refs_kinds.PVA} PVA whose activity was measured, and the three Lactobacillus plantarum genes Bsh2-4, which showed little or no BSH activity and which Lambert et al. (2008) suggest are penicillin acylases; here they count as PVA-like`,
     cbPva: PVA === 0 ? "none" : num(PVA),
     cbSupport: `at bootstrap 80 or 90, ${cb.support["80"].BSH} genes come out as BSH and ${cb.support["80"].PVA} as PVA (genes that group with the Pectobacterium PVA), and at 99, ${cb.support["99"].BSH} as BSH and ${cb.support["99"].PVA || "none"} as PVA`,
     cbKoBsh: `${cb.kofam_bsh.K01442} of the ${BSH} have the BSH KO, ${cb.kofam_bsh.K24041 || "none"} the PVA KO and the other ${cb.kofam_bsh.none} no KO`,
     cbNearBsh: `${cb.nearest_bsh[0]} of the ${BSH}, at a median of ${cb.nearest_bsh[1]}% identity`,
     cbGenes: num(cb.genes), cbMags: num(cb.mags), cbKo: num(cb.k01442), cbFull: num(cb.full), cbRefs: cb.refs.length, cbBsh: BSH, cbUnres: UNR,
-    cbPa: pa[0] < words.length ? words[pa[0]][0].toUpperCase() + words[pa[0]].slice(1) : pa[0], cbPaId: `${pa[1]}-${pa[2]}%`, cbBig: `${cb.big_split.bsh} of the ${BSH}`, cbBigSize: cb.big_split.size,
+    cbPa: pa[0] < words.length ? words[pa[0]][0].toUpperCase() + words[pa[0]].slice(1) : pa[0], cbPaId: `${pa[1]}-${pa[2]}%`, cbBig: `${cb.big_split.bsh} of the ${BSH}`, cbBigSize: cb.big_split.size, cbBigMag: cb.big_split.size - 2,
   };
 }
 function drawTools() {
