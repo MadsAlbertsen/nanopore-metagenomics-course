@@ -46,13 +46,13 @@
   <section class="panel">
     <h2>Identity to the cluster's representative</h2>
     <div id="anIdHist"></div>
-    <p class="note">Named and unnamed cluster matches (<span data-n="clusterHits"></span> CDS), in 5% steps of amino-acid identity. Bakta's light database holds only UniRef50 clusters, so 50% is the floor.</p>
+    <p class="note">All CDS with a cluster match (<span data-n="clusterHits"></span>), in 5% steps of amino-acid identity. Bakta's light database holds only UniRef50 clusters, so 50% is the floor.</p>
   </section>
 </div>
 
 <section class="panel" id="fnTools">
   <h2>3. Two tools, one gene</h2>
-  <p>A second tool gives a check. KOfam (Aramaki et al. 2020) holds one profile per KEGG orthology group (KO), each with its own score threshold, and gives a gene a KO only above that threshold. We ran it on all <span data-n="tCds"></span> CDS of the four complete, single-contig test MAGs of module 7. Bakta gives <span data-n="tBakta"></span> of these genes a name other than "hypothetical protein" (vague, domain-only names included), KOfam gives <span data-n="tKofam"></span> a KO, and <span data-n="tNeither"></span> get neither. Where both name a gene, do they agree? For <span data-n="tEcN"></span> such genes both sides carry an EC number (the enzyme code), and <span data-n="tEc"></span> share one; most of the rest are renumbered EC codes or related enzymes. Genes without EC numbers need another check: <span data-n="tGradeN"></span> random genes named by both were graded by hand, by a reviewer who saw only the two names (chart, right).</p>
+  <p>A second tool gives a check. KOfam (Aramaki et al. 2020) holds one profile per KEGG orthology group (KO), each with its own score threshold, and gives a gene a KO only above that threshold. We ran it on all <span data-n="tCds"></span> CDS of the four complete, single-contig test MAGs of module 7. Bakta gives <span data-n="tBakta"></span> of these genes a name other than "hypothetical protein" (vague, domain-only names included), KOfam gives <span data-n="tKofam"></span> a KO, and <span data-n="tNeither"></span> get neither. Where both name a gene, do they agree? For <span data-n="tEcN"></span> such genes both sides carry an EC number (the enzyme code), and <span data-n="tEc"></span> share one; the rest mix renumbered EC codes with related enzymes. Genes without EC numbers need another check: <span data-n="tGradeN"></span> random genes named by both were graded by hand, by a reviewer who saw only the two names (chart, right).</p>
   <div class="antwo">
     <div>
       <h3 class="anh3">Which tool names the gene, per test MAG</h3>
@@ -139,7 +139,7 @@
       <div class="scroll" id="fnRefs"></div>
     </div>
   </div>
-  <p>The tree reproduces a published result: the three <i>Lactobacillus plantarum</i> genes without BSH activity (Bsh2-4) group with the PVAs, as Lambert et al. (2008) suggested. <span data-n="cbPa"></span> <i>Bacteroides</i> genes that Bakta names "penicillin amidase" are <span data-n="cbPaId"></span> identical to <i>B. thetaiotaomicron</i> BT2086, a measured BSH: here the name is likely misleading. But the tree also shows its limits. BT2086 sits in one well-supported group with a PVA from <i>Pectobacterium</i>, so the other Bacteroidales genes near it stay unresolved. And <span data-n="cbBig"></span> of the BSH calls come from one split: a group of <span data-n="cbBigSize"></span> sequences that holds the MAG genes and only two references, <i>Enterococcus faecalis</i> BSH and <i>L. plantarum</i> Bsh1, at about 60% identity. In an unrooted tree, sitting next to two BSH references does not place these genes inside a BSH group: their closest characterised relatives are BSH, but the tree cannot show that they share the activity. Only an assay shows what an enzyme does.</p>
+  <p>The three <i>Lactobacillus plantarum</i> genes without BSH activity (Bsh2-4) fall in a well-supported group with the three PVAs (and BT2086, a measured BSH), in line with Lambert et al. (2008). <span data-n="cbPa"></span> <i>Bacteroides</i> genes that Bakta names "penicillin amidase" are <span data-n="cbPaId"></span> identical to <i>B. thetaiotaomicron</i> BT2086, a measured BSH: here the name is likely misleading. But the tree also shows its limits. BT2086 sits in one well-supported group with a PVA from <i>Pectobacterium</i>, so the other Bacteroidales genes near it stay unresolved. And <span data-n="cbBig"></span> of the BSH calls come from one split: a group of <span data-n="cbBigSize"></span> sequences that holds the MAG genes and only two references, <i>Enterococcus faecalis</i> BSH and <i>L. plantarum</i> Bsh1, at about 60% identity. In an unrooted tree, sitting next to two BSH references does not place these genes inside a BSH group: their closest characterised relatives are BSH, but the tree cannot show that they share the activity. Only an assay shows what an enzyme does.</p>
   <div class="exslot" data-at="tree"></div>
 </section>
 

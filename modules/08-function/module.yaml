@@ -15,7 +15,7 @@ takeaways:
     Where both name a gene they mostly agree (94% of EC numbers; 189 of 200 by hand), but about one in twenty gets two
     different functions, often related proteins."
   - "With the gene's whole order removed from the reference database, 96.0% of the genes with a KO still got their KO
-    from the best remaining match, at about 50% identity: function is shared far more widely than a species name
+    from the best remaining match, at a median 50-57% identity: function is shared far more widely than a species name
     (module 7). Without score thresholds, three quarters would take another KO when their own model is missing."
   - "A pathway call needs every step: in the four test MAGs (28-47 complete KEGG modules each), removing 5% of the genome
     at random made 13-14% of the complete modules look incomplete, removing 30% made 59-61% (10 kb blocks; 53-56% when
@@ -32,13 +32,13 @@ teacher:
     yet tried with students).
   before: What a MAG is (module 4), MAG quality (module 5) and the leave-out experiment of module 7.
   flow:
-    - "10 min: how many genes get a name and what a name rests on (sections 1 and 2; examples 1 and 2)."
+    - "10 min: how many genes get a name and what a name rests on (sections 1 and 2; example 2)."
     - "10 min: two tools on the same genes (section 3; example 3): let students guess the agreement first."
     - "15 min: missing references and missing models (section 4; examples 4 and 5), compared with module 7."
     - "10 min: incomplete MAGs and pathway calls (section 5; example 6)."
     - "15 min: BSH or PVA, what a tree can and cannot show (section 6; examples 7 and 8); take-home points and the
       discussion question."
-    - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 9 to 11)."
+    - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 1 and 9 to 11)."
   discussion_points:
     - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs 59-61% of the complete modules
       looked incomplete at 70% (section 5). Check the MAG's completeness, which steps are missing, and whether the
