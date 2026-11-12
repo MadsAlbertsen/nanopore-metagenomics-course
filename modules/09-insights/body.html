@@ -1,0 +1,102 @@
+<div class="top">
+  <div class="intro">
+    <span class="kicker">Module 9</span>
+    <h1>What this data set can tell us: ten days in one gut</h1>
+    <p>This page puts the whole data set to work on one question: what changed in this gut over ten days, and how sure can we be? One person gave a stool sample every day for ten days: days 1-5 on a high-carbohydrate, high-calorie diet, days 6-10 on a low-carbohydrate, low-calorie diet. The data owner adds that both periods were vegetarian, that days 6-10 were closer to the person's normal diet, and that a similar high-calorie diet was eaten for about a week before day 1. The reads of each day were mapped to the 421 MAGs from the co-assembly, so each MAG has an abundance on each day. The page shows how that abundance is measured, how the community changes, what long reads added, and what the genomes that rose or fell could digest. It ends with open questions. Pick a MAG on any chart to follow it over the ten days; the MAGs and their quality are in <a href="binning.html">module 4</a> and <a href="mag-quality.html">module 5</a>.</p>
+  </div>
+  <div class="stats" id="ipStats"></div>
+</div>
+<section class="panel" id="ipExamples" hidden>
+  <div class="exhead"><h2>Guided examples</h2><div class="exlist" role="list"></div></div>
+  <div class="exbody"></div>
+</section>
+<section class="panel">
+  <h2>How abundance is measured</h2>
+  <p class="note">Each read of a sample is aligned to the contigs, and mmlong2 counts the depth of every contig with jgi_summarize_bam_contig_depths (from MetaBAT2), which leaves out contig ends and poor alignments. A MAG's abundance on a day is the read bases counted on its contigs (contig length times mean depth, summed over the MAG's contigs), as a share of all read bases sequenced that day. It is a share of bases, not of reads: a long read counts more than a short one. Samples were sequenced to very different amounts (1.7 to 25.6 Gb), so raw amounts mostly follow sequencing effort; shares remove that.</p>
+  <p class="note">But shares are relative: they add up to 100%, so when one genome takes a larger share, all others take a smaller share even if their own amount in the gut did not change. Sequencing cannot tell which happened. Not every base is counted on a MAG: some are counted on contigs that were not binned, and a few percent on no contig at all. Switch the measure below to see each effect.</p>
+</section>
+<section class="spctl panel" aria-label="Page settings">
+  <label>Measure <select id="ipMeasure" aria-label="Abundance measure">
+    <option value="share">Share of all read bases (%)</option>
+    <option value="binned">Share of read bases in MAGs (%)</option>
+    <option value="gb">Read bases, not divided by sequencing effort</option>
+  </select></label>
+  <span class="daypick" role="group" aria-label="Days in the second group">Second group <span id="ipDays"></span></span>
+  <button class="link" type="button" data-split="diet">Diet periods</button>
+  <button class="link" type="button" data-split="odd">Odd against even days</button>
+  <label>MAG <input id="ipFind" list="ipMagList" placeholder="find a MAG" aria-label="Find a MAG" style="width:190px"></label>
+  <datalist id="ipMagList"></datalist>
+  <button class="link" id="ipCopy" type="button">Copy link to this view</button>
+  <span class="count" id="ipCopied" aria-live="polite"></span>
+</section>
+<div class="maps">
+  <section class="panel">
+    <div class="exhead"><h2>Community on each day</h2>
+      <label class="spctl">Group by <select id="ipBy" aria-label="Group the bars by">
+        <option value="phylum">Phylum</option><option value="mag">MAG (7 most abundant)</option>
+      </select></label></div>
+    <div id="ipComp"></div>
+    <div class="legend" id="ipCompLegend"></div>
+    <p class="note" id="ipCompNote"></p>
+    <div class="exslot" data-at="community"></div>
+  </section>
+  <section class="panel">
+    <div class="exhead"><h2>Picked MAGs over the ten days</h2>
+      <label class="check"><input type="checkbox" id="ipLog"> log scale</label></div>
+    <div id="ipLine"></div>
+    <div class="legend" id="ipLineLegend"></div>
+    <div id="ipPicked"></div>
+    <div class="exslot" data-at="picked"></div>
+  </section>
+</div>
+<div class="maps">
+  <section class="panel">
+    <h2>Change between the two groups of days, per MAG</h2>
+    <div id="ipChange"></div>
+    <div class="legend" id="ipChangeLegend"></div>
+    <p class="note" id="ipChangeNote"></p>
+    <div class="exslot" data-at="change"></div>
+  </section>
+  <section class="panel">
+    <h2>How different are the days? (Bray-Curtis)</h2>
+    <div id="ipBc" class="scroll"></div>
+    <div class="legend" id="ipBcLegend"></div>
+    <p class="note" id="ipBcNote"></p>
+    <div class="exslot" data-at="braycurtis"></div>
+  </section>
+</div>
+<section class="panel" id="mtPanel">
+  <div class="exhead"><h2>Who could do what: metabolic potential</h2>
+    <label class="spctl">Show <select id="mtShow" aria-label="Count or rate of genes">
+      <option value="rate">genes per 1,000 genes of the MAG</option><option value="count">number of genes</option>
+    </select></label></div>
+  <p class="note" id="mtIntro">Which of these genomes could break down which food? This section looks at 17 MAGs, chosen by a rule written down before looking at their genes: among the high-quality MAGs with a mean of 0.1% or more of all read bases, the six that rose most from days 1-5 to days 6-10, the six that fell most, the four most abundant that changed less than 1.4-fold, and one <i>Faecalibacterium</i> as a known butyrate producer. Genes were predicted with Pyrodigal, then searched with two sets of profile HMMs: dbCAN's for carbohydrate-active enzymes (CAZymes; here the glycoside hydrolases, polysaccharide lyases and carbohydrate esterases that take sugars apart; profile search only; dbCAN's recommended set also asks for agreement with one of two other tools) and KEGG's KOfam for a short list of marker genes (butyrate, propionate, acetate from hydrogen, bile salts, urease, protein fermentation). dbCAN's substrate table (Zheng et al. 2023, <i>Nucleic Acids Res</i>) lists the known activities of each family; a family gets a food category only when at least two thirds of its listed activities fall in that category, and some families rest on one or two listed activities. Read the categories as a rough guide. Note who is in which group: the risers are mostly not Bacillota (two Pseudomonadota, a cyanobacterial relative, a Verrucomicrobiota and a <i>Bacteroides</i>), while all six fallers are Bacillota, so differences between the groups largely follow phylum. A gene in a genome is potential: it says what the bacterium could do, not what it did on these days. Pick a MAG in the chart or the table to see its families and marker genes.</p>
+  <div class="maps">
+    <div><div id="mtDots"></div><div class="legend" id="mtDotsLegend"></div></div>
+    <div id="mtDetail" class="detail"></div>
+  </div>
+  <div id="mtTable" class="scroll"></div>
+  <p class="note" id="mtNote">Values per 1,000 genes of the MAG, so large and small genomes compare (switch to number of genes above). The change column is the diet split as in the change chart (0.01% added to both means). Categories: starch and glycogen (alpha-glucans), fructans (inulin, levan), plant cell-wall fibres (cellulose, xylan, pectin, arabinan, mannan, galactan, beta-glucan), host glycans (host glycans such as mucin, and milk oligosaccharides); a family whose activities spread over several substrates counts as several substrates, and CE9 (an intracellular step of amino-sugar use found in most bacteria) is left out of host glycans. Marker columns count genes above KOfam's threshold for each KEGG orthologue (hover a column title for the genes). The butyryl-CoA:acetate CoA-transferase that most gut butyrate producers use has no clean KEGG profile and is found by its Bakta name; a complete butyrate route needs butyryl-CoA dehydrogenase plus a last step. A dash means no gene was found: MAGs are not complete, and a gene can fall just below a profile's threshold (the <i>Prevotella</i> c.36 gene Bakta names methylmalonyl-CoA decarboxylase scores 814 against a threshold of 830, so c.36 shows no succinate-pathway gene). The succinate-pathway gene of <i>Ornithomonoglobus</i> s.14 is named propionyl-CoA carboxylase by Bakta, a related enzyme. Checks: Pyrodigal in metagenome mode reproduces every Bakta gene's stop codon, and the genes used here (trained on each MAG) share the stop codon with 96.6-99.4% of Bakta's; of 214 genes in ten well-known CAZyme families that Bakta named, 196 (92%) carry a name that fits the family; of the genes Bakta named as carbohydrate enzymes, 65-100% per MAG have a dbCAN call (606 of 669 pooled, nearly half of them in <i>Bacteroides</i> c.119).</p>
+  <div class="exslot" data-at="metabolism"></div>
+</section>
+<section class="panel">
+  <h2>What long reads gave this data set</h2>
+  <p class="note">Long reads span repeats that break short-read assemblies, so many genomes here come out whole. 102 of the 421 MAGs are a single circular contig: the assembler could close the chromosome on itself. One of them is Zag111 sp002102825 (MAG c.34): 1.91 Mb on one circular contig, 99.95% complete and 0.26% contaminated by CheckM2's estimate, from the Gastranaerophilaceae, non-photosynthetic relatives of the cyanobacteria known mainly from MAGs. It took 0.20-0.36% of the read bases on days 1-6, then 0.63%, 1.25%, 3.33% and 5.11% on days 7-10, the third-largest share of any MAG on day 10 (example 9). A whole genome lets you ask what such a bacterium could do (its genes are in the section above), even for a lineage known mainly from MAGs. The same reads carry methylation (<a href="methylation.html">module 6</a>), which can place contigs that binning left out in their genome.</p>
+</section>
+<section class="panel">
+  <h2>What one person's time series can and cannot show</h2>
+  <p class="note">It can show which genomes are present, how large a share of the read bases each takes, and which shares go up or down over the ten days. It cannot say why. There is one person and one sample per day, with no replicate samples and no second person, and the diet changed at the same time as the days went by: anything else that changed over the ten days would look the same as a diet effect. Day-to-day variation is the yardstick: a change between the two periods means more when the days within each period agree with each other, and less when single days jump about as much. Try other splits of the days: if many splits that are not the diet periods give changes as large, the diet split is not special. Look at the single days, not only the means: a few days can carry a whole period's mean. And when the 124 MAGs with 0.1% or more of the read bases are ranked by their change, some will change two-fold or more by chance alone; a list of the largest changes always has a top, whether or not anything happened.</p>
+</section>
+<section class="panel">
+  <h2>Open questions</h2>
+  <p class="note">These questions have no single right answer. Pick two, discuss them in pairs, and use the charts above to back your answer.</p>
+  <ol class="note">
+    <li>Which of the changes on this page would you put down to the diet switch, and what else could explain them (time, the week of high-calorie diet before day 1, day-to-day variation)? What study design would tell these apart?</li>
+    <li>Zag111 (c.34) rose from about 0.3% to 5.1% of the read bases. Did it grow, or did others shrink? What extra measurement would settle it?</li>
+    <li>The fallers carry more plant-fibre enzymes than the risers. What would you need, beyond genes in a genome, to say that fibre digestion in this gut changed?</li>
+    <li>Which results on this page depend on long reads? Pick one and argue whether short reads would have found it too.</li>
+    <li>Which single result here would you trust enough to publish, and what would a reviewer ask for first?</li>
+    <li>With money for one more measurement, or ten more samples, what would you add, and why?</li>
+    <li>Stool samples also contain human DNA. What should a study like this decide before it shares its reads, and what can safely be shared?</li>
+  </ol>
+</section>

@@ -185,3 +185,9 @@
 - term: "Leave-out experiment"
   text: "A test of a classifier on genomes whose names are known: the genome's species, genus, family or order is removed from the reference database, and the genome is named again to see what the tool does with an organism it has not seen."
   modules: [taxonomy]
+- term: "Relative abundance"
+  text: "A genome's share of everything sequenced in a sample, here the share of read bases on its contigs. Shares add up to 100%, so one genome rising lowers the others."
+  modules: [insights]
+- term: "Bray-Curtis dissimilarity"
+  text: "How different two samples are in composition, from 0 (the same) to 1 (nothing shared)."
+  modules: [insights]

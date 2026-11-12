@@ -12,8 +12,9 @@ and an answer to open when ready. Every page is one self-contained HTML file tha
 | 4. Binning: sorting contigs into genomes | ready |
 | 5. MAG quality: how complete, how clean | draft |
 | 6. Methylation: misassemblies, contamination and placing contigs | draft |
-| 7. Annotation: what is in a genome, and how sure are we | draft |
-| 8. Your project: what data we have | draft |
+| 7. Taxonomy: naming genomes, contigs and reads, and how names go wrong | draft |
+| 8. Function: what the genes may do, and how sure we are | draft |
+| 9. Insights: what this data set can tell us | draft |
 
 ## The data
 
