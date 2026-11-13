@@ -30,3 +30,4 @@ table.ct.gt td.ev { white-space: nowrap }
 .fntree svg { display: block }
 h2.anopt { font-size: 15px; color: var(--muted); margin: 8px 2px 0; font-weight: 600 }
 #fnTreeTable td:first-child { max-width: 230px; white-space: normal }
+@media (max-width: 1200px) { #fnTree .anmapgrid { grid-template-columns: minmax(0, 1fr) } }

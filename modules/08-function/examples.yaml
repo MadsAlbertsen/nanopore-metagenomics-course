@@ -88,26 +88,30 @@
   at: tree
   state: {col: "clade", prod: "Glycerol dehydratase"}
   question: >-
-    Bakta names 43 genes in the tree "Glycerol dehydratase" (the tree shows a sample of them, marked). Which reference
-    enzymes are they placed with, and what did those enzymes do when they were measured? Hover the marked genes.
+    Bakta names 43 genes in the tree "Glycerol dehydratase"; their row in the table is selected, and the 11 of them that
+    are drawn are marked. Hover (or tap) a marked gene: which reference is nearest, and how identical is it? Then find
+    the two references labelled at the right that act on glycerol or diols, and look up in the reference table which
+    activity each has and the paper that measured it.
   answer: >-
-    All 43 (in 43 MAGs, 29 of them Lachnospiraceae, 19 Blautia_A) sit in a well-supported group with the Roseburia
-    inulinivorans diol dehydratase, 60-70% identical to it, and each is closer to it than to the Clostridium butyricum
-    glycerol dehydratase. LaMattina et al. (2016) showed that the Roseburia enzyme, 48% identical to the glycerol
-    dehydratase, dehydrates 1,2-propanediol: it is a diol dehydratase. KOfam gives these genes no KO. So the tree points
-    to a diol dehydratase, not the glycerol dehydratase of the name; only an assay of these enzymes would settle it.
+    The marked genes sit in a well-supported group (square on the branch) with the Roseburia inulinivorans diol
+    dehydratase, and it is their nearest reference, 60-70% identical; the table shows that all 43 get the same call
+    (Diol column). The other reference, Clostridium butyricum DhaB1, is a glycerol dehydratase. LaMattina et al. (2016)
+    showed that the Roseburia enzyme, 48% identical to DhaB1, dehydrates 1,2-propanediol: it is a diol dehydratase.
+    KOfam gives these genes no KO. So the tree points to a diol dehydratase, not the glycerol dehydratase of the name;
+    only an assay of these enzymes would settle it.
 
 - title: Named benzylsuccinate synthase
   at: tree
   state: {col: "clade", prod: "Benzylsuccinate synthase alpha subunit"}
   question: >-
-    Benzylsuccinate synthase (BssA) starts the breakdown of toluene. Bakta gives this name to 12 genes in the tree. Where
-    do they sit, and what do KOfam and the nearest reference say?
+    Benzylsuccinate synthase (BssA) starts the breakdown of toluene. Bakta names 12 genes in the tree benzylsuccinate
+    synthase; all 12 are drawn and marked. Do any sit with the Thauera aromatica BssA reference? If not, where do they
+    sit, and what do the tree's call, KOfam and the nearest reference (hover or tap) say?
   answer: >-
-    Six (Phocaeicola, Parabacteroides, Odoribacter) sit in the HypD group, 51-55% identical to Clostridioides difficile
-    HypD, and KOfam gives all six the HypD KO (K23121): the tree, the identity and KOfam agree on a hydroxyproline
-    dehydratase, an enzyme common in the gut (Levin et al. 2017). One sits with the Klebsiella HpfG (46% identity), and
-    five stay unresolved, only 27-35% identical to any reference. None is placed with the BssA reference.
+    None sits with the BssA reference. Six (Phocaeicola, Parabacteroides, Odoribacter) sit in the HypD group, 51-55%
+    identical to Clostridioides difficile HypD, and KOfam gives all six the HypD KO (K23121): the tree, the identity and
+    KOfam agree on a hydroxyproline dehydratase, an enzyme common in the gut (Levin et al. 2017). One sits with the
+    Klebsiella oxytoca HpfG (46% identity), and five stay unresolved, only 27-35% identical to any reference.
 
 - title: A name from a distant relative
   at: genemap
