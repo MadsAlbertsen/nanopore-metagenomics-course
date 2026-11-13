@@ -273,7 +273,7 @@ function fnNumbers() {
     grGenes: num(gr.genes), grMags: num(gr.mags), grFull: num(gr.full), grOut: num(gr.not_tree), grRefs: gr.refs.length,
     grKinds: new Set(gr.refs.map((r) => r[2])).size, grPflNamed: num(gr.pfl_named.n), grPflIn: num(gr.pfl_named.in_pfl),
     grCounts: (() => { const c = gr.clades, other = sum(Object.entries(c).filter(([k]) => !["PFL", "HypD", "CutC", "diol dehydratase", "unresolved"].includes(k)).map(([, n]) => n)); return `${num(c.PFL)} come out as PFL, ${c["diol dehydratase"]} as diol dehydratase, ${c.HypD} as HypD, ${c.CutC} as CutC and ${other} as one of the other kinds; ${c.unresolved} stay unresolved`; })(),
-    grSupport: (() => { const s80 = gr.support["80"], s99 = gr.support["99"], same = ["PFL", "HypD", "CutC", "diol dehydratase", "unresolved"].every((k) => s80[k] === gr.clades[k] && gr.support["90"][k] === gr.clades[k]); return `${same ? "the labels are the same at bootstrap 80 and 90" : "the labels shift at bootstrap 80 or 90"}, and at 99 ${gr.clades["diol dehydratase"] - s99["diol dehydratase"]} of the diol dehydratase genes become unresolved`; })(),
+    grSupport: (() => { const s80 = gr.support["80"], s99 = gr.support["99"], same = ["PFL", "HypD", "CutC", "diol dehydratase", "unresolved"].every((k) => s80[k] === gr.clades[k] && gr.support["90"][k] === gr.clades[k]); return `${same ? "the calls are the same with a bootstrap cut-off of 80 or 90" : "the calls shift with a bootstrap cut-off of 80 or 90"}, and with 99, ${words[gr.clades["diol dehydratase"] - s99["diol dehydratase"]] || gr.clades["diol dehydratase"] - s99["diol dehydratase"]} of the diol dehydratase genes become unresolved`; })(),
     grKo: `all ${num(gr.clades.PFL)} PFL genes have KEGG's PFL KO (K00656), all ${gr.clades.HypD} HypD genes the HypD KO (K23121), and ${gr.ko_clade.CutC.K20038} of the ${gr.clades.CutC} CutC genes the CutC KO (K20038)`,
     grDiolKo: gr.ko_clade["diol dehydratase"].none === gr.clades["diol dehydratase"] ? `none of the ${gr.clades["diol dehydratase"]}` : `${gr.clades["diol dehydratase"] - gr.ko_clade["diol dehydratase"].none} of the ${gr.clades["diol dehydratase"]}`,
     grNear: `${gr.near_agree.PFL} of the PFL, ${gr.near_agree.HypD} of the HypD, ${gr.near_agree["diol dehydratase"]} of the ${gr.clades["diol dehydratase"]} diol dehydratase and ${gr.near_agree.CutC} of the ${gr.clades.CutC} CutC genes`,
@@ -281,7 +281,8 @@ function fnNumbers() {
     grBss: num(gr.bss.n), grBssHypd: (words[gr.ex_bss_hypd.n] || num(gr.ex_bss_hypd.n)), grBssId: `${gr.ex_bss_hypd.id[0]}-${gr.ex_bss_hypd.id[1]}%`,
     grPflDiol: cap(words[gr.ex_pfl_diol.n] || gr.ex_pfl_diol.n), grPflDiolId: `${gr.ex_pfl_diol.id[0]}-${gr.ex_pfl_diol.id[1]}%`,
     grPflCutc: cap(words[gr.ex_pfl_cutc.n] || gr.ex_pfl_cutc.n), grPflCutcId: `${gr.ex_pfl_cutc.id[0]}-${gr.ex_pfl_cutc.id[1]}%`,
-    grFar: cap(words[gr.ex_far.n] || gr.ex_far.n), grFarMax: `${gr.ex_far.id[1]}%`,
+    grFar: cap(words[gr.ex_far.n] || gr.ex_far.n), grFarL: words[gr.ex_far.n] || num(gr.ex_far.n), grPflCutcL: words[gr.ex_pfl_cutc.n] || num(gr.ex_pfl_cutc.n),
+    grOtherKinds: Object.entries(gr.clades).filter(([k]) => !(k in GROUP_C)).sort((a, b) => b[1] - a[1]).map(([k]) => k).join(", "), grFarMax: `${gr.ex_far.id[1]}%`,
     grHpd: num(gr.ex_hpdb.n), grHpdInId: `${gr.ex_hpdb_in.id[1]}%`, grHpdUn: num(gr.ex_hpdb_unres.n), grHpdUnId: `${gr.ex_hpdb_unres.id[0]}-${gr.ex_hpdb_unres.id[1]}%`,
     grUnres: num(gr.clades.unresolved), grUnresId: `${gr.ex_unres.median_id}%`,
     grShown: `${sum(Object.values(gr.shown))} of the ${num(gr.full)}`,
@@ -352,9 +353,18 @@ function treeColors() {
   const key = st.col === "product" ? (l) => gr.products[l.p] : (l) => l.phylum;
   const counts = {}; for (const l of L) counts[key(l)] = (counts[key(l)] || 0) + 1;
   const order = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
-  const col = Object.fromEntries(order.map((k, i) => [k, i < 6 ? `var(--c${i + 1})` : "var(--faint)"]));
-  return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (grey)"}: ${counts[k]}`, col[k]]) };
+  const col = Object.fromEntries(order.map((k, i) => [k, i < 6 ? `var(--c${i + 1})` : "none"]));
+  return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (open circle)"}: ${counts[k]}`, i < 6 ? col[k] : "transparent;border:1px solid var(--faint)"]) };
 }
+// reference label: genus abbreviated, the activity added when the name does not say it
+const refName = (l) => { const n = l.label.replace(/^([A-Z])[a-z]+ (?=[a-z])/, "$1. "); return n.endsWith(l.kind) ? n : `${n} (${l.kind})`; };
+// a tooltip on hover, and on tap for touch screens (stays until the next tap elsewhere)
+const hover = (node, html) => {
+  node.addEventListener("mousemove", (ev) => showTip(ev, html));
+  node.addEventListener("mouseleave", hideTip);
+  node.addEventListener("click", (ev) => { ev.stopPropagation(); showTip(ev, html); });
+};
+document.addEventListener("click", (ev) => { if (!ev.target.closest("#fnTreeSvg")) hideTip(); });
 function drawTree() {
   const cb = FN.gre, T = cb.tree, n = T.length, kids = T.map(() => []);
   T.forEach((r, i) => { if (r[0] >= 0) kids[r[0]].push(i); });
@@ -362,7 +372,7 @@ function drawTree() {
   let leafNo = 0;
   for (let i = 0; i < n; i++) if (T[i][0] >= 0) depth[i] = depth[T[i][0]] + T[i][1];
   (function place(i) { if (!kids[i].length) { yy[i] = leafNo++; return; } kids[i].forEach(place); yy[i] = (yy[kids[i][0]] + yy[kids[i][kids[i].length - 1]]) / 2; })(0);
-  const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), lab = Math.min(250, W * 0.45), step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
+  const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), refN = cb.leaves.filter((l) => l.ref).map((l) => refName(l).length), lab = Math.min(Math.max(...refN) * 6.4 + 16, W * 0.55), fs = Math.min(10.5, (lab - 14) / (Math.max(...refN) * 0.61)), step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
   const X = (d) => 8 + (d / maxD) * (W - lab - 16), Y = (k) => 12 + k * step;
   const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Tree of glycyl radical enzyme genes and reference enzymes" });
   let d = "";
@@ -372,7 +382,7 @@ function drawTree() {
     if (kids[i].length > 1) d += `M${X(depth[i])} ${Y(yy[kids[i][0]])}V${Y(yy[kids[i][kids[i].length - 1]])}`;
   }
   el("path", { d, fill: "none", stroke: "var(--muted)", "stroke-width": 0.8 }, svg);
-  for (let i = 0; i < n; i++) if (kids[i].length && T[i][2] >= 95 && T[i][0] >= 0) el("circle", { cx: X(depth[i]), cy: Y(yy[i]), r: 1.4, fill: "var(--ink)" }, svg);
+  for (let i = 0; i < n; i++) if (kids[i].length && T[i][2] >= 95 && T[i][0] >= 0) el("rect", { x: X(depth[i]) - 1.6, y: Y(yy[i]) - 1.6, width: 3.2, height: 3.2, fill: "var(--ink)" }, svg);
   const cc = treeColors(), q = st.tq.toLowerCase(), prod = st.prod;
   const refs = [];
   let marked = 0;
@@ -382,14 +392,16 @@ function drawTree() {
     const l = cb.leaves[li], x = X(depth[i]), y = Y(yy[i]);
     if (l.ref) {
       el("path", { d: `M${x} ${y - 4} l4 4 l-4 4 l-4 -4 z`, fill: "var(--ink)", stroke: "var(--ink)", "stroke-width": 1.2 }, svg);
-      refs.push([x, y, `${l.kind}: ${l.label}`]);
+      refs.push([x, y, refName(l)]);
+      const r = cb.refs.find((v) => v[0] === l.ref);
+      hover(el("rect", { x: x - 6, y: y - 6, width: 12, height: 12, fill: "transparent" }, svg), `<b>Reference: ${esc(l.label)}</b><br>Activity: ${esc(l.kind)} (measured)<br>${esc(r[3])}`);
       continue;
     }
     const hit = (q && [l.id, l.bin, l.family, l.name, l.phylum].some((s) => String(s).toLowerCase().includes(q))) || (prod && cb.products[l.p] === prod);
     if (hit) marked++;
-    const c = el("circle", { cx: x + 2, cy: y, r: hit ? 3.4 : 2, fill: cc.of(l), stroke: hit ? "var(--ink)" : "none", "stroke-width": 1.2 }, svg);
-    c.addEventListener("mousemove", (ev) => showTip(ev, `<span class="mono">${l.id}</span> · MAG <span class="mono">${l.bin}</span> <i>${esc(l.name)}</i><br>${esc(l.phylum)}, ${esc(l.family)}<br>Bakta: ${esc(cb.products[l.p])}<br>Tree: ${esc(l.clade)} · KOfam: ${l.ko || "no KO"}<br>Nearest reference ${esc(cb.refs.find((r) => r[0] === l.near)?.[1] || l.near)} (${l.nid}% identity)`));
-    c.addEventListener("mouseleave", hideTip);
+    const f = cc.of(l);
+    el("circle", { cx: x + 2, cy: y, r: hit ? 3.4 : 2, fill: f, stroke: hit ? "var(--ink)" : f === "none" ? "var(--faint)" : "none", "stroke-width": hit ? 1.2 : 0.8 }, svg);
+    hover(el("circle", { cx: x + 2, cy: y, r: 4, fill: "transparent" }, svg), `<span class="mono">${l.id}</span> · MAG <span class="mono">${l.bin}</span> <i>${esc(l.name)}</i><br>${esc(l.phylum)}, ${esc(l.family)}<br>Bakta: ${esc(cb.products[l.p])}<br>Tree's call: ${esc(l.clade)} · KOfam: ${l.ko || "no KO"}<br>Nearest reference ${esc(cb.refs.find((r) => r[0] === l.near)?.[1] || l.near)} (${l.nid}% identity)`);
   }
   // reference labels in a column at the right, spread so they do not overlap, with a leader line to the leaf
   let last = -1e9;
@@ -397,11 +409,12 @@ function drawTree() {
     const ly = Math.max(y, last + 12);
     last = ly;
     el("path", { d: `M${x + 5} ${y}H${W - lab - 6}L${W - lab + 2} ${ly}`, fill: "none", stroke: "var(--faint)", "stroke-dasharray": "2 2" }, svg);
-    el("text", { x: W - lab + 6, y: ly + 3.5, class: "mlbl", style: "font-size:10.5px" }, svg).textContent = t;
+    el("text", { x: W - lab + 6, y: ly + 3.5, class: "mlbl", style: `font-size:${fs.toFixed(1)}px` }, svg).textContent = t;
   }
   host.innerHTML = ""; host.appendChild(svg);
-  $("fnTreeLegend").innerHTML = legendHtml(cc.legend) + `<span><i class="sw" style="background:var(--ink);transform:rotate(45deg)"></i>Reference enzyme</span>`;
-  $("fnTreeInfo").textContent = q || prod ? `${marked} gene${marked === 1 ? "" : "s"} marked` : `${leafNo - cb.refs.length} of the ${num(cb.full)} MAG genes in the tree, and ${cb.refs.length} references`;
+  $("fnTreeLegend").innerHTML = legendHtml(cc.legend) + `<span><i class="sw" style="background:var(--ink);transform:rotate(45deg)"></i>Reference enzyme</span><span><i class="sw" style="background:var(--ink);width:6px;height:6px;border-radius:0"></i>Bootstrap 95 or more</span>`;
+  const prodN = prod ? sum(cb.table.rows.find((r) => r[0] === prod).slice(1)) : 0;
+  $("fnTreeInfo").textContent = prod && prodN > marked ? `${marked} of ${prodN} genes marked (the rest are not drawn)` : q || prod ? `${marked} gene${marked === 1 ? "" : "s"} marked` : `${leafNo - cb.refs.length} of the ${num(cb.full)} MAG genes in the tree, and ${cb.refs.length} references`;
   const tab = cb.table;
   $("fnTreeTable").innerHTML = `<table class="ct"><thead><tr><th>Bakta's name</th>${tab.clades.map((c) => `<th class="r" title="${esc(c)}">${esc(SHORT_GROUP[c] || c)}</th>`).join("")}</tr></thead><tbody>${tab.rows.map(([p, ...v]) => `<tr class="click${p === prod ? " hl" : ""}" data-prod="${esc(p)}"><td>${esc(p)}</td>${v.map((x) => `<td class="r">${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   $("fnRefs").innerHTML = `<table class="ct gt"><thead><tr><th>Enzyme</th><th>Activity</th><th>UniProt</th><th>Measured in</th></tr></thead><tbody>${cb.refs.map(([a, l, k, src]) => { const m = /^(?:Swiss-Prot; )?(.*?) \((10\.[^)]+)\)$/.exec(src); return `<tr><td>${esc(l)}</td><td>${esc(k)}</td><td class="mono">${a}</td><td>${m ? `<a href="https://doi.org/${esc(m[2])}">${esc(m[1])}</a>` : esc(src)}</td></tr>`; }).join("")}</tbody></table>`;

@@ -26,10 +26,10 @@ takeaways:
     the activity."
 discussion: >-
   A colleague reports that a MAG at 70% completeness "cannot make" a vitamin because one KEGG module is incomplete, and
-  that 191 MAGs "deconjugate bile acids" because Bakta names a bile salt hydrolase in them (244 genes). What does this page's
+  that 43 MAGs "make glycerol dehydratase" because Bakta gives one gene in each that name. What does this page's
   evidence support for each claim, what would you check first, and how would you word the results?
 teacher:
-  time: About 60 minutes for the core (sections 1 to 6), 20 more for the optional sections 7 and 8 (an estimate, not
+  time: About 70 minutes for the core (sections 1 to 6), 20 more for the optional sections 7 and 8 (an estimate, not
     yet tried with students).
   before: What a MAG is (module 4), MAG quality (module 5) and the leave-out experiment of module 7.
   flow:
@@ -37,23 +37,25 @@ teacher:
     - "10 min: two tools on the same genes (section 3; example 3): let students guess the agreement first."
     - "15 min: missing references and missing models (section 4; examples 4 and 5), compared with module 7."
     - "10 min: incomplete MAGs and pathway calls (section 5; example 6)."
-    - "15 min: which glycyl radical enzyme, what a tree can and cannot show (section 6; examples 7 and 8); take-home
+    - "25 min: which glycyl radical enzyme, what a tree can and cannot show (section 6; examples 7 and 8); take-home
       points and the discussion question."
     - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 1 and 9 to 11)."
   discussion_points:
     - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs 59-61% of the complete modules
       looked incomplete at 70% (section 5). Check the MAG's completeness, which steps are missing, and whether the
       genes could sit on unbinned contigs."
-    - "A Bakta name 'bile salt hydrolase' does not show the activity: BSH and penicillin V acylase share the domain and
-      are often confused (section 6), and in the glycyl radical enzymes the tree moves whole groups of genes to another
-      enzyme than the name. Wording: 'genes similar to bile salt hydrolases were found in N MAGs'."
+    - "A Bakta name 'glycerol dehydratase' does not show the activity: the tree places all 43 such genes with a measured
+      diol dehydratase (section 6, example 7), and a tree only narrows the choice. Wording: 'genes most similar to a diol
+      dehydratase measured in Roseburia were found in 43 MAGs'. The same holds for bile salt hydrolase in module 9."
     - "Two tools that agree are more convincing than one; where they disagree, look at what each name rests on."
-    - "Activity needs other data: expression (RNA), enzyme assays, or measured bile acids."
+    - "Activity needs other data: expression (RNA), enzyme assays, or measured metabolites."
   pitfalls:
     - "'Same KO' in section 4 means both proteins pass the same KOfam profile; it is not a measured function, and it
       covers only the 47% of genes KOfam can label."
     - "The identity in sections 1 and 2 is to a UniRef50 cluster's representative; in section 4 it is to the best
       DIAMOND match; in section 6 to the nearest measured enzyme."
+    - "Only a sample of the large groups is drawn in the tree; the table and the numbers in the text count all genes in
+      the tree."
     - "The tree is unrooted and drawn from an arbitrary point: 'next to' a reference is not 'inside' a group of it."
     - "'Hypothetical' means no match in this database, not no function; a Pfam domain often hints at one (example 1)."
     - "A gene missing from a MAG may be in the unbinned part of the genome; most MAGs are less than 100% complete."
