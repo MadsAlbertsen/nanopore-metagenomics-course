@@ -277,14 +277,9 @@ function fnNumbers() {
     grKo: `all ${num(gr.clades.PFL)} PFL genes have KEGG's PFL KO (K00656), all ${gr.clades.HypD} HypD genes the HypD KO (K23121), and ${gr.ko_clade.CutC.K20038} of the ${gr.clades.CutC} CutC genes the CutC KO (K20038)`,
     grDiolKo: gr.ko_clade["diol dehydratase"].none === gr.clades["diol dehydratase"] ? `none of the ${gr.clades["diol dehydratase"]}` : `${gr.clades["diol dehydratase"] - gr.ko_clade["diol dehydratase"].none} of the ${gr.clades["diol dehydratase"]}`,
     grNear: `${gr.near_agree.PFL} of the PFL, ${gr.near_agree.HypD} of the HypD, ${gr.near_agree["diol dehydratase"]} of the ${gr.clades["diol dehydratase"]} diol dehydratase and ${gr.near_agree.CutC} of the ${gr.clades.CutC} CutC genes`,
-    grGly: num(gr.gly_named), grGlyIn: num(gr.ex_gly_diol.n), grGlyId: `${gr.ex_gly_diol.id[0]}-${gr.ex_gly_diol.id[1]}%`,
-    grBss: num(gr.bss.n), grBssHypd: (words[gr.ex_bss_hypd.n] || num(gr.ex_bss_hypd.n)), grBssId: `${gr.ex_bss_hypd.id[0]}-${gr.ex_bss_hypd.id[1]}%`,
-    grPflDiol: cap(words[gr.ex_pfl_diol.n] || gr.ex_pfl_diol.n), grPflDiolId: `${gr.ex_pfl_diol.id[0]}-${gr.ex_pfl_diol.id[1]}%`,
-    grPflCutc: cap(words[gr.ex_pfl_cutc.n] || gr.ex_pfl_cutc.n), grPflCutcId: `${gr.ex_pfl_cutc.id[0]}-${gr.ex_pfl_cutc.id[1]}%`,
-    grFar: cap(words[gr.ex_far.n] || gr.ex_far.n), grFarL: words[gr.ex_far.n] || num(gr.ex_far.n), grPflCutcL: words[gr.ex_pfl_cutc.n] || num(gr.ex_pfl_cutc.n),
+    grPflCutcL: words[gr.ex_pfl_cutc.n] || num(gr.ex_pfl_cutc.n), grPflCutcMax: `${gr.ex_pfl_cutc.id[1]}%`, grFarL: words[gr.ex_far.n] || num(gr.ex_far.n), grFarMax: `${gr.ex_far.id[1]}%`,
     grOtherKinds: Object.entries(gr.clades).filter(([k]) => !(k in GROUP_C)).sort((a, b) => b[1] - a[1]).map(([k]) => k).join(", "), grFarMax: `${gr.ex_far.id[1]}%`,
-    grHpd: num(gr.ex_hpdb.n), grHpdInId: `${gr.ex_hpdb_in.id[1]}%`, grHpdUn: num(gr.ex_hpdb_unres.n), grHpdUnId: `${gr.ex_hpdb_unres.id[0]}-${gr.ex_hpdb_unres.id[1]}%`,
-    grUnres: num(gr.clades.unresolved), grUnresId: `${gr.ex_unres.median_id}%`,
+    grHpd: num(gr.ex_hpdb.n), grHpdUn: num(gr.ex_hpdb_unres.n), grHpdUnId: `${gr.ex_hpdb_unres.id[0]}-${gr.ex_hpdb_unres.id[1]}%`,
     grShown: `${sum(Object.values(gr.shown))} of the ${num(gr.full)}`,
   };
 }
@@ -354,7 +349,7 @@ function treeColors() {
   const counts = {}; for (const l of L) counts[key(l)] = (counts[key(l)] || 0) + 1;
   const order = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
   const col = Object.fromEntries(order.map((k, i) => [k, i < 6 ? `var(--c${i + 1})` : "none"]));
-  return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (open circle)"}: ${counts[k]}`, i < 6 ? col[k] : "transparent;border:1px solid var(--faint)"]) };
+  return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (open circle)"}: ${counts[k]} shown`, i < 6 ? col[k] : "transparent;border:1px solid var(--faint)"]) };
 }
 // reference label: genus abbreviated, the activity added when the name does not say it
 const refName = (l) => { const n = l.label.replace(/^([A-Z])[a-z]+ (?=[a-z])/, "$1. "); return n.endsWith(l.kind) ? n : `${n} (${l.kind})`; };
@@ -394,7 +389,7 @@ function drawTree() {
       el("path", { d: `M${x} ${y - 4} l4 4 l-4 4 l-4 -4 z`, fill: "var(--ink)", stroke: "var(--ink)", "stroke-width": 1.2 }, svg);
       refs.push([x, y, refName(l)]);
       const r = cb.refs.find((v) => v[0] === l.ref);
-      hover(el("rect", { x: x - 6, y: y - 6, width: 12, height: 12, fill: "transparent" }, svg), `<b>Reference: ${esc(l.label)}</b><br>Activity: ${esc(l.kind)} (measured)<br>${esc(r[3])}`);
+      hover(el("rect", { x: x - 6, y: y - 6, width: 12, height: 12, fill: "transparent" }, svg), `<b>Reference: ${esc(l.label)}</b><br>Activity: ${esc(l.kind)} (measured)<br>Measured in ${esc(r[3].replace(/^Swiss-Prot; /, "").replace(/ \(10\..*\)$/, ""))}`);
       continue;
     }
     const hit = (q && [l.id, l.bin, l.family, l.name, l.phylum].some((s) => String(s).toLowerCase().includes(q))) || (prod && cb.products[l.p] === prod);

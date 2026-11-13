@@ -90,12 +90,12 @@
   question: >-
     Bakta names 43 genes in the tree "Glycerol dehydratase"; their row in the table is selected, and the 11 of them that
     are drawn are marked. Hover (or tap) a marked gene: which reference is nearest, and how identical is it? Then find
-    the two references labelled at the right that act on glycerol or diols, and look up in the reference table what each
-    did when it was measured.
+    the two references labelled at the right that act on glycerol or diols, and look up in the reference table which
+    activity each has and the paper that measured it.
   answer: >-
     The marked genes sit in a well-supported group (square on the branch) with the Roseburia inulinivorans diol
-    dehydratase, and it is their nearest reference, 60-70% identical; the table shows the same for all 43 (all in the
-    Diol column). The other reference, Clostridium butyricum DhaB1, is a glycerol dehydratase. LaMattina et al. (2016)
+    dehydratase, and it is their nearest reference, 60-70% identical; the table shows that all 43 get the same call
+    (Diol column). The other reference, Clostridium butyricum DhaB1, is a glycerol dehydratase. LaMattina et al. (2016)
     showed that the Roseburia enzyme, 48% identical to DhaB1, dehydrates 1,2-propanediol: it is a diol dehydratase.
     KOfam gives these genes no KO. So the tree points to a diol dehydratase, not the glycerol dehydratase of the name;
     only an assay of these enzymes would settle it.
