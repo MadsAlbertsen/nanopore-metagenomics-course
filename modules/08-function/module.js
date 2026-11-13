@@ -3,7 +3,7 @@
 // bins (per MAG: GTDB-Tk ranks, method, closest reference [species, ANI, AF], RED, gene evidence counts),
 // maps (gene maps for a few MAGs: contigs [id, length, circular, module-6 verdict] and genes
 // [contig, start, stop, strand, product, symbol, evidence, identity %, Pfam]; products, symbols and pfam are lookups);
-// fn (np26 scripts/66_course_function.py): two tools, leave-out, incomplete MAGs and the BSH / PVA tree.
+// fn (np26 scripts/66_course_function.py): two tools, leave-out, incomplete MAGs and the glycyl radical enzyme tree.
 const NUM = DATA.numbers, B = DATA.bins, MAPS = DATA.maps, EVN = DATA.evidence;
 const magIdx = new Map(B.map((b, i) => [b.id, i]));
 const MAP_IDS = Object.keys(MAPS.mags);
@@ -212,7 +212,7 @@ function drawAmr() {
 }
 
 
-// --- new parts (np26 scripts/66_course_function.py, key "fn"): two tools, leave-out, incomplete MAGs, BSH/PVA tree
+// --- new parts (np26 scripts/66_course_function.py, key "fn"): two tools, leave-out, incomplete MAGs, glycyl radical enzyme tree
 const FN = DATA.fn;
 const TCLS = [["both", "Both name it", "var(--c1)"], ["bakta_only", "Bakta only", "var(--c2)"], ["kofam_only", "KOfam only", "var(--c3)"], ["neither", "Neither", "var(--v4)"]];
 const GRD = [["same", "Same function", "var(--c1)"], ["bakta_vaguer", "Bakta's name vaguer", "var(--c3)"], ["kofam_vaguer", "KOfam's KO vaguer", "var(--c4)"], ["different", "Different function", "var(--c2)"]];
@@ -245,7 +245,7 @@ function hbars(host, rows, colors, opts = {}) {
   host.innerHTML = ""; host.appendChild(svg);
 }
 function fnNumbers() {
-  const t = FN.tools, P = t.pooled, lv = FN.leave, inc = FN.incomplete, cb = FN.cbah, rec = FN.recoded;
+  const t = FN.tools, P = t.pooled, lv = FN.leave, inc = FN.incomplete, gr = FN.gre, rec = FN.recoded;
   const pooledLv = (level) => [0, 1, 2, 3].map((j) => sum(lv.mags.map((m) => lv.grades[level][m][j])));
   const share = (level, j) => { const c = pooledLv(level); return c[j] / sum(c); };
   const p1 = (x) => `${(100 * x).toFixed(1)}%`;
@@ -253,9 +253,7 @@ function fnNumbers() {
   const incShare = (k) => mean(inc.mags.map((m) => 1 - mean(inc.draws[m.id].blocks[k]) / m.full));
   const ords = Object.entries(rec.orders).sort((a, b) => b[1] - a[1]);
   const big = ords.filter(([, n]) => n > 1), small = ords.filter(([, n]) => n === 1);
-  const pa = cb.pa_bt2086;
-  const PVA = cb.leaves.filter((l) => l.clade === "PVA").length;
-  const BSH = cb.leaves.filter((l) => l.clade === "BSH").length, UNR = cb.leaves.filter((l) => l.clade === "unresolved").length;
+  const cap = (x) => String(x)[0].toUpperCase() + String(x).slice(1);
   const words = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
   return {
     tCds: num(t.cds), tBakta: `${num(P.both + P.bakta_only)} (${pct(P.both + P.bakta_only, t.cds)})`, tKofam: `${num(P.both + P.kofam_only)} (${pct(P.both + P.kofam_only, t.cds)})`,
@@ -272,16 +270,21 @@ function fnNumbers() {
     incFull: `${inc.mags.map((m) => m.full).slice(0, -1).join(", ")} and ${inc.mags[inc.mags.length - 1].full} modules in the four MAGs`,
     incKo: `${inc.keeps.map((k) => p1(inc.ko_lost[k])).join(", ")} of them at ${inc.keeps.map((k) => Math.round(k * 100)).join(", ")}% complete`,
     inc95: p1(incShare(String(inc.keeps[0]))), inc70: p1(incShare(String(inc.keeps[inc.keeps.length - 1]))),
-    cbNameBsh: num(cb.names.bsh), cbNamePen: num(cb.names.pen), cbKoPva: num(cb.kofam.K24041), cbKoNone: num(cb.kofam.none),
-    cbRefNoKo: `${cb.refs_noko} of the ${cb.refs.length} without a KO, ${cb.refs_noko_bsh} of them measured BSH`,
-    cbOut: num(cb.genes - cb.full), cbOutPartial: num(cb.not_tree.partial_match), cbOutCov: `${Math.round(100 * cb.not_tree.partial_cov)}% of it`, cbOutLen: num(cb.not_tree.other_length),
-    cbRefKinds: `${cb.refs_kinds.BSH} BSH and ${cb.refs_kinds.PVA} PVA whose activity was measured, and the three Lactobacillus plantarum genes Bsh2-4, which showed little or no BSH activity and which Lambert et al. (2008) suggest are penicillin acylases; here they count as PVA-like`,
-    cbPva: PVA === 0 ? "none" : num(PVA),
-    cbSupport: `at bootstrap 80 or 90, ${cb.support["80"].BSH} genes come out as BSH and ${cb.support["80"].PVA} as PVA (genes that group with the Pectobacterium PVA), and at 99, ${cb.support["99"].BSH} as BSH and ${cb.support["99"].PVA || "none"} as PVA`,
-    cbKoBsh: `${cb.kofam_bsh.K01442} of the ${BSH} have the BSH KO, ${cb.kofam_bsh.K24041 || "none"} the PVA KO and the other ${cb.kofam_bsh.none} no KO`,
-    cbNearBsh: `${cb.nearest_bsh[0]} of the ${BSH}, at a median of ${cb.nearest_bsh[1]}% identity`,
-    cbGenes: num(cb.genes), cbMags: num(cb.mags), cbKo: num(cb.k01442), cbFull: num(cb.full), cbRefs: cb.refs.length, cbBsh: BSH, cbUnres: UNR,
-    cbPa: pa[0] < words.length ? words[pa[0]][0].toUpperCase() + words[pa[0]].slice(1) : pa[0], cbPaId: `${pa[1]}-${pa[2]}%`, cbBig: `${cb.big_split.bsh} of the ${BSH}`, cbBigSize: cb.big_split.size, cbBigMag: cb.big_split.size - 2,
+    grGenes: num(gr.genes), grMags: num(gr.mags), grFull: num(gr.full), grOut: num(gr.not_tree), grRefs: gr.refs.length,
+    grKinds: new Set(gr.refs.map((r) => r[2])).size, grPflNamed: num(gr.pfl_named.n), grPflIn: num(gr.pfl_named.in_pfl),
+    grCounts: (() => { const c = gr.clades, other = sum(Object.entries(c).filter(([k]) => !["PFL", "HypD", "CutC", "diol dehydratase", "unresolved"].includes(k)).map(([, n]) => n)); return `${num(c.PFL)} come out as PFL, ${c["diol dehydratase"]} as diol dehydratase, ${c.HypD} as HypD, ${c.CutC} as CutC and ${other} as one of the other kinds; ${c.unresolved} stay unresolved`; })(),
+    grSupport: (() => { const s80 = gr.support["80"], s99 = gr.support["99"], same = ["PFL", "HypD", "CutC", "diol dehydratase", "unresolved"].every((k) => s80[k] === gr.clades[k] && gr.support["90"][k] === gr.clades[k]); return `${same ? "the labels are the same at bootstrap 80 and 90" : "the labels shift at bootstrap 80 or 90"}, and at 99 ${gr.clades["diol dehydratase"] - s99["diol dehydratase"]} of the diol dehydratase genes become unresolved`; })(),
+    grKo: `all ${num(gr.clades.PFL)} PFL genes have KEGG's PFL KO (K00656), all ${gr.clades.HypD} HypD genes the HypD KO (K23121), and ${gr.ko_clade.CutC.K20038} of the ${gr.clades.CutC} CutC genes the CutC KO (K20038)`,
+    grDiolKo: gr.ko_clade["diol dehydratase"].none === gr.clades["diol dehydratase"] ? `none of the ${gr.clades["diol dehydratase"]}` : `${gr.clades["diol dehydratase"] - gr.ko_clade["diol dehydratase"].none} of the ${gr.clades["diol dehydratase"]}`,
+    grNear: `${gr.near_agree.PFL} of the PFL, ${gr.near_agree.HypD} of the HypD, ${gr.near_agree["diol dehydratase"]} of the ${gr.clades["diol dehydratase"]} diol dehydratase and ${gr.near_agree.CutC} of the ${gr.clades.CutC} CutC genes`,
+    grGly: num(gr.gly_named), grGlyIn: num(gr.ex_gly_diol.n), grGlyId: `${gr.ex_gly_diol.id[0]}-${gr.ex_gly_diol.id[1]}%`,
+    grBss: num(gr.bss.n), grBssHypd: (words[gr.ex_bss_hypd.n] || num(gr.ex_bss_hypd.n)), grBssId: `${gr.ex_bss_hypd.id[0]}-${gr.ex_bss_hypd.id[1]}%`,
+    grPflDiol: cap(words[gr.ex_pfl_diol.n] || gr.ex_pfl_diol.n), grPflDiolId: `${gr.ex_pfl_diol.id[0]}-${gr.ex_pfl_diol.id[1]}%`,
+    grPflCutc: cap(words[gr.ex_pfl_cutc.n] || gr.ex_pfl_cutc.n), grPflCutcId: `${gr.ex_pfl_cutc.id[0]}-${gr.ex_pfl_cutc.id[1]}%`,
+    grFar: cap(words[gr.ex_far.n] || gr.ex_far.n), grFarMax: `${gr.ex_far.id[1]}%`,
+    grHpd: num(gr.ex_hpdb.n), grHpdInId: `${gr.ex_hpdb_in.id[1]}%`, grHpdUn: num(gr.ex_hpdb_unres.n), grHpdUnId: `${gr.ex_hpdb_unres.id[0]}-${gr.ex_hpdb_unres.id[1]}%`,
+    grUnres: num(gr.clades.unresolved), grUnresId: `${gr.ex_unres.median_id}%`,
+    grShown: `${sum(Object.values(gr.shown))} of the ${num(gr.full)}`,
   };
 }
 function drawTools() {
@@ -338,21 +341,22 @@ function drawIncomplete() {
   $("fnIncLost").innerHTML = `<table class="ct gt"><thead><tr><th>Module</th><th>Name</th><th class="r">Draws</th></tr></thead><tbody>${inc.lost[m.id].map(([id, n, k]) => `<tr><td class="mono">${id}</td><td>${esc(n)}</td><td class="r">${k}</td></tr>`).join("")}</tbody></table>`;
 }
 // tree
-const CLADE_C = { BSH: "var(--c1)", PVA: "var(--c2)", unresolved: "var(--faint)" };
+const SHORT_GROUP = { "diol dehydratase": "Diol", "other kinds": "Other", unresolved: "Unres." };
+const GROUP_C = { PFL: "var(--c1)", HypD: "var(--c2)", CutC: "var(--c3)", "diol dehydratase": "var(--c4)", "other kinds": "var(--c7)", unresolved: "var(--faint)" };
 function treeColors() {
-  const L = FN.cbah.leaves.filter((l) => !l.ref);
+  const gr = FN.gre, L = gr.leaves.filter((l) => !l.ref);
   if (st.col === "clade") {
-    const n = (k) => L.filter((l) => l.clade === k).length;
-    return { of: (l) => CLADE_C[l.clade], legend: [["BSH", "BSH (tree)"], ["PVA", "PVA (tree)"], ["unresolved", "Unresolved"]].filter(([k]) => n(k)).map(([k, t]) => [`${t}: ${n(k)}`, CLADE_C[k]]) };
+    const total = (g) => (g === "other kinds" ? sum(Object.entries(gr.clades).filter(([k]) => !(k in GROUP_C)).map(([, n]) => n)) : gr.clades[g]);
+    return { of: (l) => GROUP_C[l.group], legend: Object.keys(GROUP_C).map((g) => [`${g}: ${gr.shown[g] || 0} of ${total(g)} shown`, GROUP_C[g]]) };
   }
-  const key = st.col === "product" ? (l) => FN.cbah.products[l.p] : (l) => l.phylum;
+  const key = st.col === "product" ? (l) => gr.products[l.p] : (l) => l.phylum;
   const counts = {}; for (const l of L) counts[key(l)] = (counts[key(l)] || 0) + 1;
   const order = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
   const col = Object.fromEntries(order.map((k, i) => [k, i < 6 ? `var(--c${i + 1})` : "var(--faint)"]));
   return { of: (l) => col[key(l)], legend: order.map((k, i) => [`${i < 6 ? k : k + " (grey)"}: ${counts[k]}`, col[k]]) };
 }
 function drawTree() {
-  const cb = FN.cbah, T = cb.tree, n = T.length, kids = T.map(() => []);
+  const cb = FN.gre, T = cb.tree, n = T.length, kids = T.map(() => []);
   T.forEach((r, i) => { if (r[0] >= 0) kids[r[0]].push(i); });
   const depth = new Array(n).fill(0), yy = new Array(n).fill(0);
   let leafNo = 0;
@@ -360,7 +364,7 @@ function drawTree() {
   (function place(i) { if (!kids[i].length) { yy[i] = leafNo++; return; } kids[i].forEach(place); yy[i] = (yy[kids[i][0]] + yy[kids[i][kids[i].length - 1]]) / 2; })(0);
   const host = $("fnTreeSvg"), W = Math.max(360, host.clientWidth || 360), lab = Math.min(250, W * 0.45), step = 4.2, H = leafNo * step + 24, maxD = Math.max(...depth);
   const X = (d) => 8 + (d / maxD) * (W - lab - 16), Y = (k) => 12 + k * step;
-  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Tree of the choloylglycine hydrolase genes and reference enzymes" });
+  const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Tree of glycyl radical enzyme genes and reference enzymes" });
   let d = "";
   for (let i = 0; i < n; i++) {
     const p = T[i][0];
@@ -377,14 +381,14 @@ function drawTree() {
     if (li < 0) continue;
     const l = cb.leaves[li], x = X(depth[i]), y = Y(yy[i]);
     if (l.ref) {
-      el("path", { d: `M${x} ${y - 4} l4 4 l-4 4 l-4 -4 z`, fill: l.kind === "BSH" ? "var(--ink)" : "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.2 }, svg);
-      refs.push([x, y, `${l.kind === "no BSH" ? "no BSH activity" : l.kind}: ${l.label}`]);
+      el("path", { d: `M${x} ${y - 4} l4 4 l-4 4 l-4 -4 z`, fill: "var(--ink)", stroke: "var(--ink)", "stroke-width": 1.2 }, svg);
+      refs.push([x, y, `${l.kind}: ${l.label}`]);
       continue;
     }
     const hit = (q && [l.id, l.bin, l.family, l.name, l.phylum].some((s) => String(s).toLowerCase().includes(q))) || (prod && cb.products[l.p] === prod);
     if (hit) marked++;
     const c = el("circle", { cx: x + 2, cy: y, r: hit ? 3.4 : 2, fill: cc.of(l), stroke: hit ? "var(--ink)" : "none", "stroke-width": 1.2 }, svg);
-    c.addEventListener("mousemove", (ev) => showTip(ev, `<span class="mono">${l.id}</span> · MAG <span class="mono">${l.bin}</span> <i>${esc(l.name)}</i><br>${esc(l.phylum)}, ${esc(l.family)}<br>Bakta: ${esc(cb.products[l.p])}<br>Tree: ${esc(l.clade)} · nearest reference ${esc(cb.refs.find((r) => r[0] === l.near)?.[1] || l.near)} (${l.nid}% identity)`));
+    c.addEventListener("mousemove", (ev) => showTip(ev, `<span class="mono">${l.id}</span> · MAG <span class="mono">${l.bin}</span> <i>${esc(l.name)}</i><br>${esc(l.phylum)}, ${esc(l.family)}<br>Bakta: ${esc(cb.products[l.p])}<br>Tree: ${esc(l.clade)} · KOfam: ${l.ko || "no KO"}<br>Nearest reference ${esc(cb.refs.find((r) => r[0] === l.near)?.[1] || l.near)} (${l.nid}% identity)`));
     c.addEventListener("mouseleave", hideTip);
   }
   // reference labels in a column at the right, spread so they do not overlap, with a leader line to the leaf
@@ -396,11 +400,11 @@ function drawTree() {
     el("text", { x: W - lab + 6, y: ly + 3.5, class: "mlbl", style: "font-size:10.5px" }, svg).textContent = t;
   }
   host.innerHTML = ""; host.appendChild(svg);
-  $("fnTreeLegend").innerHTML = legendHtml(cc.legend) + `<span><i class="sw" style="background:var(--ink);transform:rotate(45deg)"></i>Reference: BSH</span><span><i class="sw" style="border:1.5px solid var(--ink);transform:rotate(45deg)"></i>Reference: PVA, or no BSH activity</span>`;
-  $("fnTreeInfo").textContent = q || prod ? `${marked} gene${marked === 1 ? "" : "s"} marked` : `${leafNo - cb.refs.length} MAG genes and ${cb.refs.length} references`;
+  $("fnTreeLegend").innerHTML = legendHtml(cc.legend) + `<span><i class="sw" style="background:var(--ink);transform:rotate(45deg)"></i>Reference enzyme</span>`;
+  $("fnTreeInfo").textContent = q || prod ? `${marked} gene${marked === 1 ? "" : "s"} marked` : `${leafNo - cb.refs.length} of the ${num(cb.full)} MAG genes in the tree, and ${cb.refs.length} references`;
   const tab = cb.table;
-  $("fnTreeTable").innerHTML = `<table class="ct"><thead><tr><th>Bakta's name</th>${tab.clades.map((c) => `<th class="r">${esc(c)}</th>`).join("")}</tr></thead><tbody>${tab.rows.map(([p, ...v]) => `<tr class="click${p === prod ? " hl" : ""}" data-prod="${esc(p)}"><td>${esc(p)}</td>${v.map((x) => `<td class="r">${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-  $("fnRefs").innerHTML = `<table class="ct gt"><thead><tr><th>Enzyme</th><th>Activity</th><th>UniProt</th></tr></thead><tbody>${cb.refs.map(([a, l, k]) => `<tr><td>${esc(l)}</td><td>${esc(k)}</td><td class="mono">${a}</td></tr>`).join("")}</tbody></table>`;
+  $("fnTreeTable").innerHTML = `<table class="ct"><thead><tr><th>Bakta's name</th>${tab.clades.map((c) => `<th class="r" title="${esc(c)}">${esc(SHORT_GROUP[c] || c)}</th>`).join("")}</tr></thead><tbody>${tab.rows.map(([p, ...v]) => `<tr class="click${p === prod ? " hl" : ""}" data-prod="${esc(p)}"><td>${esc(p)}</td>${v.map((x) => `<td class="r">${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  $("fnRefs").innerHTML = `<table class="ct gt"><thead><tr><th>Enzyme</th><th>Activity</th><th>UniProt</th><th>Measured in</th></tr></thead><tbody>${cb.refs.map(([a, l, k, src]) => { const m = /^(?:Swiss-Prot; )?(.*?) \((10\.[^)]+)\)$/.exec(src); return `<tr><td>${esc(l)}</td><td>${esc(k)}</td><td class="mono">${a}</td><td>${m ? `<a href="https://doi.org/${esc(m[2])}">${esc(m[1])}</a>` : esc(src)}</td></tr>`; }).join("")}</tbody></table>`;
 }
 function drawFn() { drawTools(); drawLeave(); drawIncomplete(); drawTree(); }
 
@@ -436,7 +440,7 @@ function applyState(s) {
   st.meth = s.meth === "pieces" ? "pieces" : "blocks";
   st.col = ["clade", "product", "phylum"].includes(s.col) ? s.col : "clade";
   st.tq = s.tq || "";
-  st.prod = FN.cbah.table.rows.some((r) => r[0] === s.prod) ? s.prod : "";
+  st.prod = FN.gre.table.rows.some((r) => r[0] === s.prod) ? s.prod : "";
   fnControls();
   if (st.q && s.pos === undefined) { const g = M().genes.find((g) => g[0] === st.ctg && matches(g, st.q)) || M().genes.find((g) => matches(g, st.q)); if (g) { st.ctg = g[0]; st.pos = Math.round((g[1] + g[2]) / 2 - winBp() / 2); } }
   clampPos();

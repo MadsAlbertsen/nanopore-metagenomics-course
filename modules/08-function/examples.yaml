@@ -7,7 +7,7 @@
 #   lv = test MAG in the leave-out chart (empty: all four); inc = test MAG and meth = removal (blocks, pieces) in the
 #   incomplete-MAG chart; col = tree colouring (clade, product, phylum); tq = search in the tree; prod = Bakta name
 #   marked in the tree.
-# Examples 3-7 (sections 3-6) use np26 scripts/62-66 (2026-11-12).
+# Examples 3-8 (sections 3-6) use np26 scripts/62-66 (2026-11-12; examples 7 and 8, the GRE tree: 2026-11-13).
 
 - title: An archaeon in a bacterial annotation tool
   at: genemap
@@ -84,29 +84,30 @@
     pieces removed the mean is 53.1% (32.1-75.0%). So in a 70% complete MAG, a missing pathway is expected even when the
     organism has it.
 
-- title: Named penicillin amidase, closest to a bile salt hydrolase
+- title: Named glycerol dehydratase, placed with a diol dehydratase
   at: tree
-  state: {col: "product", prod: "Penicillin amidase Cysteine peptidase MEROPS family C59"}
+  state: {col: "clade", prod: "Glycerol dehydratase"}
   question: >-
-    Bakta names 27 of the genes in the tree "Penicillin amidase". Where do they sit in the tree, and what does the tree
-    call them? Hover the marked genes.
+    Bakta names 43 genes in the tree "Glycerol dehydratase" (the tree shows a sample of them, marked). Which reference
+    enzymes are they placed with, and what did those enzymes do when they were measured? Hover the marked genes.
   answer: >-
-    All 27 are from Bacteroidota MAGs. 14 come out as BSH: Bacteroides and Phocaeicola genes 74.3-99.7% identical to
-    BT2086 of B. thetaiotaomicron, a measured BSH. 13 stay unresolved, at 54.0-67.0% identity to it (Parabacteroides,
-    Alistipes, Muribaculaceae, Butyricimonas and some Bacteroides). The two B. thetaiotaomicron MAGs (1.931 and s.76)
-    each carry two such genes: one 99.1-99.7% identical to BT2086, the other 54.0%. One name covers both.
+    All 43 (in 43 MAGs, 29 of them Lachnospiraceae, 19 Blautia_A) sit in a well-supported group with the Roseburia
+    inulinivorans diol dehydratase, 60-70% identical to it, and each is closer to it than to the Clostridium butyricum
+    glycerol dehydratase. LaMattina et al. (2016) showed that the Roseburia enzyme, 48% identical to the glycerol
+    dehydratase, dehydrates 1,2-propanediol: it is a diol dehydratase. KOfam gives these genes no KO. So the tree points
+    to a diol dehydratase, not the glycerol dehydratase of the name; only an assay of these enzymes would settle it.
 
-- title: Far from every measured enzyme
+- title: Named benzylsuccinate synthase
   at: tree
-  state: {col: "clade", prod: "Choloylglycine hydrolase/NAAA C-terminal domain-containing protein"}
+  state: {col: "clade", prod: "Benzylsuccinate synthase alpha subunit"}
   question: >-
-    18 genes carry Bakta's name "Choloylglycine hydrolase/NAAA C-terminal domain-containing protein". What does the tree
-    say about them, and how close is their nearest measured enzyme?
+    Benzylsuccinate synthase (BssA) starts the breakdown of toluene. Bakta gives this name to 12 genes in the tree. Where
+    do they sit, and what do KOfam and the nearest reference say?
   answer: >-
-    All 18 stay unresolved. 17 are from Bacteroidota MAGs, one from an Oscillospiraceae MAG. Their nearest reference is
-    only 30.2-38.9% identical (11 closest to the Clostridium perfringens BSH, 4 to the Bacillus subtilis PVA). So far
-    from every enzyme with a measured activity, neither the tree nor the identity can tell what they do; the name
-    itself says only which domain they carry.
+    Six (Phocaeicola, Parabacteroides, Odoribacter) sit in the HypD group, 51-55% identical to Clostridioides difficile
+    HypD, and KOfam gives all six the HypD KO (K23121): the tree, the identity and KOfam agree on a hydroxyproline
+    dehydratase, an enzyme common in the gut (Levin et al. 2017). One sits with the Klebsiella HpfG (46% identity), and
+    five stay unresolved, only 27-35% identical to any reference. None is placed with the BssA reference.
 
 - title: A name from a distant relative
   at: genemap
