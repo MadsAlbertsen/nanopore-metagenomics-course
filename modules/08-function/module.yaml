@@ -4,8 +4,8 @@ title: "Function: what the genes may do, and how sure we are"
 nav: Function
 summary: >-
   What a gene name rests on, how Bakta and KOfam compare on the same genes, what happens to function calls when the
-  reference database lacks a gene's relatives or a MAG is incomplete, and a tree for two related enzymes (bile salt
-  hydrolase or penicillin V acylase). Optional: a gene map and resistance genes.
+  reference database lacks a gene's relatives or a MAG is incomplete, and a tree that tells related enzymes apart
+  (glycyl radical enzymes). Optional: a gene map and resistance genes.
 status: draft
 mag_link: "#?mag={id}"
 takeaways:
@@ -20,9 +20,10 @@ takeaways:
   - "A pathway call needs every step: in the four test MAGs (28-47 complete KEGG modules each), removing 5% of the genome
     at random made 13-14% of the complete modules look incomplete, removing 30% made 59-61% (10 kb blocks; 53-56% when
     whole pieces are dropped). A missing pathway in an incomplete MAG is weak evidence."
-  - "379 genes in 257 MAGs carry the BSH / PVA domain. A tree with 15 measured enzymes puts 275 of 319 next to BSH, but
-    247 of these calls rest on two references at about 60% identity, and Bacteroidales genes stay unresolved: a name or
-    a tree placement is a prediction; only an assay shows the activity."
+  - "584 genes in 302 MAGs carry the glycyl radical enzyme domain. A tree with 15 measured enzymes places the 43 genes
+    Bakta names glycerol dehydratase with a measured diol dehydratase, and six named benzylsuccinate synthase with HypD
+    (KOfam agrees); 164 genes stay unresolved, far from every reference. A tree narrows the choice; only an assay shows
+    the activity."
 discussion: >-
   A colleague reports that a MAG at 70% completeness "cannot make" a vitamin because one KEGG module is incomplete, and
   that 191 MAGs "deconjugate bile acids" because Bakta names a bile salt hydrolase in them (244 genes). What does this page's
@@ -36,16 +37,16 @@ teacher:
     - "10 min: two tools on the same genes (section 3; example 3): let students guess the agreement first."
     - "15 min: missing references and missing models (section 4; examples 4 and 5), compared with module 7."
     - "10 min: incomplete MAGs and pathway calls (section 5; example 6)."
-    - "15 min: BSH or PVA, what a tree can and cannot show (section 6; examples 7 and 8); take-home points and the
-      discussion question."
+    - "15 min: which glycyl radical enzyme, what a tree can and cannot show (section 6; examples 7 and 8); take-home
+      points and the discussion question."
     - "Optional, 20 min: the gene map and resistance genes (sections 7 and 8; examples 1 and 9 to 11)."
   discussion_points:
     - "An incomplete module in a 70%-complete MAG is weak evidence: in the test MAGs 59-61% of the complete modules
       looked incomplete at 70% (section 5). Check the MAG's completeness, which steps are missing, and whether the
       genes could sit on unbinned contigs."
-    - "A Bakta name 'bile salt hydrolase' does not show the activity: BSH and PVA share the domain, and the tree places
-      most genes only next to BSH references at about 60% identity (section 6). Wording: 'genes similar to bile salt
-      hydrolases were found in N MAGs'."
+    - "A Bakta name 'bile salt hydrolase' does not show the activity: BSH and penicillin V acylase share the domain and
+      are often confused (section 6), and in the glycyl radical enzymes the tree moves whole groups of genes to another
+      enzyme than the name. Wording: 'genes similar to bile salt hydrolases were found in N MAGs'."
     - "Two tools that agree are more convincing than one; where they disagree, look at what each name rests on."
     - "Activity needs other data: expression (RNA), enzyme assays, or measured bile acids."
   pitfalls:

@@ -40,11 +40,11 @@ def check(data: dict, examples: list[dict]) -> None:
             raise ValueError(f"example '{title}': removal method {st['meth']} is not offered")
         if "col" in st and st["col"] not in {"clade", "product", "phylum"}:
             raise ValueError(f"example '{title}': tree colouring {st['col']} is not offered")
-        if "prod" in st and st["prod"] not in {r[0] for r in fn["cbah"]["table"]["rows"]}:
+        if "prod" in st and st["prod"] not in {r[0] for r in fn["gre"]["table"]["rows"]}:
             raise ValueError(f"example '{title}': product {st['prod']} is not in the tree table")
         if "tq" in st:
             q = st["tq"].lower()
-            hit = [lf for lf in fn["cbah"]["leaves"] if "id" in lf]
+            hit = [lf for lf in fn["gre"]["leaves"] if "id" in lf]
             if not any(q in str(lf[k]).lower() for lf in hit for k in ("id", "bin", "family", "name", "phylum")):
                 raise ValueError(f"example '{title}': no tree gene matches '{st['tq']}'")
         m = maps["mags"].get(mp)
